@@ -1,0 +1,6 @@
+/.mpidebug/*
+/.debug/*
+/.mpirelease/*
+/.release/*
+/bin/*
+*.out
