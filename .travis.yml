@@ -1,2 +1,4 @@
 language: cpp
-compiler: g++
+compiler: mpic++
+before_install:
+  - sudo apt-get install -y tree openssh-client openssh-server openmpi-bin openmpi-common libopenmpi2 libopenmpi-dev 
