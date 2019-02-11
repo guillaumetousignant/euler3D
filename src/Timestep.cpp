@@ -5,6 +5,7 @@
 
 #include "Timestep.h"
 
+#include <math.h>
 #include <string>
 #include <iostream>
 using namespace std;
