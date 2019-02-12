@@ -16,6 +16,7 @@ private:
 
 // Attributes
 int block_id_;
+int wall_face_id_;
 
 double dynhead;
 double cl_;

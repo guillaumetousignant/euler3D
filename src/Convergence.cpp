@@ -32,7 +32,7 @@ void Convergence::calculateRoRms(Block* block, PostProcessing* postprocessing, i
 
   for (i=0; i<block->n_cell_in_block_; i++)
 	{
-		res_ro_ = block->primitivevariables->res_ro_[i];
+		res_ro_ = block->block_primitive_variables_->res_ro_[i];
 
 		rms_ro_ += res_ro_*res_ro_;
 	}
@@ -54,7 +54,7 @@ void Convergence::calculateUuRms(Block* block, PostProcessing* postprocessing, i
 
   for (i=0; i<block->n_cell_in_block_; i++)
   {
-    res_uu_ = block->primitivevariables->res_uu_[i];
+    res_uu_ = block->block_primitive_variables_->res_uu_[i];
 
     rms_uu_ += res_uu_*res_uu_;
   }
@@ -74,7 +74,7 @@ void Convergence::calculateVvRms(Block* block, PostProcessing* postprocessing, i
 {
   for (i=0; i<block->n_cell_in_block_; i++)
   {
-    res_vv_ = block->primitivevariables->res_vv_[i];
+    res_vv_ = block->block_primitive_variables_->res_vv_[i];
 
     rms_vv_ += res_vv_*res_vv_;
   }
@@ -94,7 +94,7 @@ void Convergence::calculateWwRms(Block* block, PostProcessing* postprocessing, i
 {
   for (i=0; i<block->n_cell_in_block_; i++)
   {
-    res_ww_ = block->primitivevariables->res_ww_[i];
+    res_ww_ = block->block_primitive_variables_->res_ww_[i];
 
     rms_ww_ += res_ww_*res_ww_;
   }
@@ -113,7 +113,7 @@ void Convergence::calculatePpRms(Block* block, PostProcessing* postprocessing, i
 {
   for (i=0; i<block->n_cell_in_block_; i++)
   {
-    res_pp_ = block->primitivevariables->res_pp_[i];
+    res_pp_ = block->block_primitive_variables_->res_pp_[i];
 
     rms_pp_ += res_pp_*res_pp_;
   }
