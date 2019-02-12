@@ -10,7 +10,7 @@ class Venkatakrishnan : public Limiter
 {
 	public:
 		
-		double K_;
+		double k_;
 
 		Venkatakrishnan();
 		~Venkatakrishnan();
