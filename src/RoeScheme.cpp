@@ -164,6 +164,8 @@ void RoeScheme::computeFlux(Block* block)
 	flux_5_dissipative = 0.5*(-A_roe_energy)*normal_norm;
 
 	//} END OF LOOP ON FACE
+
+	//Il manque la distribution des flux ici
 }
 
 
