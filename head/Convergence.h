@@ -1,5 +1,5 @@
-#ifdef EULER3D_C++_H_CONVERGENCE_H
-#define EULER3D_C++_H_CONVERGENCE_H
+#ifdef EULER3D_HEAD_CONVERGENCE_H
+#define EULER3D_HEAD_CONVERGENCE_H
 
 #include <string>
 #include <vector>

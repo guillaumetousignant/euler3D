@@ -1,5 +1,5 @@
-#ifdef EULER3D_C++_H_OUTTECPLOT_H
-#define EULER3D_C++_H_OUTTEPLOT_H
+#ifdef EULER3D_HEAD_OUTTECPLOT_H
+#define EULER3D_HEAD_OUTTEPLOT_H
 
 #include <string>
 #include <vector>

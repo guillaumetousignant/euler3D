@@ -1,5 +1,5 @@
-#ifdef EULER3D_C++_CPP_CONVERGENCE_CPP
-#define EULER3D_C++_CPP_CONVERGENCE_CPP
+#ifdef EULER3D_SRC_CONVERGENCE_CPP
+#define EULER3D_SRC_CONVERGENCE_CPP
 
 #include <malloc.h>
 #include <stdio.h>

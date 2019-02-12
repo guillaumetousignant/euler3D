@@ -1,5 +1,5 @@
-#ifdef EULER3D_C++_H_POSTPROCESSING_H
-#define EULER3D_C++_H_POSTPROCESSING_H
+#ifdef EULER3D_HEAD_POSTPROCESSING_H
+#define EULER3D_HEAD_POSTPROCESSING_H
 
 #include <string>
 #include <vector>
