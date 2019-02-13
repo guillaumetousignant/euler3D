@@ -1,5 +1,5 @@
-#ifndef DATASTRUCTURE_HEAD_PrimitiveVariables_H
-#define DATASTRUCTURE_HEAD_PrimitiveVariables_H
+#ifndef DATASTRUCTURE_HEAD_PRIMITIVEVARIABLES_H
+#define DATASTRUCTURE_HEAD_PRIMITIVEVARIABLES_H
 
 class PrimitiveVariables
 {

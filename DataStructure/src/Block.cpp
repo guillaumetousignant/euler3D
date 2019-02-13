@@ -3,6 +3,7 @@
 
 #include <string>
 #include <iostream>
+#include "Block.h"
 using namespace std;
 
 Block::Block(int block_id)

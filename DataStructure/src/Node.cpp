@@ -1,7 +1,7 @@
 #ifndef DATASTRUCTURE_SRC_NODE_CPP
 #define DATASTRUCTURE_SRC_NODE_CPP
 
-#include Node.h
+#include "Node.h"
 
 Node::Node()
 {
