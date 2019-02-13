@@ -19,6 +19,9 @@ OutputTecplot::OutputTecplot(Block* block, PostProcessing* postprocessing, Solve
   }
   else if(solver->stop_solver_flag_ == true)
   {
+    printConvergence();
+    Convergence.close();
+
     printFlowData();
     printSurfaceFlowData();
     printAerodynamicCoefficients();
@@ -167,6 +170,8 @@ void OutputTecplot::printFlowData(Block* block, PostProcessing* postprocessing)
     }
   }
 
+  FlowData.close();
+
 }
 
 void OutputTecplot::printSurfaceFlowData(Block* block, PostProcessing* postprocessing)
@@ -180,21 +185,45 @@ void OutputTecplot::printSurfaceFlowData(Block* block, PostProcessing* postproce
       //return;
     }
 
+  SurfaceFlowData.close();
 }
 
 void OutputTecplot::printConvergence(Block* block, PostProcessing* postprocessing)
 {
+  Convergence.open("Convergence.plt", ios::binary);
 
+    if (Convergence.fail())
+    {
+      // TODO throw exception
+      cerr << "Fail opening file Convergence.plt" << endl;
+      //return;
+    }
 }
 
 void OutputTecplot::printAerodynamicCoefficients(Block* block, PostProcessing* postprocessing)
 {
+  AerodynamicCoefficients.open("AerodynamicCoefficients.plt", ios::binary);
 
+    if (AerodynamicCoefficients.fail())
+    {
+      // TODO throw exception
+      cerr << "Fail opening file AerodynamicCoefficients.plt" << endl;
+      //return;
+    }
 }
 
 void OutputTecplot::RestartFile(Block* block, PostProcessing* postprocessing)
 {
+  RestartFile.open("RestartFile.dat");
 
+    if (RestartFile.fail())
+    {
+      // TODO throw exception
+      cerr << "Fail opening file RestartFile.dat" << endl;
+      //return;
+    }
+
+    RestartFile.close();
 }
 
 #endif
