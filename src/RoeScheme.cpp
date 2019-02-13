@@ -29,8 +29,15 @@ void RoeScheme::computeFlux(Block* block)
 	double normal_norm, normalized_x, normalized_y, normalized_z;
 	double LAMBDA1,LAMBDA234,LAMBDA5;
 
+	my_primitive_variables = block -> block_primitive_variables_;
+	my_ro_array = my_primitive_variables -> ro_;
+	my_uu_array = my_primitive_variables -> uu_;
+	my_vv_array = my_primitive_variables -> vv_;
+	my_ww_array = my_primitive_variables -> ww_;
+	my_pp_array = my_primitive_variables -> pp_;
+
 	//////////////////////////////////////////////////////////////////////////////////LOOP ON FACE
-	//for (int face = 0; face < nface; face++)
+	//for (int face = 0; face < nface; face++) HOW TO I ACCESS TO NFACE OU L'ÉQUIVALENT??
 	//{
 
 	//normal_norm=sqrt(((*face_normals_x)[face]*(*face_normals_x)[face])+((*face_normals_y)[face]*(*face_normals_y)[face]));
@@ -42,24 +49,26 @@ void RoeScheme::computeFlux(Block* block)
 	normalized_z = 0.;
 	normal_norm = 0.;
 
+	neighboor_cells = my_face -> face_2_cells;
+	left_cell = neighboor_cells[0];
+	right_cell = neighboor_cells[1];
+
 	// Left cell
-	left_cell = 0.;
-	rho_L = 0.;
-	// example : ro[left_cell];
-	u_L = 0.;
-	v_L = 0.;
-	w_L = 0.;
-	p_L = 0.;
+	rho_L = my_ro_array[left_cell];
+	u_L = my_uu_array[left_cell];
+	v_L = my_vv_array[left_cell];
+	w_L = my_ww_array[left_cell];
+	p_L = my_pp_array[left_cell];
 	qq_L = u_L*u_L+v_L*v_L+w_L*w_L;
 	H_L = (0.5*qq_L+gamma_/(gamma_-1.0)*p_L/rho_L);
 	V_L = u_L*normalized_x+v_L*normalized_y+w_L*normalized_z;
 
 	// Right cell
-	rho_R = 0.;
-	u_R = 0.;
-	v_R = 0.;
-	w_R = 0.;
-	p_R = 0.;
+	rho_R = my_ro_array[right_cell];
+	u_R = my_uu_array[right_cell];
+	v_R = my_vv_array[right_cell];
+	w_R = my_ww_array[right_cell];
+	p_R = my_pp_array[right_cell];
 	qq_R = u_R*u_R+v_R*v_R+w_R*w_R;
 	H_R = (0.5*qq_R+gamma_/(gamma_-1.0)*p_R/rho_R);
 	V_R = u_R*normalized_x+v_R*normalized_y+w_R*normalized_z;
@@ -84,6 +93,7 @@ void RoeScheme::computeFlux(Block* block)
 
 	// Harten's correction
 	double delta=1./10.*c_wave; //Harten's delta
+	// !!!! DO WE USE c_wave OR local speed of sound?
 	if (fabs(V_wave-c_wave)<=delta)
 	{
 		LAMBDA1 = (fabs(V_wave-c_wave)*fabs(V_wave-c_wave)+delta*delta)/(2.*delta);
