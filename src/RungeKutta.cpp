@@ -36,6 +36,22 @@ void RungeKutta::computeRungeKutta(Block* block)
 	updater_->updateInternalBlock(block);
 	updater_->updateBoundary(block);
 	cout<<"\t\tFin Updater"<<endl;
+
+	/*
+	
+	int stage_idx;
+
+	for (stage_idx=0;stage_idx<stage_number_;stage_idx++)
+	{
+		residual_calculator_->computeResidual(block);
+		updater_->updateInternalBlock(block);
+		updater_->updateBoundary(block);
+
+	}
+
+
+
+	*/
 }
 
 
