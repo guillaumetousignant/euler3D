@@ -41,6 +41,17 @@ void Solver::solve(Block* block)
 	runge_kutta_->computeRungeKutta(block);
 	cout<<"\tFin RungeKutta"<<endl;
 	cout<<"Fin de l'Exécution solve"<<endl;
+
+	/*
+	while (true) // CRITÈRE DE CONVERGENCE ??? OU POST-PROCESSING GERE ÇA?
+	{
+		timestep_->computeSpectralRadius(block);
+		timestep_->computeTimestep(block);
+		this->saveW0(block);
+		runge_kutta_->computeRungeKutta(block);
+		// CALL POST PROCESSING HERE
+	}
+	*/
 }
 
 void Solver::saveW0(Block* block)
