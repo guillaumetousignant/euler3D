@@ -12,6 +12,71 @@ void Updater::updateInternalBlock(Block* block)
 {
 	block->test_block_+=10;
 	cout<<"\t\t\tExécution updateInternalBlock: "<<block->test_block_<<endl;
+
+	/*
+	int nb_cells=block->n_cells_in_block_;
+	int cell_idx;
+	double ro_0,ru_0,rv_0,rw_0,re_0;
+	double dt;
+	double cell_volume;
+	double res_ro_conv,res_uu_conv,res_vv_conv,res_ww_conv,res_pp_conv;
+	double res_ro_diss,res_uu_diss,res_vv_diss,res_ww_diss,res_pp_diss;
+
+	double ro_new,ru_new,rv_new,rw_new,re_new;
+	double ro, uu, vv, ww, pp;
+
+
+	for (cell_idx=0;cell_idx<nb_cells;cell_idx++) //BOUCLER SUR LES CELLULES INTÉRIEURS PLUTÔT? VA DÉPENDRE DE updateSolution
+	{
+		ro_0=block->block_primitive_variables_->ro_0_[cell_idx];
+		ru_0=block->block_primitive_variables_->ru_0_[cell_idx];
+		rv_0=block->block_primitive_variables_->rv_0_[cell_idx];
+		rw_0=block->block_primitive_variables_->rw_0_[cell_idx];
+		re_0=block->block_primitive_variables_->re_0_[cell_idx];
+
+		dt=block->block_time_variables_->dt_[cell_idx];
+		cell_volume=block->block_cells_[cell_idx]->cell_volume_;
+
+		res_ro_conv=block->block_primitive_variables_->res_ro_conv_[cell_idx];
+		res_uu_conv=block->block_primitive_variables_->res_uu_conv_[cell_idx];
+		res_vv_conv=block->block_primitive_variables_->res_vv_conv_[cell_idx];
+		res_ww_conv=block->block_primitive_variables_->res_ww_conv_[cell_idx];
+		res_pp_conv=block->block_primitive_variables_->res_pp_conv_[cell_idx];
+
+		res_ro_diss=block->block_primitive_variables_->res_ro_diss_[cell_idx];
+		res_uu_diss=block->block_primitive_variables_->res_uu_diss_[cell_idx];
+		res_vv_diss=block->block_primitive_variables_->res_vv_diss_[cell_idx];
+		res_ww_diss=block->block_primitive_variables_->res_ww_diss_[cell_idx];
+		res_pp_diss=block->block_primitive_variables_->res_pp_diss_[cell_idx];
+
+		ro_new=ro_0-(alpha_rk_[current_stage_]*dt/cell_volume)*(res_ro_conv-(1-beta_rk_[current_stage_])*res_ro_diss);
+		ru_new=ru_0-(alpha_rk_[current_stage_]*dt/cell_volume)*(res_uu_conv-(1-beta_rk_[current_stage_])*res_uu_diss);
+		rv_new=rv_0-(alpha_rk_[current_stage_]*dt/cell_volume)*(res_vv_conv-(1-beta_rk_[current_stage_])*res_vv_diss);
+		rw_new=rw_0-(alpha_rk_[current_stage_]*dt/cell_volume)*(res_ww_conv-(1-beta_rk_[current_stage_])*res_ww_diss);
+		re_new=re_0-(alpha_rk_[current_stage_]*dt/cell_volume)*(res_pp_conv-(1-beta_rk_[current_stage_])*res_pp_diss);
+
+		ro=ro_new;
+		uu= ru_new/ro_new;
+		vv= rv_new/ro_new;
+		ww= rw_new/ro_new;
+		pp=(gamma_-1.0)*(re_new-0.5*(ru_new*ru_new+rv_new*rv_new+rw_new*rw_new)/ro_new);
+
+		block->primitive_variables_->ro_[cell_idx]=ro;
+		block->primitive_variables_->uu_[cell_idx]=uu;
+		block->primitive_variables_->vv_[cell_idx]=vv;
+		block->primitive_variables_->ww_[cell_idx]=ww;
+		block->primitive_variables_->pp_[cell_idx]=pp;
+
+		/// QUESTION SUR LA PERTINENCE DE BETA SI ON ÉVALUE BETA À CHAQUE FOIS
+
+
+	}
+
+
+
+	*/
+
+
 }
 
 void Updater::updateBoundary(Block* block)
@@ -149,9 +214,12 @@ void Updater::synchroniseUpdate(Block* block)
 
 
 
-Updater::Updater()
+Updater::Updater(double gamma, double *alpha_rk, double *beta_rk);
 {
-
+	current_stage_=0;
+	gamma_=gamma;
+	alpha_rk_=alpha_rk;
+	beta_rk_=beta_rk;
 }
 
 Updater::~Updater()

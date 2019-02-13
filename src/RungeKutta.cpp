@@ -10,14 +10,12 @@
 #include <iostream>
 using namespace std;
 
-RungeKutta::RungeKutta(int stage_number, double *alpha_rk, double *beta_rk,string interpolation_choice, string gradient_choice, string limiter_choice, string flux_scheme_choice,string residual_smoother_choice)
+RungeKutta::RungeKutta(double gamma, int stage_number, double *alpha_rk, double *beta_rk, string interpolation_choice, string gradient_choice, string limiter_choice, string flux_scheme_choice,string residual_smoother_choice)
 
 {
 	stage_number_=stage_number;
-	updater_=new Updater();
-	residual_calculator_=new ResidualCalculator(interpolation_choice, gradient_choice, limiter_choice, flux_scheme_choice, residual_smoother_choice);
-	alpha_rk_=alpha_rk;
-	beta_rk_=beta_rk;
+	updater_=new Updater(gamma, alpha_rk, beta_rk);
+	residual_calculator_=new ResidualCalculator(gamma, interpolation_choice, gradient_choice, limiter_choice, flux_scheme_choice, residual_smoother_choice);
 }
 
 
@@ -44,9 +42,9 @@ void RungeKutta::computeRungeKutta(Block* block)
 	for (stage_idx=0;stage_idx<stage_number_;stage_idx++)
 	{
 		residual_calculator_->computeResidual(block);
+		updater_->current_stage_=stage_idx;
 		updater_->updateInternalBlock(block);
 		updater_->updateBoundary(block);
-
 	}
 
 

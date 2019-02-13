@@ -45,11 +45,11 @@ void ResidualCalculator::setInterpolation(string interpolation_choice, string gr
 		interpolation_=new FirstOrder();
 }
 
-void ResidualCalculator::setFluxScheme(string flux_scheme_choice)
+void ResidualCalculator::setFluxScheme(double gamma, string flux_scheme_choice)
 {
 	delete flux_scheme_;
 	if (flux_scheme_choice=="Roe")
-		flux_scheme_=new RoeScheme();
+		flux_scheme_=new RoeScheme(gamma);
 	else if (flux_scheme_choice=="AUSM")
 		flux_scheme_=new AusmScheme();
 }
@@ -64,7 +64,7 @@ void ResidualCalculator::setResidualSmoother(string residual_smoother_choice)
 }
 
 
-ResidualCalculator::ResidualCalculator(string interpolation_choice, string gradient_choice, string limiter_choice, string flux_scheme_choice, string residual_smoother_choice)
+ResidualCalculator::ResidualCalculator(double gamma, string interpolation_choice, string gradient_choice, string limiter_choice, string flux_scheme_choice, string residual_smoother_choice)
 
 {
 	if (interpolation_choice=="Second")
@@ -73,7 +73,7 @@ ResidualCalculator::ResidualCalculator(string interpolation_choice, string gradi
 		interpolation_=new FirstOrder();
 
 	if (flux_scheme_choice=="Roe")
-		flux_scheme_=new RoeScheme();
+		flux_scheme_=new RoeScheme(gamma);
 	else if (flux_scheme_choice=="AUSM")
 		flux_scheme_=new AusmScheme();
 	else

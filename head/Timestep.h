@@ -10,13 +10,14 @@ using namespace std;
 class Timestep
 {
 	public:
-		double cfl_;
+
 		double gamma_;
+		double cfl_;
 
 		void computeSpectralRadius(Block* block);
 		void computeTimestep(Block* block);
 
-		Timestep(double cfl, double gamma);
+		Timestep(double gamma, double cfl);
 
 		~Timestep();
 

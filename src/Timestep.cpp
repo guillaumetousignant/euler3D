@@ -11,10 +11,10 @@
 using namespace std;
 
 //Constructor
-Timestep::Timestep(double cfl, double gamma)
+Timestep::Timestep(double gamma, double cfl)
 {
-	cfl_=cfl;
 	gamma_ = gamma;
+	cfl_=cfl;
 }
 
 

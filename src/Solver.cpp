@@ -13,8 +13,8 @@ using namespace std;
 Solver::Solver(double gamma, double cfl, int stage_number, double *alpha_rk, double *beta_rk,string interpolation_choice, string gradient_choice, string limiter_choice, string flux_scheme_choice, string residual_smoother_choice)
 {
 	gamma_=gamma;
-	timestep_= new Timestep(cfl);
-	runge_kutta_= new RungeKutta(stage_number, alpha_rk, beta_rk, interpolation_choice, gradient_choice, limiter_choice, flux_scheme_choice,residual_smoother_choice);
+	timestep_= new Timestep(gamma, cfl);
+	runge_kutta_= new RungeKutta(gamma, stage_number, alpha_rk, beta_rk, interpolation_choice, gradient_choice, limiter_choice, flux_scheme_choice,residual_smoother_choice);
 }
 
 
@@ -66,11 +66,11 @@ void Solver::saveW0(Block* block)
 
 	for (cell_idx=0;cell_idx<nb_cells;cell_idx++) //BOUCLER SUR LES CELLULES INTÉRIEURS PLUTÔT? VA DÉPENDRE DE updateSolution
 	{
-		ro=block->primitive_variables_->ro_[cell_idx];
-		uu=block->primitive_variables_->uu_[cell_idx];
-		vv=block->primitive_variables_->vv_[cell_idx];
-		ww=block->primitive_variables_->ww_[cell_idx];
-		pp=block->primitive_variables_->pp_[cell_idx];
+		ro=block->block_primitive_variables_->ro_[cell_idx];
+		uu=block->block_primitive_variables_->uu_[cell_idx];
+		vv=block->block_primitive_variables_->vv_[cell_idx];
+		ww=block->block_primitive_variables_->ww_[cell_idx];
+		pp=block->block_primitive_variables_->pp_[cell_idx];
 
 		ro_0=ro;
 		ru_0= ro*uu;
@@ -78,11 +78,11 @@ void Solver::saveW0(Block* block)
 		rw_0= ro*ww;
 		re_0= 0.5*ro*(uu*uu+vv*vv)+1./(gamma_-1.0)*pp;
 
-		block->primitive_variables_->ro_0_[cell_idx]=ro_0;
-		block->primitive_variables_->ru_0_[cell_idx]=ru_0;
-		block->primitive_variables_->rv_0_[cell_idx]=rv_0;
-		block->primitive_variables_->rw_0_[cell_idx]=rw_0;
-		block->primitive_variables_->re_0_[cell_idx]=re_0;
+		block->block_primitive_variables_->ro_0_[cell_idx]=ro_0;
+		block->block_primitive_variables_->ru_0_[cell_idx]=ru_0;
+		block->block_primitive_variables_->rv_0_[cell_idx]=rv_0;
+		block->block_primitive_variables_->rw_0_[cell_idx]=rw_0;
+		block->block_primitive_variables_->re_0_[cell_idx]=re_0;
 
 
 	}
