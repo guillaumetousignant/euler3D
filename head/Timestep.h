@@ -11,11 +11,12 @@ class Timestep
 {
 	public:
 		double cfl_;
-		
+		double gamma_;
+
 		void computeSpectralRadius(Block* block);
 		void computeTimestep(Block* block);
 
-		Timestep(double cfl);
+		Timestep(double cfl, double gamma);
 
 		~Timestep();
 
