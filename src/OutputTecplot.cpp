@@ -132,25 +132,53 @@ void OutputTecplot::printFlowData(Block* block, PostProcessing* postprocessing)
     FlowData << mach_ << endl;
   }
 
+  for(i=0;i < block->n_cells_in_block_; i++)
+  {
+    switch(block->block_cells_[i]->cell_type_)
+    {
+      // Quadrilateral cell
+      case 9:
+
+        FlowData << block->block_cells_[i]->cell_2_nodes_connectivity_[0]+1 << " " << block->block_cells_[i]->cell_2_nodes_connectivity_[1]+1 << " " << block->block_cells_[i]->cell_2_nodes_connectivity_[2]+1 << " " << block->block_cells_[i]->cell_2_nodes_connectivity_[3]+1 << endl;
+
+      break;
+
+      // Tetrahedral cell
+      case 10:
+
+        FlowData << block->block_cells_[i]->cell_2_nodes_connectivity_[0]+1 << " " << block->block_cells_[i]->cell_2_nodes_connectivity_[1]+1 << " " << block->block_cells_[i]->cell_2_nodes_connectivity_[2]+1 << " " << block->block_cells_[i]->cell_2_nodes_connectivity_[3]+1 << endl;
+
+      break;
+
+      // Hexahedral cell
+      case 12:
+
+      break;
+
+      // Prism cell
+      case 13:
+
+      break;
+
+      // Pyramid cell
+      case 14:
+
+      break;
+    }
+  }
+
 }
 
 void OutputTecplot::printSurfaceFlowData(Block* block, PostProcessing* postprocessing)
 {
-  FlowData.open("FlowData.plt", ios::binary);
+  SurfaceFlowData.open("SurfaceFlowData.plt", ios::binary);
 
-    if (FlowData.fail())
+    if (SurfaceFlowData.fail())
     {
       // TODO throw exception
-      cerr << "Fail opening file FlowData.plt" << endl;
+      cerr << "Fail opening file SurfaceFlowData.plt" << endl;
       //return;
     }
-
-  FlowData << "TTILE = \"Vizualisation of the surfacic solution\""
-  FlowData << "VARIABLES=\"X\",\"Y\",\"Z\",\"RO\",\"UU\",\"VV\",\"WW\",\"PP\",\"CP\",\"MACH\"" << endl;
-  FlowData << "ZONE T=\"FLOW_FIELD\"" << endl;
-  FlowData << "Nodes=" << block->n_nodes_in_block_ << ", " << "Elements=" << block->n_cells_in_block_ << ", " << "ZONETYPE=FEQUADRILATERAL" << endl;
-  FlowData << "DATAPACKING=BLOCK" << endl;
-  FlowData << "VARLOCATION=([1,2,3,4,5,6,7,8,9,10]=CELLCENTERED)" << endl;
 
 }
 

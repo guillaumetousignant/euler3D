@@ -36,7 +36,7 @@ AerodynamicParameters::AerodynamicParameters(Block* block, PostProcessing* postp
     cmy_ = 0.;
     cmz_ = 0.;
 
-    for(i=0; i < nb_face_in_wall_; i++)
+    for(i=0; i < block->nb_face_in_wall_; i++)
     {
       // Find wall face id
       wall_face_id_ = block->block_wall_face_ids_[i];
