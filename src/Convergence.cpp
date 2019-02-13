@@ -9,15 +9,15 @@
 
 using namespace std;
 
-Convergence::Convergence(Block* block, PostProcessing* postprocessing, int iter_)
+Convergence::Convergence(Block* block, PostProcessing* postprocessing, int iter)
 {
   block_id = block->block_id_;
 
-  calculateRoRms(block, postprocessing, iter_);
-  calculateUuRms(block, postprocessing, iter_);
-  calculateVvRms(block, postprocessing, iter_);
-  calculateWwRms(block, postprocessing, iter_);
-  calculatePpRms(block, postprocessing, iter_);
+  calculateRoRms(block, postprocessing, iter);
+  calculateUuRms(block, postprocessing, iter);
+  calculateVvRms(block, postprocessing, iter);
+  calculateWwRms(block, postprocessing, iter);
+  calculatePpRms(block, postprocessing, iter);
 
 }
 
@@ -26,7 +26,7 @@ Convergence::~Convergence()
 
 }
 
-void Convergence::calculateRoRms(Block* block, PostProcessing* postprocessing, int iter_)
+void Convergence::calculateRoRms(Block* block, PostProcessing* postprocessing, int iter)
 {
   int i;
 
@@ -39,7 +39,7 @@ void Convergence::calculateRoRms(Block* block, PostProcessing* postprocessing, i
 
 	rms_ro_ = (1./block->n_cell_in_block_)*pow(rms_ro_, 0.5);
 
-  if (iter_ == 0)
+  if (iter == 0)
   {
     rms0_ro_ = rms_ro_;
   }
@@ -48,7 +48,7 @@ void Convergence::calculateRoRms(Block* block, PostProcessing* postprocessing, i
 
 }
 
-void Convergence::calculateUuRms(Block* block, PostProcessing* postprocessing, int iter_)
+void Convergence::calculateUuRms(Block* block, PostProcessing* postprocessing, int iter)
 {
   int i;
 
@@ -61,7 +61,7 @@ void Convergence::calculateUuRms(Block* block, PostProcessing* postprocessing, i
 
   rms_uu_ = (1./block->n_cell_in_block_)*_pow(rms_uu_, 0.5);
 
-  if (iter_ == 0)
+  if (iter == 0)
   {
     rms0_uu_ = rms_uu_;
   }
@@ -70,7 +70,7 @@ void Convergence::calculateUuRms(Block* block, PostProcessing* postprocessing, i
 
 }
 
-void Convergence::calculateVvRms(Block* block, PostProcessing* postprocessing, int iter_)
+void Convergence::calculateVvRms(Block* block, PostProcessing* postprocessing, int iter)
 {
   for (i=0; i<block->n_cell_in_block_; i++)
   {
@@ -81,7 +81,7 @@ void Convergence::calculateVvRms(Block* block, PostProcessing* postprocessing, i
 
   rms_vv_ = (1./block->n_cell_in_block_)*pow(rms_vv_, 0.5);
 
-  if (iter_ == 0)
+  if (iter == 0)
   {
     rms0_vv_ = rms_vv_;
   }
@@ -90,7 +90,7 @@ void Convergence::calculateVvRms(Block* block, PostProcessing* postprocessing, i
 
 }
 
-void Convergence::calculateWwRms(Block* block, PostProcessing* postprocessing, int iter_)
+void Convergence::calculateWwRms(Block* block, PostProcessing* postprocessing, int iter)
 {
   for (i=0; i<block->n_cell_in_block_; i++)
   {
@@ -101,7 +101,7 @@ void Convergence::calculateWwRms(Block* block, PostProcessing* postprocessing, i
 
   rms_ww_ = (1./block->n_cell_in_block_)*pow(rms_ww_, 0.5);
 
-  if (iter_ == 0)
+  if (iter == 0)
   {
     rms0_ww_ = rms_ww_;
   }
@@ -109,7 +109,7 @@ void Convergence::calculateWwRms(Block* block, PostProcessing* postprocessing, i
   postprocessing->convergencedata_[block_id][8]= log10(rms_ww_)-log10(rms0_ww_);
 }
 
-void Convergence::calculatePpRms(Block* block, PostProcessing* postprocessing, int iter_)
+void Convergence::calculatePpRms(Block* block, PostProcessing* postprocessing, int iter)
 {
   for (i=0; i<block->n_cell_in_block_; i++)
   {
@@ -120,7 +120,7 @@ void Convergence::calculatePpRms(Block* block, PostProcessing* postprocessing, i
 
   rms_pp_ = (1./block->n_cell_in_block_)*pow(rms_pp_, 0.5);
 
-  if (iter_ == 0)
+  if (iter == 0)
   {
     rms0_pp_ = rms_pp_;
   }

@@ -9,7 +9,7 @@ class AerodynamicParameters
 
 public:
 
-  AerodynamicParameters(Block* block, PostProcessing* postprocessing, Solver* solver, int iter_, int iteration_interval_, double cmac_, double mach_aircraft_, double aoa_, double gamma_);
+  AerodynamicParameters(Block* block, PostProcessing* postprocessing, Solver* solver, int iter, int iteration_interval_, double cmac, double mach_aircraft, double aoa, double gamma);
   ~AerodynamicParameters();
 
 private:
@@ -41,10 +41,10 @@ double calculateCm(PostProcessing* postprocessing);
 double calculateCmx(PostProcessing* postprocessing);
 double calculateCmy(PostProcessing* postprocessing);
 double calculateCmz(PostProcessing* postprocessing);
-void calculateMach(Block* block, PostProcessing* postprocessing, double gamma_);
+void calculateMach(Block* block, PostProcessing* postprocessing, double gamma);
 void calculateCp(Block* block, PostProcessing* postprocessing);
-void calculateGlobalCl(PostProcessing* postprocessing, double aoa_);
-void calculateGlobalCd(PostProcessing* postprocessing, double aoa_);
+void calculateGlobalCl(PostProcessing* postprocessing, double aoa);
+void calculateGlobalCd(PostProcessing* postprocessing, double aoa);
 void calculateGlobalCm(PostProcessing* postprocessing);
 void checkClDriver();
 

@@ -11,9 +11,9 @@
 
 using namespace std;
 
-OutputTecplot::OutputTecplot(Block* block, PostProcessing* postprocessing, Solver* solver, int iter_, int iteration_interval_)
+OutputTecplot::OutputTecplot(Block* block, PostProcessing* postprocessing, Solver* solver, int iter, int iteration_interval_)
 {
-  if(iter_ == iteration_interval_)
+  if(iter == iteration_interval_)
   {
     printConvergence();
   }
@@ -38,6 +38,8 @@ OutputTecplot::~OutputTecplot()
 void OutputTecplot::printFlowData(Block* block, PostProcessing* postprocessing)
 {
   int i;
+
+  cout << "Starting printFlowData..............................................." << endl;
 
   FlowData.open("FlowData.plt", ios::binary);
 
@@ -168,6 +170,8 @@ void OutputTecplot::printFlowData(Block* block, PostProcessing* postprocessing)
 
       break;
     }
+
+    cout << "Ending printFlowData..............................................." << endl;
   }
 
   FlowData.close();
@@ -176,6 +180,8 @@ void OutputTecplot::printFlowData(Block* block, PostProcessing* postprocessing)
 
 void OutputTecplot::printSurfaceFlowData(Block* block, PostProcessing* postprocessing)
 {
+  cout << "Starting printSurfaceFlowData........................................" << endl;
+
   SurfaceFlowData.open("SurfaceFlowData.plt", ios::binary);
 
     if (SurfaceFlowData.fail())
@@ -186,10 +192,14 @@ void OutputTecplot::printSurfaceFlowData(Block* block, PostProcessing* postproce
     }
 
   SurfaceFlowData.close();
+
+  cout << "Ending printSurfaceFlowData.........................................." << endl;
 }
 
 void OutputTecplot::printConvergence(Block* block, PostProcessing* postprocessing)
 {
+  cout << "Starting printConvergence............................................" << endl;
+
   Convergence.open("Convergence.plt", ios::binary);
 
     if (Convergence.fail())
@@ -198,10 +208,14 @@ void OutputTecplot::printConvergence(Block* block, PostProcessing* postprocessin
       cerr << "Fail opening file Convergence.plt" << endl;
       //return;
     }
+
+  cout << "Ending printConvergence.............................................." << endl;
 }
 
 void OutputTecplot::printAerodynamicCoefficients(Block* block, PostProcessing* postprocessing)
 {
+  cout << "Starting printAerodynamicCoefficients................................" << endl;
+
   AerodynamicCoefficients.open("AerodynamicCoefficients.plt", ios::binary);
 
     if (AerodynamicCoefficients.fail())
@@ -210,10 +224,14 @@ void OutputTecplot::printAerodynamicCoefficients(Block* block, PostProcessing* p
       cerr << "Fail opening file AerodynamicCoefficients.plt" << endl;
       //return;
     }
+
+  cout << "Ending printAerodynamicCoefficients.................................." << endl;
 }
 
 void OutputTecplot::RestartFile(Block* block, PostProcessing* postprocessing)
 {
+  cout << "Starting printRestartFile............................................" << endl;
+
   RestartFile.open("RestartFile.dat");
 
     if (RestartFile.fail())
@@ -224,6 +242,8 @@ void OutputTecplot::RestartFile(Block* block, PostProcessing* postprocessing)
     }
 
     RestartFile.close();
+
+  cout << "Ending printRestartFile.............................................." << endl;
 }
 
 #endif

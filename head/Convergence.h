@@ -9,7 +9,7 @@ class Convergence
 
 public:
 
-  Convergence(Block* block, PostProcessing* postprocessing, int iter_);
+  Convergence(Block* block, PostProcessing* postprocessing, int iter);
   ~Convergence();
 
 private:
@@ -35,11 +35,11 @@ double res_pp_;
 
   // Method
 
-void calculateRoRms(Block* block, PostProcessing* postprocessing, int iter_);
-void calculateUuRms(Block* block, PostProcessing* postprocessing, int iter_);
-void calculateVvRms(Block* block, PostProcessing* postprocessing, int iter_);
-void calculateWwRms(Block* block, PostProcessing* postprocessing, int iter_);
-void calculatePpRms(Block* block, PostProcessing* postprocessing, int iter_);
+void calculateRoRms(Block* block, PostProcessing* postprocessing, int iter);
+void calculateUuRms(Block* block, PostProcessing* postprocessing, int iter);
+void calculateVvRms(Block* block, PostProcessing* postprocessing, int iter);
+void calculateWwRms(Block* block, PostProcessing* postprocessing, int iter);
+void calculatePpRms(Block* block, PostProcessing* postprocessing, int iter);
 
 }
 

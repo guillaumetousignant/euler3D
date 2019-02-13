@@ -9,21 +9,21 @@
 
 using namespace std;
 
-AerodynamicParameters::AerodynamicParameters(Block* block, PostProcessing* postprocessing, Solver* solver, int iter_, int iteration_interval_, double cmac_, double mach_aircraft_, double aoa_, double gamma_)
+AerodynamicParameters::AerodynamicParameters(Block* block, PostProcessing* postprocessing, Solver* solver, int iter, int iteration_interval_, double cmac, double mach_aircraft, double aoa, double gamma)
 {
   cout << "Starting Aerodynamic Parameters......................................" << endl;
 
   // Global value
   block_id_ = block-> block_id_;
-  dynhead = 0.5*gamma_*mach_aircraft_*mach_aircraft_;
+  dynhead = 0.5*gamma*mach_aircraft*mach_aircraft;
 
   // Calculate Mach numbers for each cell
-  calculateMach(block, postprocessing, gamma_);
+  calculateMach(block, postprocessing, gamma);
 
 // Calculate pressure coefficient for each cell
   calculateCp(block, postprocessing);
 
-  if(iter_ == iteration_interval_ || solver->stop_solver_flag_ == true)
+  if(iter == iteration_interval_ || solver->stop_solver_flag_ == true)
   {
     int i, j, cell_0, cell_1;
     double nx,ny, nz, pp0, pp1, ppbc;
@@ -65,11 +65,11 @@ AerodynamicParameters::AerodynamicParameters(Block* block, PostProcessing* postp
     calculateCmz(postprocessing);
     }
 
-    cl_ = cl_/(dynhead*cmac_);
-    cd_ = cd_/(dynhead*cmac_);
+    cl_ = cl_/(dynhead*cmac);
+    cd_ = cd_/(dynhead*cmac);
 
-    calculateGlobalCl(postprocessing, aoa_);
-    calculateGlobalCd(postprocessing, aoa_);
+    calculateGlobalCl(postprocessing, aoa);
+    calculateGlobalCd(postprocessing, aoa);
     calculateGlobalCm(postprocessing);
 
     checkClDriver();
@@ -83,12 +83,12 @@ AerodynamicParameters::~AerodynamicParameters()
 
 }
 
-void AerodynamicParameters::calculateMach(Block* block, PostProcessing* postprocessing, double gamma_)
+void AerodynamicParameters::calculateMach(Block* block, PostProcessing* postprocessing, double gamma)
 {
   int i;
   double a,velocity;
 
-  cout << "Execute calculateMach................................................" << endl;
+  cout << "Starting calculateMach..............................................." << endl;
 
   for(i=0; block->n_cells_in_block_; i++)
   {
@@ -99,23 +99,23 @@ void AerodynamicParameters::calculateMach(Block* block, PostProcessing* postproc
     vv_ = block->block_primitive_variables_->vv_[i];
     ww_ = block->block_primitive_variables_->ww_[i];
 
-    a = pow(gamma_*pp_/ro_, 0.5);
+    a = pow(gamma*pp_/ro_, 0.5);
 
     // Calculate local velocity for each cell
     velocity = pow(pow(uu_,2)+pow(vv_,2)+pow(ww_,2), 0.5);
 
     // Claculate local mach number for each cell
     postprocessing->mach_[i] = velocity/a;
-
   }
 
+  cout << "Ending calculateMach................................................." << endl;
 }
 
 void AerodynamicParameters::calculateCp(Block* block, PostProcessing* postprocessing)
 {
   int i;
 
-  cout << "Execute calculateCp.................................................." << endl;
+  cout << "Starting calculateCp................................................." << endl;
 
   for(i=0; i < block->n_cells_in_block_ ; i++)
   {
@@ -125,102 +125,120 @@ void AerodynamicParameters::calculateCp(Block* block, PostProcessing* postproces
     // Save pressure coefficient in cp_ array
     postprocessing->cp_[i] = (pp_-1.)/dynhead;
   }
+
+  cout << "Ending calculateCp..................................................." << endl;
 }
 
 double AerodynamicParameters::calculateCl(double ppbc, double ny)
 {
-  cout << "Execute calculateCl.................................................." << endl;
+  cout << "Starting calculateCl................................................." << endl;
 
   // Sum of lift coefficients
   cl_ += ppbc*ny;
 
   return cl_;
 
+  cout << "Ending calculateCl..................................................." << endl;
 }
 
 double AerodynamicParameters::calculateCd(double ppbc, double nx)
 {
-  cout << "Execute calculateCd.................................................." << endl;
+  cout << "Starting calculateCd................................................." << endl;
 
   // Sum of drag coefficients
   cd_ += ppbc*nx;
 
   return cd_;
 
+  cout << "Ending calculateCd..................................................." << endl;
 }
 
 double AerodynamicParameters::calculateCmx(PostProcessing* postprocessing)
 {
-  cout << "Execute calculateCmx................................................." << endl;
+  cout << "Starting calculateCmx................................................" << endl;
 
   // Save cmx_ in array
   postprocessing->convergencedata_[block_id_][2] = cmx_;
 
   return cmx_;
+
+  cout << "Ending calculateCmx.................................................." << endl;
 }
 
 double AerodynamicParameters::calculateCmy(PostProcessing* postprocessing)
 {
-  cout << "Execute calculateCmy................................................." << endl;
+  cout << "Starting calculateCmy................................................" << endl;
 
   // Save cmy_ in array
   postprocessing->convergencedata_[block_id_][3] = cmy_;
 
   return cmy_;
+
+  cout << "Ending calculateCmy.................................................." << endl;
 }
 
 double AerodynamicParameters::calculateCmz(PostProcessing* postprocessing)
 {
-  cout << "Execute calculateCmz................................................." << endl;
+  cout << "Starting calculateCmz................................................" << endl;
 
   // Save clglobal_ in array
   postprocessing->convergencedata_[block_id_][4] = cmz_;
 
   return cmz_;
+
+  cout << "Ending calculateCmz.................................................." << endl;
 }
 
-void AerodynamicParameters::calculateGlobalCl(PostProcessing* postprocessing, double aoa_)
+void AerodynamicParameters::calculateGlobalCl(PostProcessing* postprocessing, double aoa)
 {
-  cout << "Execute calculateGlobalCl............................................" << endl;
+  cout << "Starting calculateGlobalCl..........................................." << endl;
 
   // Calculate clwind
-  clglobal_ = cl_*cos(aoa_) - cd*sin(aoa_);
+  clglobal_ = cl_*cos(aoa) - cd*sin(aoa);
 
   // Save clglobal_ in array
-  postprocessing->convergencedata_[block_id_][0] = clglobal;
+  postprocessing->convergencedata_[block_id_][0] = clglobal_;
+
+  cout << "Ending calculateGlobalCl............................................" << endl;
 }
 
-void AerodynamicParameters::calculateGlobalCd(PostProcessing* postprocessing, double aoa_)
+void AerodynamicParameters::calculateGlobalCd(PostProcessing* postprocessing, double aoa)
 {
-  cout << "Execute calculateGlobalCd............................................" << endl;
+  cout << "Starting calculateGlobalCd..........................................." << endl;
 
-  cdglobal_ = cl_*sin(aoa_) + cd*cos(aoa_);
+  cdglobal_ = cl_*sin(aoa) + cd*cos(aoa);
 
   // Save cdglobal_ in array
-  postprocessing->convergencedata_[block_id_][1] = cdglobal;
+  postprocessing->convergencedata_[block_id_][1] = cdglobal_;
+
+  cout << "Ending calculateGlobalCd............................................" << endl;
 
 }
 
 void AerodynamicParameters::calculateGlobalCm(PostProcessing* postprocessing)
 {
-  cout << "Execute calculateGlobalCm............................................" << endl;
+  cout << "Starting calculateGlobalCm..........................................." << endl;
 
   // Save cmglobal_ in array
-  postprocessing->convergencedata_[block_id_][5] = cmglobal;
+  postprocessing->convergencedata_[block_id_][5] = cmglobal_;
+
+  cout << "Ending calculateGlobalCm............................................" << endl;
 }
 
 void AerodynamicParameters::checkClDriver()
 {
-  cout << "Execute checkClDriver................................................" << endl;
+  cout << "Starting checkClDriver..............................................." << endl;
 
   if(clglobal_ < cldriver_)
   {
-    
+
   }
   else
   {
     solver->stop_solver_flag_ == true;
   }
+
+  cout << "Ending checkClDriver................................................." << endl;
 }
 
 #endif

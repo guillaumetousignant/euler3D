@@ -11,14 +11,14 @@ using namespace std;
 
 PostProcessing::PostProcessing(Block* block, CompleteMesh* completemesh)
 {
-  cout << "Starting initialize post-processing.................................." << endl;
+  cout << "Starting initializePostProcessing...................................." << endl;
 
   cp_ = 0;
   mach_ = 0;
 
   initializePostProcessing(block, completemesh);
 
-  cout << "Ending initialize post-processing...................................." << endl;
+  cout << "Ending initializePostProcessing......................................" << endl;
 }
 
 PostProcessing::~PostProcessing()
@@ -105,6 +105,8 @@ void coefficientsSum()
 
 void PostProcessing::computeFlowData(Block* block, Solver* solver, bool stopsimulation, int iter, int max_iter, double cmac, double mach, double aoa_rad, double gamma)
 {
+  cout << "Starting computeFlowData............................................." << endl;
+
   //Calculate convergence for each residual for each block
   convergence = new Convergence(block, postprocessing, iter);
 
@@ -124,21 +126,32 @@ void PostProcessing::computeFlowData(Block* block, Solver* solver, bool stopsimu
 
       iteration_interval_ += 100;
   }
+
+  cout << "Ending computeFlowData..............................................." << endl;
+
 }
 
 void PostProcessing::saveFlowData(Block* block, Solver* solver, int iter)
 {
+  cout << "Starting saveFlowData................................................" << endl;
+
   // Call OutputTecplot to save data into binary files
   outputtecplot = new OutputTecplot(block, this, solver, iter, iteration_interval_);
+
+  cout << "Ending saveFlowData.................................................." << endl;
 }
 
 void PostProcessing::process(Block* block, Solver* solver, bool stopsimulation, int iter, int max_iter, double convergence_criterion, double cmac, double mach, double aoa_rad, double gamma)
 {
+  cout << "Starting process....................................................." << endl;
+
   // Compute flow data for each iteration
    computeFlowData(block, solver, stopsimulation, iter, max_iter, cmac, mach, aoa_rad, gamma);
 
    // Save and print flow data into binary files
    saveFlowData(block, solver);
+
+   cout << "Ending process......................................................" << endl;
 }
 
 #endif

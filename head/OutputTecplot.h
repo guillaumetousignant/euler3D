@@ -9,7 +9,7 @@ class OutTeplot
 
 public:
 
-  OutTeplot(Block* block, PostProcessing* postprocessing, Solver* solver, int iter_, int iteration_interval_);
+  OutTeplot(Block* block, PostProcessing* postprocessing, Solver* solver, int iter, int iteration_interval_);
   ~OutTeplot();
 
 private:
