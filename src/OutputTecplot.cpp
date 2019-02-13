@@ -52,7 +52,7 @@ void OutputTecplot::printFlowData(Block* block, PostProcessing* postprocessing)
   FlowData << "DATAPACKING=BLOCK" << endl;
   FlowData << "VARLOCATION=([4,5,6,7,8,9,10]=CELLCENTERED)" << endl;
 
-  // X coordinate for each node
+  // Print X coordinate for each node
   for(i=0; i < block->n_nodes_in_block_; i++)
   {
     x_ = block->block_nodes_[i]->node_coordinates_[0];
@@ -60,7 +60,7 @@ void OutputTecplot::printFlowData(Block* block, PostProcessing* postprocessing)
     FlowData << x_ << endl;
   }
 
-  // Y coordinate for each node
+  // Print Y coordinate for each node
   for(i=0; i < block->n_nodes_in_block_; i++)
   {
     y_ = block->block_nodes_[i]->node_coordinates_[1];
@@ -68,13 +68,70 @@ void OutputTecplot::printFlowData(Block* block, PostProcessing* postprocessing)
     FlowData << y_ << endl;
   }
 
-  // Z coordinate for each node
+  // Print Z coordinate for each node
   for(i=0; i < block->n_nodes_in_block_; i++)
   {
     z_ = block->block_nodes_[i]->node_coordinates_[2];
 
     FlowData << z_ << endl;
   }
+
+  // Print density for each cell
+  for(i=0; i < block->n_cells_in_block_; i++)
+  {
+    ro_ = block->block_primitive_variables_[i]->ro_[i];
+
+    FlowData << ro_ << endl;
+  }
+
+  // Print UU velocity for each cell
+  for(i=0; i < block->n_cells_in_block_; i++)
+  {
+    uu_ = block->block_primitive_variables_[i]->uu_[i];
+
+    FlowData << uu_ << endl;
+  }
+
+  // Print VV velocity for each cell
+  for(i=0; i < block->n_cells_in_block_; i++)
+  {
+    vv_ = block->block_primitive_variables_[i]->vv_[i];
+
+    FlowData << vv_ << endl;
+  }
+
+  // Print WW velocity for each cell
+  for(i=0; i < block->n_cells_in_block_; i++)
+  {
+    ww_ = block->block_primitive_variables_[i]->ww_[i];
+
+    FlowData << ww_ << endl;
+  }
+
+  // Print pressure for each cell
+  for(i=0; i < block->n_cells_in_block_; i++)
+  {
+    pp_ = block->block_primitive_variables_[i]->pp_[i];
+
+    FlowData << pp_ << endl;
+  }
+
+  // Print pressure coefficient for each cell
+  for(i=0; i < block->n_cells_in_block_; i++)
+  {
+    cp_ = postprocessing->cp_[i];
+
+    FlowData << cp_ << endl;
+  }
+
+  // Print Mach number for each cell
+  for(i=0; i < block->n_cells_in_block_; i++)
+  {
+    mach_ = postprocessing->mach_[i];
+
+    FlowData << mach_ << endl;
+  }
+
 }
 
 void OutputTecplot::printSurfaceFlowData(Block* block, PostProcessing* postprocessing)
