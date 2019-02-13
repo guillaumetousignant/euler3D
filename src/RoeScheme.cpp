@@ -31,7 +31,7 @@ void RoeScheme::computeFlux(Block* block)
 
 	PrimitiveVariables* my_primitive_variables;
 	my_primitive_variables = block -> block_primitive_variables_;
-	
+
 	double* my_ro_array,my_uu_array,my_vv_array,my_ww_array,my_pp_array;
 	my_ro_array = my_primitive_variables -> ro_;
 	my_uu_array = my_primitive_variables -> uu_;
@@ -44,18 +44,16 @@ void RoeScheme::computeFlux(Block* block)
 	my_faces = block -> block_faces_;
 	nface = block -> n_faces_in_block_;
 
-	for (int face = 0; face < nface; face++)
+	for (int face_idx = 0; face_idx < nface; face_idx++)
 	{
 
-		my_face = my_faces[face];
-		//normal_norm=sqrt(((*face_normals_x)[face]*(*face_normals_x)[face])+((*face_normals_y)[face]*(*face_normals_y)[face]));
-		//normalized_x=((*face_normals_x)[face])/(normal_norm);
-		//normalized_y=((*face_normals_y)[face])/(normal_norm);
-		//normalized_z=((*face_normals_z)[face])/(normal_norm);
-		normalized_x = 0.;
-		normalized_y = 0.;
-		normalized_z = 0.;
-		normal_norm = 0.;
+		my_face = my_faces[face_idx];
+		/*
+		normalized_x = block -> block_faces_ -> face_normals_[0];
+		normalized_y = block -> block_faces_ -> face_normals_[1];
+		normalized_z = block -> block_faces_ -> face_normals_[2];
+		normal_norm=sqrt(((*face_normals_x)[face]*(*face_normals_x)[face])+((*face_normals_y)[face]*(*face_normals_y)[face])); to change!!
+		*/
 
 		neighboor_cells = my_face -> face_2_cells;
 		left_cell = neighboor_cells[0];
@@ -188,9 +186,9 @@ void RoeScheme::computeFlux(Block* block)
 
 
 
-RoeScheme::RoeScheme()
+RoeScheme::RoeScheme(double gamma)
 {
-
+	gamma_ = gamma;
 }
 
 RoeScheme::~RoeScheme()

@@ -10,7 +10,7 @@ class RoeScheme : public FluxScheme
 {
 	public:
 		double gamma_;
-		RoeScheme();
+		RoeScheme(double gamma);
 		~RoeScheme();
 
 		void computeFlux(Block* block);
