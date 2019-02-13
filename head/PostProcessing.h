@@ -12,6 +12,8 @@ public:
   PostProcessing(Block* block, Solver* solver, bool stopsimulation_, int iter_, int max_iter_, double convergence_criterion, double cmac_, double mach_, double aoa_rad, double gamma_);
   ~PostProcessing();
 
+  void process(Block* block, Solver* solver, bool stopsimulation, int iter, int max_iter, double convergence_criterion, double cmac, double mach, double aoa_rad, double gamma);
+
 private:
 
 // Attributes
@@ -38,7 +40,7 @@ private:
   // Methods
 
   void initializePostProcessing(Block* block);
-  void computeFlowData(Block* block, Solver* solver, int iter_, double cmac_, double mach_, double aoa_rad_, double gamma_);
+  void computeFlowData(Block* block, Solver* solver, bool stopsimulation, int iter_, int max_iter_, double cmac_, double mach_, double aoa_rad_, double gamma_);
   void checkStopSolver(Solver* solver, bool stopsimulation_, int iter_, int max_iter_, double convergence_criterion);
   void saveFlowData(Block* block, Solver* solver);
   void convergenceSum();

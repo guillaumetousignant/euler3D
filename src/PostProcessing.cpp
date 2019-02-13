@@ -9,43 +9,50 @@
 
 using namespace std;
 
-PostProcessing::PostProcessing(Block* block, Solver* solver, bool stopsimulation_, int iter_, int max_iter_, double convergence_criterion, double cmac_, double mach_, double aoa_rad_, double gamma_)
+PostProcessing::PostProcessing(Block* block)
 {
-  cout << "Starting post-processing............................................." << endl;
+  cout << "Starting initialize post-processing.................................." << endl;
 
-  PostProcessing* postprocessing;
+  cp_ = 0;
+  mach_ = 0;
 
-  if(iter_ == 0)
-  {
-    initializePostProcessing(block);
-  }
+  initializePostProcessing(block);
 
- // Compute flow data for each iteration
-  computeFlowData(block, solver, iter_, cmac_, mach_, aoa_rad_, gamma_);
-
-  // Save and print flow data into binary files
-  saveFlowData(block, solver);
-
-  cout << "Ending post-processing..............................................." << endl;
-
+  cout << "Ending initialize post-processing...................................." << endl;
 }
 
 PostProcessing::~PostProcessing()
 {
+  if(cp_ != 0)
+  {
+    delete [] cp_;
+  }
 
+  if(mach_ != 0)
+  {
+    delete [] mach_;
+  }
 }
 
 void PostProcessing::initializePostProcessing(Block* block)
 {
   iteration_interval_ = 0;
 
+  // Initialize vector cp_
+  cp_ = new double[block->n_cell_in_block_];
+
+  // Initialize vector mach_
+  mach_ = new double[block->n_cell_in_block_];
+
+  // Initialize array convergencedata_
+  
 
 }
 
-void PostProcessing::checkStopSolver(Solver* solver,  bool stopsimulation_, int iter_, int max_iter_, double convergence_criterion)
+void PostProcessing::checkStopSolver(Solver* solver,  bool stopsimulation, int iter, int max_iter, double convergence_criterion)
 {
   // Vefiry conditions and change the status of the simulation if one condition is true.
-  if(iter_ == max_iter_ || stopsimulation_ == true || ro_convergence <= convergence_criterion || uu_convergence <= convergence_criterion || vv_convergence <= convergence_criterion || ww_convergence <= convergence_criterion || pp_convergence <= convergence_criterion)
+  if(iter == max_iter || stopsimulation == true || ro_convergence_ <= convergence_criterion || uu_convergence_ <= convergence_criterion || vv_convergence_ <= convergence_criterion || ww_convergence_ <= convergence_criterion || pp_convergence_ <= convergence_criterion)
   {
     solver->stop_solver_flag_ == true;
   }
@@ -82,21 +89,21 @@ void coefficientsSum()
       }
 }
 
-void PostProcessing::computeFlowData(Block* block, Solver* solver, int iter_, double cmac_, double mach_, double aoa_rad_, double gamma_)
+void PostProcessing::computeFlowData(Block* block, Solver* solver, bool stopsimulation, int iter, int max_iter, double cmac, double mach, double aoa_rad, double gamma)
 {
   //Calculate convergence for each residual for each block
-  convergence = new Convergence(block, postprocessing, iter_);
+  convergence = new Convergence(block, postprocessing, iter);
 
   // Sum convergence for each block
   convergenceSum();
 
   // Check simulation status
-  checkStopSolver(solver, stopsimulation_, iter_, max_iter_, convergence_criterion);
+  checkStopSolver(solver, stopsimulation, iter, max_iter, convergence_criterion);
 
   //Calculate aerodynamic parameters for each block
-  aerodynamicparameters = new AerodynamicParemeters(block, postprocessing, solver, iter_, iteration_interval_, cmac_, mach_, aoa_rad_, gamma_);
+  aerodynamicparameters = new AerodynamicParemeters(block, this, solver, iter, iteration_interval_, cmac, mach, aoa_rad, gamma);
 
-  if(iter_ == iteration_interval_ || solver->stop_solver_flag_ == true)
+  if(iter == iteration_interval_ || solver->stop_solver_flag_ == true)
   {
     // Sum aerodynamic parameters and convergence for each block
       coeffcientsSum();
@@ -105,10 +112,19 @@ void PostProcessing::computeFlowData(Block* block, Solver* solver, int iter_, do
   }
 }
 
-void PostProcessing::saveFlowData(Block* block, Solver* solver, int iter_)
+void PostProcessing::saveFlowData(Block* block, Solver* solver, int iter)
 {
   // Call OutputTecplot to save data into binary files
-  outputtecplot = new OutputTecplot(block, postprocessing, solver, iter_);
+  outputtecplot = new OutputTecplot(block, this, solver, iter, iteration_interval_);
+}
+
+void PostProcessing::process(Block* block, Solver* solver, bool stopsimulation, int iter, int max_iter, double convergence_criterion, double cmac, double mach, double aoa_rad, double gamma)
+{
+  // Compute flow data for each iteration
+   computeFlowData(block, solver, stopsimulation, iter, max_iter, cmac, mach, aoa_rad, gamma);
+
+   // Save and print flow data into binary files
+   saveFlowData(block, solver);
 }
 
 #endif

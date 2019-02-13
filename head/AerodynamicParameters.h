@@ -46,6 +46,7 @@ void calculateCp(Block* block, PostProcessing* postprocessing);
 void calculateGlobalCl(PostProcessing* postprocessing, double aoa_);
 void calculateGlobalCd(PostProcessing* postprocessing, double aoa_);
 void calculateGlobalCm(PostProcessing* postprocessing);
+void checkClDriver();
 
 }
 
