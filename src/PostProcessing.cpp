@@ -9,14 +9,14 @@
 
 using namespace std;
 
-PostProcessing::PostProcessing(Block* block)
+PostProcessing::PostProcessing(Block* block, CompleteMesh* completemesh)
 {
   cout << "Starting initialize post-processing.................................." << endl;
 
   cp_ = 0;
   mach_ = 0;
 
-  initializePostProcessing(block);
+  initializePostProcessing(block, completemesh);
 
   cout << "Ending initialize post-processing...................................." << endl;
 }
@@ -32,10 +32,19 @@ PostProcessing::~PostProcessing()
   {
     delete [] mach_;
   }
+
+  for(i=0; i < 11; i++)
+  {
+    delete [] convergencedata_[i];
+  }
+
+  delete [] convergencedata_;
 }
 
-void PostProcessing::initializePostProcessing(Block* block)
+void PostProcessing::initializePostProcessing(Block* block, CompleteMesh* completemesh)
 {
+  int i;
+
   iteration_interval_ = 0;
 
   // Initialize vector cp_
@@ -45,7 +54,12 @@ void PostProcessing::initializePostProcessing(Block* block)
   mach_ = new double[block->n_cell_in_block_];
 
   // Initialize array convergencedata_
-  
+  convergencedata_ = new double[completemesh->n_blocks_]
+
+  for(i=0; i < 11; i++)
+  {
+    convergencedata_[i] = new double[11];
+  }
 
 }
 
