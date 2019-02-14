@@ -8,8 +8,8 @@ class BlockBuilder
 public:
 	BlockBuilder();
 	~BlockBuilder();
-	virtual void readMyBlocks() = 0;
-	void buildCell(int cell_type);
+	virtual void readMyBlocks(Block* block) = 0;
+	Cell* buildCell(int cell_type);
 	void buildNode();
 	void buildFace(int face_type);
 	void setConnectivity(Block* block);
