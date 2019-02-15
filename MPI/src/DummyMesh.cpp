@@ -1,5 +1,4 @@
 #include "DummyMesh.h"
-#include "DummyBlock.h"
 
 DummyMesh::DummyMesh(int n_blocks): n_blocks_(n_blocks){
     blocks_ = new DummyBlock*[n_blocks_];
