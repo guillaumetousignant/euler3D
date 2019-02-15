@@ -41,7 +41,7 @@ private:
   void initializePostProcessing(Block* block, CompleteMesh* completemesh);
   void computeFlowData(Block* block, Solver* solver, bool stopsimulation, int iter, int max_iter, double cmac, double mach, double aoa_rad, double gamma);
   void checkStopSolver(Solver* solver, bool stopsimulation, int iter, int max_iter, double convergence_criterion);
-  void saveFlowData(Block* block, Solver* solver);
+  void saveFlowData(Block* block, Solver* solver, int iter, double aoa_rad);
   void convergenceSum();
   void coefficientsSum();
 

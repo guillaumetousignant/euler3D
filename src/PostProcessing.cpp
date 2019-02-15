@@ -130,12 +130,12 @@ void PostProcessing::computeFlowData(Block* block, Solver* solver, bool stopsimu
 
 }
 
-void PostProcessing::saveFlowData(Block* block, Solver* solver, int iter)
+void PostProcessing::saveFlowData(Block* block, Solver* solver, int iter, double aoa_rad)
 {
   cout << "Starting saveFlowData................................................" << endl;
 
   // Call OutputTecplot to save data into binary files
-  outputtecplot = new OutputTecplot(block, this, solver, iter, iteration_interval_);
+  outputtecplot = new OutputTecplot(block, this, solver, iter, iteration_interval_, aoa_rad);
 
   cout << "Ending saveFlowData.................................................." << endl;
 }
@@ -148,7 +148,7 @@ void PostProcessing::process(Block* block, Solver* solver, bool stopsimulation, 
    computeFlowData(block, solver, stopsimulation, iter, max_iter, cmac, mach, aoa_rad, gamma);
 
    // Save and print flow data into binary files
-   saveFlowData(block, solver);
+   saveFlowData(block, solver, iter, aoa_rad);
 
    cout << "Ending process......................................................" << endl;
 }

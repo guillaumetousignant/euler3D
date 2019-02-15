@@ -11,7 +11,7 @@
 
 using namespace std;
 
-OutputTecplot::OutputTecplot(Block* block, PostProcessing* postprocessing, Solver* solver, int iter, int iteration_interval_)
+OutputTecplot::OutputTecplot(Block* block, PostProcessing* postprocessing, Solver* solver, int iter, int iteration_interval_, double aoa)
 {
   if(iter == iteration_interval_)
   {
@@ -19,9 +19,9 @@ OutputTecplot::OutputTecplot(Block* block, PostProcessing* postprocessing, Solve
   }
   else if(solver->stop_solver_flag_ == true)
   {
-    printConvergence(postprocessing, iter);
-    Convergence.close();
+    aoa_deg_ = aoa*180/3.1416;
 
+    printConvergence(postprocessing, solver, iter);
     printFlowData(block, postprocessing);
     printSurfaceFlowData(block, postprocessing);
     printAerodynamicCoefficients(block, postprocessing);
@@ -197,7 +197,7 @@ void OutputTecplot::printSurfaceFlowData(Block* block, PostProcessing* postproce
   cout << "Ending printSurfaceFlowData.........................................." << endl;
 }
 
-void OutputTecplot::printConvergence(PostProcessing* postprocessing, int iter)
+void OutputTecplot::printConvergence(PostProcessing* postprocessing, Solver* solver, int iter)
 {
   cout << "Starting printConvergence............................................" << endl;
 
@@ -228,6 +228,11 @@ void OutputTecplot::printConvergence(PostProcessing* postprocessing, int iter)
 
   Convergence << iter << " " << Cl << " " << Cd << " " << Cmx << " " << Cmy << " " << Cmz << " " << ro_convergence << " " << uu_convergence << " " << vv_convergence << " " << ww_convergence << " " << pp_convergence << endl;
 
+  if(solver->stop_solver_flag_==True)
+  {
+    Convergence.close();
+  }
+
   cout << "Ending printConvergence.............................................." << endl;
 }
 
@@ -244,6 +249,19 @@ void OutputTecplot::printAerodynamicCoefficients(Block* block, PostProcessing* p
       cerr << "Fail opening file AerodynamicCoefficients.plt" << endl;
       //return;
     }
+
+  Cl = postprocessing->convergencedata_[0];
+  Cd = postprocessing->convergencedata_[1];
+  Cmx = postprocessing->convergencedata_[2];
+  Cmy = postprocessing->convergencedata_[3];
+  Cmz = postprocessing->convergencedata_[4];
+
+  AerodynamicCoefficients << aoa_deg << " " << Cl << " " << Cd << " " << Cmx << " " << Cmy << " " << Cmz << endl;
+
+  if()
+  {
+    AerodynamicCoefficients.close();
+  }
 
   cout << "Ending printAerodynamicCoefficients.................................." << endl;
 }
