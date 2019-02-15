@@ -1,0 +1,6 @@
+class BlockCommunicator {
+    public:
+        BlockCommunicator() {
+            
+        }
+}
