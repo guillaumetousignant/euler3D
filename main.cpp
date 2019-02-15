@@ -1,5 +1,6 @@
 #include <mpi.h>
 #include <stdio.h>
+#include <iostream>
 
 int main(int argc, char** argv)
 {
@@ -22,6 +23,20 @@ int main(int argc, char** argv)
     // Print off a hello world message
     printf("Hello world from processor %s, rank %d out of %d processors\n",
            processor_name, world_rank, world_size);
+
+    double* proc_list = nullptr;
+    if (world_rank == 0){
+        proc_list = new double[world_size];
+    }
+
+    MPI_Gather(&world_rank, 1, MPI_DOUBLE, proc_list, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+    if (world_rank == 0){
+        std::cout << "World content:";
+        for (unsigned int i = 0; i < world_size; i++){
+            std::cout << " " << proc_list[i];
+        }
+        std::cout << std::endl;
+    }
 
     // Finalize the MPI environment.
     MPI_Finalize();
