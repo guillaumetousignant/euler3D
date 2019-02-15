@@ -6,6 +6,6 @@ int main( int argc, char **argv)
   CppUnit::TextUi::TestRunner runner;
   //runner.addTest( ExampleTestCase::suite() );
   runner.addTest(TestsTest::suite());
-  runner.run();
-  return 0;
+  bool wasSuccessful = runner.run( "", false );
+  return !wasSuccessful;
 }
