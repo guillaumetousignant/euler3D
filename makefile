@@ -103,8 +103,8 @@ CXX = g++
 MPICXX = mpic++
 CXXFLAGS += -std=c++11 -Wall -Wno-unused-function -Wno-strict-overflow
 
-DEBUGFLAGS += -Og -g -pg 
-RELEASEFLAGS += -O3 -fopenmp
+DEBUGFLAGS += -Og -g -pg -lcppunit
+RELEASEFLAGS += -O3 -fopenmp -lcppunit
 #--------------------------------------------------------------------------------------------------------------------------------------+
 #---------------------------------------------------------------------------------------------------+
 # Targets
