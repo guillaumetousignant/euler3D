@@ -15,19 +15,18 @@ OutputTecplot::OutputTecplot(Block* block, PostProcessing* postprocessing, Solve
 {
   if(iter == iteration_interval_)
   {
-    printConvergence();
+    printConvergence(postprocessing, iter);
   }
   else if(solver->stop_solver_flag_ == true)
   {
-    printConvergence();
+    printConvergence(postprocessing, iter);
     Convergence.close();
 
-    printFlowData();
-    printSurfaceFlowData();
-    printAerodynamicCoefficients();
-    printRestartFile();
+    printFlowData(block, postprocessing);
+    printSurfaceFlowData(block, postprocessing);
+    printAerodynamicCoefficients(block, postprocessing);
+    printRestartFile(block, postprocessing, solver);
   }
-
 }
 
 OutputTecplot::~OutputTecplot()
@@ -198,9 +197,12 @@ void OutputTecplot::printSurfaceFlowData(Block* block, PostProcessing* postproce
   cout << "Ending printSurfaceFlowData.........................................." << endl;
 }
 
-void OutputTecplot::printConvergence(Block* block, PostProcessing* postprocessing)
+void OutputTecplot::printConvergence(PostProcessing* postprocessing, int iter)
 {
   cout << "Starting printConvergence............................................" << endl;
+
+  int i;
+  double Cl, Cd, Cmx, Cmy, Cmz, ro_convergence, uu_convergence, vv_convergence, ww_convergence, pp_convergence;
 
   //Convergence.open("Convergence.plt", ios::binary);
   Convergence.open("Convergence.dat");
@@ -211,6 +213,20 @@ void OutputTecplot::printConvergence(Block* block, PostProcessing* postprocessin
       cerr << "Fail opening file Convergence.plt" << endl;
       //return;
     }
+
+  Cl = postprocessing->convergencedata_[0];
+  Cd = postprocessing->convergencedata_[1];
+  Cmx = postprocessing->convergencedata_[2];
+  Cmy = postprocessing->convergencedata_[3];
+  Cmz = postprocessing->convergencedata_[4];
+
+  ro_convergence = postprocessing->convergencedata_[5];
+  uu_convergence = postprocessing->convergencedata_[6];
+  vv_convergence = postprocessing->convergencedata_[7];
+  ww_convergence = postprocessing->convergencedata_[8];
+  pp_convergence = postprocessing->convergencedata_[9];
+
+  Convergence << iter << " " << Cl << " " << Cd << " " << Cmx << " " << Cmy << " " << Cmz << " " << ro_convergence << " " << uu_convergence << " " << vv_convergence << " " << ww_convergence << " " << pp_convergence << endl;
 
   cout << "Ending printConvergence.............................................." << endl;
 }

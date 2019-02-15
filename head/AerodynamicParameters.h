@@ -41,13 +41,13 @@ double fz_;
 double area_;
 
   // Methods
-
+double calculateForce(double cpbc);
 double calculateCl();
 double calculateCd();
 double calculateCmx(PostProcessing* postprocessing);
 double calculateCmy(PostProcessing* postprocessing);
-double calculateCmz(PostProcessing* postprocessing;
-double calculateForce(double cpbc);
+double calculateCmz(PostProcessing* postprocessing);
+
 void calculateMach(Block* block, PostProcessing* postprocessing, double gamma);
 void calculateCp(Block* block, PostProcessing* postprocessing);
 void calculateGlobalCl(PostProcessing* postprocessing, double aoa);

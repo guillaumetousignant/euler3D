@@ -45,9 +45,9 @@ std:: ofstream RestartFile;
 
 void printFlowData(Block* block, PostProcessing* postprocessing);
 void printSurfaceFlowData(Block* block, PostProcessing* postprocessing);
-void printConvergence(Block* block, PostProcessing* postprocessing);
+void printConvergence(PostProcessing* postprocessing, int iter);
 void printAerodynamicCoefficients(Block* block, PostProcessing* postprocessing);
-void printRestartFile(Block* block, PostProcessing* postprocessing);
+void printRestartFile(Block* block, PostProcessing* postprocessing, Solver* solver);
 
 }
 
