@@ -27,7 +27,7 @@ void BlockCommunicator::initialize(){
 }
 
 double BlockCommunicator::getGlobal(double const coeff_local) const {
-
+    return 0.0;
 }
 
 void BlockCommunicator::setBoundaryOffset(){
