@@ -61,6 +61,8 @@ text_section_2_3 = Label(title_section_2_3, text="Please select other code optio
 text_section_2_3.pack()
 
 ##################### 3. OUTPUT #####################
+text_section_3 = Label(tab3, text="Please specify the graphs that you would like to display:")
+text_section_3.pack()
 
 # DISPLAYING OF THE MAIN WINDOW
 main_window1.mainloop()
