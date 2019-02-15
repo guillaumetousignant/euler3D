@@ -19,7 +19,11 @@ newline := ""
 #-------------------------------------------------------------------------------------------------------------------+
 # Directory Variables
 
+ifdef VERIFY
+DeactivatedFiles = main.cpp
+else
 DeactivatedFiles := $(shell grep -v '^//' .makeignore | grep -v '^$$')
+endif
 
 # Names of all root folders (these contains source code in any tree structure of visible folders)
 SourceDirs := $(shell tree -dfi --noreport)
@@ -48,7 +52,11 @@ current_dir := $(shell basename $(CURDIR))
 
 Executable = $(current_dir)
 
+ifdef VERIFY
+ExecutableSourceFile = main_test.cpp
+else
 ExecutableSourceFile = main.cpp
+endif
 
 # Executable debug object file
 ExecutableDebugObjectFile = $(subst .cpp,.o,$(addprefix .debug/,$(ExecutableSourceFile)))
