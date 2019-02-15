@@ -25,7 +25,6 @@ private:
   double cmx_geometry_;
   double cmy_geometry_;
   double cmz_geometry_;
-  double cm_geometry_;
   double ro_convergence_;
   double uu_convergence_;
   double vv_convergence_;

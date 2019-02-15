@@ -79,11 +79,11 @@ void PostProcessing::convergenceSum()
     for(i=0; i<nblock ; i++) // For each block
       {
         // Convergence data
-        ro_convergence_ += convergencedata_[i][6];
-        uu_convergence_ += convergencedata_[i][7];
-        vv_convergence_ += convergencedata_[i][8];
-        ww_convergence_ += convergencedata_[i][9];
-        pp_convergence_ += convergencedata_[i][10];
+        ro_convergence_ += convergencedata_[i][5];
+        uu_convergence_ += convergencedata_[i][6];
+        vv_convergence_ += convergencedata_[i][7];
+        ww_convergence_ += convergencedata_[i][8];
+        pp_convergence_ += convergencedata_[i][9];
       }
 }
 
@@ -99,7 +99,6 @@ void coefficientsSum()
         cmx_geometry_ += convergencedata_[i][2];
         cmy_geometry_ += convergencedata_[i][3];
         cmz_geometry_ += convergencedata_[i][4];
-        cm_geometry_ += convergencedata_[i][5];
       }
 }
 

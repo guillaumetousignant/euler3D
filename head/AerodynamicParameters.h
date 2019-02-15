@@ -26,21 +26,28 @@ double cmy_;
 double cmz_;
 double clglobal_;
 double cdglobal_;
-double cmglobal_;
 double pp_;
 double ro_;
 double uu_;
 double vv_;
 double ww_;
+double nx_;
+double ny_;
+double nz_;
+double force_;
+double fx_;
+double fy_;
+double fz_;
+double area_;
 
   // Methods
 
-double calculateCl(double ppbc, double ny);
-double calculateCd(double ppbc, double nx);
-double calculateCm(PostProcessing* postprocessing);
+double calculateCl();
+double calculateCd();
 double calculateCmx(PostProcessing* postprocessing);
 double calculateCmy(PostProcessing* postprocessing);
-double calculateCmz(PostProcessing* postprocessing);
+double calculateCmz(PostProcessing* postprocessing;
+double calculateForce(double cpbc);
 void calculateMach(Block* block, PostProcessing* postprocessing, double gamma);
 void calculateCp(Block* block, PostProcessing* postprocessing);
 void calculateGlobalCl(PostProcessing* postprocessing, double aoa);

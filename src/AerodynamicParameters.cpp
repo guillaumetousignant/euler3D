@@ -26,7 +26,13 @@ AerodynamicParameters::AerodynamicParameters(Block* block, PostProcessing* postp
   if(iter == iteration_interval_ || solver->stop_solver_flag_ == true)
   {
     int i, j, cell_0, cell_1;
-    double nx,ny, nz, pp0, pp1, ppbc;
+    double pp0, pp1, ppbc, cpbc;
+
+    // Initialize forces
+    force_ = 0.;
+    fx_ = 0.;
+    fy_ = 0.;
+    fz_ = 0.;
 
     // Initialize aerodynamic coefficients
     cl_ = 0.;
@@ -52,17 +58,26 @@ AerodynamicParameters::AerodynamicParameters(Block* block, PostProcessing* postp
       // Mean pressure value
       ppbc = 0.5*(pp0 + pp1);
 
-      // Face normals
-      nx = block->block_faces_[wall_face_id_]->face_normals_[0];
-      ny = block->block_faces_[wall_face_id_]->face_normals_[1];
-      nz = block->block_faces_[wall_face_id_]->face_normals_[2];
+      // Pressure coefficient for each wall cell
+      cpbc = (ppbc-1.)/dynhead;
 
-    // Calculate Cl, Cd and Cm for the block
-    calculateCl(ppbc, ny);
-    calculateCd(ppbc, nx);
-    calculateCmx(postprocessing);
-    calculateCmy(postprocessing);
-    calculateCmz(postprocessing);
+      // Face normals
+      nx_ = block->block_faces_[wall_face_id_]->face_normals_[0];
+      ny_ = block->block_faces_[wall_face_id_]->face_normals_[1];
+      nz_ = block->block_faces_[wall_face_id_]->face_normals_[2];
+
+      // Face aera
+      area_ = block->block_faces_[wall_face_id_]->face_area_;
+
+      // Calculate force and force components for each wall cell
+      calculateForce(cpbc);
+
+      // Calculate Cl, Cd and Cm for the block
+      calculateCl();
+      calculateCd();
+      calculateCmx(postprocessing);
+      calculateCmy(postprocessing);
+      calculateCmz(postprocessing);
     }
 
     cl_ = cl_/(dynhead*cmac);
@@ -128,24 +143,36 @@ void AerodynamicParameters::calculateCp(Block* block, PostProcessing* postproces
   cout << "Ending calculateCp..................................................." << endl;
 }
 
-double AerodynamicParameters::calculateCl(double ppbc, double ny)
+double calculateForce(double cpbc)
+{
+  cout << "Starting calculateForce.............................................." << endl;
+
+  force_ = cpbc*area_;
+  fx_ = force_*nx_;
+  fy_ = force_*ny_;
+  fz_ = force_*nz_;
+
+  cout << "Ending calculateForce................................................" << endl;
+}
+
+double AerodynamicParameters::calculateCl()
 {
   cout << "Starting calculateCl................................................." << endl;
 
   // Sum of lift coefficients
-  cl_ += ppbc*ny;
+  cl_ += fy_;
 
   return cl_;
 
   cout << "Ending calculateCl..................................................." << endl;
 }
 
-double AerodynamicParameters::calculateCd(double ppbc, double nx)
+double AerodynamicParameters::calculateCd()
 {
   cout << "Starting calculateCd................................................." << endl;
 
   // Sum of drag coefficients
-  cd_ += ppbc*nx;
+  cd_ += fx_;
 
   return cd_;
 
