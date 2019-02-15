@@ -3,8 +3,8 @@
 
 class BlockCommunicator {
     public:
-        BlockCommunicator() {}
-        ~BlockCommunicator() {}
+        BlockCommunicator();
+        ~BlockCommunicator();
 
         int number_of_processes_;
         int process_id_;
@@ -13,11 +13,11 @@ class BlockCommunicator {
         int n_inter_block_boundaries_;
         // BoundaryCellIds* inter_block_boundaries_;
 
-        void updateBoundaries();
+        void updateBoundaries() const;
         void addCellIdInConnexion();
-        void getMyBlocks(int &n_blocks, int* my_blocks);
+        void getMyBlocks(int &n_blocks, int* my_blocks) const;
         void initialize();
-        double getGlobal(double coeff_local);
+        double getGlobal(double const coeff_local) const;
         void setBoundaryOffset();
 };
 #endif
