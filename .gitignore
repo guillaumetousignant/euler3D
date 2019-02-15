@@ -4,3 +4,4 @@
 /.release/*
 /bin/*
 *.out
+/.vscode/*
