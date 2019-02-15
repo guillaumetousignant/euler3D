@@ -70,7 +70,6 @@ AerodynamicParameters::AerodynamicParameters(Block* block, PostProcessing* postp
 
     calculateGlobalCl(postprocessing, aoa);
     calculateGlobalCd(postprocessing, aoa);
-    calculateGlobalCm(postprocessing);
 
     checkClDriver();
   }
@@ -213,16 +212,6 @@ void AerodynamicParameters::calculateGlobalCd(PostProcessing* postprocessing, do
 
   cout << "Ending calculateGlobalCd............................................" << endl;
 
-}
-
-void AerodynamicParameters::calculateGlobalCm(PostProcessing* postprocessing)
-{
-  cout << "Starting calculateGlobalCm..........................................." << endl;
-
-  // Save cmglobal_ in array
-  postprocessing->convergencedata_[block_id_][5] = cmglobal_;
-
-  cout << "Ending calculateGlobalCm............................................" << endl;
 }
 
 void AerodynamicParameters::checkClDriver()

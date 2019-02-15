@@ -41,7 +41,8 @@ void OutputTecplot::printFlowData(Block* block, PostProcessing* postprocessing)
 
   cout << "Starting printFlowData..............................................." << endl;
 
-  FlowData.open("FlowData.plt", ios::binary);
+  //FlowData.open("FlowData.plt", ios::binary);
+  FlowData.open("FlowData.dat");
 
     if (FlowData.fail())
     {
@@ -182,7 +183,8 @@ void OutputTecplot::printSurfaceFlowData(Block* block, PostProcessing* postproce
 {
   cout << "Starting printSurfaceFlowData........................................" << endl;
 
-  SurfaceFlowData.open("SurfaceFlowData.plt", ios::binary);
+  //SurfaceFlowData.open("SurfaceFlowData.plt", ios::binary);
+  SurfaceFlowData.open("SurfaceFlowData.dat");
 
     if (SurfaceFlowData.fail())
     {
@@ -200,7 +202,8 @@ void OutputTecplot::printConvergence(Block* block, PostProcessing* postprocessin
 {
   cout << "Starting printConvergence............................................" << endl;
 
-  Convergence.open("Convergence.plt", ios::binary);
+  //Convergence.open("Convergence.plt", ios::binary);
+  Convergence.open("Convergence.dat");
 
     if (Convergence.fail())
     {
@@ -216,7 +219,8 @@ void OutputTecplot::printAerodynamicCoefficients(Block* block, PostProcessing* p
 {
   cout << "Starting printAerodynamicCoefficients................................" << endl;
 
-  AerodynamicCoefficients.open("AerodynamicCoefficients.plt", ios::binary);
+  //AerodynamicCoefficients.open("AerodynamicCoefficients.plt", ios::binary);
+  AerodynamicCoefficients.open("AerodynamicCoefficients.dat");
 
     if (AerodynamicCoefficients.fail())
     {

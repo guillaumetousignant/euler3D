@@ -18,7 +18,6 @@ Convergence::Convergence(Block* block, PostProcessing* postprocessing, int iter)
   calculateVvRms(block, postprocessing, iter);
   calculateWwRms(block, postprocessing, iter);
   calculatePpRms(block, postprocessing, iter);
-
 }
 
 Convergence::~Convergence()

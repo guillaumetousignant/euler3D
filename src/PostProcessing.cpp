@@ -56,9 +56,9 @@ void PostProcessing::initializePostProcessing(Block* block, CompleteMesh* comple
   // Initialize array convergencedata_
   convergencedata_ = new double[completemesh->n_blocks_]
 
-  for(i=0; i < 11; i++)
+  for(i=0; i < 10; i++)
   {
-    convergencedata_[i] = new double[11];
+    convergencedata_[i] = new double[10];
   }
 
 }
