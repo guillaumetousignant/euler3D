@@ -1,7 +1,7 @@
 #include "BlockCommunicator.h"
 #include <mpi.h>
 
-BlockCommunicator::BlockCommunicator(DummyMesh* mesh) : mesh_(mesh) {
+BlockCommunicator::BlockCommunicator(DummyMesh* mesh): n_blocks_(mesh->n_blocks_){
     MPI_Comm_size(MPI_COMM_WORLD, &number_of_processes_);
     MPI_Comm_rank(MPI_COMM_WORLD, &process_id_);
 }
@@ -18,7 +18,7 @@ void BlockCommunicator::addCellIdInConnexion(){
 
 }
 
-void BlockCommunicator::getMyBlocks(int &n_blocks, int* my_blocks) const {
+void BlockCommunicator::getMyBlocks(DummyMesh* mesh) const {
     
 }
 

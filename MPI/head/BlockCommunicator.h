@@ -14,11 +14,10 @@ class BlockCommunicator {
         int n_blocks_;
         int n_inter_block_boundaries_;
         // BoundaryCellIds* inter_block_boundaries_;
-        DummyMesh* mesh_;
 
         void updateBoundaries() const;
         void addCellIdInConnexion();
-        void getMyBlocks(int &n_blocks, int* my_blocks) const;
+        void getMyBlocks(DummyMesh* mesh) const;
         void initialize();
         double getGlobal(double const coeff_local) const;
         void setBoundaryOffset();

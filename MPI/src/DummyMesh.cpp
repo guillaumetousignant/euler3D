@@ -15,4 +15,8 @@ DummyMesh::~DummyMesh(){
         }
         delete [] blocks_;
     }
+
+    if (my_blocks_ != nullptr){
+        delete [] my_blocks_;
+    }
 };

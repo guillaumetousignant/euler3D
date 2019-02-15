@@ -8,7 +8,11 @@ int main(int argc, char** argv)
     // Initialize the MPI environment
     MPI_Init(NULL, NULL);
 
-    BlockCommunicator* communicator = new BlockCommunicator();
+    DummyMesh* mesh = new DummyMesh(5);
+
+    BlockCommunicator* communicator = new BlockCommunicator(mesh);
+
+    communicator->getMyBlocks(mesh);
 
     // Print off a hello world message
     std::cout << "Hello from process " << communicator->process_id_ << " out of " 
@@ -31,6 +35,9 @@ int main(int argc, char** argv)
     }
 
     // Test exchanges
+
+    delete mesh;
+    delete communicator;
 
     // Finalize the MPI environment.
     MPI_Finalize();
