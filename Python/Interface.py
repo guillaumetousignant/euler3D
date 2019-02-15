@@ -35,7 +35,15 @@ text_section_1_1.pack()
 # Aller chercher les fonctions des classes mesh et geometry??
 def importMesh():
     messagebox.askokcancel('Mesh Importation', 'Import the desired mesh:')
-Button(text_section_1_1, text='Import mesh', command=importMesh).pack()
+Button(title_section_1_1, text='Import mesh', command=importMesh).pack(side=LEFT)
+
+def importGeometry():
+    messagebox.askokcancel('Geometry Importation', 'Import the desired geometry:')
+Button(title_section_1_1, text='Import geometry', command=importGeometry).pack(side=TOP)
+
+def generateGeometry():
+    messagebox.askokcancel('Geometry Generation', 'Specify the needed information for geometry generation:')
+Button(title_section_1_1, text='Generate geometry', command=generateGeometry).pack(side=RIGHT)
 
 # SECTION 1.2: INPUT PARAMETERS
 title_section_1_2 = LabelFrame(tab1, text="1.2 Input parameters", padx=20, pady=20)
