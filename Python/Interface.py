@@ -23,19 +23,44 @@ tabControl.add(tab3, text="3. Output")
 
 tabControl.pack(fill="both", expand="yes")
 
-# SECTION 1: GEOMETRY AND MESH
-title_section1 = LabelFrame(main_window1, text="1.1 Geometry and mesh", padx=20, pady=20)
-title_section1.pack(fill="both", expand="yes")
+##################### 1. INPUT #####################
+# SECTION 1.1: GEOMETRY AND MESH
+title_section_1_1 = LabelFrame(tab1, text="1.1 Geometry and mesh", padx=20, pady=20)
+title_section_1_1.pack(fill="both", expand="yes")
 
-text_section1 = Label(title_section1, text="Please select the desired mesh or geometry:")
-text_section1.pack()
+text_section_1_1 = Label(title_section_1_1, text="Please select the desired mesh or geometry:")
+text_section_1_1.pack()
 
-# SECTION 2: INPUT PARAMETERS
-title_section2 = LabelFrame(main_window1, text="1.2 Input parameters", padx=20, pady=20)
-title_section2.pack(fill="both", expand="yes")
+# SECTION 1.2: INPUT PARAMETERS
+title_section_1_2 = LabelFrame(tab1, text="1.2 Input parameters", padx=20, pady=20)
+title_section_1_2.pack(fill="both", expand="yes")
 
-text_section2 = Label(title_section2, text="Please specify the required input values:")
-text_section2.pack()
+text_section_1_2 = Label(title_section_1_2, text="Please specify the required input values:")
+text_section_1_2.pack()
 
-# DISPLAYING OF THE MAIN WINDOW (1. Input)
+##################### 2. SOLVER #####################
+# SECTION 2.1: CONVERGENCE CRITERIAS
+title_section_2_1 = LabelFrame(tab2, text="2.1 Convergence criterias", padx=20, pady=20)
+title_section_2_1.pack(fill="both", expand="yes")
+
+text_section_2_1 = Label(title_section_2_1, text="Please specify the required convergence criterias:")
+text_section_2_1.pack()
+
+# SECTION 2.2: SCHEME SELECTION
+title_section_2_2 = LabelFrame(tab2, text="2.2 Scheme Selection", padx=20, pady=20)
+title_section_2_2.pack(fill="both", expand="yes")
+
+text_section_2_2 = Label(title_section_2_2, text="Please select the desired flux scheme:")
+text_section_2_2.pack()
+
+# SECTION 2.3: SOLVER OPTIONS
+title_section_2_3 = LabelFrame(tab2, text="2.3 Solver Options", padx=20, pady=20)
+title_section_2_3.pack(fill="both", expand="yes")
+
+text_section_2_3 = Label(title_section_2_3, text="Please select other code options:")
+text_section_2_3.pack()
+
+##################### 3. OUTPUT #####################
+
+# DISPLAYING OF THE MAIN WINDOW
 main_window1.mainloop()
