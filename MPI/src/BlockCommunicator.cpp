@@ -1,7 +1,7 @@
 #include "BlockCommunicator.h"
 #include <mpi.h>
 
-BlockCommunicator::BlockCommunicator(){
+BlockCommunicator::BlockCommunicator(DummyMesh* mesh) : mesh_(mesh) {
     MPI_Comm_size(MPI_COMM_WORLD, &number_of_processes_);
     MPI_Comm_rank(MPI_COMM_WORLD, &process_id_);
 }

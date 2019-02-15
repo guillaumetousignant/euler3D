@@ -3,7 +3,10 @@
 
 class DummyBlock {
     public:
+        DummyBlock();
+        ~DummyBlock();
 
+        int* boundary_values_;
 
 };
 #endif

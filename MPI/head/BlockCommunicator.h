@@ -1,9 +1,11 @@
 #ifndef BLOCK_COMMUNICATOR_H
 #define BLOCK_COMMUNICATOR_H
 
+#include "DummyMesh.h"
+
 class BlockCommunicator {
     public:
-        BlockCommunicator(); // Should take a mesh as input
+        BlockCommunicator(DummyMesh* mesh); // Should take a mesh as input
         ~BlockCommunicator();
 
         int number_of_processes_;
@@ -12,7 +14,7 @@ class BlockCommunicator {
         int n_blocks_;
         int n_inter_block_boundaries_;
         // BoundaryCellIds* inter_block_boundaries_;
-        // Mesh mesh_;
+        DummyMesh* mesh_;
 
         void updateBoundaries() const;
         void addCellIdInConnexion();
