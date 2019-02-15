@@ -4,9 +4,8 @@
 class ConcreteBlockBuilder:public BlockBuilder
 {
 public:
-	ConcreteBlockBuilder();
-	~ConcreteBlockBuilder();
 	
-	void readMyBlocks(Block* block);
+	void readMyBlock(Block* block);
+
 
 };

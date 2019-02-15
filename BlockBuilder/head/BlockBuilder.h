@@ -2,13 +2,18 @@
 #define BLOCKBUILDER_HEAD_BLOCKBUILDER_H
 
 #include "Block.h"
+#include <fstream>
 
 class BlockBuilder
 {
 public:
+	FILE* block_file_;
+
 	BlockBuilder();
 	~BlockBuilder();
-	virtual void readMyBlocks(Block* block) = 0;
+
+	virtual void readMyBlock(Block* block) = 0;
+
 	Cell* buildCell(int cell_type);
 	void buildNode();
 	void buildFace(int face_type);

@@ -12,6 +12,7 @@ public:
 	double cell_volume_;
 	double* cell_coordinates_;
 	double* cell_weights_;
+	int n_nodes_per_cell_;
 
 	Cell();
 	~Cell();

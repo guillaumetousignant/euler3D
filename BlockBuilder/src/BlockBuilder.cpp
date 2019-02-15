@@ -12,8 +12,9 @@
 #include <iostream>
 #include <string>
 
-BlockBuilder::BlockBuilder()
+BlockBuilder::BlockBuilder(FILE* block_file)
 {
+	block_file_ = block_file;
 
 }
 
@@ -22,14 +23,7 @@ BlockBuilder::~BlockBuilder()
 
 }
 
-void readMyBlocks(Block* block)
-{
-	
-
-
-}
-
-Cell* buildCell(string cell_type, CellCreator* creators)
+Cell* buildCell(srd::string cell_type, CellCreator* creators)
 {
 
 	int key;
@@ -48,7 +42,7 @@ Cell* buildCell(string cell_type, CellCreator* creators)
 		key = 2;
 	}
 
-	new_cell = creators[key];
+	new_cell = creators[key]->creataCell();
 	return new_cell
 }
 
