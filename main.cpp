@@ -30,6 +30,8 @@ int main(int argc, char** argv)
         delete[] proc_list; 
     }
 
+    // Test exchanges
+
     // Finalize the MPI environment.
     MPI_Finalize();
 }
