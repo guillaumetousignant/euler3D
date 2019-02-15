@@ -1,6 +1,7 @@
 import tkinter
 from tkinter import *
 from tkinter import ttk
+from tkinter import messagebox
 
 # MAIN WINDOW CREATION:
 main_window1 = Tk()
@@ -30,6 +31,11 @@ title_section_1_1.pack(fill="both", expand="yes")
 
 text_section_1_1 = Label(title_section_1_1, text="Please select the desired mesh or geometry:")
 text_section_1_1.pack()
+
+# Aller chercher les fonctions des classes mesh et geometry??
+def importMesh():
+    messagebox.askokcancel('Mesh Importation', 'Import the desired mesh:')
+Button(text_section_1_1, text='Import mesh', command=importMesh).pack()
 
 # SECTION 1.2: INPUT PARAMETERS
 title_section_1_2 = LabelFrame(tab1, text="1.2 Input parameters", padx=20, pady=20)
