@@ -113,15 +113,43 @@ void BlockCommunicator::updateBoundaries(DummyMesh* mesh) const {
     // Put in blocks
     for (int i = 0; i < n_inter_block_boundaries_; i++){
         if (process_id_ == block_process_id_[boundary_blocks_[i][0]]){
+            if (block_process_id_[boundary_blocks_[i][0]] == block_process_id_[boundary_blocks_[i][1]]) {
+                std::cout << boundary_blocks_[i][0] << " AAAAAAAAA";
+                for (int j = 0; j < boundary_width_[i]; j++){
+                    std::cout << " " << buffers[i][1][j];
+                } 
+                
+            }
             for (int j = 0; j < boundary_width_[i]; j++){
                 mesh->blocks_[boundary_blocks_[i][0]]->boundary_values_[boundary_map_[i][0][j]] = buffers[i][1][j];
             }
+            if (block_process_id_[boundary_blocks_[i][0]] == block_process_id_[boundary_blocks_[i][1]]) {
+                std::cout << "   " << boundary_blocks_[i][0] << " BBBBBBB";
+                for (int j = 0; j < boundary_width_[i]; j++){
+                    std::cout << " " << mesh->blocks_[boundary_blocks_[i][0]]->boundary_values_[boundary_map_[i][0][j]];
+                } 
+                std::cout << std::endl;
+            } 
         }
 
         if (process_id_ == block_process_id_[boundary_blocks_[i][1]]){
-            for (int j = 0; j < boundary_width_[i]; j++){
-                mesh->blocks_[boundary_blocks_[i][1]]->boundary_values_[boundary_map_[i][1][j]] = buffers[i][3][j];
+            if (block_process_id_[boundary_blocks_[i][0]] == block_process_id_[boundary_blocks_[i][1]]) {
+                std::cout << boundary_blocks_[i][1] << " AAAAAAAAA";
+                for (int j = 0; j < boundary_width_[i]; j++){
+                    std::cout << " " << buffers[i][3][j];
+                } 
+                
             }
+            for (int j = 0; j < boundary_width_[i]; j++){
+                mesh->blocks_[boundary_blocks_[i][1]]->boundary_values_[boundary_map_[i][1][j]] = buffers[i][3][j];                                                                                                                                             
+            }
+            if (block_process_id_[boundary_blocks_[i][0]] == block_process_id_[boundary_blocks_[i][1]]) {
+                std::cout << "   " << boundary_blocks_[i][1] << " BBBBBBB";
+                for (int j = 0; j < boundary_width_[i]; j++){
+                    std::cout << " " << mesh->blocks_[boundary_blocks_[i][1]]->boundary_values_[boundary_map_[i][1][j]];
+                } 
+                std::cout << std::endl;
+            } 
         }
     }
 
