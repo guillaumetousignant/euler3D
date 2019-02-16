@@ -2,8 +2,7 @@
 #include "catch.hpp"
 #include <iostream>
 
-TEST_CASE( "stupid/1=2", "Prove that one equals 2" ){
-    std::cout << "This is the test main" << std::endl;
+TEST_CASE( "stupid/1=1", "Prove that one equals 1" ){
     int one = 1;
-    REQUIRE( one == 2 );
+    REQUIRE( one == 1 );
 }

@@ -10,7 +10,6 @@ script:
   - ./bin/euler3D
   - make clean
   - make
-  - cppcheck --quiet --error-exitcode=1 .
 before_script: 
 after_script:  make clean
 before_script:
