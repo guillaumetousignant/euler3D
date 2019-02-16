@@ -7,6 +7,6 @@ class DummyBlock {
         ~DummyBlock();
 
         int* boundary_values_;
-
+        void fillBlock(int i);
 };
 #endif

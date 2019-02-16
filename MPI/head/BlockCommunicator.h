@@ -10,10 +10,11 @@ class BlockCommunicator {
 
         int number_of_processes_;
         int process_id_;
-        int** block_process_id_;
+        int* block_process_id_;
         int n_blocks_;
         int n_inter_block_boundaries_;
         // BoundaryCellIds* inter_block_boundaries_;
+
 
         void updateBoundaries() const;
         void addCellIdInConnexion();
