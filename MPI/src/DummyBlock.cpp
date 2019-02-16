@@ -17,6 +17,6 @@ void DummyBlock::fillBlock(int i){
 
     boundary_values_ = new int[10];
     for (int j = 0; j < 10; j++){
-        boundary_values_[j] = i;
+        boundary_values_[j] = i*100 + j;
     }
 }
