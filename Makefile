@@ -34,14 +34,8 @@ DebugDirs := $(subst . ,,$(subst ./,.debug/,$(SourceDirs)))
 # Determine the path for the source code folders in the .release folder (will mimic the visible root tree structure)
 ReleaseDirs := $(subst . ,,$(subst ./,.release/,$(SourceDirs)))
 
-# Determine the path for the source code folders in the .debug folder (will mimic the visible root tree structure)
-MPIDebugDirs := $(subst . ,,$(subst ./,.mpidebug/,$(SourceDirs)))
-
-# Determine the path for the source code folders in the .release folder (will mimic the visible root tree structure)
-MPIReleaseDirs := $(subst . ,,$(subst ./,.mpirelease/,$(SourceDirs)))
-
 # Concatenate all of the previous 3 folder name variables
-AllDirs := $(SourceDirs) $(ReleaseDirs) $(DebugDirs) $(MPIReleaseDirs) $(MPIDebugDirs)
+AllDirs := $(SourceDirs) $(ReleaseDirs) $(DebugDirs)
 
 #-------------------------------------------------------------------------------------------------------------------+
 #-----------------------------------------------------------------------------------------------------+
@@ -64,12 +58,6 @@ ExecutableDebugObjectFile = $(subst .cpp,.o,$(addprefix .debug/,$(ExecutableSour
 # Executable release object file
 ExecutableReleaseObjectFile = $(subst .cpp,.o,$(addprefix .release/,$(ExecutableSourceFile)))
 
-# Executable debug object file
-ExecutableMPIDebugObjectFile = $(subst .cpp,.o,$(addprefix .mpidebug/,$(ExecutableSourceFile)))
-
-# Executable release object file
-ExecutableMPIReleaseObjectFile = $(subst .cpp,.o,$(addprefix .mpirelease/,$(ExecutableSourceFile)))
-
 # Source files (.cpp)
 SourceFiles := $(filter-out $(ExecutableSourceFile),$(subst ./,,$(subst .//,,$(shell find ./ -regex .*.cpp))))
 
@@ -81,12 +69,6 @@ DebugObjectFiles := $(addprefix .debug/,$(subst .cpp,.o,$(ActiveSourceFiles)))
 
 # Release object files (names of the object files that are produced by make release)
 ReleaseObjectFiles := $(addprefix .release/,$(subst .cpp,.o,$(ActiveSourceFiles))) 
-
-# Debug object files (names of the object files that are produced by make debug)
-MPIDebugObjectFiles := $(addprefix .mpidebug/,$(subst .cpp,.o,$(ActiveSourceFiles))) 
-
-# Release object files (names of the object files that are produced by make release)
-MPIReleaseObjectFiles := $(addprefix .mpirelease/,$(subst .cpp,.o,$(ActiveSourceFiles))) 
 
 # Concatenate all object files
 AnyObjectFiles := $(notdir $(shell find ./ -regex .*.o))
@@ -100,16 +82,15 @@ VPATH := $(AllDirs)
 
 # Default compilation configuration
 CXX = g++
-MPICXX = mpic++
 CXXFLAGS += -std=c++11 -Wall -Wno-unused-function -Wno-strict-overflow
 
-DEBUGFLAGS += -Og -g -pg
+DEBUGFLAGS += -Og -g -pg 
 RELEASEFLAGS += -O3 -fopenmp
 #--------------------------------------------------------------------------------------------------------------------------------------+
 #---------------------------------------------------------------------------------------------------+
 # Targets
 
-all : mpidebug $(MPIDebugObjectFiles)
+all : debug $(DebugObjectFiles)
 
 debug : .debug  begun $(DebugObjectFiles) $(ExecutableDebugObjectFile)
 	@printf '   Linking Debug...'
@@ -123,22 +104,10 @@ release : .release begun $(ReleaseObjectFiles) $(ExecutableReleaseObjectFile)
 	@printf 'Done'
 	@printf '\n'
 
-mpidebug : .mpidebug  begun $(MPIDebugObjectFiles) $(ExecutableMPIDebugObjectFile)
-	@printf '   Linking Debug...'
-	@$(MPICXX) $(CXXFLAGS) $(DEBUGFLAGS) $(MPIDebugObjectFiles) $(ExecutableMPIDebugObjectFile) -o $(addprefix bin/,$(Executable))
-	@printf 'Done'
-	@printf '\n'
-
-mpirelease : .mpirelease begun $(MPIReleaseObjectFiles) $(ExecutableMPIReleaseObjectFile)
-	@printf '   Linking Release...'
-	@$(MPICXX) $(CXXFLAGS) $(RELEASEFLAGS) $(MPIReleaseObjectFiles) $(ExecutableMPIReleaseObjectFile) -o $(addprefix bin/,$(Executable))
-	@printf 'Done'
-	@printf '\n'
-
 reset : clean 
 	@$(shell reset)
 
-verify : mpidebug $(MPIDebugObjectFiles)
+verify : release $(ReleaseObjectFiles)
 
 #---------------------------------------------------------------------------------------------------+
 #---------------------------------------------------------------------------------------+
@@ -152,13 +121,6 @@ verify : mpidebug $(MPIDebugObjectFiles)
 	@$(CXX) -c $(CXXFLAGS) $(RELEASEFLAGS)  -I$(subst $(space), -I,$(AllDirs)) $< -o $@ 
 	@echo '   Pattern Rule | Compiling | '$(CXXFLAGS) $(RELEASEFLAGS) ' | ' $<' ... Done '
 
-.mpidebug/%.o : %.cpp
-	@$(MPICXX) -c $(CXXFLAGS) $(DEBUGFLAGS)  -I$(subst $(space), -I,$(AllDirs)) $< -o $@ 
-	@echo '   Pattern Rule | Compiling | '$(CXXFLAGS) $(DEBUGFLAGS) ' | ' $<' ... Done'
-
-.mpirelease/%.o : %.cpp
-	@$(MPICXX) -c $(CXXFLAGS) $(RELEASEFLAGS)  -I$(subst $(space), -I,$(AllDirs)) $< -o $@ 
-	@echo '   Pattern Rule | Compiling | '$(CXXFLAGS) $(RELEASEFLAGS) ' | ' $<' ... Done '
 
 #---------------------------------------------------------------------------------------+
 #--------------------------------------------------------------------------------+
@@ -168,7 +130,7 @@ verify : mpidebug $(MPIDebugObjectFiles)
 
 begun :
 
-clean : cleandebug cleanrelease cleanmpidebug cleanmpirelease
+clean : cleandebug cleanrelease
 	@-rm -rf $(AnyObjectFiles)
 	@-rm -f bin/$(current_dir)
 	
@@ -180,38 +142,17 @@ cleanrelease :
 	@-rm -rf .release .releasetimestamp
 	@-rm -f $(addprefix .release/,$(Executable))
 
-cleanmpidebug :
-	@-rm -rf .mpidebug .mpidebugtimestamp
-	@-rm -f $(addprefix .mpidebug/,$(Executable))
-
-cleanmpirelease :
-	@-rm -rf .mpirelease .mpireleasetimestamp
-	@-rm -f $(addprefix .mpirelease/,$(Executable))
-
 .debug : .debugtimestamp
-
-.mpidebug : .mpidebugtimestamp
 
 .debugtimestamp :
 	@mkdir -p .debug $(DebugDirs)
 	@mkdir -p bin
 #	@touch .debugtimestamp
 
-.mpidebugtimestamp :
-	@mkdir -p .mpidebug $(MPIDebugDirs)
-	@mkdir -p bin
-#	@touch .debugtimestamp
-
 .release : .releasetimestamp
-
-.mpirelease : .mpireleasetimestamp
 
 .releasetimestamp :
 	@mkdir -p .release $(ReleaseDirs)
-	@mkdir -p bin
-
-.mpireleasetimestamp :
-	@mkdir -p .mpirelease $(MPIReleaseDirs)
 	@mkdir -p bin
 
 #--------------------------------------------------------------------------------+
@@ -235,12 +176,6 @@ debugobjectfiles :
 
 releaseobjectfiles :
 	@printf '%s\n' $(ReleaseObjectFiles)
-
-mpidebugobjectfiles :
-	@printf '%s\n' $(MPIDebugObjectFiles)
-
-mpireleaseobjectfiles :
-	@printf '%s\n' $(MPIReleaseObjectFiles)
 
 os :
 	@echo $(OS)
