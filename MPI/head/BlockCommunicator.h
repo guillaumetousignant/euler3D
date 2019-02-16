@@ -14,9 +14,12 @@ class BlockCommunicator {
         int n_blocks_;
         int n_inter_block_boundaries_;
         // BoundaryCellIds* inter_block_boundaries_;
+        int** boundary_blocks_;
+        int* boundary_width_;
+        int*** boundary_map_; // this is temporary
 
 
-        void updateBoundaries() const;
+        void updateBoundaries(DummyMesh* mesh) const;
         void addCellIdInConnexion();
         void getMyBlocks(DummyMesh* mesh) const;
         void initialize();
