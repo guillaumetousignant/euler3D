@@ -3,6 +3,7 @@
 #include <iostream>
 #include "BlockCommunicator.h"
 #include <fstream>
+#include <sstream>
 
 int main(int argc, char** argv)
 {
@@ -34,10 +35,10 @@ int main(int argc, char** argv)
     communicator->updateBoundaries(mesh);
 
     std::ofstream myfile;
-    std::string filename;
+    std::stringstream filename;
     for (int i = 0; i < mesh->n_my_blocks_; i++){
-        filename = "example" + mesh->my_blocks_[i] + ".txt";
-        myfile.open(filename);
+        filename = << "example" << mesh->my_blocks_[i] << ".txt";
+        myfile.open(filename.str());
             for (int j = 0; j < 10; j++){
                 myfile << mesh->blocks_[mesh->my_blocks_[i]]->boundary_values_[j] << std::endl;
             }    
