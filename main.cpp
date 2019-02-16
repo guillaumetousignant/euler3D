@@ -29,7 +29,7 @@ int main(int argc, char** argv)
     std::cout << std::endl;
 
     for (int i = 0; i < mesh->n_my_blocks_; i++){
-        mesh->blocks_[mesh->my_blocks_[i]]->fillBlock(i);
+        mesh->blocks_[mesh->my_blocks_[i]]->fillBlock(mesh->my_blocks_[i]);
     }
 
     communicator->updateBoundaries(mesh);
