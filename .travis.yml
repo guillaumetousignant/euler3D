@@ -7,7 +7,7 @@ before_install:
   - sudo apt install -y tree openssh-client openssh-server openmpi-bin openmpi-common libopenmpi1.6 libopenmpi-dev libopenmpi1.6-dbg cppcheck
 script: 
   - make VERIFY-true
-  - mpirun -n 1 ./bin/euler3D
+  - ./bin/euler3D
   - make clean
   - make
   - cppcheck --quiet --error-exitcode=1 .
