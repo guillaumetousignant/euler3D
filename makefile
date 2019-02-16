@@ -109,7 +109,7 @@ RELEASEFLAGS += -O3 -fopenmp
 #---------------------------------------------------------------------------------------------------+
 # Targets
 
-all : mpidebug $(MPIDebugObjectFiles)
+all : mpirelease $(MPIReleaseObjectFiles)
 
 debug : .debug  begun $(DebugObjectFiles) $(ExecutableDebugObjectFile)
 	@printf '   Linking Debug...'
@@ -124,13 +124,13 @@ release : .release begun $(ReleaseObjectFiles) $(ExecutableReleaseObjectFile)
 	@printf '\n'
 
 mpidebug : .mpidebug  begun $(MPIDebugObjectFiles) $(ExecutableMPIDebugObjectFile)
-	@printf '   Linking Debug...'
+	@printf '   Linking MpiDebug...'
 	@$(MPICXX) $(CXXFLAGS) $(DEBUGFLAGS) $(MPIDebugObjectFiles) $(ExecutableMPIDebugObjectFile) -o $(addprefix bin/,$(Executable))
 	@printf 'Done'
 	@printf '\n'
 
 mpirelease : .mpirelease begun $(MPIReleaseObjectFiles) $(ExecutableMPIReleaseObjectFile)
-	@printf '   Linking Release...'
+	@printf '   Linking MpiRelease...'
 	@$(MPICXX) $(CXXFLAGS) $(RELEASEFLAGS) $(MPIReleaseObjectFiles) $(ExecutableMPIReleaseObjectFile) -o $(addprefix bin/,$(Executable))
 	@printf 'Done'
 	@printf '\n'
@@ -138,7 +138,7 @@ mpirelease : .mpirelease begun $(MPIReleaseObjectFiles) $(ExecutableMPIReleaseOb
 reset : clean 
 	@$(shell reset)
 
-verify : mpidebug $(MPIDebugObjectFiles)
+verify : mpirelease $(MPIReleaseObjectFiles)
 
 #---------------------------------------------------------------------------------------------------+
 #---------------------------------------------------------------------------------------+
