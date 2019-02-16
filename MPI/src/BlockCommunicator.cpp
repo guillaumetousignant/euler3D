@@ -119,7 +119,9 @@ void BlockCommunicator::updateBoundaries(DummyMesh* mesh) const {
         }
 
         if (process_id_ == block_process_id_[boundary_blocks_[i][1]]){
-
+            for (int j = 0; j < boundary_width_[i]; j++){
+                mesh->blocks_[boundary_blocks_[i][1]]->boundary_values_[boundary_map_[i][1][j]] = buffers[i][3][j];
+            }
         }
     }
 
@@ -149,9 +151,9 @@ void BlockCommunicator::getMyBlocks(DummyMesh* mesh) const {
         delete [] mesh->my_blocks_;
     }*/
 
-    mesh->my_blocks_ = new DummyBlock*[mesh->n_my_blocks_];
+    mesh->my_blocks_ = new int[mesh->n_my_blocks_];
     for (int i = 0; i < mesh->n_my_blocks_; i++){
-        mesh->my_blocks_[i] = mesh->blocks_[index_start + i];
+        mesh->my_blocks_[i] = index_start + i;
     }    
 }
 

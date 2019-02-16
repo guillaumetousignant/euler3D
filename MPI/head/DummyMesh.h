@@ -11,6 +11,6 @@ class DummyMesh {
         int n_blocks_;
         DummyBlock** blocks_;
         int n_my_blocks_;
-        DummyBlock** my_blocks_;
+        int* my_blocks_;
 };
 #endif

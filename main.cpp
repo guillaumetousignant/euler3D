@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <iostream>
 #include "BlockCommunicator.h"
+#include <fstream>
 
 int main(int argc, char** argv)
 {
@@ -27,7 +28,20 @@ int main(int argc, char** argv)
     std::cout << std::endl;
 
     for (int i = 0; i < mesh->n_my_blocks_; i++){
-        mesh->my_blocks_[i]->fillBlock(i);
+        mesh->blocks_[mesh->my_blocks_[i]]->fillBlock(i);
+    }
+
+    communicator->updateBoundaries(mesh);
+
+    std::ofstream myfile;
+    std::string filename;
+    for (int i = 0; i < mesh->n_my_blocks_; i++){
+        filename = "example" + mesh->my_blocks_[i] + ".txt";
+        myfile.open(filename);
+            for (int j = 0; j < 10; j++){
+                myfile << mesh->blocks_[mesh->my_blocks_[i]]->boundary_values_[j] << std::endl;
+            }    
+        myfile.close();
     }
 
     // Gather test
