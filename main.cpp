@@ -26,6 +26,10 @@ int main(int argc, char** argv)
     else{
         std::cout << " block.";
     } 
+
+    for (int i = 0; i < mesh->n_my_blocks_; i++){
+        std::cout << " " << mesh->my_blocks_[i];
+    }
     std::cout << std::endl;
 
     for (int i = 0; i < mesh->n_my_blocks_; i++){
