@@ -17,7 +17,14 @@ int main(int argc, char** argv)
     // Print off a hello world message
     std::cout << "Hello from process " << communicator->process_id_ << " out of " 
                     << communicator->number_of_processes_ << " processes. I have " 
-                    << mesh->n_my_blocks_ << " blocks." << std::endl;
+                    << mesh->n_my_blocks_;
+    if (mesh->n_my_blocks_ > 1){
+        std::cout << " blocks.";
+    }
+    else{
+        std::cout << " block.";
+    } 
+    std::cout << std::endl;
 
     for (int i = 0; i < mesh->n_my_blocks_; i++){
         mesh->my_blocks_[i]->fillBlock(i);
