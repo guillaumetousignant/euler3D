@@ -37,6 +37,7 @@ int main(int argc, char** argv)
     std::ofstream myfile;
     std::stringstream filename;
     for (int i = 0; i < mesh->n_my_blocks_; i++){
+        filename.str(std::string());
         filename << "output" << mesh->my_blocks_[i] << ".txt";
         myfile.open(filename.str());
             for (int j = 0; j < 10; j++){
