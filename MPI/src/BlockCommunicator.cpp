@@ -1,6 +1,7 @@
 #include "BlockCommunicator.h"
 #include <mpi.h>
 #include <algorithm>
+#include <iostream> // REMOVE
 
 BlockCommunicator::BlockCommunicator(DummyMesh* mesh): n_blocks_(mesh->n_blocks_){
     MPI_Comm_size(MPI_COMM_WORLD, &number_of_processes_);
@@ -32,6 +33,8 @@ void BlockCommunicator::getMyBlocks(DummyMesh* mesh) const {
     for (int i = 0; i < mesh->n_my_blocks_; i++){
         mesh->my_blocks_[i] = mesh->blocks_[index_start + i];
         block_process_id_[index_start + i] = process_id_;
+        // REMOVE
+        std::cout << process_id_ << std::endl;
     }    
 }
 
