@@ -39,9 +39,9 @@ void BlockCommunicator::getMyBlocks(DummyMesh* mesh) const {
     int index_start = process_id_ * n + std::min(process_id_, remainder);
     mesh->n_my_blocks_ = n + (process_id_ < remainder);
 
-    if (mesh->my_blocks_ != nullptr){
+    /*if (mesh->my_blocks_ != nullptr){
         delete [] mesh->my_blocks_;
-    }
+    }*/
 
     mesh->my_blocks_ = new DummyBlock*[mesh->n_my_blocks_];
     for (int i = 0; i < mesh->n_my_blocks_; i++){
