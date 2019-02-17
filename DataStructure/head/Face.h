@@ -15,6 +15,7 @@ public:
 
 
 	double face_area_;
+	double* face_center_;
 	double* face_normals_;
 	double* right_cell_r_vector_;
 	double* left_cell_r_vector_;

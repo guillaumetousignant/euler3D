@@ -45,9 +45,9 @@ void MetricsInitializer::doInit()
 
     computeCenterCells(iNCells, iNCellsTot, iCells, iNodes);
     
-    //computeCenterFaces(iNFaces, iFaces, iNodes);
+    computeCenterFaces(iNFaces, iFaces, iNodes);
 
-    //computeNormalFaces(iNFaces, iFaces, iNodes);
+    computeNormalFaces(iNFaces, iFaces, iNodes);
 
     //computeAreaFaces(iNFaces, iFaces);
 
@@ -97,7 +97,7 @@ void MetricsInitializer::MetricsInitializer::computeCenterCells(uint iNCells, ui
 
     }
 }
-/*
+
 void MetricsInitializer::computeCenterFaces(uint iNFaces, Face* iFaces, Node* iNodes)
 {
     
@@ -108,41 +108,42 @@ void MetricsInitializer::computeCenterFaces(uint iNFaces, Face* iFaces, Node* iN
         double nodeCoord_y = 0.0;
         double nodeCoord_z = 0.0;
 
-        uint nbFace2Nodes = iFaces[i].nb_face2nodes_;
+        uint nbFace2Nodes = iFaces[i].face_2_nodes_connectivity_size_;
 
 
         for(uint j(0);j < nbFace2Nodes;j++)
         {
             //1. Get coordinates of nodes on face.
-            int nodeID = iFaces[i].face2nodes_[j];
+            int nodeID = iFaces[i].face_2_nodes_connectivity_[j];
 
-            nodeCoord_x += iNodes[nodeID].x_node_;
-            nodeCoord_y += iNodes[nodeID].y_node_;
-            nodeCoord_z += iNodes[nodeID].z_node_;
+            nodeCoord_x += iNodes[nodeID].node_coordinates_[0];
+            nodeCoord_y += iNodes[nodeID].node_coordinates_[1];
+            nodeCoord_z += iNodes[nodeID].node_coordinates_[2];
             
         }
 
         //3. Output Mapping
-        iFaces[i].x_face_ = nodeCoord_x / nbFace2Nodes;
-        iFaces[i].y_face_ = nodeCoord_y / nbFace2Nodes;
-        iFaces[i].z_face_ = nodeCoord_z / nbFace2Nodes;
+        iFaces[i].face_center_[0] = nodeCoord_x / nbFace2Nodes;
+        iFaces[i].face_center_[1] = nodeCoord_y / nbFace2Nodes;
+        iFaces[i].face_center_[2] = nodeCoord_z / nbFace2Nodes;
 
     }
 }
+
 
 void MetricsInitializer::computeNormalFaces(uint iNFaces, Face* iFaces, Node* iNodes)
 {
     for(uint i = 0; i < iNFaces;i++)
     {
-        vector<vector<double>> nodeCoord(iFaces[i].nb_face2nodes_);
+        vector<vector<double>> nodeCoord(iFaces[i].face_2_nodes_connectivity_size_);
 
-        for(int j = 0;j < iFaces[i].nb_face2nodes_;j++)
+        for(int j = 0;j < iFaces[i].face_2_nodes_connectivity_size_;j++)
         {
-            uint nodeID = iFaces[i].face2nodes_[j];
+            uint nodeID = iFaces[i].face_2_nodes_connectivity_[j];
 
-            double node_x = iNodes[nodeID].x_node_;
-            double node_y = iNodes[nodeID].y_node_;
-            double node_z = iNodes[nodeID].z_node_;
+            double node_x = iNodes[nodeID].node_coordinates_[0];
+            double node_y = iNodes[nodeID].node_coordinates_[1];
+            double node_z = iNodes[nodeID].node_coordinates_[2];
 
             nodeCoord[j].push_back(3);
 
@@ -256,6 +257,7 @@ void MetricsInitializer::computeNormalFaces(uint iNFaces, Face* iFaces, Node* iN
 
 }
 
+/*
 void MetricsInitializer::computeInterpVect(uint iNCells, uint iNCellsTot, uint iNFaces, Cell* iCells, Face* iFaces)
 {
     const uint X = 0;

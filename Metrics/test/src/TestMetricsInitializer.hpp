@@ -23,25 +23,20 @@ void buildConnectivity(Block *iBlock)
     iBlock->block_cells_[0].cell_2_cells_connectivity_size_ = 1;
     iBlock->block_cells_[0].cell_2_faces_connectivity_size_ = 5;
     iBlock->block_cells_[0].cell_2_nodes_connectivity_size_ = 5;
-    std::cout << iBlock->block_cells_[0].cell_2_nodes_connectivity_size_  << endl;
     
     //Init Cells block connectivity
-    int cell2cells[1] = {0};
-    int cell2faces[5] = {0,1,2,3,4};
-    int cell2nodes[5] = {0,1,2,3,4};
 
     iBlock->block_cells_[0].cell_2_cells_connectivity_ = new int[iBlock->block_cells_[0].cell_2_cells_connectivity_size_];
-    iBlock->block_cells_[0].cell_2_faces_connectivity_ = new int[iBlock->block_cells_[0].cell_2_faces_connectivity_size_];
-    iBlock->block_cells_[0].cell_2_nodes_connectivity_ = new int[iBlock->block_cells_[0].cell_2_nodes_connectivity_size_];
-
     iBlock->block_cells_[0].cell_2_cells_connectivity_[0] = 0;
 
+    iBlock->block_cells_[0].cell_2_faces_connectivity_ = new int[iBlock->block_cells_[0].cell_2_faces_connectivity_size_];
     iBlock->block_cells_[0].cell_2_faces_connectivity_[0] = 0;
     iBlock->block_cells_[0].cell_2_faces_connectivity_[1] = 1;
     iBlock->block_cells_[0].cell_2_faces_connectivity_[2] = 2;
     iBlock->block_cells_[0].cell_2_faces_connectivity_[3] = 3;
     iBlock->block_cells_[0].cell_2_faces_connectivity_[4] = 4;
 
+    iBlock->block_cells_[0].cell_2_nodes_connectivity_ = new int[iBlock->block_cells_[0].cell_2_nodes_connectivity_size_];
     iBlock->block_cells_[0].cell_2_nodes_connectivity_[0] = 0;
     iBlock->block_cells_[0].cell_2_nodes_connectivity_[1] = 1;
     iBlock->block_cells_[0].cell_2_nodes_connectivity_[2] = 2;
@@ -62,17 +57,39 @@ void buildConnectivity(Block *iBlock)
     for(int i(0);i < iBlock->nb_faces_in_block_;i++)
         iBlock->block_faces_[0].face_2_cells_connectivity_ = face2cells;
 
-    int face2node_0[3] = {0,1,4};
-    int face2node_1[3] = {1,2,4};
-    int face2node_2[3] = {2,3,4};
-    int face2node_3[3] = {3,0,4};
-    int face2node_4[4] = {0,3,2,1};
 
-    iBlock->block_faces_[0].face_2_nodes_connectivity_ = face2node_0;
-    iBlock->block_faces_[1].face_2_nodes_connectivity_ = face2node_1;
-    iBlock->block_faces_[2].face_2_nodes_connectivity_ = face2node_2;
-    iBlock->block_faces_[3].face_2_nodes_connectivity_ = face2node_3;
-    iBlock->block_faces_[4].face_2_nodes_connectivity_ = face2node_4;
+
+    iBlock->block_faces_[0].face_2_nodes_connectivity_ = new int[iBlock->block_faces_[0].face_2_nodes_connectivity_size_];
+
+    iBlock->block_faces_[0].face_2_nodes_connectivity_[0] = 0;
+    iBlock->block_faces_[0].face_2_nodes_connectivity_[1] = 1;
+    iBlock->block_faces_[0].face_2_nodes_connectivity_[2] = 4;
+
+    iBlock->block_faces_[1].face_2_nodes_connectivity_ = new int[iBlock->block_faces_[1].face_2_nodes_connectivity_size_];
+
+    iBlock->block_faces_[1].face_2_nodes_connectivity_[0] = 1;
+    iBlock->block_faces_[1].face_2_nodes_connectivity_[1] = 2;
+    iBlock->block_faces_[1].face_2_nodes_connectivity_[2] = 4;
+
+    iBlock->block_faces_[2].face_2_nodes_connectivity_ = new int[iBlock->block_faces_[2].face_2_nodes_connectivity_size_];
+
+    iBlock->block_faces_[2].face_2_nodes_connectivity_[0] = 2;
+    iBlock->block_faces_[2].face_2_nodes_connectivity_[1] = 3;
+    iBlock->block_faces_[2].face_2_nodes_connectivity_[2] = 4;
+
+    iBlock->block_faces_[3].face_2_nodes_connectivity_ = new int[iBlock->block_faces_[3].face_2_nodes_connectivity_size_];
+
+    iBlock->block_faces_[3].face_2_nodes_connectivity_[0] = 3;
+    iBlock->block_faces_[3].face_2_nodes_connectivity_[1] = 0;
+    iBlock->block_faces_[3].face_2_nodes_connectivity_[2] = 4;
+
+    iBlock->block_faces_[4].face_2_nodes_connectivity_ = new int[iBlock->block_faces_[4].face_2_nodes_connectivity_size_];
+
+    iBlock->block_faces_[4].face_2_nodes_connectivity_[0] = 0;
+    iBlock->block_faces_[4].face_2_nodes_connectivity_[1] = 3;
+    iBlock->block_faces_[4].face_2_nodes_connectivity_[2] = 2;
+    iBlock->block_faces_[4].face_2_nodes_connectivity_[3] = 1;
+    
 
     int node2cells[1] = {0};
 
@@ -107,6 +124,9 @@ void tearDown(Block *iBlock)
     delete [] iBlock->block_cells_[0].cell_2_faces_connectivity_;
     delete [] iBlock->block_cells_[0].cell_2_nodes_connectivity_;
 
+    for(int i(0);i < iBlock->nb_faces_in_block_;i++)
+        delete [] iBlock->block_faces_[i].face_2_nodes_connectivity_;
+
     delete [] iBlock->block_cells_;
     delete [] iBlock->block_faces_;
     delete [] iBlock->block_nodes_;
@@ -138,5 +158,168 @@ TEST_CASE( "TestComputeCenterCells", "Prove that center cells are well defined" 
     metricsInit = nullptr;
 }
 
+
+TEST_CASE("TestComputeCenterFaces", "Prove that center of faces are correct")
+{
+    int blockId = 0;
+    Block *blockData = new Block(blockId);
+
+    buildConnectivity(blockData);
+
+    MetricsInitializer *metricsInit = new MetricsInitializer(blockData);
+    metricsInit->doInit();
+
+    int const nbNodesTriangle = 3;
+    int const nbNodesRect = 4;
+
+    double centerFace1[nbNodesTriangle];
+    double centerFace2[nbNodesTriangle];
+    double centerFace3[nbNodesTriangle];
+    double centerFace4[nbNodesTriangle];
+    double centerFace5[nbNodesRect];
+
+    double epsilon = 0.01;
+
+    centerFace1[0] = 0.33;
+    centerFace1[1] = 0.33;
+    centerFace1[2] = 0.67;
+
+    for(int i(0);i<nbNodesTriangle;i++)
+    {
+            REQUIRE(blockData->block_faces_[0].face_center_[i] <= centerFace1[i] + epsilon);
+            REQUIRE(blockData->block_faces_[0].face_center_[i] >= centerFace1[i] - epsilon);
+    }
+        
+    centerFace2[0] = -0.33;
+    centerFace2[1] = 0.33;
+    centerFace2[2] = 0.67;
+
+    for(int i(0);i<nbNodesTriangle;i++)
+    {
+        REQUIRE(blockData->block_faces_[1].face_center_[i] <= centerFace2[i] + epsilon);
+        REQUIRE(blockData->block_faces_[1].face_center_[i] >= centerFace2[i] - epsilon);
+    }
+
+    centerFace3[0] = -0.33;
+    centerFace3[1] = -0.33;
+    centerFace3[2] = 0.67;
+
+    for(int i(0);i<nbNodesTriangle;i++)
+    {
+        REQUIRE(blockData->block_faces_[2].face_center_[i] <= centerFace3[i] + epsilon);
+        REQUIRE(blockData->block_faces_[2].face_center_[i] >= centerFace3[i] - epsilon);
+    }
+
+    centerFace4[0] = 0.33;
+    centerFace4[1] = -0.33;
+    centerFace4[2] = 0.67;
+
+    for(int i(0);i<nbNodesTriangle;i++)
+    {
+        REQUIRE(blockData->block_faces_[3].face_center_[i] <= centerFace4[i] + epsilon);
+        REQUIRE(blockData->block_faces_[3].face_center_[i] >= centerFace4[i] - epsilon);
+    }
+
+    centerFace5[0] = 0.0;
+    centerFace5[1] = 0.0;
+    centerFace5[2] = 0.0;
+    centerFace5[3] = 0.0;
+
+    for(int i(0);i<nbNodesTriangle;i++)
+    {
+        REQUIRE(blockData->block_faces_[4].face_center_[i] <= centerFace5[i] + epsilon);
+        REQUIRE(blockData->block_faces_[4].face_center_[i] >= centerFace5[i] - epsilon);
+    }
+
+    tearDown(blockData);
+
+    delete blockData;
+    blockData = nullptr;
+
+    delete metricsInit;
+    metricsInit = nullptr;
+}
+
+
+TEST_CASE( "TestComputeNormals", "Prove that normales of each faces are well defined" )
+{
+    
+    int blockId = 0;
+    Block *blockData = new Block(blockId);
+
+    buildConnectivity(blockData);
+
+    MetricsInitializer *metricsInit = new MetricsInitializer(blockData);
+    metricsInit->doInit();
+
+    int const nbCoordVect = 3;
+
+    double normalFace1[nbCoordVect];
+    double normalFace2[nbCoordVect];
+    double normalFace3[nbCoordVect];
+    double normalFace4[nbCoordVect];
+    double normalFace5[nbCoordVect];
+
+    double epsilon = 0.01;
+
+    normalFace1[0] = 1.0;
+    normalFace1[1] = 1.0;
+    normalFace1[2] = 0.5;
+
+    for(int i(0);i<nbCoordVect;i++)
+    {
+            REQUIRE(blockData->block_faces_[0].face_normals_[i] <= normalFace1[i] + epsilon);
+            REQUIRE(blockData->block_faces_[0].face_normals_[i] >= normalFace1[i] - epsilon);
+    }
+        
+    normalFace2[0] = -1.0;
+    normalFace2[1] = 1.0;
+    normalFace2[2] = 0.5;
+
+    for(int i(0);i<nbCoordVect;i++)
+    {
+        REQUIRE(blockData->block_faces_[1].face_normals_[i] <= normalFace2[i] + epsilon);
+        REQUIRE(blockData->block_faces_[1].face_normals_[i] >= normalFace2[i] - epsilon);
+    }
+
+    normalFace3[0] = -1.0;
+    normalFace3[1] = -1.0;
+    normalFace3[2] = 0.5;
+
+    for(int i(0);i<nbCoordVect;i++)
+    {
+        REQUIRE(blockData->block_faces_[2].face_normals_[i] <= normalFace3[i] + epsilon);
+        REQUIRE(blockData->block_faces_[2].face_normals_[i] >= normalFace3[i] - epsilon);
+    }
+
+    normalFace4[0] = 1.0;
+    normalFace4[1] = -1.0;
+    normalFace4[2] = 0.5;
+
+    for(int i(0);i<nbCoordVect;i++)
+    {
+        REQUIRE(blockData->block_faces_[3].face_normals_[i] <= normalFace4[i] + epsilon);
+        REQUIRE(blockData->block_faces_[3].face_normals_[i] >= normalFace4[i] - epsilon);
+    }
+
+    normalFace5[0] = 0.0;
+    normalFace5[1] = 0.0;
+    normalFace5[2] = 0.0;
+    normalFace5[3] = 2.0;
+
+    for(int i(0);i<nbCoordVect;i++)
+    {
+        REQUIRE(blockData->block_faces_[4].face_normals_[i] <= normalFace5[i] + epsilon);
+        REQUIRE(blockData->block_faces_[4].face_normals_[i] >= normalFace5[i] - epsilon);
+    }
+
+    tearDown(blockData);
+
+    delete blockData;
+    blockData = nullptr;
+
+    delete metricsInit;
+    metricsInit = nullptr;
+}
 
 
