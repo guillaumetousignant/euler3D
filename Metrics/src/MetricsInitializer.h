@@ -23,10 +23,12 @@
 
 typedef unsigned int uint;
 
-class MetricsInitializer : public Initializer
+class MetricsInitializer
 {
 
     public:
+
+        void doInit();
 
         /**
          * @brief Construct a new Metrics Initializer object
@@ -45,7 +47,6 @@ class MetricsInitializer : public Initializer
          * @brief This method is the entry point defined by the Initializer's inherited class
          * 
          */
-        virtual void doInit();
     
     protected:
         /**
@@ -60,7 +61,7 @@ class MetricsInitializer : public Initializer
          * @param iSynchs: Array of Cell objects to represent ghost cell of type synchs.
          * @param iNodes: Array of Node objects to represent the properties of nodes.
          */
-        void computeCenterCells(uint iNCells, uint iNCellsTot, Cell* iCells, Cell* iWalls, Cell* iFarF, Cell* iSynchs, Node* iNodes);
+        void computeCenterCells(uint iNCells, uint iNCellsTot, Cell* iCells, Node* iNodes);
 
         /**
          * @brief 
@@ -83,7 +84,7 @@ class MetricsInitializer : public Initializer
          * @param iSynchs 
          * @param iFaces 
          */
-        void computeInterpVect(uint iNCells, uint iNCellsTot, uint iNFaces, Cell* iCells, Cell* iWalls, Cell* iFarF, Cell* iSynchs, Face* iFaces);
+        void computeInterpVect(uint iNCells, uint iNCellsTot, uint iNFaces, Cell* iCells, Face* iFaces);
 
         /**
          * @brief 
@@ -113,7 +114,7 @@ class MetricsInitializer : public Initializer
          * @param iSynchs 
          * @param iFaces 
          */
-        void computeVolumeCells(uint iNCells, uint iNCellsTot, Cell* iCells, Cell* iWalls, Cell* iFarF, Cell* iSynchs, Face* iFaces);
+        void computeVolumeCells(uint iNCells, uint iNCellsTot, Cell* iCells, Face* iFaces);
 
         /**
          * @brief 

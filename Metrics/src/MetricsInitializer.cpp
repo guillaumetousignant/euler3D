@@ -27,23 +27,23 @@ MetricsInitializer::~MetricsInitializer()
 void MetricsInitializer::doInit()
 {
 
-    uint iNCells = blockData_->nb_interior_cells_in_block_;
-    uint iNCellsTot = blockData_->nb_cells_in_block_;
+    uint iNCells = blockData_->n_real_cells_in_block_;
+    uint iNCellsTot = blockData_->n_all_cells_in_block_;
     uint iNFaces = blockData_->nb_faces_in_block_;
 
     //uint iNCellsFarf = blockData_->nb_farfields_in_block_;
     //uint iNCellsWall = blockData_->nb_walls_in_block_;
     //uint iNCellsSynchs = blockData_->nb_synchs_in_block_;
 
-    Cell* iCells = blockData_->cells_in_block_;
-    Face* iFaces = blockData_->faces_in_block_;
-    Node* iNodes = blockData_->nodes_in_block_;
+    Cell* iCells = blockData_->block_cells_;
+    Face* iFaces = blockData_->block_faces_;
+    Node* iNodes = blockData_->block_nodes_;
     
-    Cell* iWalls = blockData_->walls_in_block_;
-    Cell* iSynchs = blockData_->synchs_in_block_;
-    Cell* iFarF = blockData_->farfields_in_block_;
+    //Cell* iWalls = blockData_->walls_in_block_;
+    //Cell* iSynchs = blockData_->synchs_in_block_;
+    //Cell* iFarF = blockData_->farfields_in_block_;
 
-    computeCenterCells(iNCells, iNCellsTot, iCells, iWalls, iFarF, iSynchs, iNodes);
+    computeCenterCells(iNCells, iNCellsTot, iCells, iNodes);
     
     computeCenterFaces(iNFaces, iFaces, iNodes);
 
@@ -51,9 +51,9 @@ void MetricsInitializer::doInit()
 
     computeAreaFaces(iNFaces, iFaces);
 
-    computeVolumeCells(iNCells, iNCellsTot, iCells, iWalls, iFarF, iSynchs, iFaces);
+    computeVolumeCells(iNCells, iNCellsTot, iCells,iFaces);
 
-    //computeInterpVect(iNCells, iNCellsTot,iNFaces, iCells, iWalls, iFarF, iSynchs, iFaces);
+    //computeInterpVect(iNCells, iNCellsTot,iNFaces, iCells, iFaces);
     
     //computeWLS();
 
@@ -67,7 +67,7 @@ void MetricsInitializer::doInit()
 
 }
 
-
+/*
 void MetricsInitializer::MetricsInitializer::computeCenterCells(uint iNCells, uint iNCellsTot, Cell* iCells, Cell* iWalls, Cell* iFarF, Cell* iSynchs, Node* iNodes)
 {
     for(uint i(0);i < iNCells;i++)
@@ -370,5 +370,4 @@ void MetricsInitializer::computeWLS(uint iNCells, Cell* iCells)
 {
     
 }
-
-
+*/
