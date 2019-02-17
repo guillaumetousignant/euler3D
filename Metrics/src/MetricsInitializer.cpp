@@ -177,7 +177,7 @@ void MetricsInitializer::computeNormalFaces(uint iNFaces, Face* iFaces, Node* iN
         double y5,y6,y7,y8;
         double z5,z6,z7,z8;
 
-        if(iFaces[i].nb_face2nodes_ == 3)   
+        if(iFaces[i].face_2_nodes_connectivity_size_ == 3)   
         {
             //Triangular face
             
@@ -210,7 +210,7 @@ void MetricsInitializer::computeNormalFaces(uint iNFaces, Face* iFaces, Node* iN
                 s_z = 0.5*(dxyA + dxyB + dxyC);
 
         }   
-        else if(iFaces[i].nb_face2nodes_ == 4)
+        else if(iFaces[i].face_2_nodes_connectivity_size_ == 4)
         {
 
             //Quadrilateral case
@@ -249,9 +249,9 @@ void MetricsInitializer::computeNormalFaces(uint iNFaces, Face* iFaces, Node* iN
             s_z = 0.0; 
         }
 
-        iFaces[i].n_vector_[0] = s_x;
-        iFaces[i].n_vector_[1] = s_y;
-        iFaces[i].n_vector_[2] = s_z;
+        iFaces[i].face_normals_[0] = s_x;
+        iFaces[i].face_normals_[1] = s_y;
+        iFaces[i].face_normals_[2] = s_z;
 
     }
 
