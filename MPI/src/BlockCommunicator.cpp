@@ -87,8 +87,8 @@ void BlockCommunicator::updateBoundaries(DummyMesh* mesh) const {
                 buffers[i][0][j] = mesh->blocks_[boundary_blocks_[i][0]]->boundary_values_[boundary_map_[i][0][j]];
             }
 
-            MPI_Isend(buffers[i][0], boundary_width_[i], MPI_INT, block_process_id_[boundary_blocks_[i][1]], i, MPI_COMM_WORLD, &send_send_request);
-            MPI_Irecv(buffers[i][1], boundary_width_[i], MPI_INT, block_process_id_[boundary_blocks_[i][1]], i, MPI_COMM_WORLD, &send_receive_request);
+            MPI_Isend(buffers[i][0], boundary_width_[i], MPI_INT, block_process_id_[boundary_blocks_[i][1]], 2*i, MPI_COMM_WORLD, &send_send_request);
+            MPI_Irecv(buffers[i][1], boundary_width_[i], MPI_INT, block_process_id_[boundary_blocks_[i][1]], 2*i+1, MPI_COMM_WORLD, &send_receive_request);
         }
 
         // If this process is receiver
@@ -103,8 +103,8 @@ void BlockCommunicator::updateBoundaries(DummyMesh* mesh) const {
                 buffers[i][2][j] = mesh->blocks_[boundary_blocks_[i][1]]->boundary_values_[boundary_map_[i][1][j]];
             }
 
-            MPI_Isend(buffers[i][2], boundary_width_[i], MPI_INT, block_process_id_[boundary_blocks_[i][0]], i, MPI_COMM_WORLD, &receive_send_request);
-            MPI_Irecv(buffers[i][3], boundary_width_[i], MPI_INT, block_process_id_[boundary_blocks_[i][0]], i, MPI_COMM_WORLD, &receive_receive_request);
+            MPI_Isend(buffers[i][2], boundary_width_[i], MPI_INT, block_process_id_[boundary_blocks_[i][0]], 2*i+1, MPI_COMM_WORLD, &receive_send_request);
+            MPI_Irecv(buffers[i][3], boundary_width_[i], MPI_INT, block_process_id_[boundary_blocks_[i][0]], 2*i, MPI_COMM_WORLD, &receive_receive_request);
         }
     }
 
@@ -113,18 +113,19 @@ void BlockCommunicator::updateBoundaries(DummyMesh* mesh) const {
     // Put in blocks
     for (int i = 0; i < n_inter_block_boundaries_; i++){
         if (process_id_ == block_process_id_[boundary_blocks_[i][0]]){
-            if (block_process_id_[boundary_blocks_[i][0]] == block_process_id_[boundary_blocks_[i][1]]) {
-                std::cout << boundary_blocks_[i][0] << " AAAAAAAAA";
+            //if (block_process_id_[boundary_blocks_[i][0]] == block_process_id_[boundary_blocks_[i][1]]) {
+            if (i == 1){
+                std::cout << boundary_blocks_[i][0] << " Block receiving ";
                 for (int j = 0; j < boundary_width_[i]; j++){
                     std::cout << " " << buffers[i][1][j];
-                } 
-                
+                }   
             }
             for (int j = 0; j < boundary_width_[i]; j++){
                 mesh->blocks_[boundary_blocks_[i][0]]->boundary_values_[boundary_map_[i][0][j]] = buffers[i][1][j];
             }
-            if (block_process_id_[boundary_blocks_[i][0]] == block_process_id_[boundary_blocks_[i][1]]) {
-                std::cout << "   " << boundary_blocks_[i][0] << " BBBBBBB";
+            //if (block_process_id_[boundary_blocks_[i][0]] == block_process_id_[boundary_blocks_[i][1]]) {
+            if (i == 1){
+                std::cout << "   " << boundary_blocks_[i][0] << " Block writing ";
                 for (int j = 0; j < boundary_width_[i]; j++){
                     std::cout << " " << mesh->blocks_[boundary_blocks_[i][0]]->boundary_values_[boundary_map_[i][0][j]];
                 } 
@@ -133,18 +134,19 @@ void BlockCommunicator::updateBoundaries(DummyMesh* mesh) const {
         }
 
         if (process_id_ == block_process_id_[boundary_blocks_[i][1]]){
-            if (block_process_id_[boundary_blocks_[i][0]] == block_process_id_[boundary_blocks_[i][1]]) {
-                std::cout << boundary_blocks_[i][1] << " AAAAAAAAA";
+            //if (block_process_id_[boundary_blocks_[i][0]] == block_process_id_[boundary_blocks_[i][1]]) {
+            if (i == 1){
+                std::cout << boundary_blocks_[i][1] << " Block receiving";
                 for (int j = 0; j < boundary_width_[i]; j++){
                     std::cout << " " << buffers[i][3][j];
                 } 
-                
             }
             for (int j = 0; j < boundary_width_[i]; j++){
                 mesh->blocks_[boundary_blocks_[i][1]]->boundary_values_[boundary_map_[i][1][j]] = buffers[i][3][j];                                                                                                                                             
             }
-            if (block_process_id_[boundary_blocks_[i][0]] == block_process_id_[boundary_blocks_[i][1]]) {
-                std::cout << "   " << boundary_blocks_[i][1] << " BBBBBBB";
+            //if (block_process_id_[boundary_blocks_[i][0]] == block_process_id_[boundary_blocks_[i][1]]) {
+            if (i == 1){
+                std::cout << "   " << boundary_blocks_[i][1] << " Block writing";
                 for (int j = 0; j < boundary_width_[i]; j++){
                     std::cout << " " << mesh->blocks_[boundary_blocks_[i][1]]->boundary_values_[boundary_map_[i][1][j]];
                 } 
