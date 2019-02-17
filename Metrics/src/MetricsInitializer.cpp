@@ -34,7 +34,7 @@ void MetricsInitializer::doInit()
     //uint iNCellsFarf = blockData_->nb_farfields_in_block_;
     //uint iNCellsWall = blockData_->nb_walls_in_block_;
     //uint iNCellsSynchs = blockData_->nb_synchs_in_block_;
-
+    
     Cell* iCells = blockData_->block_cells_;
     Face* iFaces = blockData_->block_faces_;
     Node* iNodes = blockData_->block_nodes_;

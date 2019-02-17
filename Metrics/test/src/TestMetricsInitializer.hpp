@@ -4,6 +4,9 @@
 
 //Project files
 #include "Block.h"
+#include "Metrics/src/MetricsInitializer.h"
+
+using namespace std;
 
 
 void buildConnectivity(Block *iBlock)
@@ -19,16 +22,31 @@ void buildConnectivity(Block *iBlock)
 
     iBlock->block_cells_[0].cell_2_cells_connectivity_size_ = 1;
     iBlock->block_cells_[0].cell_2_faces_connectivity_size_ = 5;
-    iBlock->block_cells_[0].cell_2_faces_connectivity_size_ = 5;
-
+    iBlock->block_cells_[0].cell_2_nodes_connectivity_size_ = 5;
+    std::cout << iBlock->block_cells_[0].cell_2_nodes_connectivity_size_  << endl;
+    
     //Init Cells block connectivity
     int cell2cells[1] = {0};
     int cell2faces[5] = {0,1,2,3,4};
     int cell2nodes[5] = {0,1,2,3,4};
 
-    iBlock->block_cells_[0].cell_2_cells_connectivity_ = cell2cells;
-    iBlock->block_cells_[0].cell_2_faces_connectivity_ = cell2faces;
-    iBlock->block_cells_[0].cell_2_nodes_connectivity_ = cell2nodes;
+    iBlock->block_cells_[0].cell_2_cells_connectivity_ = new int[iBlock->block_cells_[0].cell_2_cells_connectivity_size_];
+    iBlock->block_cells_[0].cell_2_faces_connectivity_ = new int[iBlock->block_cells_[0].cell_2_faces_connectivity_size_];
+    iBlock->block_cells_[0].cell_2_nodes_connectivity_ = new int[iBlock->block_cells_[0].cell_2_nodes_connectivity_size_];
+
+    iBlock->block_cells_[0].cell_2_cells_connectivity_[0] = 0;
+
+    iBlock->block_cells_[0].cell_2_faces_connectivity_[0] = 0;
+    iBlock->block_cells_[0].cell_2_faces_connectivity_[1] = 1;
+    iBlock->block_cells_[0].cell_2_faces_connectivity_[2] = 2;
+    iBlock->block_cells_[0].cell_2_faces_connectivity_[3] = 3;
+    iBlock->block_cells_[0].cell_2_faces_connectivity_[4] = 4;
+
+    iBlock->block_cells_[0].cell_2_nodes_connectivity_[0] = 0;
+    iBlock->block_cells_[0].cell_2_nodes_connectivity_[1] = 1;
+    iBlock->block_cells_[0].cell_2_nodes_connectivity_[2] = 2;
+    iBlock->block_cells_[0].cell_2_nodes_connectivity_[3] = 3;
+    iBlock->block_cells_[0].cell_2_nodes_connectivity_[4] = 4;
 
     //Init Faces block connectivity
     for(int i(0);i < iBlock->nb_faces_in_block_;i++)
@@ -81,16 +99,14 @@ void buildConnectivity(Block *iBlock)
     iBlock->block_nodes_[4].node_coordinates_[1] = 0.0;
     iBlock->block_nodes_[4].node_coordinates_[2] = 2.0;
 
-    for(int i(0);i < iBlock->nb_faces_in_block_;i++)
-    {
-        
-    }
-
-
 }
 
 void tearDown(Block *iBlock)
 {
+    delete [] iBlock->block_cells_[0].cell_2_cells_connectivity_;
+    delete [] iBlock->block_cells_[0].cell_2_faces_connectivity_;
+    delete [] iBlock->block_cells_[0].cell_2_nodes_connectivity_;
+
     delete [] iBlock->block_cells_;
     delete [] iBlock->block_faces_;
     delete [] iBlock->block_nodes_;
@@ -107,9 +123,11 @@ TEST_CASE( "TestComputeCenterCells", "Prove that center cells are well defined" 
     MetricsInitializer *metricsInit = new MetricsInitializer(blockData);
     metricsInit->doInit();
 
-    double centerCoord[3] = {0.0,0.3,0.4};
+    double centerCoord[3] = {0.0,0.0,0.4};
 
-    REQUIRE(centerCoord == blockData->block_cells_[0].cell_coordinates_);
+    REQUIRE(centerCoord[0] == blockData->block_cells_[0].cell_coordinates_[0]);
+    REQUIRE(centerCoord[1] == blockData->block_cells_[0].cell_coordinates_[1]);
+    REQUIRE(centerCoord[2] == blockData->block_cells_[0].cell_coordinates_[2]);
 
     tearDown(blockData);
 
@@ -119,3 +137,6 @@ TEST_CASE( "TestComputeCenterCells", "Prove that center cells are well defined" 
     delete metricsInit;
     metricsInit = nullptr;
 }
+
+
+
