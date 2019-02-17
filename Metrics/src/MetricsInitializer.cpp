@@ -45,13 +45,13 @@ void MetricsInitializer::doInit()
 
     computeCenterCells(iNCells, iNCellsTot, iCells, iNodes);
     
-    computeCenterFaces(iNFaces, iFaces, iNodes);
+    //computeCenterFaces(iNFaces, iFaces, iNodes);
 
-    computeNormalFaces(iNFaces, iFaces, iNodes);
+    //computeNormalFaces(iNFaces, iFaces, iNodes);
 
-    computeAreaFaces(iNFaces, iFaces);
+    //computeAreaFaces(iNFaces, iFaces);
 
-    computeVolumeCells(iNCells, iNCellsTot, iCells,iFaces);
+    //computeVolumeCells(iNCells, iNCellsTot, iCells, iFaces);
 
     //computeInterpVect(iNCells, iNCellsTot,iNFaces, iCells, iFaces);
     
@@ -61,14 +61,14 @@ void MetricsInitializer::doInit()
    iCells = nullptr;
    iFaces = nullptr;
    iNodes = nullptr;
-   iWalls = nullptr;
-   iSynchs = nullptr;
-   iFarF = nullptr;
+   //iWalls = nullptr;
+   //iSynchs = nullptr;
+   //iFarF = nullptr;
 
 }
 
-/*
-void MetricsInitializer::MetricsInitializer::computeCenterCells(uint iNCells, uint iNCellsTot, Cell* iCells, Cell* iWalls, Cell* iFarF, Cell* iSynchs, Node* iNodes)
+
+void MetricsInitializer::MetricsInitializer::computeCenterCells(uint iNCells, uint iNCellsTot, Cell* iCells, Node* iNodes)
 {
     for(uint i(0);i < iNCells;i++)
     {
@@ -76,28 +76,28 @@ void MetricsInitializer::MetricsInitializer::computeCenterCells(uint iNCells, ui
         double nodeCoord_y = 0.0;
         double nodeCoord_z = 0.0;
 
-        uint nbCell2Node = iCells[i].nb_cell2nodes_;
-
+        uint nbCell2Node = iCells[i].cell_2_nodes_connectivity_size_;
+        
         for(uint j(0);j < nbCell2Node;j++)
         {
             //1. Get nodes coordinates of current cell
-            int nodeID = iCells[i].cell2nodes_[j];
+            int nodeID = iCells[i].cell_2_nodes_connectivity_[j];
 
             //2. Get average of all nodes coordinates
-            nodeCoord_x += iNodes[nodeID].x_node_;
-            nodeCoord_y += iNodes[nodeID].y_node_;
-            nodeCoord_z += iNodes[nodeID].z_node_;
+            nodeCoord_x += iNodes[nodeID].node_coordinates_[0];
+            nodeCoord_y += iNodes[nodeID].node_coordinates_[1];
+            nodeCoord_z += iNodes[nodeID].node_coordinates_[2];
 
         }
 
         //3. Output mapping
-        iCells[i].x_cell_ = nodeCoord_x / nbCell2Node;
-        iCells[i].y_cell_ = nodeCoord_y / nbCell2Node;
-        iCells[i].z_cell_ = nodeCoord_z / nbCell2Node;
+        iCells[i].cell_coordinates_[0] = nodeCoord_x / nbCell2Node;
+        iCells[i].cell_coordinates_[1] = nodeCoord_y / nbCell2Node;
+        iCells[i].cell_coordinates_[2] = nodeCoord_z / nbCell2Node;
 
     }
 }
-
+/*
 void MetricsInitializer::computeCenterFaces(uint iNFaces, Face* iFaces, Node* iNodes)
 {
     
@@ -256,7 +256,7 @@ void MetricsInitializer::computeNormalFaces(uint iNFaces, Face* iFaces, Node* iN
 
 }
 
-void MetricsInitializer::computeInterpVect(uint iNCells, uint iNCellsTot, uint iNFaces, Cell* iCells, Cell* iWalls, Cell* iFarF, Cell* iSynchs, Face* iFaces)
+void MetricsInitializer::computeInterpVect(uint iNCells, uint iNCellsTot, uint iNFaces, Cell* iCells, Face* iFaces)
 {
     const uint X = 0;
     const uint Y = 1;
@@ -330,7 +330,7 @@ void MetricsInitializer::computeAreaFaces(uint iNFaces, Face* iFaces)
 }   
 
     
-void MetricsInitializer::computeVolumeCells(uint iNCells, uint iNCellsTot, Cell* iCells, Cell* iWalls, Cell* iFarF, Cell* iSynchs, Face* iFaces)
+void MetricsInitializer::computeVolumeCells(uint iNCells, uint iNCellsTot, Cell* iCells, Face* iFaces)
 {
     const int X = 0;
     const int Y = 1;
