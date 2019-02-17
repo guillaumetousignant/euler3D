@@ -13,7 +13,6 @@
 #define DEF_METRICSINITIALIZER_H
 
 //Project files.
-#include 
 #include "Block.h"
 
 //Standard library
