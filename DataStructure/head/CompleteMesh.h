@@ -1,7 +1,7 @@
 #ifndef DATASTRUCTURE_HEAD_COMPLETEMESH_H
 #define DATASTRUCTURE_HEAD_COMPLETEMESH_H
 
-#include Block.h
+#include "Block.h"
 
 class CompleteMesh
 {
@@ -11,7 +11,7 @@ public:
 	int* my_blocks_;
 	Block* all_blocks_;
 	
-	CompleteMesh();
+	CompleteMesh(int n_blocks, int n_block_in_process, int my_blocks[], Block all_blocks[]);
 	~CompleteMesh();
 	
 };

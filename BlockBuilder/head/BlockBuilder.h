@@ -15,7 +15,7 @@ public:
 	virtual void readMyBlock(Block* block) = 0;
 
 	Cell* buildCell(int cell_type);
-	void buildNode();
+	void buildNode(int node_id,double node_coordinates[3], NodeCreator* node_creator);
 	void buildFace(int face_type);
 	void setConnectivity(Block* block);
 	void setMetrics(Block* block);
