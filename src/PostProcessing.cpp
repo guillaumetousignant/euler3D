@@ -11,14 +11,14 @@ using namespace std;
 
 PostProcessing::PostProcessing(Block* block, CompleteMesh* completemesh)
 {
-  cout << "Starting initializePostProcessing...................................." << endl;
+  cout << "Starting PostProcessing.............................................." << endl;
 
   cp_ = 0;
   mach_ = 0;
 
   initializePostProcessing(block, completemesh);
 
-  cout << "Ending initializePostProcessing......................................" << endl;
+  cout << "Ending PostProcessing................................................" << endl;
 }
 
 PostProcessing::~PostProcessing()
@@ -45,6 +45,8 @@ void PostProcessing::initializePostProcessing(Block* block, CompleteMesh* comple
 {
   int i;
 
+  cout << "Starting initializePostProcessing...................................." << endl;
+
   iteration_interval_ = 0;
 
   // Initialize vector cp_
@@ -61,20 +63,29 @@ void PostProcessing::initializePostProcessing(Block* block, CompleteMesh* comple
     convergencedata_[i] = new double[10];
   }
 
+  cout << "Ending initializePostProcessing......................................" << endl;
+
 }
 
 void PostProcessing::checkStopSolver(Solver* solver,  bool stopsimulation, int iter, int max_iter, double convergence_criterion)
 {
+  cout << "Starting checkStopSolver............................................." << endl;
+
   // Vefiry conditions and change the status of the simulation if one condition is true.
   if(iter == max_iter || stopsimulation == true || ro_convergence_ <= convergence_criterion || uu_convergence_ <= convergence_criterion || vv_convergence_ <= convergence_criterion || ww_convergence_ <= convergence_criterion || pp_convergence_ <= convergence_criterion)
   {
     solver->stop_solver_flag_ == true;
   }
+
+  cout << "Ending checkStopSolver..............................................." << endl;
+
 }
 
 void PostProcessing::convergenceSum()
 {
   int i;
+
+  cout << "Starting convergenceSum.............................................." << endl;
 
     for(i=0; i<nblock ; i++) // For each block
       {
@@ -85,11 +96,15 @@ void PostProcessing::convergenceSum()
         ww_convergence_ += convergencedata_[i][8];
         pp_convergence_ += convergencedata_[i][9];
       }
+
+  cout << "Ending convergenceSum................................................" << endl;
 }
 
 void coefficientsSum()
 {
   int i;
+
+  cout << "Starting coefficientsSum............................................." << endl;
 
     for(i=0; i<nblock ; i++) // For each block
       {
@@ -100,6 +115,8 @@ void coefficientsSum()
         cmy_geometry_ += convergencedata_[i][3];
         cmz_geometry_ += convergencedata_[i][4];
       }
+
+  cout << "Ending coefficientsSum..............................................." << endl;
 }
 
 void PostProcessing::computeFlowData(Block* block, Solver* solver, bool stopsimulation, int iter, int max_iter, double cmac, double mach, double aoa_rad, double gamma)
