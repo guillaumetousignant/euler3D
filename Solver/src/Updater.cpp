@@ -214,7 +214,7 @@ void Updater::synchroniseUpdate(Block* block)
 
 
 
-Updater::Updater(double gamma, double *alpha_rk, double *beta_rk);
+Updater::Updater(double gamma, double *alpha_rk, double *beta_rk)
 {
 	current_stage_=0;
 	gamma_=gamma;

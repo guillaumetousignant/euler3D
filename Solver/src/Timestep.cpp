@@ -28,7 +28,7 @@ void Timestep::computeSpectralRadius(Block* block)
 	block->test_block_+=2;
 	cout<<"\t\tExécution computeSpectralRadius: "<<block->test_block_<<endl;
 	// P.211 Blazek !!!	watch out pour delta_s s'il doit multiplier juste c ou non (dépend de comment n définit face_normals_y)
-
+	/*
 	PrimitiveVariables* my_primitive_variables;
 	my_primitive_variables = block -> block_primitive_variables_;
 	double* my_ro_array,my_uu_array,my_vv_array,my_ww_array,my_pp_array;
@@ -76,14 +76,14 @@ void Timestep::computeSpectralRadius(Block* block)
 			spectral_radius[cell_idx] += fabs(my_uu_array[cell_idx]*normalized_x+my_vv_array[cell_idx]*normalized_y+my_ww_array[cell_idx]*normalized_z) + c*delta_s;
 		}
 	}
-
+	*/
 }
 
 void Timestep::computeTimestep(Block* block)
 {
 	block->test_block_-=2;
 	cout<<"\t\tExécution computeTimestep: "<<block->test_block_<<endl;
-
+	/*
 	Cell* my_cells;
 	my_cells = block -> block_cells_;
 	int ncell;
@@ -104,7 +104,7 @@ void Timestep::computeTimestep(Block* block)
 
 		dt[cell_idx] = cfl_*cell_volume[cell_idx]/spectral_radius[cell_idx];
 	}
-
+	*/
 }
 
 
