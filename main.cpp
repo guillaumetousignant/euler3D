@@ -10,6 +10,7 @@
 
 #include <iostream>
 #include <string>
+#include <mpi.h>
 using namespace std;
 
 int main()
@@ -22,6 +23,16 @@ int main()
 
 	Solver *solver=initializer->initializeSolver(interface);
 	solver->solve(block);
+	
+	/*
+	// Initialize the MPI environment
+	MPI_Init(NULL, NULL);
+
+	cout << "This is the main" << endl;
+
+	// Finalize the MPI environment.
+	MPI_Finalize();
+	*/
 
 	/*
 	double gamma=1.5;
