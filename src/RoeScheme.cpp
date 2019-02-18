@@ -39,6 +39,20 @@ void RoeScheme::computeFlux(Block* block)
 	my_ww_array = my_primitive_variables -> ww_;
 	my_pp_array = my_primitive_variables -> pp_;
 
+	double* my_conv_res_ro,my_conv_res_uu,my_conv_res_vv,my_conv_res_ww,my_conv_res_pp;
+	my_conv_res_ro = my_primitive_variables -> conv_res_ro_;
+	my_conv_res_uu = my_primitive_variables -> conv_res_uu_;
+	my_conv_res_vv = my_primitive_variables -> conv_res_vv_;
+	my_conv_res_ww = my_primitive_variables -> conv_res_ww_;
+	my_conv_res_pp = my_primitive_variables -> conv_res_pp_;
+
+	double* my_diss_res_ro,my_diss_res_uu,my_diss_res_vv,my_diss_res_ww,my_diss_res_pp;
+	my_diss_res_ro = my_primitive_variables -> diss_res_ro_;
+	my_diss_res_uu = my_primitive_variables -> diss_res_uu_;
+	my_diss_res_vv = my_primitive_variables -> diss_res_vv_;
+	my_diss_res_ww = my_primitive_variables -> diss_res_ww_;
+	my_diss_res_pp = my_primitive_variables -> diss_res_pp_;
+
 	int nface;
 	Face* my_faces;
 	my_faces = block -> block_faces_;
@@ -178,9 +192,54 @@ void RoeScheme::computeFlux(Block* block)
 		flux_4_dissipative = 0.5*(-A_roe_w)*normal_norm;
 		flux_5_dissipative = 0.5*(-A_roe_energy)*normal_norm;
 
+		my_conv_res_ro[left_cell] += flux_1_convective;
+		my_conv_res_uu[left_cell] += flux_2_convective;
+		my_conv_res_vv[left_cell] += flux_3_convective;
+		my_conv_res_ww[left_cell] += flux_4_convective;
+		my_conv_res_pp[left_cell] += flux_5_convective;
+
+		my_conv_res_ro[right_cell] -= flux_1_convective;
+		my_conv_res_uu[right_cell] -= flux_2_convective;
+		my_conv_res_vv[right_cell] -= flux_3_convective;
+		my_conv_res_ww[right_cell] -= flux_4_convective;
+		my_conv_res_pp[right_cell] -= flux_5_convective;
+
+		my_diss_res_ro[left_cell] += flux_1_dissipative;
+		my_diss_res_uu[left_cell] += flux_2_dissipative;
+		my_diss_res_vv[left_cell] += flux_3_dissipative;
+		my_diss_res_ww[left_cell] += flux_4_dissipative;
+		my_diss_res_pp[left_cell] += flux_5_dissipative;
+
+		my_diss_res_ro[right_cell] -= flux_1_dissipative;
+		my_diss_res_uu[right_cell] -= flux_2_dissipative;
+		my_diss_res_vv[right_cell] -= flux_3_dissipative;
+		my_diss_res_ww[right_cell] -= flux_4_dissipative;
+		my_diss_res_pp[right_cell] -= flux_5_dissipative;
 	}
 
-	//Il manque la distribution des flux ici - on sépare convectif et dissipatif
+	Cell* my_cells;
+	my_cells = block -> block_cells_;
+	ncell = block -> n_real_cells_in_block_;
+	double cell_volume;
+
+	for (int cell_idx=0; cell<ncell; cell_idx++)
+	{
+		my_cell = my_cells[cell_idx];
+		cell_volume  = my_cell -> cell_volume_;
+
+		my_conv_res_ro[cell_idx] /= cell_volume[cell_idx];
+		my_conv_res_uu[cell_idx] /= cell_volume[cell_idx];
+		my_conv_res_vv[cell_idx] /= cell_volume[cell_idx];
+		my_conv_res_ww[cell_idx] /= cell_volume[cell_idx];
+		my_conv_res_pp[cell_idx] /= cell_volume[cell_idx];
+
+		my_diss_res_ro[cell_idx] /= cell_volume[cell_idx];
+		my_diss_res_uu[cell_idx] /= cell_volume[cell_idx];
+		my_diss_res_vv[cell_idx] /= cell_volume[cell_idx];
+		my_diss_res_ww[cell_idx] /= cell_volume[cell_idx];
+		my_diss_res_pp[cell_idx] /= cell_volume[cell_idx];
+	}
+
 }
 
 

@@ -59,8 +59,7 @@ void Timestep::computeSpectralRadius(Block* block)
 
 	for(int cell_idx = 0; cell_idx < ncell; cell_idx++)
 	{
-		my_cell = my_cells[cell_idx];
-		c = sqrt(gamma_*my_pp_array[my_cell]/my_ro_array[my_cell]);
+		c = sqrt(gamma_*my_pp_array[cell_idx]/my_ro_array[cell_idx]);
 
 		// (Je peux faire un sizeof de cell2face, mais on perdrait de la performance, Laurent va pt le faire dans la connectivité, à suivre....)
 		for(int face_idx = 0; face_idx < face_in_cell; face_idx++) HOW DO I ACCCES face_in_cell?????
@@ -100,7 +99,8 @@ void Timestep::computeTimestep(Block* block)
 	{
 		my_cell = my_cells[cell_idx];
 		cell_volume  = my_cell -> cell_volume_;
-		dt[my_cell] = cfl_*cell_volume_[my_cell]/spectral_radius[my_cell];
+
+		dt[cell_idx] = cfl_*cell_volume[cell_idx]/spectral_radius[cell_idx];
 	}
 	*/
 }
