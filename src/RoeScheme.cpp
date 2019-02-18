@@ -13,9 +13,8 @@ void RoeScheme::computeFlux(Block* block)
 {
 	block->test_block_++;
 	cout<<"\t\t\t\tExécution computeFlux: Roe: "<<block->test_block_<<endl;
-
+	/*
 	//Set variables
-	int left_cell,right_cell;
 	double rho_L,u_L,v_L,w_L,p_L,H_L,qq_L,V_L,rho_R,u_R,v_R,w_R,p_R,H_R,qq_R,V_R;
 	double delta_p,delta_V,delta_rho,delta_u,delta_v,delta_w;
 	double rho_wave,u_wave,v_wave,w_wave,H_wave,c_wave,V_wave,q_square_wave;
@@ -53,7 +52,8 @@ void RoeScheme::computeFlux(Block* block)
 	my_diss_res_ww = my_primitive_variables -> diss_res_ww_;
 	my_diss_res_pp = my_primitive_variables -> diss_res_pp_;
 
-	int nface;
+	int nface, my_face, left_cell, right_cell;
+	int* neighboor_cells;
 	Face* my_faces;
 	my_faces = block -> block_faces_;
 	nface = block -> n_faces_in_block_;
@@ -68,7 +68,7 @@ void RoeScheme::computeFlux(Block* block)
 		normalized_z = block -> block_faces_[my_face] -> face_normals_[2];
 		normal_norm=sqrt(normalized_x*normalized_x+normalized_y*normalized_y+normalized_z*normalized_z);
 
-		neighboor_cells = my_face -> face_2_cells;
+		neighboor_cells = my_face -> face_2_cells_connectivity_;
 		left_cell = neighboor_cells[0];
 		right_cell = neighboor_cells[1];
 
@@ -112,7 +112,6 @@ void RoeScheme::computeFlux(Block* block)
 
 		// Harten's correction
 		double delta=1./10.*c_wave; //Harten's delta
-		// !!!! DO WE USE c_wave OR local speed of sound?
 		if (fabs(V_wave-c_wave)<=delta)
 		{
 			LAMBDA1 = (fabs(V_wave-c_wave)*fabs(V_wave-c_wave)+delta*delta)/(2.*delta);
@@ -219,10 +218,11 @@ void RoeScheme::computeFlux(Block* block)
 
 	Cell* my_cells;
 	my_cells = block -> block_cells_;
+	int ncell, my_cell;
 	ncell = block -> n_real_cells_in_block_;
 	double cell_volume;
 
-	for (int cell_idx=0; cell<ncell; cell_idx++)
+	for (int cell_idx=0; cell_idx<ncell; cell_idx++)
 	{
 		my_cell = my_cells[cell_idx];
 		cell_volume  = my_cell -> cell_volume_;
@@ -239,7 +239,7 @@ void RoeScheme::computeFlux(Block* block)
 		my_diss_res_ww[cell_idx] /= cell_volume[cell_idx];
 		my_diss_res_pp[cell_idx] /= cell_volume[cell_idx];
 	}
-
+	*/
 }
 
 
