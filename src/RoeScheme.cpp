@@ -180,7 +180,7 @@ void RoeScheme::computeFlux(Block* block)
 
 	}
 
-	//Il manque la distribution des flux ici
+	//Il manque la distribution des flux ici - on sépare convectif et dissipatif
 }
 
 

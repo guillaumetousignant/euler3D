@@ -53,8 +53,6 @@ void Timestep::computeSpectralRadius(Block* block)
 	double* spectral_radius;
 	spectral_radius = time_variables -> spectral_radius_;
 
-	double* cell_spectral_radius;
-
 	int face_id;
 
 	double normalized_x,normalized_y,normalized_z;
@@ -84,11 +82,27 @@ void Timestep::computeTimestep(Block* block)
 {
 	block->test_block_-=2;
 	cout<<"\t\tExécution computeTimestep: "<<block->test_block_<<endl;
+	/*
+	Cell* my_cells;
+	my_cells = block -> block_cells_;
+	int ncell;
+	ncell = block -> n_real_cells_in_block_;
+	double cell_volume;
 
-	// for(int cell = 0; cell < ncell; cell++) HOW TO I ACCCES ncell?????
-	//{
-	//delta_t[cell] = cfl_*cells_areas[cell]/spectral_radius[cell]; VOLUMEEEEEEEEE!
-	//}
+	TimeVariables* time_variables;
+	time_variables = block -> block_time_variables_;
+	double* spectral_radius;
+	spectral_radius = time_variables -> spectral_radius_;
+	double* dt;
+	dt = time_variables -> dt_;
+
+	for(int cell_idx = 0; cell_idx < ncell; cell_idx++)
+	{
+		my_cell = my_cells[cell_idx];
+		cell_volume  = my_cell -> cell_volume_;
+		dt[my_cell] = cfl_*cell_volume_[my_cell]/spectral_radius[my_cell];
+	}
+	*/
 }
 
 
