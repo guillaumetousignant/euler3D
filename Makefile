@@ -138,7 +138,7 @@ mpirelease : .mpirelease begun $(MPIReleaseObjectFiles) $(ExecutableMPIReleaseOb
 reset : clean 
 	@$(shell reset)
 
-verify : mpirelease $(MPIReleaseObjectFiles)
+verify : mpidebug $(MPIDebugObjectFiles)
 
 #---------------------------------------------------------------------------------------------------+
 #---------------------------------------------------------------------------------------+

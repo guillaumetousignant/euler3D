@@ -304,8 +304,7 @@ TEST_CASE( "TestComputeNormals", "Prove that normales of each faces are well def
 
     normalFace5[0] = 0.0;
     normalFace5[1] = 0.0;
-    normalFace5[2] = 0.0;
-    normalFace5[3] = 2.0;
+    normalFace5[2] = 2.0;
 
     for(int i(0);i<nbCoordVect;i++)
     {
@@ -321,5 +320,42 @@ TEST_CASE( "TestComputeNormals", "Prove that normales of each faces are well def
     delete metricsInit;
     metricsInit = nullptr;
 }
+
+TEST_CASE("Test ComputeAreaFaces", "Testing if areas are well defined")
+{
+    int blockId = 0;
+    Block *blockData = new Block(blockId);
+
+    buildConnectivity(blockData);
+
+    MetricsInitializer *metricsInit = new MetricsInitializer(blockData);
+    metricsInit->doInit();
+
+    int const nbFaces = 5;
+    double area[nbFaces];
+    
+    area[0] = 1.5;
+    area[1] = 1.5;
+    area[2] = 1.5;
+    area[3] = 1.5;
+    area[4] = 2;
+
+    for(int i(0);i < nbFaces;i++)
+        REQUIRE(blockData->block_faces_[i].face_area_ == area[i]);
+
+    tearDown(blockData);
+
+    delete blockData;
+    blockData = nullptr;
+
+    delete metricsInit;
+    metricsInit = nullptr;
+
+}
+
+
+
+
+
 
 
