@@ -50,10 +50,14 @@ void Timestep::computeSpectralRadius(Block* block)
 
 	TimeVariables* time_variables;
 	time_variables = block -> block_time_variables_;
-	double** spectral_radius_array;
-	spectral_radius_array = time_variables -> spectral_radius_;
+	double* spectral_radius;
+	spectral_radius = time_variables -> spectral_radius_;
 
 	double* cell_spectral_radius;
+
+	int face_id;
+
+	double normalized_x,normalized_y,normalized_z;
 
 	for(int cell_idx = 0; cell_idx < ncell; cell_idx++)
 	{
@@ -61,16 +65,16 @@ void Timestep::computeSpectralRadius(Block* block)
 		c = sqrt(gamma_*my_pp_array[my_cell]/my_ro_array[my_cell]);
 
 		// (Je peux faire un sizeof de cell2face, mais on perdrait de la performance, Laurent va pt le faire dans la connectivité, à suivre....)
-		for(int face_idx = 0; face_idx < face_in_cell; face_idx++) HOW TO I ACCCES face_in_cell?????
+		for(int face_idx = 0; face_idx < face_in_cell; face_idx++) HOW DO I ACCCES face_in_cell?????
 		{
-			face_idx =
+			face_id = my_cell -> cell_2_faces_[face_idx];
 
-			cell_spectral_radius = spectral_radius_array[cell_idx];
+			normalized_x = block -> block_faces_[face_id] -> face_normals_[0];
+			normalized_y = block -> block_faces_[face_id] -> face_normals_[1];
+			normalized_z = block -> block_faces_[face_id] -> face_normals_[2];
 
-
-			// .old
-			delta_s = sqrt(norm_x[face_idx]*norm_x[face_idx]+norm_y[face_idx]*norm_y[face_idx]+norm_z[face_idx]*norm_z[face_idx]) !!!!!!!!!!!!!! DELTA_S ATTENTION SCALAIRE/VOLUME
-			spectral_radius[cell_idx] += fabs(my_uu_array[cell_idx]*(*face_normals_x)[face_idx]+my_vv_array[cell_idx]*(*face_normals_y)[face_idx]+my_ww_array[cell_idx]*(*face_normals_z)[face_idx])+c*delta_s
+			delta_s = sqrt(norm_x[face_idx]*norm_x[face_idx]+norm_y[face_idx]*norm_y[face_idx]+norm_z[face_idx]*norm_z[face_idx]) !!!!!!!!!!!!!! DELTA_S ATTENTION SCALAIRE/VOLUME - à valider
+			spectral_radius[cell_idx] += fabs(my_uu_array[cell_idx]*normalized_x+my_vv_array[cell_idx]*normalized_y+my_ww_array[cell_idx]*normalized_z) + c*delta_s;
 		}
 	}
 	*/

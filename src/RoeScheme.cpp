@@ -48,12 +48,11 @@ void RoeScheme::computeFlux(Block* block)
 	{
 
 		my_face = my_faces[face_idx];
-		/*
-		normalized_x = block -> block_faces_ -> face_normals_[0];
-		normalized_y = block -> block_faces_ -> face_normals_[1];
-		normalized_z = block -> block_faces_ -> face_normals_[2];
-		normal_norm=sqrt(((*face_normals_x)[face]*(*face_normals_x)[face])+((*face_normals_y)[face]*(*face_normals_y)[face])); to change!!
-		*/
+
+		normalized_x = block -> block_faces_[my_face] -> face_normals_[0];
+		normalized_y = block -> block_faces_[my_face] -> face_normals_[1];
+		normalized_z = block -> block_faces_[my_face] -> face_normals_[2];
+		normal_norm=sqrt(normalized_x*normalized_x+normalized_y*normalized_y+normalized_z*normalized_z);
 
 		neighboor_cells = my_face -> face_2_cells;
 		left_cell = neighboor_cells[0];

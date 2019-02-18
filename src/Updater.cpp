@@ -96,9 +96,9 @@ void Updater::updateBoundary(Block* block)
 		int int_cell_idx=block->block_faces_[wall_face_idx]->face_2_cells_[0];
 		int ext_cell_idx=block->block_faces_[wall_face_idx]->face_2_cells_[1];
 
-		double normalized_x=block->block_faces_->face_normals_[0];
-		double normalized_y=block->block_faces_->face_normals_[1];
-		double normalized_z=block->block_faces_->face_normals_[2];
+		double normalized_x=block->block_faces_[wall_face_idx]->face_normals_[0];
+		double normalized_y=block->block_faces_[wall_face_idx]->face_normals_[1];
+		double normalized_z=block->block_faces_[wall_face_idx]->face_normals_[2];
 
 		double ro_int=block->block_primitive_variables->ro_[int_cell_idx];
 		double uu_int=block->block_primitive_variables->uu_[int_cell_idx];
@@ -131,9 +131,9 @@ void Updater::updateBoundary(Block* block)
 		int int_cell_idx=block->block_faces_[farfield_face_idx]->face_2_cells_[0];
 		int ext_cell_idx=block->block_faces_[farfield_face_idx]->face_2_cells_[1];
 
-		double normalized_x=block->block_faces_->face_normals_[0];
-		double normalized_y=block->block_faces_->face_normals_[1];
-		double normalized_z=block->block_faces_->face_normals_[2];
+		double normalized_x=block->block_faces_[farfield_face_idx]->face_normals_[0];
+		double normalized_y=block->block_faces_[farfield_face_idx]->face_normals_[1];
+		double normalized_z=block->block_faces_[farfield_face_idx]->face_normals_[2];
 
 		double ro_int=block->block_primitive_variables->ro_[int_cell_idx];
 		double uu_int=block->block_primitive_variables->uu_[int_cell_idx];
@@ -150,11 +150,11 @@ void Updater::updateBoundary(Block* block)
 			// SUPERSONIC INFLOW
 			if (un1<0)
 			{
-				block->block_primitive_variables->ro_[ext_cell_idx]=2*0*this->ro_free_-ro_int;
-				block->block_primitive_variables->uu_[ext_cell_idx]=2*0*this->uu_free_-uu_int;
-				block->block_primitive_variables->vv_[ext_cell_idx]=2*0*this->vv_free_-vv_int;
-				block->block_primitive_variables->ww_[ext_cell_idx]=2*0*this->ww_free_-ww_int;
-				block->block_primitive_variables->pp_[ext_cell_idx]=2*0*this->pp_free_-pp_int;
+				block->block_primitive_variables->ro_[ext_cell_idx]=2.0*this->ro_free_-ro_int;
+				block->block_primitive_variables->uu_[ext_cell_idx]=2.0*this->uu_free_-uu_int;
+				block->block_primitive_variables->vv_[ext_cell_idx]=2.0*this->vv_free_-vv_int;
+				block->block_primitive_variables->ww_[ext_cell_idx]=2.0*this->ww_free_-ww_int;
+				block->block_primitive_variables->pp_[ext_cell_idx]=2.0*this->pp_free_-pp_int;
 			}
 			// SUPERSONIC OUTFLOW
 			else
@@ -178,11 +178,11 @@ void Updater::updateBoundary(Block* block)
 				double vv_bc=this->vv_free_-normalized_y*(this->pp_free_-pp_bc)/(ro_int*cc_int);
 				double ww_bc=this->ww_free_-normalized_z*(this->pp_free_-pp_bc)/(ro_int*cc_int);
 
-				block->block_primitive_variables->ro_[ext_cell_idx]=2*0*ro_bc-ro_int;
-				block->block_primitive_variables->uu_[ext_cell_idx]=2*0*uu_bc_-uu_int;
-				block->block_primitive_variables->vv_[ext_cell_idx]=2*0*vv_bc_-vv_int;
-				block->block_primitive_variables->ww_[ext_cell_idx]=2*0*ww_bc_-ww_int;
-				block->block_primitive_variables->pp_[ext_cell_idx]=2*0*pp_bc_-pp_int;
+				block->block_primitive_variables->ro_[ext_cell_idx]=2.0*ro_bc-ro_int;
+				block->block_primitive_variables->uu_[ext_cell_idx]=2.0*uu_bc_-uu_int;
+				block->block_primitive_variables->vv_[ext_cell_idx]=2.0*vv_bc_-vv_int;
+				block->block_primitive_variables->ww_[ext_cell_idx]=2.0*ww_bc_-ww_int;
+				block->block_primitive_variables->pp_[ext_cell_idx]=2.0*pp_bc_-pp_int;
 			}
 			else
 			{
@@ -192,11 +192,11 @@ void Updater::updateBoundary(Block* block)
 				double vv_bc=vv_int+normalized_y*(pp_int-pp_bc)/(ro_int*cc_int);
 				double ww_bc=ww_int+normalized_z*(pp_int-pp_bc)/(ro_int*cc_int);
 
-				block->block_primitive_variables->ro_[ext_cell_idx]=2*0*ro_bc-ro_int;
-				block->block_primitive_variables->uu_[ext_cell_idx]=2*0*uu_bc_-uu_int;
-				block->block_primitive_variables->vv_[ext_cell_idx]=2*0*vv_bc_-vv_int;
-				block->block_primitive_variables->ww_[ext_cell_idx]=2*0*ww_bc_-ww_int;
-				block->block_primitive_variables->pp_[ext_cell_idx]=2*0*pp_bc_-pp_int;
+				block->block_primitive_variables->ro_[ext_cell_idx]=2.0*ro_bc-ro_int;
+				block->block_primitive_variables->uu_[ext_cell_idx]=2.0*uu_bc_-uu_int;
+				block->block_primitive_variables->vv_[ext_cell_idx]=2.0*vv_bc_-vv_int;
+				block->block_primitive_variables->ww_[ext_cell_idx]=2.0*ww_bc_-ww_int;
+				block->block_primitive_variables->pp_[ext_cell_idx]=2.0*pp_bc_-pp_int;
 			}
 		}
 
