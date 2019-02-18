@@ -226,6 +226,8 @@ void OutputTecplot::printConvergence(PostProcessing* postprocessing, Solver* sol
   ww_convergence = postprocessing->convergencedata_[8];
   pp_convergence = postprocessing->convergencedata_[9];
 
+  Convergence << "Iteration" << " " << "Cl" << " " << "Cd" << " " << "Cmx" << " " << "Cmy" << " " << "Cmz" << " " << "Density convergence" << " " << "Uu convergence" << " " << "Vv convergence" << " " << "Ww convergence" << " " << "DPressure convergence" << " " << endl;
+
   Convergence << iter << " " << Cl << " " << Cd << " " << Cmx << " " << Cmy << " " << Cmz << " " << ro_convergence << " " << uu_convergence << " " << vv_convergence << " " << ww_convergence << " " << pp_convergence << endl;
 
   if(solver->stop_solver_flag_==True)
@@ -255,6 +257,8 @@ void OutputTecplot::printAerodynamicCoefficients(Block* block, PostProcessing* p
   Cmx = postprocessing->convergencedata_[2];
   Cmy = postprocessing->convergencedata_[3];
   Cmz = postprocessing->convergencedata_[4];
+
+  AerodynamicCoefficients << "Angle of attack" << " " << "Cl" << " " << "Cd" << " " << "Cmx" << " " << "Cmy" << " " << "Cmz" << endl;
 
   AerodynamicCoefficients << aoa_deg << " " << Cl << " " << Cd << " " << Cmx << " " << Cmy << " " << Cmz << endl;
 
