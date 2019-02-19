@@ -30,18 +30,10 @@ void MetricsInitializer::doInit()
     uint iNCells = blockData_->n_real_cells_in_block_;
     uint iNCellsTot = blockData_->n_all_cells_in_block_;
     uint iNFaces = blockData_->nb_faces_in_block_;
-
-    //uint iNCellsFarf = blockData_->nb_farfields_in_block_;
-    //uint iNCellsWall = blockData_->nb_walls_in_block_;
-    //uint iNCellsSynchs = blockData_->nb_synchs_in_block_;
     
     Cell* iCells = blockData_->block_cells_;
     Face* iFaces = blockData_->block_faces_;
     Node* iNodes = blockData_->block_nodes_;
-    
-    //Cell* iWalls = blockData_->walls_in_block_;
-    //Cell* iSynchs = blockData_->synchs_in_block_;
-    //Cell* iFarF = blockData_->farfields_in_block_;
 
     computeCenterCells(iNCells, iNCellsTot, iCells, iNodes);
     
@@ -61,7 +53,6 @@ void MetricsInitializer::doInit()
    iCells = nullptr;
    iFaces = nullptr;
    iNodes = nullptr;
-
 
 }
 
