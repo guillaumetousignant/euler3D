@@ -45,7 +45,7 @@ void MetricsInitializer::doInit()
 
     computeVolumeCells(iNCells, iNCellsTot, iCells, iFaces);
 
-    computeInterpVect(iNCells, iNCellsTot,iNFaces, iCells, iFaces);
+    //computeInterpVect(iNCells, iNCellsTot,iNFaces, iCells, iFaces);
     
     //computeWLS();
 
@@ -61,8 +61,8 @@ void MetricsInitializer::MetricsInitializer::computeCenterCells(uint iNCells, ui
 {
 
     int const X = 0;
-    int const Y = 0;
-    int const Z = 0;
+    int const Y = 1;
+    int const Z = 2;
 
     for(uint i(0);i < iNCells;i++)
     {
@@ -432,8 +432,8 @@ void MetricsInitializer::computeWLS(uint iNCells, Cell* iCells)
 {
 
     const uint X = 0;
-    const uint Y = 0;
-    const uint Z = 0;
+    const uint Y = 1;
+    const uint Z = 2;
 
     for(uint i(0);i < iNCells;i++)
     {
