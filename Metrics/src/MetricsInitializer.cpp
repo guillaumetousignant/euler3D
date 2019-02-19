@@ -334,11 +334,9 @@ void MetricsInitializer::computeInterpVect(uint iNCells, uint iNCellsTot, uint i
     }
 
     const uint FACE_GHOST = 0;
-    const uint X = 0;
-    const uint Y = 0;
-    const uint Z = 0;
 
-    for(int i(iNCells);i < iNCellsTot;i++)
+
+    for(uint i(iNCells);i < iNCellsTot;i++)
     {
         uint faceID = iCells[i].cell_2_faces_connectivity_[FACE_GHOST];
 
@@ -364,6 +362,10 @@ void MetricsInitializer::computeInterpVect(uint iNCells, uint iNCellsTot, uint i
         r_ref_x = r_x - 2*prodScalaire*n_x;
         r_ref_y = r_y - 2*prodScalaire*n_y;
         r_ref_z = r_z - 2*prodScalaire*n_z;
+
+        iFaces[faceID].right_cell_r_vector_[X] = r_ref_x;
+        iFaces[faceID].right_cell_r_vector_[Y] = r_ref_y;
+        iFaces[faceID].right_cell_r_vector_[Z] = r_ref_z;
 
     }
 
@@ -423,7 +425,7 @@ void MetricsInitializer::computeVolumeCells(uint iNCells, uint iNCellsTot, Cell*
 
     const uint LEFT = 0;
 
-    for(int i(iNCells);i < iNCellsTot;i++)
+    for(uint i(iNCells);i < iNCellsTot;i++)
     {
         uint leftCellID = iCells[i].cell_2_cells_connectivity_[LEFT];
 
@@ -437,7 +439,82 @@ void MetricsInitializer::computeVolumeCells(uint iNCells, uint iNCellsTot, Cell*
     
 void MetricsInitializer::computeWLS(uint iNCells, Cell* iCells)
 {
-    
+
+    const uint X = 0;
+    const uint Y = 0;
+    const uint Z = 0;
+
+    for(uint i(0);i < iNCells;i++)
+    {
+        //double weight[3] = {0.0, 0.0, 0.0};
+
+        //double alpha1, alpha2, alpha3;
+        //double beta;
+        const uint nbCellsNeighbor = iCells[i].cell_2_cells_connectivity_size_;
+
+        double dxij[nbCellsNeighbor];
+        double dyij[nbCellsNeighbor];
+        double dzij[nbCellsNeighbor];
+
+        for(uint j(0);j < nbCellsNeighbor;j++)
+        {
+            double centerCell[3] =  {0.0, 0.0,0.0};
+
+            centerCell[X] = iCells[i].cell_coordinates_[X];
+            centerCell[Y] = iCells[i].cell_coordinates_[Y];
+            centerCell[Z] = iCells[i].cell_coordinates_[Z];
+
+            uint cellNeighborID = iCells[i].cell_2_cells_connectivity_[j];
+            double centerNeighborCell[3] = {0.0, 0.0,0.0};
+
+            centerNeighborCell[X] = iCells[cellNeighborID].cell_coordinates_[X];
+            centerNeighborCell[Y] = iCells[cellNeighborID].cell_coordinates_[Y];
+            centerNeighborCell[Z] = iCells[cellNeighborID].cell_coordinates_[Z];
+
+            dxij[j] = centerNeighborCell[X] - centerCell[X];
+            dyij[j] = centerNeighborCell[Y] - centerCell[Y];
+            dzij[j] = centerNeighborCell[Z] - centerCell[Z];
+
+        }
+
+        double sumdxij2 = 0.0;
+        double sumdxij_dot_dyij = 0.0;
+        double sumdxij_dot_dzij = 0.0;
+        double sumdyijSquare_minus_r12Square = 0.0;
+        double sumdyijdzij_minus_r12r13;
+        double sumdzijSquare_minus_r13Square_minusr23Square = 0.0;
+
+        double r12 = 0.0;
+        double r11 = 0.0;
+        double r13 = 0.0;
+        double r23 = 0.0;
+        double r22 = 0.0;
+        //double r33 = 0.0;
+
+        for(int j(0);j < iCells[i].cell_2_cells_connectivity_size_;j++)
+        {
+            sumdxij2 += dxij[j]*dxij[j];
+            sumdxij_dot_dyij += dxij[j]*dyij[j];
+            sumdxij_dot_dzij += dxij[j]*dzij[j];
+            sumdyijSquare_minus_r12Square += dyij[j]*dyij[j] - r12*r12;
+            sumdyijdzij_minus_r12r13 += dyij[j]*dzij[j] - r12*r13;
+            sumdzijSquare_minus_r13Square_minusr23Square += dzij[j]*dzij[j] - (r13*r13 + r23*r23);
+        }
+
+        r11 = sqrt(sumdxij2);
+
+        r12 = (1/r11)*sumdxij_dot_dyij;
+
+        r13 = (1/r11)*sumdxij_dot_dzij;
+        
+        r22 = sqrt(sumdyijSquare_minus_r12Square);
+
+        r23 = (1/r22)*sumdyijdzij_minus_r12r13;
+        
+        //r33 = sqrt(sumdzijSquare_minus_r13Square_minusr23Square);    
+
+    }
+
 
 
 }
