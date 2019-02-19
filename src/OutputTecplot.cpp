@@ -1,4 +1,4 @@
-#ifdef EULER3D_SRC_OUTTECPLOT_CPP
+#ifndef EULER3D_SRC_OUTTECPLOT_CPP
 #define EULER3D_SRC_OUTTECPLOT_CPP
 
 #include <malloc.h>
@@ -11,22 +11,11 @@
 
 using namespace std;
 
-OutputTecplot::OutputTecplot(Block* block, PostProcessing* postprocessing, Solver* solver, int iter, int iteration_interval_, double aoa)
+OutputTecplot::OutputTecplot()
 {
-  if(iter == iteration_interval_)
-  {
-    printConvergence(postprocessing, iter);
-  }
-  else if(solver->stop_solver_flag_ == true)
-  {
-    aoa_deg_ = aoa*180/3.1416;
+  cout << "Initialize OutTecplot................................................" << endl;
 
-    printConvergence(postprocessing, solver, iter);
-    printFlowData(block, postprocessing);
-    printSurfaceFlowData(block, postprocessing);
-    printAerodynamicCoefficients(block, postprocessing);
-    printRestartFile(block, postprocessing, solver);
-  }
+  cout << "Initialize OutTecplot............................................DONE" << endl;
 }
 
 OutputTecplot::~OutputTecplot()
@@ -34,7 +23,7 @@ OutputTecplot::~OutputTecplot()
 
 }
 
-void OutputTecplot::printFlowData(Block* block, PostProcessing* postprocessing)
+void OutputTecplot::printFlowData(Block* block)
 {
   int i;
 
@@ -50,6 +39,7 @@ void OutputTecplot::printFlowData(Block* block, PostProcessing* postprocessing)
       //return;
     }
 
+  #if 0
   FlowData << "TTILE = \"Vizualisation of the volumetric solution\""
   FlowData << "VARIABLES=\"X\",\"Y\",\"Z\",\"RO\",\"UU\",\"VV\",\"WW\",\"PP\",\"CP\",\"MACH\"" << endl;
   FlowData << "ZONE T=\"FLOW_FIELD\"" << endl;
@@ -124,17 +114,13 @@ void OutputTecplot::printFlowData(Block* block, PostProcessing* postprocessing)
   // Print pressure coefficient for each cell
   for(i=0; i < block->n_cells_in_block_; i++)
   {
-    cp_ = postprocessing->cp_[i];
-
-    FlowData << cp_ << endl;
+    FlowData << cp_[i] << endl;
   }
 
   // Print Mach number for each cell
   for(i=0; i < block->n_cells_in_block_; i++)
   {
-    mach_ = postprocessing->mach_[i];
-
-    FlowData << mach_ << endl;
+    FlowData << mach_[i] << endl;
   }
 
   for(i=0;i < block->n_cells_in_block_; i++)
@@ -170,15 +156,15 @@ void OutputTecplot::printFlowData(Block* block, PostProcessing* postprocessing)
 
       break;
     }
-
-    cout << "Ending printFlowData..............................................." << endl;
   }
-
+  #endif
   FlowData.close();
+
+  cout << "Ending printFlowData..............................................." << endl;
 
 }
 
-void OutputTecplot::printSurfaceFlowData(Block* block, PostProcessing* postprocessing)
+void OutputTecplot::printSurfaceFlowData(Block* block)
 {
   cout << "Starting printSurfaceFlowData........................................" << endl;
 
@@ -197,7 +183,7 @@ void OutputTecplot::printSurfaceFlowData(Block* block, PostProcessing* postproce
   cout << "Ending printSurfaceFlowData.........................................." << endl;
 }
 
-void OutputTecplot::printConvergence(PostProcessing* postprocessing, Solver* solver, int iter)
+void OutputTecplot::printConvergence(Solver* solver, int iter)
 {
   cout << "Starting printConvergence............................................" << endl;
 
@@ -213,18 +199,18 @@ void OutputTecplot::printConvergence(PostProcessing* postprocessing, Solver* sol
       cerr << "Fail opening file Convergence.plt" << endl;
       //return;
     }
+  #if 0
+  Cl = data_[0];
+  Cd = data_[1];
+  Cmx = data_[2];
+  Cmy = data_[3];
+  Cmz = data_[4];
 
-  Cl = postprocessing->convergencedata_[0];
-  Cd = postprocessing->convergencedata_[1];
-  Cmx = postprocessing->convergencedata_[2];
-  Cmy = postprocessing->convergencedata_[3];
-  Cmz = postprocessing->convergencedata_[4];
-
-  ro_convergence = postprocessing->convergencedata_[5];
-  uu_convergence = postprocessing->convergencedata_[6];
-  vv_convergence = postprocessing->convergencedata_[7];
-  ww_convergence = postprocessing->convergencedata_[8];
-  pp_convergence = postprocessing->convergencedata_[9];
+  ro_convergence = data_[5];
+  uu_convergence = data_[6];
+  vv_convergence = data_[7];
+  ww_convergence = data_[8];
+  pp_convergence = data_[9];
 
   Convergence << "Iteration" << " " << "Cl" << " " << "Cd" << " " << "Cmx" << " " << "Cmy" << " " << "Cmz" << " " << "Density convergence" << " " << "Uu convergence" << " " << "Vv convergence" << " " << "Ww convergence" << " " << "DPressure convergence" << " " << endl;
 
@@ -234,11 +220,11 @@ void OutputTecplot::printConvergence(PostProcessing* postprocessing, Solver* sol
   {
     Convergence.close();
   }
-
+  #endif
   cout << "Ending printConvergence.............................................." << endl;
 }
 
-void OutputTecplot::printAerodynamicCoefficients(Block* block, PostProcessing* postprocessing)
+void OutputTecplot::printAerodynamicCoefficients(Block* block)
 {
   cout << "Starting printAerodynamicCoefficients................................" << endl;
 
@@ -251,12 +237,12 @@ void OutputTecplot::printAerodynamicCoefficients(Block* block, PostProcessing* p
       cerr << "Fail opening file AerodynamicCoefficients.plt" << endl;
       //return;
     }
-
-  Cl = postprocessing->convergencedata_[0];
-  Cd = postprocessing->convergencedata_[1];
-  Cmx = postprocessing->convergencedata_[2];
-  Cmy = postprocessing->convergencedata_[3];
-  Cmz = postprocessing->convergencedata_[4];
+  #if 0
+  Cl = data_[0];
+  Cd = data_[1];
+  Cmx = data_[2];
+  Cmy = data_[3];
+  Cmz = data_[4];
 
   AerodynamicCoefficients << "Angle of attack" << " " << "Cl" << " " << "Cd" << " " << "Cmx" << " " << "Cmy" << " " << "Cmz" << endl;
 
@@ -266,11 +252,11 @@ void OutputTecplot::printAerodynamicCoefficients(Block* block, PostProcessing* p
   {
     AerodynamicCoefficients.close();
   }
-
+  #endif
   cout << "Ending printAerodynamicCoefficients.................................." << endl;
 }
 
-void OutputTecplot::RestartFile(Block* block, PostProcessing* postprocessing)
+void OutputTecplot::printRestartFile(Block* block)
 {
   cout << "Starting printRestartFile............................................" << endl;
 
@@ -286,6 +272,33 @@ void OutputTecplot::RestartFile(Block* block, PostProcessing* postprocessing)
     RestartFile.close();
 
   cout << "Ending printRestartFile.............................................." << endl;
+}
+
+void OutputTecplot::printData(Block* block, Solver* solver, int iter, int iteration_interval_, double aoa, double* data, double* cp, double* mach)
+{
+  cout << "Starting printData..................................................." << endl;
+
+  cp_ = cp;
+  data_ = data;
+  mach_ = mach;
+
+  if(solver->stop_solver_flag_ == true)
+  {
+    aoa_deg_ = aoa*180/3.1416;
+
+    printConvergence(solver, iter);
+    printFlowData(block);
+    printSurfaceFlowData(block);
+    printAerodynamicCoefficients(block);
+    printRestartFile(block);
+  }
+  else if(iter == iteration_interval_)
+  {
+    printConvergence(solver, iter);
+  }
+
+  cout << "Ending printRestartFile.............................................." << endl;
+
 }
 
 #endif

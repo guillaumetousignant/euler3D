@@ -1,16 +1,26 @@
-#ifdef EULER3D_HEAD_AERODYNAMICPARAMETERS_H
+#ifndef EULER3D_HEAD_AERODYNAMICPARAMETERS_H
 #define EULER3D_HEAD_AERODYNAMICPARAMETERS_H
 
 #include <string>
 #include <vector>
+
+
+#include "Block.h"
+#include "Solver.h"
 
 class AerodynamicParameters
 {
 
 public:
 
-  AerodynamicParameters(Block* block, PostProcessing* postprocessing, Solver* solver, int iter, int iteration_interval_, double cmac, double mach_aircraft, double aoa, double gamma);
+  AerodynamicParameters(Block* block);
   ~AerodynamicParameters();
+
+void computeAerodynamic(Block* block, Solver* solver, int iter, int iteration_interval_, double cmac, double mach_aircraft, double aoa, double gamma);
+
+double getCoefficients(int i);
+double getCp(int i);
+double getMach(int i);
 
 private:
 
@@ -40,20 +50,24 @@ double fy_;
 double fz_;
 double area_;
 
+double* coefficients_;
+double* cp_;
+double* mach_;
+
   // Methods
-double calculateForce(double cpbc);
 double calculateCl();
 double calculateCd();
-double calculateCmx(PostProcessing* postprocessing);
-double calculateCmy(PostProcessing* postprocessing);
-double calculateCmz(PostProcessing* postprocessing);
+double calculateCmx();
+double calculateCmy();
+double calculateCmz();
 
-void calculateMach(Block* block, PostProcessing* postprocessing, double gamma);
-void calculateCp(Block* block, PostProcessing* postprocessing);
-void calculateGlobalCl(PostProcessing* postprocessing, double aoa);
-void calculateGlobalCd(PostProcessing* postprocessing, double aoa);
+void calculateForce(double cpbc);
+void calculateMach(Block* block, double gamma);
+void calculateCp(Block* block);
+void calculateGlobalCl(double aoa);
+void calculateGlobalCd(double aoa);
 void checkClDriver();
 
-}
+};
 
 #endif

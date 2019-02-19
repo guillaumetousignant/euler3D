@@ -1,16 +1,22 @@
-#ifdef EULER3D_HEAD_CONVERGENCE_H
+#ifndef EULER3D_HEAD_CONVERGENCE_H
 #define EULER3D_HEAD_CONVERGENCE_H
 
 #include <string>
 #include <vector>
+
+#include "Block.h"
 
 class Convergence
 {
 
 public:
 
-  Convergence(Block* block, PostProcessing* postprocessing, int iter);
+  Convergence();
   ~Convergence();
+
+void computeConvergence(Block* block, int iter);
+
+double getConvergence(int i);
 
 private:
 
@@ -33,14 +39,16 @@ double res_vv_;
 double res_ww_;
 double res_pp_;
 
+double* convergence_;
+
   // Method
 
-void calculateRoRms(Block* block, PostProcessing* postprocessing, int iter);
-void calculateUuRms(Block* block, PostProcessing* postprocessing, int iter);
-void calculateVvRms(Block* block, PostProcessing* postprocessing, int iter);
-void calculateWwRms(Block* block, PostProcessing* postprocessing, int iter);
-void calculatePpRms(Block* block, PostProcessing* postprocessing, int iter);
+void calculateRoRms(Block* block, int iter);
+void calculateUuRms(Block* block, int iter);
+void calculateVvRms(Block* block, int iter);
+void calculateWwRms(Block* block, int iter);
+void calculatePpRms(Block* block, int iter);
 
-}
+};
 
 #endif

@@ -1,23 +1,27 @@
-#ifdef EULER3D_HEAD_OUTTECPLOT_H
-#define EULER3D_HEAD_OUTTEPLOT_H
+#ifndef EULER3D_HEAD_OUTPUTTECPLOT_H
+#define EULER3D_HEAD_OUTPUTTECPLOT_H
 
 #include <string>
 #include <vector>
+#include <fstream>
 
-class OutTeplot
+#include "Block.h"
+#include "Solver.h"
+
+class OutputTecplot
 {
 
 public:
 
-  OutTeplot(Block* block, PostProcessing* postprocessing, Solver* solver, int iter, int iteration_interval_, double aoa);
-  ~OutTeplot();
+  OutputTecplot();
+  ~OutputTecplot();
+
+void printData(Block* block, Solver* solver, int iter, int iteration_interval_, double aoa, double* data, double* cp, double* mach);
 
 private:
 
 // Attributes
 
-double cp_;
-double mach_;
 double aoa_deg_;
 double cl_aircraft_;
 double cd_aircraft_;
@@ -35,20 +39,24 @@ double x_;
 double y_;
 double z_;
 
+double* cp_;
+double* data_;
+double* mach_;
+
 std::ofstream FlowData;
 std::ofstream SurfaceFlowData;
 std::ofstream Convergence;
 std::ofstream AerodynamicCoefficients;
-std:: ofstream RestartFile;
+std::ofstream RestartFile;
 
   // Methods
 
-void printFlowData(Block* block, PostProcessing* postprocessing);
-void printSurfaceFlowData(Block* block, PostProcessing* postprocessing);
-void printConvergence(PostProcessing* postprocessing, Solver* solver, int iter);
-void printAerodynamicCoefficients(Block* block, PostProcessing* postprocessing);
-void printRestartFile(Block* block, PostProcessing* postprocessing, Solver* solver);
+void printFlowData(Block* block);
+void printSurfaceFlowData(Block* block);
+void printConvergence(Solver* solver, int iter);
+void printAerodynamicCoefficients(Block* block);
+void printRestartFile(Block* block);
 
-}
+};
 
 #endif
