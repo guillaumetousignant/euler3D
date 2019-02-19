@@ -117,7 +117,7 @@ void PostProcessing::convergenceSum(CompleteMesh* completemesh)
   cout << "Ending convergenceSum................................................" << endl;
 }
 
-void coefficientsSum(CompleteMesh* completemesh)
+void PostProcessing::coefficientsSum(CompleteMesh* completemesh)
 {
   int i;
 
@@ -206,6 +206,8 @@ void PostProcessing::saveMach(Block* block)
 
 void PostProcessing::saveData()
 {
+  cout << "Starting saveData...................................................." << endl;
+  #if 0
   data_[0] = cl_geometry_;
   data_[1] = cd_geometry_;
   data_[2] = cmx_geometry_;
@@ -216,6 +218,8 @@ void PostProcessing::saveData()
   data_[7] = vv_convergence_;
   data_[8] = ww_convergence_;
   data_[9] = pp_convergence_;
+  #endif
+  cout << "Ending saveData......................................................" << endl;
 }
 
 void PostProcessing::computeFlowData(Block* block, CompleteMesh* completemesh, Solver* solver, bool stopsimulation, int iter, int max_iter, double cmac, double mach, double aoa_rad, double gamma, double convergence_criterion)
@@ -250,8 +254,6 @@ void PostProcessing::computeFlowData(Block* block, CompleteMesh* completemesh, S
 
     // Sum aerodynamic parameters and convergence for each block
     coefficientsSum(completemesh);
-
-    iteration_interval_ += 100;
   }
 
   cout << "Ending computeFlowData..............................................." << endl;
@@ -280,6 +282,11 @@ void PostProcessing::process(Block* block, CompleteMesh* completemesh, Solver* s
 
    // Save and print flow data into binary files
    saveFlowData(block, solver, iter, aoa_rad);
+
+   if(iter == iteration_interval_)
+   {
+     iteration_interval_ += 100;
+   }
 
    cout << "Ending process......................................................" << endl;
 }

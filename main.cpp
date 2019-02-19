@@ -30,6 +30,7 @@ int main(int argc, char**argv)
   double aoa_rad = 0.20944;
   double gamma = 1.4;
 
+  solver = new Solver();
 
   postprocessing = new PostProcessing(block, completemesh);
 

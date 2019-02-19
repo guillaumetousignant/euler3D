@@ -91,7 +91,7 @@ void AerodynamicParameters::calculateCp(Block* block)
   cout << "Ending calculateCp..................................................." << endl;
 }
 
-void calculateForce(double cpbc)
+void AerodynamicParameters::calculateForce(double cpbc)
 {
   cout << "Starting calculateForce.............................................." << endl;
 

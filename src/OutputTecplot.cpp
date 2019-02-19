@@ -277,10 +277,11 @@ void OutputTecplot::printRestartFile(Block* block)
 void OutputTecplot::printData(Block* block, Solver* solver, int iter, int iteration_interval_, double aoa, double* data, double* cp, double* mach)
 {
   cout << "Starting printData..................................................." << endl;
-
+#if 0
   cp_ = cp;
   data_ = data;
   mach_ = mach;
+#endif
 
   if(solver->stop_solver_flag_ == true)
   {
@@ -297,7 +298,7 @@ void OutputTecplot::printData(Block* block, Solver* solver, int iter, int iterat
     printConvergence(solver, iter);
   }
 
-  cout << "Ending printRestartFile.............................................." << endl;
+  cout << "Ending printData....................................................." << endl;
 
 }
 
