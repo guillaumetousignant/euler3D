@@ -53,7 +53,7 @@ void MetricsInitializer::doInit()
 
     computeVolumeCells(iNCells, iNCellsTot, iCells, iFaces);
 
-    //computeInterpVect(iNCells, iNCellsTot,iNFaces, iCells, iFaces);
+    computeInterpVect(iNCells, iNCellsTot,iNFaces, iCells, iFaces);
     
     //computeWLS();
 
@@ -61,15 +61,18 @@ void MetricsInitializer::doInit()
    iCells = nullptr;
    iFaces = nullptr;
    iNodes = nullptr;
-   //iWalls = nullptr;
-   //iSynchs = nullptr;
-   //iFarF = nullptr;
+
 
 }
 
 
 void MetricsInitializer::MetricsInitializer::computeCenterCells(uint iNCells, uint iNCellsTot, Cell* iCells, Node* iNodes)
 {
+
+    int const X = 0;
+    int const Y = 0;
+    int const Z = 0;
+
     for(uint i(0);i < iNCells;i++)
     {
         double nodeCoord_x = 0.0;
@@ -84,9 +87,9 @@ void MetricsInitializer::MetricsInitializer::computeCenterCells(uint iNCells, ui
             int nodeID = iCells[i].cell_2_nodes_connectivity_[j];
 
             //2. Get average of all nodes coordinates
-            nodeCoord_x += iNodes[nodeID].node_coordinates_[0];
-            nodeCoord_y += iNodes[nodeID].node_coordinates_[1];
-            nodeCoord_z += iNodes[nodeID].node_coordinates_[2];
+            nodeCoord_x += iNodes[nodeID].node_coordinates_[X];
+            nodeCoord_y += iNodes[nodeID].node_coordinates_[Y];
+            nodeCoord_z += iNodes[nodeID].node_coordinates_[Z];
 
         }
 
@@ -94,7 +97,24 @@ void MetricsInitializer::MetricsInitializer::computeCenterCells(uint iNCells, ui
         iCells[i].cell_coordinates_[0] = nodeCoord_x / nbCell2Node;
         iCells[i].cell_coordinates_[1] = nodeCoord_y / nbCell2Node;
         iCells[i].cell_coordinates_[2] = nodeCoord_z / nbCell2Node;
+    }
 
+    for(uint i(iNCells);i < iNCellsTot;i++)
+    {
+        double nodeCoord_x = 0.0;
+        double nodeCoord_y = 0.0;
+        double nodeCoord_z = 0.0;
+        int const LEFT = 0;
+
+        uint leftCellID = iCells[i].cell_2_cells_connectivity_[LEFT];
+
+        nodeCoord_x = iCells[leftCellID].cell_coordinates_[X];
+        nodeCoord_y = iCells[leftCellID].cell_coordinates_[Y];
+        nodeCoord_z = iCells[leftCellID].cell_coordinates_[Z];
+
+        iCells[i].cell_coordinates_[0] = nodeCoord_x;
+        iCells[i].cell_coordinates_[1] = nodeCoord_y;
+        iCells[i].cell_coordinates_[2] = nodeCoord_z;
     }
 }
 
@@ -313,6 +333,41 @@ void MetricsInitializer::computeInterpVect(uint iNCells, uint iNCellsTot, uint i
 
     }
 
+    const uint FACE_GHOST = 0;
+    const uint X = 0;
+    const uint Y = 0;
+    const uint Z = 0;
+
+    for(int i(iNCells);i < iNCellsTot;i++)
+    {
+        uint faceID = iCells[i].cell_2_faces_connectivity_[FACE_GHOST];
+
+        //Get interpolant vector coordinates
+        double r_x, r_y, r_z;
+
+        r_x = iFaces[faceID].left_cell_r_vector_[X];
+        r_y = iFaces[faceID].left_cell_r_vector_[Y];
+        r_z = iFaces[faceID].left_cell_r_vector_[Z];
+
+        //Compute reflection vector.
+        double r_ref_x, r_ref_y, r_ref_z;
+        double n_x, n_y, n_z;
+        double area;
+
+        area = iFaces[faceID].face_area_;
+        n_x = iFaces[faceID].face_normals_[X] / area;
+        n_y = iFaces[faceID].face_normals_[Y] / area;
+        n_z = iFaces[faceID].face_normals_[Z] / area;
+
+        double prodScalaire = r_x*n_x + r_y*n_y + r_z*n_z;
+
+        r_ref_x = r_x - 2*prodScalaire*n_x;
+        r_ref_y = r_y - 2*prodScalaire*n_y;
+        r_ref_z = r_z - 2*prodScalaire*n_z;
+
+    }
+
+
 }
 
 
@@ -366,9 +421,23 @@ void MetricsInitializer::computeVolumeCells(uint iNCells, uint iNCellsTot, Cell*
         iCells[i].cell_volume_ = volume;
     }
 
+    const uint LEFT = 0;
+
+    for(int i(iNCells);i < iNCellsTot;i++)
+    {
+        uint leftCellID = iCells[i].cell_2_cells_connectivity_[LEFT];
+
+        double volume = 0.0;
+        volume = iCells[leftCellID].cell_volume_;
+
+        iCells[i].cell_volume_ = volume;
+    }
+
 }
     
 void MetricsInitializer::computeWLS(uint iNCells, Cell* iCells)
 {
     
+
+
 }
