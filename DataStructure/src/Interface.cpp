@@ -7,7 +7,7 @@ using namespace std;
 Interface::Interface(string mesh_file_name, string topology_file_name, double gamma, double cfl, int stage_number, double *alpha_rk, double *beta_rk,string interpolation_choice, string gradient_choice, string limiter_choice, string flux_scheme_choice, string residual_smoother_choice)
 {
 	mesh_file_name_interface_=mesh_file_name;
-	topology_file_name_interface_=output_file_name;
+	topology_file_name_interface_=topology_file_name;
 	gamma_interface_=gamma;
 	cfl_interface_=cfl;
 	stage_number_interface_=stage_number;

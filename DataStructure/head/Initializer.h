@@ -3,7 +3,7 @@
 
 
 #include "Interface.h"
-#include "Solver.h"
+// #include "Solver.h"
 #include "CompleteMesh.h"
 
 #include <string>
@@ -17,8 +17,8 @@ class Initializer
 	public:
 		
 
-		Solver* initializeSolver(Interface* interface);
-		CompleteMesh* initializeMesh(Interface* interface);
+		// Solver* initializeSolver(Interface* interface);
+		CompleteMesh* InitializeMesh(Interface* interface);
 		
 
 

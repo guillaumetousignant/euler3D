@@ -1,14 +1,14 @@
-#ifndef DATASTRUCTURE_HEAD_PrimitiveVariables_H
-#define DATASTRUCTURE_HEAD_PrimitiveVariables_H
+#ifndef DATASTRUCTURE_HEAD_INTEPOLATIONVARIABLES_H
+#define DATASTRUCTURE_HEAD_INTEPOLATIONVARIABLES_H
 
-class PrimitiveVariables
+class InterpolationVariables
 {
 public:
-	double** grad_ro_;
-	double** grad_uu_;
-	double** grad_vv_;
-	double** grad_ww_;
-	double** grad_pp_;
+	double (*grad_ro_)[3];
+	double (*grad_uu_)[3];
+	double (*grad_vv_)[3];
+	double (*grad_ww_)[3];
+	double (*grad_pp_)[3];
 
 	double* limiter_ro_;
 	double* limiter_uu_;
@@ -16,8 +16,8 @@ public:
 	double* limiter_ww_;
 	double* limiter_pp_;
 
-	PrimitiveVariables();
-	~PrimitiveVariables();
+	InterpolationVariables(int n_all_cells_in_block);
+	~InterpolationVariables();
 	
 };
 

@@ -1,7 +1,6 @@
 #ifndef DATASTRUCTURE_HEAD_BOUNDARYCELLIDS_H
 #define DATASTRUCTURE_HEAD_BOUNDARYCELLIDS_H
 
-#include Block.h
 
 class BoundaryCellIds
 {

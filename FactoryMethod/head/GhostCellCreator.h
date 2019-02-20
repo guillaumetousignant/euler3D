@@ -7,7 +7,7 @@ class GhostCellCreator:CellCreator
 {
 public:
 
-	Cell* createCell()
+	Cell* createCell();
 
 };
 
