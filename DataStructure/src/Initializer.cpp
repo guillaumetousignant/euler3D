@@ -40,9 +40,9 @@ Solver* Initializer::initializeSolver(Interface* interface)
 
 Solver* Initializer::InitializeMesh(Interface* interface)
 {
-	cout<<"Initialisation du maillage complet"<<endl<<endl;
-	string mesh_file_name=mesh_file_name_interface_;
-	string topology_file_name=topology_file_name_interface_;
+	cout<<"Initialisation du maillage entier"<<endl<<endl;
+	string mesh_file_name=interface->mesh_file_name_interface_;
+
 	/*
 	double gamma=interface->gamma_interface_;
 	double cfl=interface->cfl_interface_;
