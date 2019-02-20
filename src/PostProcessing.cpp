@@ -57,14 +57,13 @@ void PostProcessing::initializePostProcessing(Block* block, CompleteMesh* comple
 
   cout << "Starting initializePostProcessing...................................." << endl;
 
-
   iteration_interval_ = 0;
-#if 0
+
   // Initialize vector cp_
-  cp_ = new double[block->n_cell_in_block_];
+  cp_ = new double[block->n_cells_in_block_];
 
   // Initialize vector mach_
-  mach_ = new double[block->n_cell_in_block_];
+  mach_ = new double[block->n_cells_in_block_];
 
   // Initialize array convergencedata_
   convergencedata_ = new double[completemesh->n_blocks_]
@@ -73,7 +72,6 @@ void PostProcessing::initializePostProcessing(Block* block, CompleteMesh* comple
   {
     convergencedata_[i] = new double[10];
   }
-#endif
 
   aerodynamicparameters = new AerodynamicParameters(block);
   convergence = new Convergence();

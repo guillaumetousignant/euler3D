@@ -97,9 +97,9 @@ void AerodynamicParameters::calculateForce(double cpbc)
 
   #if 0
   force_ = cpbc*area_;
-  fx_ = force_*nx_;
-  fy_ = force_*ny_;
-  fz_ = force_*nz_;
+  fx_ = -force_*nx_;
+  fy_ = -force_*ny_;
+  fz_ = -force_*nz_;
   #endif
 
   cout << "Ending calculateForce................................................" << endl;
@@ -133,42 +133,46 @@ double AerodynamicParameters::calculateCd()
   cout << "Ending calculateCd..................................................." << endl;
 }
 
-double AerodynamicParameters::calculateCmx()
+void AerodynamicParameters::calculateCmx()
 {
   cout << "Starting calculateCmx................................................" << endl;
+
   #if 0
+  // Calculate moment coefficient compared to x axis
+  cmx_ += cell_y_coordinate_*fz_ - cell_z_coordinate_*fy_;
+
   // Save cmx_ in array
   coefficients_[2] = cmx_;
-
-  return cmx_;
   #endif
 
   cout << "Ending calculateCmx.................................................." << endl;
 }
 
-double AerodynamicParameters::calculateCmy()
+void AerodynamicParameters::calculateCmy()
 {
   cout << "Starting calculateCmy................................................" << endl;
 
   #if 0
+  // Calculate moment coefficient compared to y axis
+  cmy_ += cell_z_coordinate_*fx_ - cell_x_coordinate_*fz_;
+
   // Save cmy_ in array
   coefficients_[3] = cmy_;
-
-  return cmy_;
   #endif
 
   cout << "Ending calculateCmy.................................................." << endl;
 }
 
-double AerodynamicParameters::calculateCmz()
+void AerodynamicParameters::calculateCmz()
 {
   cout << "Starting calculateCmz................................................" << endl;
 
   #if 0
+  // Calculate moment coefficient compared to z axis
+  cmz_ += cell_x_coordinate_*fy_ - cell_y_coordinate_*fx_;
+
   // Save clglobal_ in array
   coefficients_[4] = cmz_;
-
-  return cmz_;
   #endif
 
   cout << "Ending calculateCmz.................................................." << endl;
@@ -255,8 +259,7 @@ void AerodynamicParameters::computeAerodynamic(Block* block, Solver* solver, int
     cmy_ = 0.;
     cmz_ = 0.;
 
-    //for(i=0; i < block->nb_face_in_wall_; i++)
-    for(i=0; i < 1; i++)
+    for(i=0; i < block->nb_face_in_wall_; i++)
     {
       #if 0
       // Find wall face id
@@ -265,6 +268,11 @@ void AerodynamicParameters::computeAerodynamic(Block* block, Solver* solver, int
       // Find wall cells associate with the wall face i
       cell_0 = block->block_faces_[wall_face_id_]->face_2_cells_connectivity_[0];
       cell_1 = block->block_faces_[wall_face_id_]->face_2_cells_connectivity_[1];
+
+      // cell_0 coordinates
+      cell_x_coordinate_ = block->block_cells_[cell_0]->cell_coordinates_[0];
+      cell_y_coordinate_ = block->block_cells_[cell_0]->cell_coordinates_[1];
+      cell_z_coordinate_ = block->block_cells_[cell_0]->cell_coordinates_[2];
 
       // Pressure value from cell 0 and 1
       pp0 = block->block_primitive_variables_->pp_[cell_0];

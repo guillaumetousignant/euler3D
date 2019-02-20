@@ -49,6 +49,10 @@ double fx_;
 double fy_;
 double fz_;
 double area_;
+double cell_x_coordinate_;
+double cell_y_coordinate_;
+double cell_z_coordinate_;
+
 
 double* coefficients_;
 double* cp_;
@@ -57,10 +61,10 @@ double* mach_;
   // Methods
 double calculateCl();
 double calculateCd();
-double calculateCmx();
-double calculateCmy();
-double calculateCmz();
 
+void calculateCmx();
+void calculateCmy();
+void calculateCmz();
 void calculateForce(double cpbc);
 void calculateMach(Block* block, double gamma);
 void calculateCp(Block* block);

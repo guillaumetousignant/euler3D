@@ -14,6 +14,7 @@ public:
 
 private:
 
+  int n_cells_in_block_;
 
 };
 

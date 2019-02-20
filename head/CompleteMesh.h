@@ -14,6 +14,7 @@ public:
 
 private:
 
+int n_blocks_;
 
 };
 
