@@ -21,3 +21,4 @@ public:
 	void setMetrics(Block* block);
 	
 };
+#endif

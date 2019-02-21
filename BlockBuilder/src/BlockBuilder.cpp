@@ -102,3 +102,4 @@ void setMetrics(Block* block)
 {
 
 }
+#endif

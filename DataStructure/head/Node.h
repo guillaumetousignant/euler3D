@@ -13,3 +13,4 @@ public:
 	~Node();
 	
 };
+#endif
