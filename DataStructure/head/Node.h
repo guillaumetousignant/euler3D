@@ -13,4 +13,5 @@ public:
 	~Node();
 	
 };
+
 #endif

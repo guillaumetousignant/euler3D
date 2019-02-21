@@ -5,9 +5,9 @@ class TimeVariables
 {
 public:
 	double* dt_;
-	double** spectral_radius_;
+	double* spectral_radius_;
 
-	TimeVariables();
+	TimeVariables(int n_all_cells_in_blocks);
 	~TimeVariables();
 	
 };

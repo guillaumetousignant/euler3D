@@ -9,7 +9,7 @@ public:
 	CellCreator();
 	~CellCreator();
 
-	virtual Cell* createNode() = 0;
+	virtual Cell* createCell() = 0;
 	
 };
 
