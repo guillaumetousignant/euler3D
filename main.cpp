@@ -15,6 +15,9 @@ using namespace std;
 
 int main()
 {
+	MPI_Init(NULL, NULL);
+
+	cout << "This is the main" << endl;
 
 	int test_block=69;
 	Block* block= new Block(test_block);
@@ -23,16 +26,14 @@ int main()
 
 	Solver *solver=initializer->initializeSolver(interface);
 	solver->solve(block);
-	
-	/*
-	// Initialize the MPI environment
-	MPI_Init(NULL, NULL);
 
-	cout << "This is the main" << endl;
+
+	// Initialize the MPI environment
+
 
 	// Finalize the MPI environment.
 	MPI_Finalize();
-	*/
+
 
 	/*
 	double gamma=1.5;
@@ -62,6 +63,5 @@ int main()
 	cout<<block->test_block_<<endl;
 	*/
 
-	return 0;
 }
 #endif
