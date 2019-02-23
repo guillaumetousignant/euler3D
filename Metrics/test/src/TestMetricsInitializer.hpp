@@ -50,7 +50,7 @@ void buildConnectivity(Block *iBlock)
     iBlock->block_cells_[0].cell_2_nodes_connectivity_[4] = 4;
 
     //Init ghost connectivity
-    for(int i(1);i < i < iBlock->n_all_cells_in_block_;i++)
+    for(int i(1);i < iBlock->n_all_cells_in_block_;i++)
     {
         iBlock->block_cells_[i].cell_2_cells_connectivity_ = new int[iBlock->block_cells_[i].cell_2_cells_connectivity_size_];
         iBlock->block_cells_[i].cell_2_cells_connectivity_[0] = 0;
@@ -163,9 +163,14 @@ TEST_CASE( "TestComputeCenterCells", "Prove that center cells are well defined" 
 
     double centerCoord[3] = {0.0,0.0,0.4};
 
-    REQUIRE(centerCoord[0] == blockData->block_cells_[0].cell_coordinates_[0]);
-    REQUIRE(centerCoord[1] == blockData->block_cells_[0].cell_coordinates_[1]);
-    REQUIRE(centerCoord[2] == blockData->block_cells_[0].cell_coordinates_[2]);
+    //Test for internal cell and ghost cells
+    for(int i(0);i < blockData->n_all_cells_in_block_;i++)
+    {
+        REQUIRE(centerCoord[0] == blockData->block_cells_[i].cell_coordinates_[0]);
+        REQUIRE(centerCoord[1] == blockData->block_cells_[i].cell_coordinates_[1]);
+        REQUIRE(centerCoord[2] == blockData->block_cells_[i].cell_coordinates_[2]);
+    }
+    
 
     tearDown(blockData);
 
