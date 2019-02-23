@@ -12,20 +12,26 @@ using namespace std;
 void buildConnectivity(Block *iBlock)
 {
     iBlock->n_real_cells_in_block_ = 1;
-    iBlock->n_all_cells_in_block_ = 1;
+    iBlock->n_all_cells_in_block_ = 6;
     iBlock->nb_faces_in_block_ = 5;
     iBlock->nb_nodes_in_block_ = 5;
 
-    iBlock->block_cells_ = new Cell[iBlock->n_real_cells_in_block_];
+    iBlock->block_cells_ = new Cell[iBlock->n_all_cells_in_block_];
     iBlock->block_faces_ = new Face[iBlock->nb_faces_in_block_];
     iBlock->block_nodes_ = new Node[iBlock->nb_nodes_in_block_];
 
     iBlock->block_cells_[0].cell_2_cells_connectivity_size_ = 1;
     iBlock->block_cells_[0].cell_2_faces_connectivity_size_ = 5;
     iBlock->block_cells_[0].cell_2_nodes_connectivity_size_ = 5;
-    
-    //Init Cells block connectivity
 
+    //Init sizes for ghots cells
+    for(int i(1);i < iBlock->n_all_cells_in_block_;i++)
+    {
+        iBlock->block_cells_[i].cell_2_cells_connectivity_size_ = 1;
+        iBlock->block_cells_[i].cell_2_faces_connectivity_size_ = 1;
+    }
+
+    //Init Cell block connectivity internal
     iBlock->block_cells_[0].cell_2_cells_connectivity_ = new int[iBlock->block_cells_[0].cell_2_cells_connectivity_size_];
     iBlock->block_cells_[0].cell_2_cells_connectivity_[0] = 0;
 
@@ -43,6 +49,16 @@ void buildConnectivity(Block *iBlock)
     iBlock->block_cells_[0].cell_2_nodes_connectivity_[3] = 3;
     iBlock->block_cells_[0].cell_2_nodes_connectivity_[4] = 4;
 
+    //Init ghost connectivity
+    for(int i(1);i < i < iBlock->n_all_cells_in_block_;i++)
+    {
+        iBlock->block_cells_[i].cell_2_cells_connectivity_ = new int[iBlock->block_cells_[i].cell_2_cells_connectivity_size_];
+        iBlock->block_cells_[i].cell_2_cells_connectivity_[0] = 0;
+
+        iBlock->block_cells_[i].cell_2_faces_connectivity_ = new int[iBlock->block_cells_[i].cell_2_faces_connectivity_size_];
+        iBlock->block_cells_[i].cell_2_faces_connectivity_[0] = (i - 1);
+    }
+
     //Init Faces block connectivity
     for(int i(0);i < iBlock->nb_faces_in_block_;i++)
         iBlock->block_faces_[i].face_2_cells_connectivity_size_ = 1;
@@ -56,7 +72,6 @@ void buildConnectivity(Block *iBlock)
 
     for(int i(0);i < iBlock->nb_faces_in_block_;i++)
         iBlock->block_faces_[0].face_2_cells_connectivity_ = face2cells;
-
 
 
     iBlock->block_faces_[0].face_2_nodes_connectivity_ = new int[iBlock->block_faces_[0].face_2_nodes_connectivity_size_];
@@ -120,9 +135,12 @@ void buildConnectivity(Block *iBlock)
 
 void tearDown(Block *iBlock)
 {
-    delete [] iBlock->block_cells_[0].cell_2_cells_connectivity_;
-    delete [] iBlock->block_cells_[0].cell_2_faces_connectivity_;
-    delete [] iBlock->block_cells_[0].cell_2_nodes_connectivity_;
+    for(int i(0);i < iBlock->n_all_cells_in_block_;i++)
+    { 
+        delete [] iBlock->block_cells_[i].cell_2_cells_connectivity_;
+        delete [] iBlock->block_cells_[i].cell_2_faces_connectivity_;
+        delete [] iBlock->block_cells_[i].cell_2_nodes_connectivity_;
+    }
 
     for(int i(0);i < iBlock->nb_faces_in_block_;i++)
         delete [] iBlock->block_faces_[i].face_2_nodes_connectivity_;
