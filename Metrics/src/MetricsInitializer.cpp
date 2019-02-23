@@ -45,7 +45,7 @@ void MetricsInitializer::doInit()
 
     computeVolumeCells(iNCells, iNCellsTot, iCells, iFaces);
 
-    //computeInterpVect(iNCells, iNCellsTot,iNFaces, iCells, iFaces);
+    computeInterpVect(iNCells, iNCellsTot,iNFaces, iCells, iFaces);
     
     //computeWLS();
 

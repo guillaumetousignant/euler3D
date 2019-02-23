@@ -61,19 +61,41 @@ void buildConnectivity(Block *iBlock)
 
     //Init Faces block connectivity
     for(int i(0);i < iBlock->nb_faces_in_block_;i++)
-        iBlock->block_faces_[i].face_2_cells_connectivity_size_ = 1;
+        iBlock->block_faces_[i].face_2_cells_connectivity_size_ = 2;
 
     for(int i(0);i < iBlock->nb_faces_in_block_ - 1;i++)
         iBlock->block_faces_[i].face_2_nodes_connectivity_size_ = 3; // Triangles
 
     iBlock->block_faces_[iBlock->nb_faces_in_block_ - 1].face_2_nodes_connectivity_size_ = 4; //Square
 
-    int face2cells[1] = {0};
+    int face2cells_[iBlock->nb_faces_in_block_][2];
+    face2cells_[0][0] = 0;
+    face2cells_[0][1] = 1;
+
+    face2cells_[1][0] = 0;
+    face2cells_[1][1] = 2;
+
+    face2cells_[2][0] = 0;
+    face2cells_[2][1] = 3;
+
+    face2cells_[3][0] = 0;
+    face2cells_[3][1] = 4;
+    
+    face2cells_[4][0] = 0;
+    face2cells_[4][1] = 5;
 
     for(int i(0);i < iBlock->nb_faces_in_block_;i++)
-        iBlock->block_faces_[0].face_2_cells_connectivity_ = face2cells;
+    {
+        iBlock->block_faces_[i].face_2_cells_connectivity_ = new int[2];
 
+        for(int j(0);j < 2;j++)
+        {
+            int value = face2cells_[i][j];
+            iBlock->block_faces_[i].face_2_cells_connectivity_[j] = value;
+        }
+    }
 
+    
     iBlock->block_faces_[0].face_2_nodes_connectivity_ = new int[iBlock->block_faces_[0].face_2_nodes_connectivity_size_];
 
     iBlock->block_faces_[0].face_2_nodes_connectivity_[0] = 0;
@@ -143,7 +165,11 @@ void tearDown(Block *iBlock)
     }
 
     for(int i(0);i < iBlock->nb_faces_in_block_;i++)
+    {
+        delete [] iBlock->block_faces_[i].face_2_cells_connectivity_;
         delete [] iBlock->block_faces_[i].face_2_nodes_connectivity_;
+    }
+        
 
     delete [] iBlock->block_cells_;
     delete [] iBlock->block_faces_;
@@ -374,6 +400,11 @@ TEST_CASE("Test ComputeAreaFaces", "Testing if areas are well defined")
     delete metricsInit;
     metricsInit = nullptr;
 
+}
+
+TEST_CASE("Test interpolation vector")
+{
+    
 }
 
 
