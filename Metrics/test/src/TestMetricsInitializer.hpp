@@ -404,7 +404,42 @@ TEST_CASE("Test ComputeAreaFaces", "Testing if areas are well defined")
 
 TEST_CASE("Test interpolation vector")
 {
-    
+    int blockId = 0;
+    Block *blockData = new Block(blockId);
+
+    buildConnectivity(blockData);
+
+    MetricsInitializer *metricsInit = new MetricsInitializer(blockData);
+    metricsInit->doInit();
+
+    double eps = 0.01;
+
+    double vec_interp_left[3];
+
+    vec_interp_left[0] = 0.33;
+    vec_interp_left[1] = 0.33;
+    vec_interp_left[2] = 0.27;
+
+    double *result_left = blockData->block_faces_[0].left_cell_r_vector_;
+
+    for(int i(0);i < 3;i++)
+    {
+        REQUIRE(result_left[i] <= vec_interp_left[i] + eps);
+        REQUIRE(result_left[i] >= vec_interp_left[i] - eps);
+        
+    }
+        
+
+    tearDown(blockData);
+
+    delete blockData;
+    blockData = nullptr;
+
+    delete metricsInit;
+    metricsInit = nullptr;
+
+    result_left = nullptr;
+
 }
 
 
