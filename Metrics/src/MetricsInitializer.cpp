@@ -437,10 +437,6 @@ void MetricsInitializer::computeWLS(uint iNCells, Cell* iCells)
 
     for(uint i(0);i < iNCells;i++)
     {
-        //double weight[3] = {0.0, 0.0, 0.0};
-
-        //double alpha1, alpha2, alpha3;
-        //double beta;
         const uint nbCellsNeighbor = iCells[i].cell_2_cells_connectivity_size_;
 
         double dxij[nbCellsNeighbor];
@@ -475,37 +471,65 @@ void MetricsInitializer::computeWLS(uint iNCells, Cell* iCells)
         double sumdyijdzij_minus_r12r13;
         double sumdzijSquare_minus_r13Square_minusr23Square = 0.0;
 
-        double r12 = 0.0;
-        double r11 = 0.0;
-        double r13 = 0.0;
-        double r23 = 0.0;
-        double r22 = 0.0;
-        //double r33 = 0.0;
-
-        for(int j(0);j < iCells[i].cell_2_cells_connectivity_size_;j++)
+        for(int j(0);j < nbCellsNeighbor;j++)
         {
             sumdxij2 += dxij[j]*dxij[j];
             sumdxij_dot_dyij += dxij[j]*dyij[j];
             sumdxij_dot_dzij += dxij[j]*dzij[j];
-            sumdyijSquare_minus_r12Square += dyij[j]*dyij[j] - r12*r12;
-            sumdyijdzij_minus_r12r13 += dyij[j]*dzij[j] - r12*r13;
-            sumdzijSquare_minus_r13Square_minusr23Square += dzij[j]*dzij[j] - (r13*r13 + r23*r23);
         }
 
-        r11 = sqrt(sumdxij2);
+        double r11 = sqrt(sumdxij2);
 
-        r12 = (1/r11)*sumdxij_dot_dyij;
+        double r12 = (1/r11)*sumdxij_dot_dyij;
 
-        r13 = (1/r11)*sumdxij_dot_dzij;
+        double r13 = (1/r11)*sumdxij_dot_dzij;
+
+        for(int j(0);j < nbCellsNeighbor;j++)
+        {
+            sumdyijSquare_minus_r12Square += dyij[j]*dyij[j] - r12*r12;
+            sumdyijdzij_minus_r12r13 += dyij[j]*dzij[j] - r12*r13;
+        }
+
+        double r22 = sqrt(sumdyijSquare_minus_r12Square);
+
+        double r23 = (1/r22)*sumdyijdzij_minus_r12r13;
+
+        for(int j(0);j < nbCellsNeighbor;j++)
+        {
+            sumdzijSquare_minus_r13Square_minusr23Square += dzij[j]*dzij[j] - (r13*r13 + r23*r23);
+        }
         
-        r22 = sqrt(sumdyijSquare_minus_r12Square);
+        double r33 = sqrt(sumdzijSquare_minus_r13Square_minusr23Square);    
 
-        r23 = (1/r22)*sumdyijdzij_minus_r12r13;
+        double beta = (r12*r23 - r13*r22)/(r11*r22);
+
+        double **weights = new double*[nbCellsNeighbor];;
         
-        //r33 = sqrt(sumdzijSquare_minus_r13Square_minusr23Square);    
+        for(uint j(0);j < nbCellsNeighbor;j++)
+        {
+            weights[j] = new double[3];
 
+            double alpha3 = (1/(r33*r33))*(dzij[j] - (r33/r22)*dyij[j] + beta*dxij[j]);
+
+            double alpha2 = (1/(r22*r22))*(dyij[j] - (r12/r11)*dxij[j]);
+
+            double alpha1 = dxij[j] / (r11*r11);
+
+            weights[j][0] = alpha1 - (r12/r11)*alpha2 + beta*alpha3;
+            weights[j][1] = alpha2 - (r23/r22)*alpha3;
+            weights[j][2] = alpha3;
+
+        }
+
+        //Deallocation
+        for(uint j(0);j < nbCellsNeighbor;j++)
+        {
+            delete [] weights[j];
+        }
+        delete [] weights;
+        weights = nullptr;
+        
     }
-
 
 
 }
