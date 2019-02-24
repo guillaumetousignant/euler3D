@@ -236,22 +236,25 @@ void PostProcessing::computeFlowData(Block* block, CompleteMesh* completemesh, S
   // Check simulation status
   checkStopSolver(solver, stopsimulation, iter, max_iter, convergence_criterion);
 
-  //Calculate aerodynamic parameters for each block
-  aerodynamicparameters->computeAerodynamic(block, solver, iter, iteration_interval_, cmac,  mach, aoa_rad, gamma);
-
-  // Save pressure coefficients into an array
-  saveCp(block);
-
-  // Save Mach numbers into an array
-  saveMach(block);
-
   if(iter == iteration_interval_ || solver->stop_solver_flag_ == true)
   {
+    //Calculate aerodynamic parameters for each block
+    aerodynamicparameters->computeAerodynamic(block, solver, iter, iteration_interval_, cmac,  mach, aoa_rad, gamma);
+
     // Save convergence into convergencedata_
     saveCoefficients(block);
 
     // Sum aerodynamic parameters and convergence for each block
     coefficientsSum(completemesh);
+
+    if(solver->stop_solver_flag_ == true)
+    {
+      // Save pressure coefficients into an array
+      saveCp(block);
+
+      // Save Mach numbers into an array
+      saveMach(block);
+    }
   }
 
   cout << "Ending computeFlowData..............................................." << endl;
@@ -278,11 +281,11 @@ void PostProcessing::process(Block* block, CompleteMesh* completemesh, Solver* s
   // Compute flow data for each iteration
    computeFlowData(block, completemesh, solver, stopsimulation, iter, max_iter, cmac, mach, aoa_rad, gamma, convergence_criterion);
 
-   // Save and print flow data into binary files
-   saveFlowData(block, solver, iter, aoa_rad);
-
-   if(iter == iteration_interval_)
+  if(iter == iteration_interval_ || solver->stop_solver_flag_ == true)
    {
+     // Save and print flow data into binary files
+     saveFlowData(block, solver, iter, aoa_rad);
+
      iteration_interval_ += 100;
    }
 

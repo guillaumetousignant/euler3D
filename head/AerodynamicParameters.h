@@ -49,9 +49,9 @@ double fx_;
 double fy_;
 double fz_;
 double area_;
-double cell_x_coordinate_;
-double cell_y_coordinate_;
-double cell_z_coordinate_;
+double face_x_coordinate_;
+double face_y_coordinate_;
+double face_z_coordinate_;
 
 
 double* coefficients_;
@@ -65,9 +65,9 @@ double calculateCd();
 void calculateCmx();
 void calculateCmy();
 void calculateCmz();
-void calculateForce(double cpbc);
+void calculateForce(double ppbc);
 void calculateMach(Block* block, double gamma);
-void calculateCp(Block* block);
+void calculateCp(int i);
 void calculateGlobalCl(double aoa);
 void calculateGlobalCd(double aoa);
 void checkClDriver();

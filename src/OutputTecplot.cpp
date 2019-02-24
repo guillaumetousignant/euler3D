@@ -41,11 +41,11 @@ void OutputTecplot::printFlowData(Block* block)
 
   #if 0
   FlowData << "TTILE = \"Vizualisation of the volumetric solution\""
-  FlowData << "VARIABLES=\"X\",\"Y\",\"Z\",\"RO\",\"UU\",\"VV\",\"WW\",\"PP\",\"CP\",\"MACH\"" << endl;
+  FlowData << "VARIABLES=\"X\",\"Y\",\"Z\",\"RO\",\"UU\",\"VV\",\"WW\",\"PP\"" << endl;
   FlowData << "ZONE T=\"FLOW_FIELD\"" << endl;
   FlowData << "Nodes=" << block->n_nodes_in_block_ << ", " << "Elements=" << block->n_cells_in_block_ << ", " << "ZONETYPE=FEPOLYHEDRAL" << endl;
   FlowData << "DATAPACKING=BLOCK" << endl;
-  FlowData << "VARLOCATION=([4,5,6,7,8,9,10]=CELLCENTERED)" << endl;
+  FlowData << "VARLOCATION=([4,5,6,7,8]=CELLCENTERED)" << endl;
 
   // Print X coordinate for each node
   for(i=0; i < block->n_nodes_in_block_; i++)
@@ -109,18 +109,6 @@ void OutputTecplot::printFlowData(Block* block)
     pp_ = block->block_primitive_variables_[i]->pp_[i];
 
     FlowData << pp_ << endl;
-  }
-
-  // Print pressure coefficient for each cell
-  for(i=0; i < block->n_cells_in_block_; i++)
-  {
-    FlowData << cp_[i] << endl;
-  }
-
-  // Print Mach number for each cell
-  for(i=0; i < block->n_cells_in_block_; i++)
-  {
-    FlowData << mach_[i] << endl;
   }
 
   for(i=0;i < block->n_cells_in_block_; i++)
@@ -278,24 +266,21 @@ void OutputTecplot::printData(Block* block, Solver* solver, int iter, int iterat
 {
   cout << "Starting printData..................................................." << endl;
 #if 0
-  cp_ = cp;
   data_ = data;
-  mach_ = mach;
 #endif
+
+  printConvergence(solver, iter);
 
   if(solver->stop_solver_flag_ == true)
   {
+    mach_ = mach;
+    cp_ = cp;
     aoa_deg_ = aoa*180/3.1416;
 
-    printConvergence(solver, iter);
     printFlowData(block);
     printSurfaceFlowData(block);
     printAerodynamicCoefficients(block);
     printRestartFile(block);
-  }
-  else if(iter == iteration_interval_)
-  {
-    printConvergence(solver, iter);
   }
 
   cout << "Ending printData....................................................." << endl;
