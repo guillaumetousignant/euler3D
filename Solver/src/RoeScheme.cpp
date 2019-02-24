@@ -9,10 +9,10 @@
 #include <iostream>
 using namespace std;
 
-void RoeScheme::computeFlux(Block* block)
+void RoeScheme::computeFluxDiss(Block* block)
 {
 	block->test_block_++;
-	cout<<"\t\t\t\tExécution computeFlux: Roe: "<<block->test_block_<<endl;
+	cout<<"\t\t\t\tExécution computeFluxDiss: Roe: "<<block->test_block_<<endl;
 	/*
 	//Set variables
 	double rho_L,u_L,v_L,w_L,p_L,H_L,qq_L,V_L,rho_R,u_R,v_R,w_R,p_R,H_R,qq_R,V_R;
@@ -22,8 +22,6 @@ void RoeScheme::computeFlux(Block* block)
 	double F_234_cst,F_234_mass,F_234_u,F_234_v,F_234_w,F_234_energy;
 	double F_5_cst,F_5_mass,F_5_u,F_5_v,F_5_w,F_5_energy;
 	double A_roe_mass,A_roe_u,A_roe_v,A_roe_w,A_roe_energy;
-	double Fc_L_1,Fc_L_2,Fc_L_3,Fc_L_4,Fc_L_5,Fc_R_1,Fc_R_2,Fc_R_3,Fc_R_4,Fc_R_5;
-	double flux_1_convective,flux_2_convective,flux_3_convective,flux_4_convective,flux_5_convective;
 	double flux_1_dissipative,flux_2_dissipative,flux_3_dissipative,flux_4_dissipative,flux_5_dissipative;
 	double normal_norm, normalized_x, normalized_y, normalized_z;
 	double LAMBDA1,LAMBDA234,LAMBDA5;
@@ -38,19 +36,32 @@ void RoeScheme::computeFlux(Block* block)
 	my_ww_array = my_primitive_variables -> ww_;
 	my_pp_array = my_primitive_variables -> pp_;
 
-	double* my_conv_res_ro,my_conv_res_uu,my_conv_res_vv,my_conv_res_ww,my_conv_res_pp;
-	my_conv_res_ro = my_primitive_variables -> conv_res_ro_;
-	my_conv_res_uu = my_primitive_variables -> conv_res_uu_;
-	my_conv_res_vv = my_primitive_variables -> conv_res_vv_;
-	my_conv_res_ww = my_primitive_variables -> conv_res_ww_;
-	my_conv_res_pp = my_primitive_variables -> conv_res_pp_;
-
 	double* my_diss_res_ro,my_diss_res_uu,my_diss_res_vv,my_diss_res_ww,my_diss_res_pp;
+	
 	my_diss_res_ro = my_primitive_variables -> diss_res_ro_;
 	my_diss_res_uu = my_primitive_variables -> diss_res_uu_;
 	my_diss_res_vv = my_primitive_variables -> diss_res_vv_;
 	my_diss_res_ww = my_primitive_variables -> diss_res_ww_;
 	my_diss_res_pp = my_primitive_variables -> diss_res_pp_;
+	
+	Cell* my_cells;
+	my_cells = block -> block_cells_;
+	int ncell, my_cell;
+	ncell = block -> n_real_cells_in_block_;
+	double cell_volume;
+
+	for (int cell_idx=0; cell_idx<ncell; cell_idx++)
+	{
+		my_cell = my_cells[cell_idx];
+		cell_volume  = my_cell -> cell_volume_;
+
+		my_diss_res_ro[cell_idx] *=(1-current_beta_)*cell_volume[cell_idx];
+		my_diss_res_uu[cell_idx] *=(1-current_beta_)*cell_volume[cell_idx];
+		my_diss_res_vv[cell_idx] *=(1-current_beta_)*cell_volume[cell_idx];
+		my_diss_res_ww[cell_idx] *=(1-current_beta_)*cell_volume[cell_idx];
+		my_diss_res_pp[cell_idx] *=(1-current_beta_)*cell_volume[cell_idx];
+
+	}
 
 	int nface, my_face, left_cell, right_cell;
 	int* neighboor_cells;
@@ -168,76 +179,37 @@ void RoeScheme::computeFlux(Block* block)
 		A_roe_w = F_1_w + F_234_w + F_5_w;
 		A_roe_energy = F_1_energy + F_234_energy + F_5_energy;
 
-		Fc_L_1 = rho_L*V_L;
-		Fc_R_1 = rho_R*V_R;
-		Fc_L_2 = rho_L*u_L*V_L+normalized_x*p_L;
-		Fc_R_2 = rho_R*u_R*V_R+normalized_x*p_R;
-		Fc_L_3 = rho_L*v_L*V_L+normalized_y*p_L;
-		Fc_R_3 = rho_R*v_R*V_R+normalized_y*p_R;
-		Fc_L_4 = rho_L*w_L*V_L+normalized_z*p_L;
-		Fc_R_4 = rho_R*w_R*V_R+normalized_z*p_R;
-		Fc_L_5 = rho_L*H_L*V_L;
-		Fc_R_5 = rho_R*H_R*V_R;
-
-		flux_1_convective = 0.5*(Fc_L_1+Fc_R_1)*normal_norm;
-		flux_2_convective = 0.5*(Fc_L_2+Fc_R_2)*normal_norm;
-		flux_3_convective = 0.5*(Fc_L_3+Fc_R_3)*normal_norm;
-		flux_4_convective = 0.5*(Fc_L_4+Fc_R_4)*normal_norm;
-		flux_5_convective = 0.5*(Fc_L_5+Fc_R_5)*normal_norm;
-
 		flux_1_dissipative = 0.5*(-A_roe_mass)*normal_norm;
 		flux_2_dissipative = 0.5*(-A_roe_u)*normal_norm;
 		flux_3_dissipative = 0.5*(-A_roe_v)*normal_norm;
 		flux_4_dissipative = 0.5*(-A_roe_w)*normal_norm;
 		flux_5_dissipative = 0.5*(-A_roe_energy)*normal_norm;
 
-		my_conv_res_ro[left_cell] += flux_1_convective;
-		my_conv_res_uu[left_cell] += flux_2_convective;
-		my_conv_res_vv[left_cell] += flux_3_convective;
-		my_conv_res_ww[left_cell] += flux_4_convective;
-		my_conv_res_pp[left_cell] += flux_5_convective;
+		my_diss_res_ro[left_cell] += flux_1_dissipative*current_beta_;
+		my_diss_res_uu[left_cell] += flux_2_dissipative*current_beta_;
+		my_diss_res_vv[left_cell] += flux_3_dissipative*current_beta_;
+		my_diss_res_ww[left_cell] += flux_4_dissipative*current_beta_;
+		my_diss_res_pp[left_cell] += flux_5_dissipative*current_beta_;
 
-		my_conv_res_ro[right_cell] -= flux_1_convective;
-		my_conv_res_uu[right_cell] -= flux_2_convective;
-		my_conv_res_vv[right_cell] -= flux_3_convective;
-		my_conv_res_ww[right_cell] -= flux_4_convective;
-		my_conv_res_pp[right_cell] -= flux_5_convective;
-
-		my_diss_res_ro[left_cell] += flux_1_dissipative;
-		my_diss_res_uu[left_cell] += flux_2_dissipative;
-		my_diss_res_vv[left_cell] += flux_3_dissipative;
-		my_diss_res_ww[left_cell] += flux_4_dissipative;
-		my_diss_res_pp[left_cell] += flux_5_dissipative;
-
-		my_diss_res_ro[right_cell] -= flux_1_dissipative;
-		my_diss_res_uu[right_cell] -= flux_2_dissipative;
-		my_diss_res_vv[right_cell] -= flux_3_dissipative;
-		my_diss_res_ww[right_cell] -= flux_4_dissipative;
-		my_diss_res_pp[right_cell] -= flux_5_dissipative;
+		my_diss_res_ro[right_cell] -= flux_1_dissipative*current_beta_;
+		my_diss_res_uu[right_cell] -= flux_2_dissipative*current_beta_;
+		my_diss_res_vv[right_cell] -= flux_3_dissipative*current_beta_;
+		my_diss_res_ww[right_cell] -= flux_4_dissipative*current_beta_;
+		my_diss_res_pp[right_cell] -= flux_5_dissipative*current_beta_;
 	}
 
-	Cell* my_cells;
-	my_cells = block -> block_cells_;
-	int ncell, my_cell;
-	ncell = block -> n_real_cells_in_block_;
-	double cell_volume;
 
 	for (int cell_idx=0; cell_idx<ncell; cell_idx++)
 	{
 		my_cell = my_cells[cell_idx];
 		cell_volume  = my_cell -> cell_volume_;
 
-		my_conv_res_ro[cell_idx] /= cell_volume[cell_idx];
-		my_conv_res_uu[cell_idx] /= cell_volume[cell_idx];
-		my_conv_res_vv[cell_idx] /= cell_volume[cell_idx];
-		my_conv_res_ww[cell_idx] /= cell_volume[cell_idx];
-		my_conv_res_pp[cell_idx] /= cell_volume[cell_idx];
-
 		my_diss_res_ro[cell_idx] /= cell_volume[cell_idx];
 		my_diss_res_uu[cell_idx] /= cell_volume[cell_idx];
 		my_diss_res_vv[cell_idx] /= cell_volume[cell_idx];
 		my_diss_res_ww[cell_idx] /= cell_volume[cell_idx];
 		my_diss_res_pp[cell_idx] /= cell_volume[cell_idx];
+
 	}
 	*/
 }
@@ -247,6 +219,7 @@ void RoeScheme::computeFlux(Block* block)
 RoeScheme::RoeScheme(double gamma)
 {
 	gamma_ = gamma;
+	current_beta_=1.0;
 }
 
 RoeScheme::~RoeScheme()

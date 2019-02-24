@@ -13,7 +13,7 @@ class AusmScheme : public FluxScheme
 		AusmScheme();
 		~AusmScheme();
 
-		void computeFlux(Block* block);
+		void computeFluxDiss(Block* block);
 
 };
 

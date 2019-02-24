@@ -49,11 +49,11 @@ void Updater::updateInternalBlock(Block* block)
 		res_ww_diss=block->block_primitive_variables_->res_ww_diss_[cell_idx];
 		res_pp_diss=block->block_primitive_variables_->res_pp_diss_[cell_idx];
 
-		ro_new=ro_0-(alpha_rk_[current_stage_]*dt/cell_volume)*(res_ro_conv-(1-beta_rk_[current_stage_])*res_ro_diss);
-		ru_new=ru_0-(alpha_rk_[current_stage_]*dt/cell_volume)*(res_uu_conv-(1-beta_rk_[current_stage_])*res_uu_diss);
-		rv_new=rv_0-(alpha_rk_[current_stage_]*dt/cell_volume)*(res_vv_conv-(1-beta_rk_[current_stage_])*res_vv_diss);
-		rw_new=rw_0-(alpha_rk_[current_stage_]*dt/cell_volume)*(res_ww_conv-(1-beta_rk_[current_stage_])*res_ww_diss);
-		re_new=re_0-(alpha_rk_[current_stage_]*dt/cell_volume)*(res_pp_conv-(1-beta_rk_[current_stage_])*res_pp_diss);
+		ro_new=ro_0-(alpha_rk_[current_stage_]*dt/cell_volume)*(res_ro_conv-res_ro_diss);
+		ru_new=ru_0-(alpha_rk_[current_stage_]*dt/cell_volume)*(res_uu_conv-res_uu_diss);
+		rv_new=rv_0-(alpha_rk_[current_stage_]*dt/cell_volume)*(res_vv_conv-res_vv_diss);
+		rw_new=rw_0-(alpha_rk_[current_stage_]*dt/cell_volume)*(res_ww_conv-res_ww_diss);
+		re_new=re_0-(alpha_rk_[current_stage_]*dt/cell_volume)*(res_pp_conv-res_pp_diss);
 
 		ro=ro_new;
 		uu= ru_new/ro_new;
@@ -66,8 +66,6 @@ void Updater::updateInternalBlock(Block* block)
 		block->primitive_variables_->vv_[cell_idx]=vv;
 		block->primitive_variables_->ww_[cell_idx]=ww;
 		block->primitive_variables_->pp_[cell_idx]=pp;
-
-		/// QUESTION SUR LA PERTINENCE DE BETA SI ON ÉVALUE BETA À CHAQUE FOIS
 
 
 	}
@@ -214,12 +212,11 @@ void Updater::synchroniseUpdate(Block* block)
 
 
 
-Updater::Updater(double gamma, double *alpha_rk, double *beta_rk)
+Updater::Updater(double gamma, double *alpha_rk)
 {
 	current_stage_=0;
 	gamma_=gamma;
 	alpha_rk_=alpha_rk;
-	beta_rk_=beta_rk;
 }
 
 Updater::~Updater()

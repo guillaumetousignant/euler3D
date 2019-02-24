@@ -8,11 +8,15 @@ class Block;
 class FluxScheme
 {
 	public:
-		
+
+		double gamma_;
+		double current_beta_;
+
 		FluxScheme();
 		~FluxScheme();
 
-		virtual void computeFlux(Block* block)=0;
+		virtual void computeFluxDiss(Block* block)=0;
+		void computeFluxConv(Block* block);
 
 
 };

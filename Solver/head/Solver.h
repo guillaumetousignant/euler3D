@@ -24,7 +24,7 @@ class Solver
 		void saveW0(Block* block);
 
 
-		Solver(double gamma, double cfl, int stage_number, double *alpha_rk, double *beta_rk,string interpolation_choice, string gradient_choice, string limiter_choice, string flux_scheme_choice, string residual_smoother_choice);
+		Solver(double gamma, double cfl, int stage_number, string interpolation_choice, string gradient_choice, string limiter_choice, string flux_scheme_choice, string residual_smoother_choice);
 		Solver();
 		~Solver();
 

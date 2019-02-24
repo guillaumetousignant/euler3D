@@ -13,14 +13,13 @@ class Updater
 		double gamma_;
 		int current_stage_;
 		double *alpha_rk_;
-		double *beta_rk_;
 		
 		void updateInternalBlock(Block* block);
 		void updateBoundary(Block* block);
 		void synchroniseUpdate(Block* block);
 
 
-		Updater(double gamma, double *alpha_rk, double *beta_rk);
+		Updater(double gamma, double *alpha_rk);
 		~Updater();
 
 

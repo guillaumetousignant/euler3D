@@ -9,11 +9,11 @@ class Block;
 class RoeScheme : public FluxScheme
 {
 	public:
-		double gamma_;
+
 		RoeScheme(double gamma);
 		~RoeScheme();
 
-		void computeFlux(Block* block);
+		void computeFluxDiss(Block* block);
 
 };
 

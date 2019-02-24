@@ -28,7 +28,12 @@ void ResidualCalculator::computeResidual(Block* block)
 	interpolation_->computeInterpolation(block);
 	cout<<"\t\t\tFin Interpolation"<<endl;
 	cout<<endl<<"\t\t\tDans FluxScheme"<<endl;
-	flux_scheme_->computeFlux(block);
+	flux_scheme_->computeFluxConv(block);
+	flux_scheme_->current_beta_=beta_rk_[current_stage_];
+	if (beta_rk_[current_stage_]>10^-16)
+	{
+		flux_scheme_->computeFluxDiss(block);	
+	}
 	cout<<"\t\t\tFin FluxScheme"<<endl;
 	cout<<endl<<"\t\t\tDans ResidualSmoother"<<endl;
 	residual_smoother_->smoothResidual(block);
@@ -64,9 +69,12 @@ void ResidualCalculator::setResidualSmoother(string residual_smoother_choice)
 }
 
 
-ResidualCalculator::ResidualCalculator(double gamma, string interpolation_choice, string gradient_choice, string limiter_choice, string flux_scheme_choice, string residual_smoother_choice)
+ResidualCalculator::ResidualCalculator(double gamma, double *beta_rk, string interpolation_choice, string gradient_choice, string limiter_choice, string flux_scheme_choice, string residual_smoother_choice)
 
 {
+	current_stage_=0;
+	beta_rk_=beta_rk;
+
 	if (interpolation_choice=="Second")
 		interpolation_=new SecondOrder(gradient_choice, limiter_choice);
 	else

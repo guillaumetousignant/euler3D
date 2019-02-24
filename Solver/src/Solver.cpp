@@ -10,11 +10,11 @@
 #include <iostream>
 using namespace std;
 
-Solver::Solver(double gamma, double cfl, int stage_number, double *alpha_rk, double *beta_rk,string interpolation_choice, string gradient_choice, string limiter_choice, string flux_scheme_choice, string residual_smoother_choice)
+Solver::Solver(double gamma, double cfl, int stage_number, string interpolation_choice, string gradient_choice, string limiter_choice, string flux_scheme_choice, string residual_smoother_choice)
 {
 	gamma_=gamma;
 	timestep_= new Timestep(gamma, cfl);
-	runge_kutta_= new RungeKutta(gamma, stage_number, alpha_rk, beta_rk, interpolation_choice, gradient_choice, limiter_choice, flux_scheme_choice,residual_smoother_choice);
+	runge_kutta_= new RungeKutta(gamma, stage_number, interpolation_choice, gradient_choice, limiter_choice, flux_scheme_choice,residual_smoother_choice);
 }
 
 

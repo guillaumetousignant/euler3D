@@ -9,10 +9,10 @@
 #include <iostream>
 using namespace std;
 
-void AusmScheme::computeFlux(Block* block)
+void AusmScheme::computeFluxDiss(Block* block)
 {
 	block->test_block_--;
-	cout<<"\t\t\t\tExécution computeFlux: AUSM: "<<block->test_block_<<endl;
+	cout<<"\t\t\t\tExécution computeFluxDiss: AUSM: "<<block->test_block_<<endl;
 }
 
 
