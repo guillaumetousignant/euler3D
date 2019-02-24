@@ -47,7 +47,7 @@ void MetricsInitializer::doInit()
 
     computeInterpVect(iNCells, iNCellsTot,iNFaces, iCells, iFaces);
     
-    //computeWLS();
+    //Compute Weight Least-Squared metrics;
 
 
    iCells = nullptr;
@@ -515,9 +515,13 @@ void MetricsInitializer::computeWLS(uint iNCells, Cell* iCells)
 
             double alpha1 = dxij[j] / (r11*r11);
 
-            weights[j][0] = alpha1 - (r12/r11)*alpha2 + beta*alpha3;
-            weights[j][1] = alpha2 - (r23/r22)*alpha3;
-            weights[j][2] = alpha3;
+            double weight1 = alpha1 - (r12/r11)*alpha2 + beta*alpha3;
+            double weight2 = alpha2 - (r23/r22)*alpha3;
+            double weight3 = alpha3;
+
+            weights[j][0] = weight1;
+            weights[j][1] = weight2;
+            weights[j][2] = weight3;
 
         }
 
