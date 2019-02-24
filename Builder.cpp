@@ -81,20 +81,23 @@ void Builder::setConnectivity()
 {
 	int i,j,k,w,idx,node_0,node_1,n_cells_linked;
 	int *idx_node,*idx_cell_2_faces,*idx_cell_2_cells; 
+	
 	//node_2_cells_connectivity_
-		idx_node=allocate_1d_array_int(int my_Block->n_nodes_in_block_, "idx_node")
-		for(i=0;i < my_Block->n_nodes_in_block_-1 ;i++)
+		
+		idx_node=allocate_1d_array_int(int my_block->n_nodes_in_block_, "idx_node")
+		
+		for(i=0;i < my_block->n_nodes_in_block_-1 ;i++)
 		{
-			my_Block->block_nodes_[i]->node_2_cells_connectivity_=allocate_1d_array_int(int my_Block->n_cells_per_node_[i], string "node_2_cells_connectivity_");
+			my_block->block_nodes_[i]->node_2_cells_connectivity_=allocate_1d_array_int(int my_block->block_nodes_[i]->n_cells_per_node_, string "node_2_cells_connectivity_");
 			idx_node[i]=0;
 		}
 
 		for(i=0;i < my_Block->n_cells_in_block_-1 ;i++)
 		{
 			{
-			for(j=0,j < my_Block->n_nodes_per_cell_[i]-1 ;i++)
-				idx=my_Block->block_cells_[i]->cell_2_nodes_connectivity_[j];
-				my_Block->block_nodes_[idx]->node_2_cells_connectivity_[idx_node[idx]]=i;
+			for(j=0,j < my_block->block_cells_[i]->n_nodes_per_cell_-1 ;i++)
+				idx=my_block->block_cells_[i]->cell_2_nodes_connectivity_[j];
+				my_block->block_nodes_[idx]->node_2_cells_connectivity_[idx_node[idx]]=i;
 				idx_node[idx]+=1;
 			}
 
@@ -102,24 +105,24 @@ void Builder::setConnectivity()
 
 	//face_2_nodes_connectivity_
 
-		for(i=0;i < my_Block->n_faces_in_block_-1 ;i++)
+		for(i=0;i < my_block->n_faces_in_block_-1 ;i++)
 		{
-			my_Block->block_faces_[i]->face_2_cells_connectivity_=allocate_1d_array_int(int 2, "face_2_cells_connectivity_");
+			my_block->block_faces_[i]->face_2_cells_connectivity_=allocate_1d_array_int(int 2, "face_2_cells_connectivity_");
 		
-			node_0=my_Block->block_faces_[i]->face_2_nodes_connectivity_[0];
+			node_0=my_block->block_faces_[i]->face_2_nodes_connectivity_[0];
 			
 			
-			for(j=1;j < my_Block->n_nodes_per_face_[i]-1 ;j++)
+			for(j=1;j < my_block->block_faces_[i]->n_nodes_per_face_-1 ;j++)
 			{	
 				n_cells_linked=0;
-				node_1=my_Block->block_faces_[i]->face_2_nodes_connectivity_[j];
+				node_1=my_block->block_faces_[i]->face_2_nodes_connectivity_[j];
 
-				for(k=0;k < n_cells_per_node[node_0]-1 ;k++)
+				for(k=0;k < my_block->block_nodes_[node_0]->n_cells_per_node-1 ;k++)
 				{	
 
-					for(w=0;w < n_cells_per_node[node_1]-1 ; w++)
+					for(w=0;w < my_block->block_nodes_[node_1]->n_cells_per_node-1 ; w++)
 					{
-						if(my_Block->block_nodes[node_0]->node_2_cells_connectivity_[k]=my_Block->block_nodes[node_1]->node_2_cells_connectivity_[w])
+						if(my_block->block_nodes[node_0]->node_2_cells_connectivity_[k]=my_block->block_nodes[node_1]->node_2_cells_connectivity_[w])
 						{
 							n_cells_linked+=1;
 						}
@@ -130,21 +133,21 @@ void Builder::setConnectivity()
 
 				if(n_cells_linked==2)
 				{
-					j=my_Block->n_nodes_per_face_[i];
+					j=my_block->block_faces_[i]->n_nodes_per_face_;
 				}			
 
 			}	
 
 			idx=0;
 
-			for(k=0;k < n_cells_per_node[node_0]-1 ;k++)
+			for(k=0;k < my_block->block_nodes[node_0]->n_cells_per_node-1 ;k++)
 				{	
 
-					for(w=0;w < n_cells_per_node[node_1]-1 ; w++)
+					for(w=0;w < my_block->block_nodes[node_1]->n_cells_per_node-1 ; w++)
 					{
-						if(my_Block->block_nodes[node_0]->node_2_cells_connectivity_[k]=my_Block->block_nodes[node_1]->node_2_cells_connectivity_[w])
+						if(my_block->block_nodes[node_0]->node_2_cells_connectivity_[k]=my_block->block_nodes[node_1]->node_2_cells_connectivity_[w])
 						{
-							my_Block->block_faces[i]->face_2_cells[idx]=my_Block->block_nodes[node_0]->node_2_cells_connectivity_[k];
+							my_block->block_faces[i]->face_2_cells[idx]=my_block->block_nodes[node_0]->node_2_cells_connectivity_[k];
 							idx+=1;
 						}
 
@@ -156,15 +159,15 @@ void Builder::setConnectivity()
 
 
 	//cell_2_faces_connectivity_ & cell_2_cells_connectivity_
-		idx_cell_2_faces=allocate_1d_array_int(int my_Block->n_cells_in_block_, "idx_cell_2_faces")
-		idx_cell_2_cells=allocate_1d_array_int(int my_Block->n_cells_in_block_, "idx_cell_2_cells")
+		idx_cell_2_faces=allocate_1d_array_int(int my_block->n_cells_in_block_, "idx_cell_2_faces")
+		idx_cell_2_cells=allocate_1d_array_int(int my_block->n_cells_in_block_, "idx_cell_2_cells")
 
-		for(i=0;i < my_Block->n_cells_in_block_-1 ;i++)
+		for(i=0;i < my_block->n_cells_in_block_-1 ;i++)
 		{
 			idx_cell_2_faces[i]=0;
 			idx_cell_2_cells[i]=0;
 
-			switch (my_Block->block_cells_[i]->cell_type_) 
+			switch (my_block->block_cells_[i]->cell_type_) 
 
 		 	{
 			  case 10: //tetrahedral
@@ -177,12 +180,12 @@ void Builder::setConnectivity()
 			  my_block->block_cells->cell_2_cells_connectivity_=allocate_1d_array_int(int 6, "cell_2_cells_connectivity_");
 			    break;
 			  case 13: //prism
-			  my_block->block_cells->cell_2_faces_connectivity_=allocate_1d_array_int(int 2+((my_block->n_nodes_per_cell_[i])/2), "cell_2_faces_connectivity_");
-			  my_block->block_cells->cell_2_cells_connectivity_=allocate_1d_array_int(int 2+((my_block->n_nodes_per_cell_[i])/2), "cell_2_cells_connectivity_");
+			  my_block->block_cells->cell_2_faces_connectivity_=allocate_1d_array_int(int 2+((my_block->block_cells_[i]->n_nodes_per_cell_)/2), "cell_2_faces_connectivity_");
+			  my_block->block_cells->cell_2_cells_connectivity_=allocate_1d_array_int(int 2+((my_block->block_cells_[i]->n_nodes_per_cell_)/2), "cell_2_cells_connectivity_");
 			    break;	    
 			  case 14: //pyramid
-			  my_block->block_cells->cell_2_faces_connectivity_=allocate_1d_array_int(int my_block->n_nodes_per_cell_[i], "cell_2_faces_connectivity_");
-			  my_block->block_cells->cell_2_cells_connectivity_=allocate_1d_array_int(int my_block->n_nodes_per_cell_[i], "cell_2_cells_connectivity_");
+			  my_block->block_cells->cell_2_faces_connectivity_=allocate_1d_array_int(int my_block->block_cells_[i]->n_nodes_per_cell_, "cell_2_faces_connectivity_");
+			  my_block->block_cells->cell_2_cells_connectivity_=allocate_1d_array_int(int my_block->block_cells_[i]->n_nodes_per_cell_, "cell_2_cells_connectivity_");
 			    break;
 
 			}
@@ -190,19 +193,19 @@ void Builder::setConnectivity()
 		}
 
 
-		for(i=0;i < my_Block->n_faces_in_block_-1 ;i++)
+		for(i=0;i < my_block->n_faces_in_block_-1 ;i++)
 		{
-			my_Block->block_cells[my_Block->block_faces_[i]->face_2_cells_connectivity_[0]]->cell_2_faces_connectivity_[idx_cell_2_faces[my_Block->block_faces_[i]->face_2_cells_connectivity_[0]]]=i;
-			idx_cell_2_faces[my_Block->block_faces_[i]->face_2_cells_connectivity_[0]]+=1;
+			my_block->block_cells[my_block->block_faces_[i]->face_2_cells_connectivity_[0]]->cell_2_faces_connectivity_[idx_cell_2_faces[my_block->block_faces_[i]->face_2_cells_connectivity_[0]]]=i;
+			idx_cell_2_faces[my_block->block_faces_[i]->face_2_cells_connectivity_[0]]+=1;
 
-			my_Block->block_cells[my_Block->block_faces_[i]->face_2_cells_connectivity_[1]]->cell_2_faces_connectivity_[idx_cell_2_faces[my_Block->block_faces_[i]->face_2_cells_connectivity_[1]]]=i;
-			idx_cell_2_faces[my_Block->block_faces_[i]->face_2_cells_connectivity_[1]]+=1;
+			my_block->block_cells[my_block->block_faces_[i]->face_2_cells_connectivity_[1]]->cell_2_faces_connectivity_[idx_cell_2_faces[my_block->block_faces_[i]->face_2_cells_connectivity_[1]]]=i;
+			idx_cell_2_faces[my_block->block_faces_[i]->face_2_cells_connectivity_[1]]+=1;
 
 
-			my_Block->block_cells[my_Block->block_faces_[i]->face_2_cells_connectivity_[0]]->cell_2_cells_connectivity_[idx_cell_2_cells[my_Block->block_faces_[i]->face_2_cells_connectivity_[0]]]=my_Block->block_faces_[i]->face_2_cells_connectivity_[1];
-			my_Block->block_cells[my_Block->block_faces_[i]->face_2_cells_connectivity_[1]]->cell_2_cells_connectivity_[idx_cell_2_cells[my_Block->block_faces_[i]->face_2_cells_connectivity_[1]]]=my_Block->block_faces_[i]->face_2_cells_connectivity_[0];
-			idx_cell_2_faces[my_Block->block_faces_[i]->face_2_cells_connectivity_[0]]+=1;
-			idx_cell_2_faces[my_Block->block_faces_[i]->face_2_cells_connectivity_[1]]+=1;
+			my_block->block_cells[my_block->block_faces_[i]->face_2_cells_connectivity_[0]]->cell_2_cells_connectivity_[idx_cell_2_cells[my_block->block_faces_[i]->face_2_cells_connectivity_[0]]]=my_block->block_faces_[i]->face_2_cells_connectivity_[1];
+			my_block->block_cells[my_block->block_faces_[i]->face_2_cells_connectivity_[1]]->cell_2_cells_connectivity_[idx_cell_2_cells[my_block->block_faces_[i]->face_2_cells_connectivity_[1]]]=my_block->block_faces_[i]->face_2_cells_connectivity_[0];
+			idx_cell_2_faces[my_block->block_faces_[i]->face_2_cells_connectivity_[0]]+=1;
+			idx_cell_2_faces[my_block->block_faces_[i]->face_2_cells_connectivity_[1]]+=1;
 
 		}
 
