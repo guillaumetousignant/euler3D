@@ -10,14 +10,17 @@
 
 using namespace std;
 
-AerodynamicParameters::AerodynamicParameters(Block* block)
+AerodynamicParameters::AerodynamicParameters(Block* block, double mach_aircraft, double gamma)
 {
   cout << "Initialize AerodynamicParameters....................................." << endl;
 
   #if 0
+  gamma_=gamma;
+  mach_aircraft_=mach_aircraft;
   mach_ = new double[block->n_cells_in_block_];
   cp_ = new double[block->n_cells_in_block_];
-  coefficients_ = new double[5];
+
+  // NON coefficients_ = new double[5];
   #endif
 
   cout << "Initialize AerodynamicParameters.................................DONE" << endl;
@@ -25,14 +28,16 @@ AerodynamicParameters::AerodynamicParameters(Block* block)
 
 AerodynamicParameters::~AerodynamicParameters()
 {
+  /* NON
   if(coefficients_ != 0)
   {
     delete [] coefficients_;
   }
+  */
 
   if(cp_ != 0)
   {
-    delete [] coefficients_;
+    delete [] cp_;
   }
 
   if(mach_ != 0)
@@ -41,9 +46,10 @@ AerodynamicParameters::~AerodynamicParameters()
   }
 }
 
-void AerodynamicParameters::calculateMach(Block* block, double gamma)
+void AerodynamicParameters::calculateMach(Block* block)
 {
   int i;
+  double ro, uu, vv, ww, pp;
   double a,velocity;
 
   cout << "Starting calculateMach..............................................." << endl;
@@ -52,16 +58,16 @@ void AerodynamicParameters::calculateMach(Block* block, double gamma)
   for(i=0; block->n_cells_in_block_; i++)
   {
     // Primitve variables
-    pp_ = block->block_primitive_variables_->pp_[i];
-    ro_ = block->block_primitive_variables_->ro_[i];
-    uu_ = block->block_primitive_variables_->uu_[i];
-    vv_ = block->block_primitive_variables_->vv_[i];
-    ww_ = block->block_primitive_variables_->ww_[i];
+    pp = block->block_primitive_variables_->pp_[i];
+    ro = block->block_primitive_variables_->ro_[i];
+    uu = block->block_primitive_variables_->uu_[i];
+    vv = block->block_primitive_variables_->vv_[i];
+    ww = block->block_primitive_variables_->ww_[i];
 
-    a = pow(gamma*pp_/ro_, 0.5);
+    a = pow(gamma_*pp/ro, 0.5);
 
     // Calculate local velocity for each cell
-    velocity = pow(pow(uu_,2)+pow(vv_,2)+pow(ww_,2), 0.5);
+    velocity = pow(pow(uu,2)+pow(vv,2)+pow(ww,2), 0.5);
 
     // Claculate local mach number for each cell
     mach_[i] = velocity/a;
@@ -74,6 +80,7 @@ void AerodynamicParameters::calculateMach(Block* block, double gamma)
 void AerodynamicParameters::calculateCp(Block* block)
 {
   int i;
+  double pp;
 
   cout << "Starting calculateCp................................................." << endl;
 
@@ -81,10 +88,10 @@ void AerodynamicParameters::calculateCp(Block* block)
   for(i=0; i < block->n_cells_in_block_ ; i++)
   {
     // Pressure value from cell i
-    pp_ = block->block_primitive_variables_->pp_[i];
+    pp = block->block_primitive_variables_->pp_[i];
 
     // Save pressure coefficient in cp_ array
-    cp_[i] = (pp_-1.)/dynhead;
+    cp_[i] = (pp-1.)/dynhead_;
   }
   #endif
 
@@ -227,7 +234,7 @@ void AerodynamicParameters::computeAerodynamic(Block* block, Solver* solver, int
   #if 0
   // Global value
   block_id_ = block-> block_id_;
-  dynhead = 0.5*gamma*mach_aircraft*mach_aircraft;
+  dynhead_ = 0.5*gamma*mach_aircraft_*mach_aircraft_;
 
   #endif
 

@@ -40,14 +40,14 @@ private:
   double pp_convergence_;
 
   double* cp_;
-  double* data_;
+  double* data_;  // Inacceptable comme nom
   double* mach_;
 
   double** convergencedata_;
 
-  AerodynamicParameters* aerodynamicparameters;
-  Convergence* convergence;
-  OutputTecplot* outputtecplot;
+  AerodynamicParameters* aerodynamicparameters_;
+  Convergence* convergence_;
+  OutputTecplot* output_tecplot_;
 
   // Methods
 

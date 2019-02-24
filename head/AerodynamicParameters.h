@@ -13,7 +13,7 @@ class AerodynamicParameters
 
 public:
 
-  AerodynamicParameters(Block* block);
+  AerodynamicParameters(Block* block, double mach_aircraft, double gamma);
   ~AerodynamicParameters();
 
 void computeAerodynamic(Block* block, Solver* solver, int iter, int iteration_interval_, double cmac, double mach_aircraft, double aoa, double gamma);
@@ -25,10 +25,14 @@ double getMach(int i);
 private:
 
 // Attributes
-int block_id_;
-int wall_face_id_;
+// NON int block_id_;
+// NON int wall_face_id_;
 
-double dynhead;
+double dynhead_;
+double mach_aircraft_;
+
+double gamma_;
+
 double cl_;
 double cd_;
 double cmx_;
@@ -36,21 +40,21 @@ double cmy_;
 double cmz_;
 double clglobal_;
 double cdglobal_;
-double pp_;
-double ro_;
-double uu_;
-double vv_;
-double ww_;
-double nx_;
-double ny_;
-double nz_;
+// NON double pp_;
+// NON double ro_;
+// NON double uu_;
+// NON double vv_;
+// NON double ww_;
+// NON double nx_;
+// NON double ny_;
+// NON double nz_;
 double force_;
 double fx_;
 double fy_;
 double fz_;
-double area_;
+// NON double area_;
 
-double* coefficients_;
+// NON double* coefficients_;
 double* cp_;
 double* mach_;
 
@@ -62,7 +66,7 @@ double calculateCmy();
 double calculateCmz();
 
 void calculateForce(double cpbc);
-void calculateMach(Block* block, double gamma);
+void calculateMach(Block* block);
 void calculateCp(Block* block);
 void calculateGlobalCl(double aoa);
 void calculateGlobalCd(double aoa);

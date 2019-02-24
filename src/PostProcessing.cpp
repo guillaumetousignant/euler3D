@@ -46,9 +46,9 @@ PostProcessing::~PostProcessing()
 
   delete [] convergencedata_;
 
-  delete aerodynamicparameters;
-  delete convergence;
-  delete outputtecplot;
+  delete aerodynamic_parameters_;
+  delete convergence_;
+  delete output_tecplot_;
 }
 
 void PostProcessing::initializePostProcessing(Block* block, CompleteMesh* completemesh)
@@ -69,15 +69,17 @@ void PostProcessing::initializePostProcessing(Block* block, CompleteMesh* comple
   // Initialize array convergencedata_
   convergencedata_ = new double[completemesh->n_blocks_]
 
+
+  // POURQUOI 10???? 0 à 4 coefficients, 5 à 9 convergence
   for(i=0; i < 10; i++)
   {
     convergencedata_[i] = new double[10];
   }
 #endif
 
-  aerodynamicparameters = new AerodynamicParameters(block);
-  convergence = new Convergence();
-  outputtecplot = new OutputTecplot();
+  aerodynamic_parameters_ = new AerodynamicParameters(block);
+  convergence_ = new Convergence();
+  output_tecplot_ = new OutputTecplot();
 
   cout << "Ending initializePostProcessing......................................" << endl;
 
@@ -144,11 +146,11 @@ void PostProcessing::saveConvergence(Block* block, Convergence* convergence)
 
   block_id = block-> block_id_;
 
-  convergencedata[block_id][5] = convergence->getConvergence(0);
-  convergencedata[block_id][6] = convergence->getConvergence(1);
-  convergencedata[block_id][7] = convergence->getConvergence(2);
-  convergencedata[block_id][8] = convergence->getConvergence(3);
-  convergencedata[block_id][9] = convergence->getConvergence(4);
+  convergencedata_[block_id][5] = convergence->getConvergence(0);
+  convergencedata_[block_id][6] = convergence->getConvergence(1);
+  convergencedata_[block_id][7] = convergence->getConvergence(2);
+  convergencedata_[block_id][8] = convergence->getConvergence(3);
+  convergencedata_[block_id][9] = convergence->getConvergence(4);
 #endif
   cout << "Ending saveConvergence..............................................." << endl;
 }
@@ -161,11 +163,11 @@ void PostProcessing::saveCoefficients(Block* block)
 
   block_id = block-> block_id_;
 
-  convergencedata[block_id][0] = aerodynamicparameters->getCoefficients(0);
-  convergencedata[block_id][1] = aerodynamicparameters->getCoefficients(1);
-  convergencedata[block_id][2] = aerodynamicparameters->getCoefficients(2);
-  convergencedata[block_id][3] = aerodynamicparameters->getCoefficients(3);
-  convergencedata[block_id][4] = aerodynamicparameters->getCoefficients(4);
+  convergencedata_[block_id][0] = aerodynamicparameters->getCoefficients(0);
+  convergencedata_[block_id][1] = aerodynamicparameters->getCoefficients(1);
+  convergencedata_[block_id][2] = aerodynamicparameters->getCoefficients(2);
+  convergencedata_[block_id][3] = aerodynamicparameters->getCoefficients(3);
+  convergencedata_[block_id][4] = aerodynamicparameters->getCoefficients(4);
 #endif
   cout << "Ending saveCoefficients.............................................." << endl;
 }
@@ -223,10 +225,10 @@ void PostProcessing::computeFlowData(Block* block, CompleteMesh* completemesh, S
   cout << "Starting computeFlowData............................................." << endl;
 
   //Calculate convergence for each residual for each block
-  convergence->computeConvergence(block, iter);
+  convergence_->computeConvergence(block, iter);
 
   // Save convergence into convergencedata_
-  saveConvergence(block, convergence);
+  saveConvergence(block, convergence_);
 
   // Sum convergence for each block
   convergenceSum(completemesh);
