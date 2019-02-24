@@ -79,7 +79,7 @@ DANS CELL
 */
 void Builder::setConnectivity()
 {
-	int i,j,k,w,idx,node_0,node_1,n_cells_linked;
+	int i,j,k,w,idx,node_0,node_1,node_2,n_cells_linked;
 	int *idx_node,*idx_cell_2_faces,*idx_cell_2_cells; 
 	
 	//node_2_cells_connectivity_
@@ -103,7 +103,9 @@ void Builder::setConnectivity()
 
 		}
 
-	//face_2_nodes_connectivity_
+	//face_2_cells_connectivity_
+/*
+		VERSION 1 : PAS BONNE
 
 		for(i=0;i < my_block->n_faces_in_block_-1 ;i++)
 		{
@@ -156,6 +158,49 @@ void Builder::setConnectivity()
 				}	
 
 		}
+*/
+
+// VERSION 2 (verification de 3 points pareil)
+
+		for(i=0;i < my_block->n_faces_in_block_-1 ;i++)
+		{
+			my_block->block_faces_[i]->face_2_cells_connectivity_=allocate_1d_array_int(int 2, "face_2_cells_connectivity_");
+		
+			idx=0;
+			node_0=my_block->block_faces_[i]->face_2_nodes_connectivity_[0];
+			node_1=my_block->block_faces_[i]->face_2_nodes_connectivity_[1];
+			node_2=my_block->block_faces_[i]->face_2_nodes_connectivity_[2];
+			
+			for(j=0,j<my_block->block_nodes[node_0]->n_cells_per_node_-1,j++)
+			{
+				n_cells_linked=0;
+				
+				for(k=0,k<my_block->block_cells[my_block->block_nodes[node_0]->node_2_cells_connectivity_[j]]->n_nodes_per_cell_-1,k++)
+				{
+						if( (my_block->block_cells[my_block->block_nodes[node_0]->node_2_cells_connectivity_[j]]->cell_2_nodes_connectivity_[k]==node_1) || (my_block->block_cells[my_block->block_nodes[node_0]->node_2_cells_connectivity_[j]]->cell_2_nodes_connectivity_[k]==node_2) )
+						{
+							n_cells_linked+=1;
+						}
+				}
+
+				if(n_cells_linked==2)
+				{
+					my_block->block_faces_[i]->face_2_cells_connectivity_[idx]=my_block->block_nodes[node_0]->node_2_cells_connectivity_[j];
+					idx+=1;
+					if(idx==2)
+					{
+						break;
+					}
+				}
+
+
+
+
+			}
+
+
+		}
+
 
 
 	//cell_2_faces_connectivity_ & cell_2_cells_connectivity_
