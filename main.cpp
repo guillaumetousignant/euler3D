@@ -14,30 +14,33 @@ using namespace std;
 
 int main(int argc, char**argv)
 {
-  PostProcessing* postprocessing;
+  PostProcessing* post_processing;
   Block* block;
-  CompleteMesh* completemesh;
+  CompleteMesh* complete_mesh;
   Solver* solver;
 
-  // Attributes
-  bool stopsimulation = false;
+  block= new Block();
+  complete_mesh= new CompleteMesh();
 
-  int max_iter = 2;
+  // Attributes
+ 
+  int max_iter = 25;
 
   double convergence_criterion = pow(10,-16);
   double cmac = 1.;
-  double mach = 0.8;
-  double aoa_rad = 0.20944;
+  double mach_aircraft = 0.8;
+  double aoa_deg = 0.20944;
   double gamma = 1.4;
 
   solver = new Solver();
 
-  postprocessing = new PostProcessing(block, completemesh);
+  
+  post_processing = new PostProcessing(complete_mesh, max_iter, convergence_criterion, cmac, mach_aircraft, aoa_deg, gamma);
 
   for(int i=0; i < max_iter; i++)
   {
     cout << i << endl;
-    postprocessing->process(block, completemesh, solver, stopsimulation, i, max_iter, convergence_criterion, cmac, mach, aoa_rad, gamma);
+    post_processing->process(block, complete_mesh);
   }
 }
 

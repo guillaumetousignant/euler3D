@@ -11,7 +11,7 @@
 
 using namespace std;
 
-OutputTecplot::OutputTecplot(double mach_aircraft, double aoa_deg, double gamma);
+OutputTecplot::OutputTecplot(double mach_aircraft, double aoa_deg, double gamma)
 {
   cout << "Initialize OutTecplot................................................" << endl;
   mach_aircraft_=mach_aircraft;
@@ -227,7 +227,7 @@ void OutputTecplot::printConvergence(int iter, double cl, double cd, double cmx,
   int i;
   
   //Convergence.open("Convergence.plt", ios::binary);
-  Convergence.open("Convergence.dat", std::ofstream::in | std::ofstream::out | std::ofstream::app);
+  Convergence.open("Convergence.dat", std::ios_base::app);
 
 
     if (Convergence.fail())
@@ -245,9 +245,10 @@ void OutputTecplot::printConvergence(int iter, double cl, double cd, double cmx,
   
   Convergence << iter << " " << cl << " " << cd << " " << cmx << " " << cmy << " " << cmz << " " << ro_convergence << " " << uu_convergence << " " << vv_convergence << " " << ww_convergence << " " << pp_convergence << endl;
   
+  #endif
   Convergence.close();
 
-  #endif
+  
   cout << "Ending printConvergence.............................................." << endl;
 }
 
@@ -271,9 +272,9 @@ void OutputTecplot::printAerodynamicCoefficients(double cl, double cd, double cm
 
   AerodynamicCoefficients << aoa_deg << " " << cl << " " << cd << " " << cmx << " " << cmy << " " << cmz << endl;
 
-
-  AerodynamicCoefficients.close();
   #endif
+  AerodynamicCoefficients.close();
+  
   cout << "Ending printAerodynamicCoefficients.................................." << endl;
 }
 

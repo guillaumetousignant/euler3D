@@ -12,7 +12,7 @@ using namespace std;
 
 Solver::Solver()
 {
-  stop_solver_flag_ = false;
+
 }
 
 Solver::~Solver()

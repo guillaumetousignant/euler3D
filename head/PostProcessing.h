@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <math.h>
 
 #include "AerodynamicParameters.h"
 #include "Convergence.h"
@@ -20,7 +21,7 @@ public:
   PostProcessing(CompleteMesh* complete_mesh, int max_iter, double convergence_criterion, double cmac, double mach_aircraft, double aoa_deg, double gamma);
   ~PostProcessing();
 
-  void process(Block* block, CompleteMesh* completemesh);
+  void process(Block* block, CompleteMesh* complete_mesh);
 
 
 
@@ -75,13 +76,12 @@ public:
 
   // Methods
 
-  void initializePostProcessing(CompleteMesh* complete_mesh, double cmac, double mach_aircraft, double aoa_deg, double gamma);
   void computeFlowData(Block* block, CompleteMesh* complete_mesh);
   void checkStopSolver();
   void convergenceSum(CompleteMesh* complete_mesh);
-  void convergenceSum0(CompleteMesh* complete_mesh`);
+  void convergenceSum0(CompleteMesh* complete_mesh);
   void coefficientsSum(CompleteMesh* complete_mesh);
-  void saveConvergence(Block* block, Convergence* convergence);
+  void saveConvergence(Block* block);
   void saveCoefficients(Block* block);
 
 };

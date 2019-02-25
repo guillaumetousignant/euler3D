@@ -12,7 +12,7 @@ public:
   Solver();
   ~Solver();
 
-  bool stop_solver_flag_;
+
 
 private:
 

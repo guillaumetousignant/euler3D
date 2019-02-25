@@ -10,27 +10,9 @@
 
 using namespace std;
 
-PostProcessing::PostProcessing(CompleteMesh* complete_mesh, double cmac, double mach_aircraft, double aoa_deg, double gamma)
+PostProcessing::PostProcessing(CompleteMesh* complete_mesh, int max_iter, double convergence_criterion, double cmac, double mach_aircraft, double aoa_deg, double gamma)
 {
-  cout << "Starting PostProcessing.............................................." << endl;
-
-  initializePostProcessing(complete_mesh, cmac, mach_aircraft, aoa_deg, gamma);
-
-  cout << "Ending PostProcessing................................................" << endl;
-}
-
-PostProcessing::~PostProcessing()
-{
-  delete aerodynamic_parameters_;
-  delete convergence_;
-  delete output_tecplot_;
-}
-
-void PostProcessing::initializePostProcessing(CompleteMesh* complete_mesh, int max_iter, double convergence_criterion, double cmac, double mach_aircraft, double aoa_deg, double gamma)
-{
-  int i;
-
-  cout << "Starting initializePostProcessing...................................." << endl;
+  cout << "Initialize PostProcessing............................................DONE" << endl;
 
   current_iter_=0;
   max_iter_=max_iter;
@@ -58,9 +40,16 @@ void PostProcessing::initializePostProcessing(CompleteMesh* complete_mesh, int m
   convergence_ = new Convergence();
   output_tecplot_ = new OutputTecplot(mach_aircraft, aoa_deg, gamma);
 
-  cout << "Ending initializePostProcessing......................................" << endl;
-
+  cout << "Initialize PostProcessing............................................DONE" << endl;
 }
+
+PostProcessing::~PostProcessing()
+{
+  delete aerodynamic_parameters_;
+  delete convergence_;
+  delete output_tecplot_;
+}
+
 
 // ENLEVER DÉPENDANCE SOLVER
 void PostProcessing::checkStopSolver()
@@ -68,12 +57,16 @@ void PostProcessing::checkStopSolver()
   cout << "Starting checkStopSolver............................................." << endl;
 #if 0
   // Vefiry conditions and change the status of the simulation if one condition is true.
-  if(iter_ == max_iter_ || ro_convergence_ <= convergence_criterion_ || uu_convergence_ <= convergence_criterion || vv_convergence_ <= convergence_criterion || ww_convergence_ <= convergence_criterion || pp_convergence_ <= convergence_criterion)
+  if(current_iter_+1 == max_iter_ || ro_convergence_ <= convergence_criterion_ || uu_convergence_ <= convergence_criterion || vv_convergence_ <= convergence_criterion || ww_convergence_ <= convergence_criterion || pp_convergence_ <= convergence_criterion)
   {
     stop_solver_= true;
   }
 #endif
-
+  // EN ATTENDANT
+  if(current_iter_+1 == max_iter_)
+  {
+    stop_solver_= true;
+  }
   cout << "Ending checkStopSolver..............................................." << endl;
 
 }
@@ -197,43 +190,6 @@ void PostProcessing::saveCoefficients(Block* block)
 }
 
 
-/* NON
-void PostProcessing::saveCp(Block* block)
-{
-  int i;
-
-  cout << "Starting saveCp......................................................" << endl;
-
-  #if 0
-  for(i=0; i < block->n_cells_in_block_ ; i++)
-  {
-    // Save pressure coefficient in cp_ array
-    cp_[i] = aerodynamic_parameters_->getCp(i);
-  }
-  #endif
-
-  cout << "Ending saveCp........................................................" << endl;
-}
-*/
-
-/* NON
-void PostProcessing::saveMach(Block* block)
-{
-  int i;
-
-  cout << "Starting saveMach...................................................." << endl;
-
-  #if 0
-  for(i=0; i < block->n_cells_in_block_ ; i++)
-  {
-    // Save Mach numbers in mach_ array
-    mach_[i] = aerodynamic_parameters_->getMach(i);
-  }
-  #endif
-
-  cout << "Ending saveMach......................................................" << endl;
-}
-*/
 
 
 void PostProcessing::computeFlowData(Block* block, CompleteMesh* complete_mesh)
@@ -256,7 +212,7 @@ void PostProcessing::computeFlowData(Block* block, CompleteMesh* complete_mesh)
   coefficientsSum(complete_mesh);
   // Sum convergence for each block
   convergenceSum(complete_mesh);
-  if (iter==0)
+  if (current_iter_==0)
   {
     convergenceSum0(complete_mesh);
   }
@@ -278,20 +234,24 @@ void PostProcessing::computeFlowData(Block* block, CompleteMesh* complete_mesh)
 }
 
 
-void PostProcessing::process(Block* block, CompleteMesh* completemesh)
+void PostProcessing::process(Block* block, CompleteMesh* complete_mesh)
 {
   cout << "Starting process....................................................." << endl;
 
-  if (current_iter_%iteration_interval_==0)
+  if (current_iter_%iteration_interval_==0||current_iter_+1==max_iter_)
   {
     // Compute flow data
     computeFlowData(block, complete_mesh);
     // Check simulation status
     checkStopSolver();
+    if (stop_solver_==true)
+    {
+      cout<<"STOP ACTIVATED"<<endl;
+    }
+   
+
     // Save and print flow data into binary files
-
-
-    output_tecplot_->printConvergence(current_iter_, cl_geometry_mesh_, cl_geometry_mesh_, cd_geometry_mesh_, cmx_geometry_mesh_, cmy_geometry_mesh_, cmz_geometry_mesh_, ro_convergence, uu_convergence, vv_convergence, ww_convergence, pp_convergence);
+    output_tecplot_->printConvergence(current_iter_, cl_geometry_mesh_, cd_geometry_mesh_, cmx_geometry_mesh_, cmy_geometry_mesh_, cmz_geometry_mesh_, ro_convergence_, uu_convergence_, vv_convergence_, ww_convergence_, pp_convergence_);
   
     if (stop_solver_==true)
     {
