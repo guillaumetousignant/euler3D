@@ -22,7 +22,7 @@ int main(int argc, char**argv)
   // Attributes
   bool stopsimulation = false;
 
-  int max_iter = 1;
+  int max_iter = 2;
 
   double convergence_criterion = pow(10,-16);
   double cmac = 1.;
@@ -30,14 +30,15 @@ int main(int argc, char**argv)
   double aoa_rad = 0.20944;
   double gamma = 1.4;
 
+  solver = new Solver();
 
   postprocessing = new PostProcessing(block, completemesh);
 
   for(int i=0; i < max_iter; i++)
   {
+    cout << i << endl;
     postprocessing->process(block, completemesh, solver, stopsimulation, i, max_iter, convergence_criterion, cmac, mach, aoa_rad, gamma);
   }
-
 }
 
 #endif

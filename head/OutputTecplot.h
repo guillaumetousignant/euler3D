@@ -13,35 +13,15 @@ class OutputTecplot
 
 public:
 
-  OutputTecplot();
+  OutputTecplot(double mach_aircraft, double aoa_deg, double gamma);
   ~OutputTecplot();
-
-void printData(Block* block, Solver* solver, int iter, int iteration_interval_, double aoa, double* data, double* cp, double* mach);
-
-private:
 
 // Attributes
 
-double aoa_deg_;
-double cl_aircraft_;
-double cd_aircraft_;
-double cmx_aircraft_;
-double cmy_aircraft_;
-double cmz_aircraft_;
-double cm_aircraft_;
-double convergence_;
-double ro_;
-double uu_;
-double vv_;
-double ww_;
-double pp_;
-double x_;
-double y_;
-double z_;
 
-double* cp_;
-double* data_;
-double* mach_;
+double mach_aircraft_;
+double aoa_deg_;
+double gamma_;
 
 std::ofstream FlowData;
 std::ofstream SurfaceFlowData;
@@ -53,8 +33,8 @@ std::ofstream RestartFile;
 
 void printFlowData(Block* block);
 void printSurfaceFlowData(Block* block);
-void printConvergence(Solver* solver, int iter);
-void printAerodynamicCoefficients(Block* block);
+void printConvergence(int iter, double cl, double cd, double cmx, double cmy, double cmz, double ro_convergence, double uu_convergence, double vv_convergence, double ww_convergence, double pp_convergence);
+void printAerodynamicCoefficients(double cl, double cd, double cmx, double cmy, double cmz);
 void printRestartFile(Block* block);
 
 };

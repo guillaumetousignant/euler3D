@@ -12,8 +12,10 @@ public:
   Block();
   ~Block();
 
-private:
 
+
+  int n_cells_in_block_;
+  int nb_face_in_wall_;
 
 };
 

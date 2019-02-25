@@ -3,6 +3,7 @@
 
 #include <malloc.h>
 #include <stdio.h>
+#include <math.h>
 #include <string>
 #include <iostream>
 
@@ -10,17 +11,19 @@
 
 using namespace std;
 
-AerodynamicParameters::AerodynamicParameters(Block* block, double mach_aircraft, double gamma)
+AerodynamicParameters::AerodynamicParameters(double cmac, double mach_aircraft, double aoa_deg, double gamma)
 {
   cout << "Initialize AerodynamicParameters....................................." << endl;
 
   #if 0
   gamma_=gamma;
+  cmac_=cmac;
   mach_aircraft_=mach_aircraft;
-  mach_ = new double[block->n_cells_in_block_];
-  cp_ = new double[block->n_cells_in_block_];
+  aoa_rad_=aoa_deg*atan(1)*4/180;
+  
+  stop_solver_flag_=false;
 
-  // NON coefficients_ = new double[5];
+
   #endif
 
   cout << "Initialize AerodynamicParameters.................................DONE" << endl;
@@ -28,91 +31,26 @@ AerodynamicParameters::AerodynamicParameters(Block* block, double mach_aircraft,
 
 AerodynamicParameters::~AerodynamicParameters()
 {
-  /* NON
-  if(coefficients_ != 0)
-  {
-    delete [] coefficients_;
-  }
-  */
 
-  if(cp_ != 0)
-  {
-    delete [] cp_;
-  }
-
-  if(mach_ != 0)
-  {
-    delete [] mach_;
-  }
 }
 
-void AerodynamicParameters::calculateMach(Block* block)
-{
-  int i;
-  double ro, uu, vv, ww, pp;
-  double a,velocity;
 
-  cout << "Starting calculateMach..............................................." << endl;
 
-  #if 0
-  for(i=0; block->n_cells_in_block_; i++)
-  {
-    // Primitve variables
-    pp = block->block_primitive_variables_->pp_[i];
-    ro = block->block_primitive_variables_->ro_[i];
-    uu = block->block_primitive_variables_->uu_[i];
-    vv = block->block_primitive_variables_->vv_[i];
-    ww = block->block_primitive_variables_->ww_[i];
-
-    a = pow(gamma_*pp/ro, 0.5);
-
-    // Calculate local velocity for each cell
-    velocity = pow(pow(uu,2)+pow(vv,2)+pow(ww,2), 0.5);
-
-    // Claculate local mach number for each cell
-    mach_[i] = velocity/a;
-  }
-  #endif
-
-  cout << "Ending calculateMach................................................." << endl;
-}
-
-void AerodynamicParameters::calculateCp(Block* block)
-{
-  int i;
-  double pp;
-
-  cout << "Starting calculateCp................................................." << endl;
-
-  #if 0
-  for(i=0; i < block->n_cells_in_block_ ; i++)
-  {
-    // Pressure value from cell i
-    pp = block->block_primitive_variables_->pp_[i];
-
-    // Save pressure coefficient in cp_ array
-    cp_[i] = (pp-1.)/dynhead_;
-  }
-  #endif
-
-  cout << "Ending calculateCp..................................................." << endl;
-}
-
-void calculateForce(double cpbc)
+void AerodynamicParameters::calculateForce(double cpbc, double area, double nx, double ny, double nz)
 {
   cout << "Starting calculateForce.............................................." << endl;
 
   #if 0
-  force_ = cpbc*area_;
-  fx_ = force_*nx_;
-  fy_ = force_*ny_;
-  fz_ = force_*nz_;
+  force_ = cpbc*area;
+  fx_ = -force_*nx;
+  fy_ = -force_*ny;
+  fz_ = -force_*nz;
   #endif
 
   cout << "Ending calculateForce................................................" << endl;
 }
 
-double AerodynamicParameters::calculateCl()
+void AerodynamicParameters::calculateCl()
 {
   cout << "Starting calculateCl................................................." << endl;
 
@@ -120,13 +58,12 @@ double AerodynamicParameters::calculateCl()
   // Sum of lift coefficients
   cl_ += fy_;
 
-  return cl_;
   #endif
 
   cout << "Ending calculateCl..................................................." << endl;
 }
 
-double AerodynamicParameters::calculateCd()
+void AerodynamicParameters::calculateCd()
 {
   cout << "Starting calculateCd................................................." << endl;
 
@@ -134,87 +71,85 @@ double AerodynamicParameters::calculateCd()
   // Sum of drag coefficients
   cd_ += fx_;
 
-  return cd_;
   #endif
 
   cout << "Ending calculateCd..................................................." << endl;
 }
 
-double AerodynamicParameters::calculateCmx()
+void AerodynamicParameters::calculateCmx(double cell_y_coordinate, double cell_z_coordinate)
 {
   cout << "Starting calculateCmx................................................" << endl;
-  #if 0
-  // Save cmx_ in array
-  coefficients_[2] = cmx_;
 
-  return cmx_;
+  #if 0
+  // Calculate moment coefficient compared to x axis
+  cmx_ += cell_y_coordinate*fz_ - cell_z_coordinate*fy_;
+
   #endif
 
   cout << "Ending calculateCmx.................................................." << endl;
 }
 
-double AerodynamicParameters::calculateCmy()
+void AerodynamicParameters::calculateCmy(double cell_x_coordinate, double cell_z_coordinate)
 {
   cout << "Starting calculateCmy................................................" << endl;
 
   #if 0
-  // Save cmy_ in array
-  coefficients_[3] = cmy_;
+  // Calculate moment coefficient compared to y axis
+  cmy_ += cell_z_coordinate*fx_ - cell_x_coordinate*fz_;
 
-  return cmy_;
+
   #endif
 
   cout << "Ending calculateCmy.................................................." << endl;
 }
 
-double AerodynamicParameters::calculateCmz()
+void AerodynamicParameters::calculateCmz(double cell_x_coordinate, double cell_y_coordinate)
 {
   cout << "Starting calculateCmz................................................" << endl;
 
   #if 0
-  // Save clglobal_ in array
-  coefficients_[4] = cmz_;
+  // Calculate moment coefficient compared to z axis
+  cmz_ += cell_x_coordinate*fy_ - cell_y_coordinate*fx_;
 
-  return cmz_;
+
   #endif
 
   cout << "Ending calculateCmz.................................................." << endl;
 }
 
-void AerodynamicParameters::calculateGlobalCl(double aoa)
+void AerodynamicParameters::calculateGlobalCl()
 {
   cout << "Starting calculateGlobalCl..........................................." << endl;
 
   #if 0
   // Calculate clwind
-  clglobal_ = cl_*cos(aoa) - cd*sin(aoa);
-
-  // Save clglobal_ in array
-  coefficients_[0] = clglobal_;
+  cl_global_ = cl_*cos(aoa_rad_) - cd*sin(aoa_rad_);
+  
   #endif
 
   cout << "Ending calculateGlobalCl............................................." << endl;
 }
 
-void AerodynamicParameters::calculateGlobalCd(double aoa)
+void AerodynamicParameters::calculateGlobalCd()
 {
   cout << "Starting calculateGlobalCd..........................................." << endl;
 
   #if 0
-  cdglobal_ = cl_*sin(aoa) + cd*cos(aoa);
+  cd_global_ = cl_*sin(aoa_rad_) + cd*cos(aoa_rad_);
 
-  // Save cdglobal_ in array
-  coefficients_[1] = cdglobal_;
   #endif
 
   cout << "Ending calculateGlobalCd............................................" << endl;
 
 }
 
+
+/* NON
 void AerodynamicParameters::checkClDriver()
 {
   cout << "Starting checkClDriver..............................................." << endl;
 
+  
   #if 0
   if(clglobal_ < cldriver_)
   {
@@ -222,114 +157,105 @@ void AerodynamicParameters::checkClDriver()
   }
   else
   {
-    solver->stop_solver_flag_ == true;
+    // NON ÇA NE MARCHE PAS COMME ÇA
+    stop_solver_flag_ == true;
   }
   #endif
 
   cout << "Ending checkClDriver................................................." << endl;
 }
+*/
 
-void AerodynamicParameters::computeAerodynamic(Block* block, Solver* solver, int iter, int iteration_interval_, double cmac, double mach_aircraft, double aoa, double gamma)
+void AerodynamicParameters::computeAerodynamic(Block* block)
 {
   #if 0
-  // Global value
-  block_id_ = block-> block_id_;
-  dynhead_ = 0.5*gamma*mach_aircraft_*mach_aircraft_;
+  double dyn_head;
+  dyn_head = 0.5*gamma_*mach_aircraft_*mach_aircraft_;
 
   #endif
 
-  // Calculate Mach numbers for each cell
-  calculateMach(block, gamma);
+  int i, j, cell_0, cell_1, wall_face_id;
+  double cell_x_coordinate, cell_y_coordinate, cell_z_coordinate;
+  double pp0, pp1, ppbc, cpbc;
+  double nx, ny, nz, area;
 
-// Calculate pressure coefficient for each cell
-  calculateCp(block);
+  // Initialize forces
+  force_ = 0.;
+  fx_ = 0.;
+  fy_ = 0.;
+  fz_ = 0.;
 
-  if(iter == iteration_interval_ || solver->stop_solver_flag_ == true)
+  // Initialize aerodynamic coefficients
+  cl_ = 0.;
+  cd_ = 0.;
+  cmx_ = 0.;
+  cmy_ = 0.;
+  cmz_ = 0.;
+
+  for(i=0; i < block->nb_face_in_wall_; i++)
   {
-    int i, j, cell_0, cell_1;
-    double pp0, pp1, ppbc, cpbc;
-
-    // Initialize forces
-    force_ = 0.;
-    fx_ = 0.;
-    fy_ = 0.;
-    fz_ = 0.;
-
-    // Initialize aerodynamic coefficients
-    cl_ = 0.;
-    cd_ = 0.;
-    cmx_ = 0.;
-    cmy_ = 0.;
-    cmz_ = 0.;
-
-    //for(i=0; i < block->nb_face_in_wall_; i++)
-    for(i=0; i < 1; i++)
-    {
-      #if 0
-      // Find wall face id
-      wall_face_id_ = block->block_wall_face_ids_[i];
-
-      // Find wall cells associate with the wall face i
-      cell_0 = block->block_faces_[wall_face_id_]->face_2_cells_connectivity_[0];
-      cell_1 = block->block_faces_[wall_face_id_]->face_2_cells_connectivity_[1];
-
-      // Pressure value from cell 0 and 1
-      pp0 = block->block_primitive_variables_->pp_[cell_0];
-      pp1 = block->block_primitive_variables_->pp_[cell_1];
-
-      // Mean pressure value
-      ppbc = 0.5*(pp0 + pp1);
-
-      // Pressure coefficient for each wall cell
-      cpbc = (ppbc-1.)/dynhead;
-
-      // Face normals
-      nx_ = block->block_faces_[wall_face_id_]->face_normals_[0];
-      ny_ = block->block_faces_[wall_face_id_]->face_normals_[1];
-      nz_ = block->block_faces_[wall_face_id_]->face_normals_[2];
-
-      // Face aera
-      area_ = block->block_faces_[wall_face_id_]->face_area_;
-      #endif
-
-      cpbc = 1.;
-
-      // Calculate force and force components for each wall cell
-      calculateForce(cpbc);
-
-      // Calculate Cl, Cd and Cm for the block
-      calculateCl();
-      calculateCd();
-      calculateCmx();
-      calculateCmy();
-      calculateCmz();
-    }
-
     #if 0
-    cl_ = cl_/(dynhead*cmac);
-    cd_ = cd_/(dynhead*cmac);
+    // Find wall face id
+    wall_face_id = block->block_wall_face_ids_[i];
+
+    // Find wall cells associate with the wall face i
+    cell_0 = block->block_faces_[wall_face_id]->face_2_cells_connectivity_[0];
+    cell_1 = block->block_faces_[wall_face_id]->face_2_cells_connectivity_[1];
+
+    // cell_0 coordinates
+    cell_x_coordinate = block->block_cells_[cell_0]->cell_coordinates_[0];
+    cell_y_coordinate = block->block_cells_[cell_0]->cell_coordinates_[1];
+    cell_z_coordinate = block->block_cells_[cell_0]->cell_coordinates_[2];
+
+    // Pressure value from cell 0 and 1
+    pp0 = block->block_primitive_variables_->pp_[cell_0];
+    pp1 = block->block_primitive_variables_->pp_[cell_1];
+
+    // Mean pressure value
+    ppbc = 0.5*(pp0 + pp1);
+
+    // Pressure coefficient for each wall cell
+    cpbc = (ppbc-1.)/dyn_head;
+
+    // Face normals
+    nx = block->block_faces_[wall_face_id]->face_normals_[0];
+    ny = block->block_faces_[wall_face_id]->face_normals_[1];
+    nz = block->block_faces_[wall_face_id]->face_normals_[2];
+
+    // Face aera
+    area = block->block_faces_[wall_face_id]->face_area_;
     #endif
 
-    calculateGlobalCl(aoa);
-    calculateGlobalCd(aoa);
+    cpbc = 1.; // EN ATTENDANT
+    area=1.;
+    nx=1.;
+    ny=1.;
+    nz=1.;
+    cell_x_coordinate=1.;
+    cell_y_coordinate=1.;
+    cell_z_coordinate=1.;
 
-    checkClDriver();
+    // Calculate force and force components for each wall cell
+    calculateForce(cpbc, area, nx, ny, nz);
+
+    // Calculate Cl, Cd and Cm for the block
+    calculateCl();
+    calculateCd();
+    calculateCmx(cell_y_coordinate, cell_z_coordinate);
+    calculateCmy(cell_x_coordinate, cell_z_coordinate);
+    calculateCmz(cell_x_coordinate, cell_y_coordinate);
   }
-}
 
-double AerodynamicParameters::getCoefficients(int i)
-{
-  return coefficients_[i];
-}
+  #if 0
+  cl_ = cl_/(dyn_head*cmac);
+  cd_ = cd_/(dyn_head*cmac);
+  #endif
 
-double AerodynamicParameters::getCp(int i)
-{
-  return cp_[i];
-}
+  calculateGlobalCl();
+  calculateGlobalCd();
 
-double AerodynamicParameters::getMach(int i)
-{
-  return mach_[i];
+  // NON checkClDriver();
+  
 }
 
 #endif
