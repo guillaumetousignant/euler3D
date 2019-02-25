@@ -21,11 +21,13 @@ int main()
 
 	int test_block=69;
 	Block* block= new Block(test_block);
+	CompleteMesh* complete_mesh;
+  	complete_mesh= new CompleteMesh();
 	Initializer* initializer= new Initializer();
 	Interface* interface= new Interface();
 
 	Solver *solver=initializer->initializeSolver(interface);
-	solver->solve(block);
+	solver->solve(block, complete_mesh);
 
 
 	// Initialize the MPI environment
@@ -64,4 +66,7 @@ int main()
 	*/
 
 }
+
+
 #endif
+

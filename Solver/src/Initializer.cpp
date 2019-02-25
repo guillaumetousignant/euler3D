@@ -35,7 +35,14 @@ Solver* Initializer::initializeSolver(Interface* interface)
 	string flux_scheme_choice=interface->flux_scheme_choice_interface_;
 	string residual_smoother_choice=interface->residual_smoother_choice_interface_;
 
-	return new Solver(gamma, cfl, stage_number, interpolation_choice, gradient_choice, limiter_choice, flux_scheme_choice, residual_smoother_choice);
+	int n_blocks=interface->n_blocks_interface_;
+	int max_iter=interface->max_iter_interface_;
+	double convergence_criterion=interface->convergence_criterion_interface_;
+	double cmac=interface->cmac_interface_;
+	double aoa_deg= interface->aoa_deg_interface_;
+	double mach_aircraft=interface->mach_aircraft_interface_;
+
+	return new Solver(gamma, cfl, stage_number, interpolation_choice, gradient_choice, limiter_choice, flux_scheme_choice, residual_smoother_choice, n_blocks, max_iter, convergence_criterion, cmac, aoa_deg, mach_aircraft);
 
 }
 

@@ -2,19 +2,22 @@
 #define SOLVERSKELETON_SRC_SOLVER_CPP
 
 #include "Block.h"
+#include "CompleteMesh.h"
 #include "Timestep.h"
 #include "RungeKutta.h"
 #include "Solver.h"
+#include "PostProcessing.h"
 
 #include <string>
 #include <iostream>
 using namespace std;
 
-Solver::Solver(double gamma, double cfl, int stage_number, string interpolation_choice, string gradient_choice, string limiter_choice, string flux_scheme_choice, string residual_smoother_choice)
+Solver::Solver(double gamma, double cfl, int stage_number, string interpolation_choice, string gradient_choice, string limiter_choice, string flux_scheme_choice, string residual_smoother_choice, int n_blocks, int max_iter, double convergence_criterion, double cmac, double aoa_deg, double mach_aircraft)
 {
 	gamma_=gamma;
 	timestep_= new Timestep(gamma, cfl);
 	runge_kutta_= new RungeKutta(gamma, stage_number, interpolation_choice, gradient_choice, limiter_choice, flux_scheme_choice,residual_smoother_choice);
+	post_processing_= new PostProcessing( n_blocks, max_iter, convergence_criterion, cmac, mach_aircraft, aoa_deg, gamma);
 }
 
 
@@ -29,8 +32,10 @@ Solver::Solver()
 	runge_kutta_=NULL;
 }
 
-void Solver::solve(Block* block)
+void Solver::solve(Block* block, CompleteMesh* complete_mesh)
 {
+	while (true)
+	{
 	cout<<"Exécution solve: "<<block->test_block_<<endl;
 	this->saveW0(block);
 	cout<<endl<<"\tDans Timestep"<<endl;
@@ -40,16 +45,18 @@ void Solver::solve(Block* block)
 	cout<<endl<<"\tDans RungeKutta"<<endl;
 	runge_kutta_->computeRungeKutta(block);
 	cout<<"\tFin RungeKutta"<<endl;
+	post_processing_->process(block, complete_mesh);
 	cout<<"Fin de l'Exécution solve"<<endl;
+	}
 
 	/*
-	while (true) // CRITÈRE DE CONVERGENCE ??? OU POST-PROCESSING GERE ÇA?
+	while (true) 
 	{
 		timestep_->computeSpectralRadius(block);
 		timestep_->computeTimestep(block);
 		this->saveW0(block);
 		runge_kutta_->computeRungeKutta(block);
-		// CALL POST PROCESSING HERE
+		post_processing_->process(block, complete_mesh);
 	}
 	*/
 }

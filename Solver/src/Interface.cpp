@@ -30,6 +30,11 @@ Interface::Interface()
 	limiter_choice_interface_="Venkatakrishnan";
 	flux_scheme_choice_interface_="Roe";
 	residual_smoother_choice_interface_="Central IRS";
+
+	n_blocks_interface_=5;
+	max_iter_interface_=25;
+	convergence_criterion_interface_=pow(10,-16);
+	cmac_interface_=1.0;
 }
 
 Interface::~Interface()
