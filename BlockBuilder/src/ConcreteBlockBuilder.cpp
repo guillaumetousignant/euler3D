@@ -9,7 +9,7 @@
 #include "GhostCellCreator.h"
 #include "PyramidCellCreator.h"
 #include "PrismCellCreator.h"
-#include "TerahedralCellCreator.h"
+#include "TetrahedralCellCreator.h"
 
 
 void ConcreteBlockBuilder::readMyBlocks(Block* block)
@@ -17,12 +17,12 @@ void ConcreteBlockBuilder::readMyBlocks(Block* block)
 	NodeCreator* node_creator;
 	FaceCreator* face_creator;
 	CellCreator (cell_creators*)[4];
-	TerahedralCellCreator* terahedral_cell_creator;
+	TetrahedralCellCreator* tetrahedral_cell_creator;
 	GhostCellCreator* ghost_cell_creator;
 	PrismCellCreator* prims_cell_creator;
 	PyramidCellCreator* pyramid_cell_creator;
 
-	cell_creators[0] = terahedral_cell_creator;
+	cell_creators[0] = tetrahedral_cell_creator;
 	cell_creators[1] = prims_cell_creator;
 	cell_creators[2] = pyramid_cell_creator;
 	cell_creators[3] = ghost_cell_creator;
