@@ -52,7 +52,7 @@ void calculateCmz(double cell_x_coordinate, double cell_y_coordinate);
 void calculateForce(double cpbc, double area, double nx, double ny, double nz);
 void calculateGlobalCl();
 void calculateGlobalCd();
-// NON void checkClDriver();
+// À compléter void checkClDriver();
 
 };
 

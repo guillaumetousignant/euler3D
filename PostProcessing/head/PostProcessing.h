@@ -13,6 +13,10 @@
 #include "CompleteMesh.h"
 #include "Solver.h"
 
+class AerodynamicParameters;
+class Convergence;
+class OutputTecplot;
+
 class PostProcessing
 {
 
