@@ -12,8 +12,6 @@ public:
   CompleteMesh();
   ~CompleteMesh();
 
-private:
-
 int n_blocks_;
 
 };

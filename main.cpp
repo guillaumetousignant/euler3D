@@ -1,44 +1,72 @@
-#ifndef EULER3D_SRC_TESTMAIN_CPP
-#define EULER3D_SRC_TESTMAIN_CPP
+#ifndef SOLVERSKELETON_SRC_TESTMAIN_CPP
+#define SOLVERSKELETON_SRC_TESTMAIN_CPP
 
-#include "PostProcessing.h"
+#include "Block.h"
 
-#include <malloc.h>
-#include <stdio.h>
-#include <iomanip>
+#include "Initializer.h"
+#include "Interface.h"
+#include "Solver.h"
+
+
 #include <iostream>
-#include <fstream>
-#include <math.h>
-
+#include <string>
+#include <mpi.h>
 using namespace std;
 
-int main(int argc, char**argv)
+int main()
 {
-  PostProcessing* postprocessing;
-  Block* block;
-  CompleteMesh* completemesh;
-  Solver* solver;
+	MPI_Init(NULL, NULL);
 
-  // Attributes
-  bool stopsimulation = false;
+	cout << "This is the main" << endl;
 
-  int max_iter = 2;
+	int test_block=69;
+	Block* block= new Block(test_block);
+	CompleteMesh* complete_mesh;
+  	complete_mesh= new CompleteMesh();
+	Initializer* initializer= new Initializer();
+	Interface* interface= new Interface();
 
-  double convergence_criterion = pow(10,-16);
-  double cmac = 1.;
-  double mach = 0.8;
-  double aoa_rad = 0.20944;
-  double gamma = 1.4;
+	Solver *solver=initializer->initializeSolver(interface);
+	solver->solve(block, complete_mesh);
 
-  solver = new Solver();
 
-  postprocessing = new PostProcessing(block, completemesh);
+	// Initialize the MPI environment
 
-  for(int i=0; i < max_iter; i++)
-  {
-    cout << i << endl;
-    postprocessing->process(block, completemesh, solver, stopsimulation, i, max_iter, convergence_criterion, cmac, mach, aoa_rad, gamma);
-  }
+
+	// Finalize the MPI environment.
+	MPI_Finalize();
+
+
+	/*
+	double gamma=1.5;
+	double cfl=1.0;
+	int stage_number=5;
+	double alpha_rk[5]={420,420,420,420,420};
+	double beta_rk[5]={1337,1337,1337,1337,1337};
+	string interpolation_choice = "Second";
+	string gradient_choice = "Least Squares";
+	string limiter_choice = "Venkatakrishnan";
+	string flux_scheme_choice = "Roe";
+	string residual_smoother_choice = "Central IRS";
+
+
+
+	Solver *solver= new Solver(gamma, cfl, stage_number, alpha_rk, beta_rk, interpolation_choice, gradient_choice, limiter_choice, flux_scheme_choice, residual_smoother_choice);
+
+	cout<<"Salut"<<endl;
+	cout<<solver->gamma_<<endl;
+	cout<<solver->runge_kutta_->alpha_rk_[1]<<endl;
+	cout<<solver->runge_kutta_->beta_rk_[1]<<endl;
+	cout<<block->test_block_<<endl;
+
+
+	solver->solve(block);
+
+	cout<<block->test_block_<<endl;
+	*/
+
 }
 
+
 #endif
+

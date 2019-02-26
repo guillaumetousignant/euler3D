@@ -11,10 +11,12 @@
 
 using namespace std;
 
-OutputTecplot::OutputTecplot()
+OutputTecplot::OutputTecplot(double mach_aircraft, double aoa_deg, double gamma)
 {
   cout << "Initialize OutTecplot................................................" << endl;
-
+  mach_aircraft_=mach_aircraft;
+  aoa_deg_=aoa_deg;
+  gamma_=gamma;
   cout << "Initialize OutTecplot............................................DONE" << endl;
 }
 
@@ -47,68 +49,115 @@ void OutputTecplot::printFlowData(Block* block)
   FlowData << "DATAPACKING=BLOCK" << endl;
   FlowData << "VARLOCATION=([4,5,6,7,8]=CELLCENTERED)" << endl;
 
+  double x_node;
   // Print X coordinate for each node
   for(i=0; i < block->n_nodes_in_block_; i++)
   {
-    x_ = block->block_nodes_[i]->node_coordinates_[0];
+    x_node = block->block_nodes_[i]->node_coordinates_[0];
 
-    FlowData << x_ << endl;
+    FlowData << x_node << endl;
   }
 
+  double y_node;
   // Print Y coordinate for each node
   for(i=0; i < block->n_nodes_in_block_; i++)
   {
-    y_ = block->block_nodes_[i]->node_coordinates_[1];
+    y_node = block->block_nodes_[i]->node_coordinates_[1];
 
-    FlowData << y_ << endl;
+    FlowData << y_node << endl;
   }
 
+  double z_node;
   // Print Z coordinate for each node
   for(i=0; i < block->n_nodes_in_block_; i++)
   {
-    z_ = block->block_nodes_[i]->node_coordinates_[2];
+    z_node = block->block_nodes_[i]->node_coordinates_[2];
 
-    FlowData << z_ << endl;
+    FlowData << z_node << endl;
   }
 
+  double ro_cell;
   // Print density for each cell
   for(i=0; i < block->n_cells_in_block_; i++)
   {
-    ro_ = block->block_primitive_variables_[i]->ro_[i];
+    ro_cell = block->block_primitive_variables_[i]->ro_[i];
 
-    FlowData << ro_ << endl;
+    FlowData << ro_cell << endl;
   }
 
+  double uu_cell;
   // Print UU velocity for each cell
   for(i=0; i < block->n_cells_in_block_; i++)
   {
-    uu_ = block->block_primitive_variables_[i]->uu_[i];
+    uu_cell = block->block_primitive_variables_[i]->uu_[i];
 
-    FlowData << uu_ << endl;
+    FlowData << uu_cell << endl;
   }
 
+  double vv_cell;
   // Print VV velocity for each cell
   for(i=0; i < block->n_cells_in_block_; i++)
   {
-    vv_ = block->block_primitive_variables_[i]->vv_[i];
+    vv_cell = block->block_primitive_variables_[i]->vv_[i];
 
-    FlowData << vv_ << endl;
+    FlowData << vv_cell << endl;
   }
 
+  double ww_cell;
   // Print WW velocity for each cell
   for(i=0; i < block->n_cells_in_block_; i++)
   {
-    ww_ = block->block_primitive_variables_[i]->ww_[i];
+    ww_cell = block->block_primitive_variables_[i]->ww_[i];
 
-    FlowData << ww_ << endl;
+    FlowData << ww_cell << endl;
   }
 
+  double pp_cell;
   // Print pressure for each cell
   for(i=0; i < block->n_cells_in_block_; i++)
   {
-    pp_ = block->block_primitive_variables_[i]->pp_[i];
+    pp_cell = block->block_primitive_variables_[i]->pp_[i];
 
-    FlowData << pp_ << endl;
+    FlowData << pp_cell << endl;
+  }
+
+  double dyn_head;
+  double cp_cell;
+  // Print pressure coefficient for each cell
+  dyn_head = 0.5*gamma_*mach_aircraft_*mach_aircraft_;
+  for(i=0; i < block->n_cells_in_block_; i++)
+  {
+    // Pressure value from cell i
+    pp_cell = block->block_primitive_variables_->pp_[i];
+
+
+    // Save pressure coefficient in cp_ array
+    cp_cell = (pp_cell-1.)/dyn_head;
+    FlowData << cp_cell << endl;
+  }
+
+  double a_cell;
+  double velocity_cell;
+  double mach_cell
+  // Print Mach number for each cell
+  for(i=0; i < block->n_cells_in_block_; i++)
+  {
+    // Primitve variables
+    pp_cell = block->block_primitive_variables_->pp_[i];
+    ro_cell = block->block_primitive_variables_->ro_[i];
+    uu_cell = block->block_primitive_variables_->uu_[i];
+    vv_cell = block->block_primitive_variables_->vv_[i];
+    ww_cell = block->block_primitive_variables_->ww_[i];
+
+    a_cell = pow(gamma_*pp_cell/ro_cell, 0.5);
+
+    // Calculate local velocity for each cell
+    velocity_cell = pow(pow(uu_cell,2)+pow(vv_cell,2)+pow(ww_cell,2), 0.5);
+
+    // Claculate local mach number for each cell
+    mach_cell = velocity_cell/a_cell;
+
+    FlowData << mach_cell << endl;
   }
 
   for(i=0;i < block->n_cells_in_block_; i++)
@@ -171,15 +220,15 @@ void OutputTecplot::printSurfaceFlowData(Block* block)
   cout << "Ending printSurfaceFlowData.........................................." << endl;
 }
 
-void OutputTecplot::printConvergence(Solver* solver, int iter)
+void OutputTecplot::printConvergence(int iter, double cl, double cd, double cmx, double cmy, double cmz, double ro_convergence, double uu_convergence, double vv_convergence, double ww_convergence, double pp_convergence)
 {
   cout << "Starting printConvergence............................................" << endl;
 
   int i;
-  double Cl, Cd, Cmx, Cmy, Cmz, ro_convergence, uu_convergence, vv_convergence, ww_convergence, pp_convergence;
 
   //Convergence.open("Convergence.plt", ios::binary);
-  Convergence.open("Convergence.dat");
+  Convergence.open("Convergence.dat", std::ios_base::app);
+
 
     if (Convergence.fail())
     {
@@ -188,31 +237,22 @@ void OutputTecplot::printConvergence(Solver* solver, int iter)
       //return;
     }
   #if 0
-  Cl = data_[0];
-  Cd = data_[1];
-  Cmx = data_[2];
-  Cmy = data_[3];
-  Cmz = data_[4];
 
-  ro_convergence = data_[5];
-  uu_convergence = data_[6];
-  vv_convergence = data_[7];
-  ww_convergence = data_[8];
-  pp_convergence = data_[9];
-
-  Convergence << "Iteration" << " " << "Cl" << " " << "Cd" << " " << "Cmx" << " " << "Cmy" << " " << "Cmz" << " " << "Density convergence" << " " << "Uu convergence" << " " << "Vv convergence" << " " << "Ww convergence" << " " << "DPressure convergence" << " " << endl;
-
-  Convergence << iter << " " << Cl << " " << Cd << " " << Cmx << " " << Cmy << " " << Cmz << " " << ro_convergence << " " << uu_convergence << " " << vv_convergence << " " << ww_convergence << " " << pp_convergence << endl;
-
-  if(solver->stop_solver_flag_==True)
+  if (iter==0)
   {
-    Convergence.close();
+    Convergence << "Iteration" << " " << "Cl" << " " << "Cd" << " " << "Cmx" << " " << "Cmy" << " " << "Cmz" << " " << "Density convergence" << " " << "Uu convergence" << " " << "Vv convergence" << " " << "Ww convergence" << " " << "Pressure convergence" << " " << endl;
   }
+
+  Convergence << iter << " " << cl << " " << cd << " " << cmx << " " << cmy << " " << cmz << " " << ro_convergence << " " << uu_convergence << " " << vv_convergence << " " << ww_convergence << " " << pp_convergence << endl;
+
   #endif
+  Convergence.close();
+
+
   cout << "Ending printConvergence.............................................." << endl;
 }
 
-void OutputTecplot::printAerodynamicCoefficients(Block* block)
+void OutputTecplot::printAerodynamicCoefficients(double cl, double cd, double cmx, double cmy, double cmz)
 {
   cout << "Starting printAerodynamicCoefficients................................" << endl;
 
@@ -226,21 +266,15 @@ void OutputTecplot::printAerodynamicCoefficients(Block* block)
       //return;
     }
   #if 0
-  Cl = data_[0];
-  Cd = data_[1];
-  Cmx = data_[2];
-  Cmy = data_[3];
-  Cmz = data_[4];
+
 
   AerodynamicCoefficients << "Angle of attack" << " " << "Cl" << " " << "Cd" << " " << "Cmx" << " " << "Cmy" << " " << "Cmz" << endl;
 
-  AerodynamicCoefficients << aoa_deg << " " << Cl << " " << Cd << " " << Cmx << " " << Cmy << " " << Cmz << endl;
+  AerodynamicCoefficients << aoa_deg << " " << cl << " " << cd << " " << cmx << " " << cmy << " " << cmz << endl;
 
-  if()
-  {
-    AerodynamicCoefficients.close();
-  }
   #endif
+  AerodynamicCoefficients.close();
+
   cout << "Ending printAerodynamicCoefficients.................................." << endl;
 }
 
@@ -262,29 +296,6 @@ void OutputTecplot::printRestartFile(Block* block)
   cout << "Ending printRestartFile.............................................." << endl;
 }
 
-void OutputTecplot::printData(Block* block, Solver* solver, int iter, int iteration_interval_, double aoa, double* data, double* cp, double* mach)
-{
-  cout << "Starting printData..................................................." << endl;
-#if 0
-  data_ = data;
-#endif
 
-  printConvergence(solver, iter);
-
-  if(solver->stop_solver_flag_ == true)
-  {
-    mach_ = mach;
-    cp_ = cp;
-    aoa_deg_ = aoa*180/3.1416;
-
-    printFlowData(block);
-    printSurfaceFlowData(block);
-    printAerodynamicCoefficients(block);
-    printRestartFile(block);
-  }
-
-  cout << "Ending printData....................................................." << endl;
-
-}
 
 #endif
