@@ -1,6 +1,12 @@
 #ifndef BLOCKBUILDER_HEAD_BLOCKBUILDER_H
 #define BLOCKBUILDER_HEAD_BLOCKBUILDER_H
 
+#include "CellCreator.h"
+#include "FaceCreator.h"
+#include "NodeCreator.h"
+#include "Cell.h"
+#include "Node.h"
+#include "Face.h"
 #include "Block.h"
 #include <fstream>
 
@@ -9,7 +15,7 @@ class BlockBuilder
 public:
 	FILE* block_file_;
 
-	BlockBuilder();
+	BlockBuilder(FILE* block_file);
 	~BlockBuilder();
 
 	virtual void readMyBlock(Block* block) = 0;

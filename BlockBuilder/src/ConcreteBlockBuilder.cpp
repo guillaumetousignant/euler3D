@@ -1,7 +1,7 @@
 #ifndef BLOCKBUILDER_SRC_CONCRETEBLOCKBUILDER_CPP
 #define BLOCKBUILDER_SRC_CONCRETEBLOCKBUILDER_CPP
 
-#include "ConcreteBlockBuilder.h"
+
 #include "BlockBuilder.h"
 #include "NodeCreator.h"
 #include "FaceCreator.h"
@@ -10,6 +10,7 @@
 #include "PyramidCellCreator.h"
 #include "PrismCellCreator.h"
 #include "TetrahedralCellCreator.h"
+#include "ConcreteBlockBuilder.h"
 
 
 void ConcreteBlockBuilder::readMyBlocks(Block* block)
