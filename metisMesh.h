@@ -27,6 +27,7 @@ public:
     MetisMesh* Partition(int nPart);
     void SetConnectivity(std::vector<int>** connectivity_);
 
+
 };
 
 #endif

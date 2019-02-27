@@ -81,7 +81,58 @@ void MetisMesh::Init(int nBlock, int* nElements, int* nNodes)
     }
 }
 
+
+
 void MetisMesh::ReadSingleBlockMesh(std::string fileName)
+{
+    std::ifstream myfile(fileName); //reding data from a file stored in myfile object named the string stired in fileName
+    std::string line;
+
+    for (int i = 0; i < 7; i++)
+        getline(myfile, line);
+
+    //variable to stored data that we extract from file
+    int nNodes(0);
+    int nElements(0);
+    int nBlock(1);
+    char ZONETYPE[128];
+
+
+    sscanf(line.c_str()," Nodes=%d, Elements=%d, ZONETYPE=%s", &nNodes, &nElements, ZONETYPE);
+
+    
+
+    Init(nBlock, &nElements, &nNodes);
+
+    getline(myfile, line);
+    getline(myfile, line);
+
+    //on parcourt le fichier et on store les coordonnées des noeuds
+    for (int nodeI = 0; nodeI < nNodes; nodeI++)
+    {
+        myfile >> x_[0][nodeI] >> y_[0][nodeI] >> z_[0][nodeI];
+    }
+
+    std::cout << "Nb de noeuds = " << nNodes << "" << " Nb d'elem = " << nElements << std::endl;
+
+    for (int elementI = 0; elementI < nElements; elementI++)
+    {
+        int n1, n2, n3;
+        myfile >> n1 >> n2 >> n3;
+        connectivity_[0][elementI].push_back(n1);
+        connectivity_[0][elementI].push_back(n2);
+        connectivity_[0][elementI].push_back(n3);
+    }
+
+    myfile.close();
+
+
+    std::cout << "file read and closed" << std::endl;
+}
+
+
+
+/*void MetisMesh::ReadSingleBlockMesh(std::string fileName)
 {
     std::ifstream myfile(fileName);
     std::string line;
@@ -118,7 +169,7 @@ void MetisMesh::ReadSingleBlockMesh(std::string fileName)
 
     myfile.close();
 }
-
+*/
 void MetisMesh::WriteMesh(std::string fileName)
 {
     FILE* fid = fopen(fileName.c_str(), "w");
