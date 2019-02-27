@@ -20,13 +20,13 @@ int findNodeIndex(std::vector<int>& list, int node2find)
     return list.size();
 }
 
-Mesh::Mesh()
+MetisMesh::MetisMesh()
 : nElements_(nullptr), nNodes_(nullptr), nBlock_(0), x_(nullptr), y_(nullptr), z_(nullptr), connectivity_(nullptr)
 {
 
 }
 
-Mesh::~Mesh()
+MetisMesh::~MetisMesh()
 {
     if (nElements_ != nullptr) delete [] nElements_;
     if (nNodes_ != nullptr) delete [] nNodes_;
@@ -57,7 +57,7 @@ Mesh::~Mesh()
     connectivity_ = nullptr;
 }
 
-void Mesh::Init(int nBlock, int* nElements, int* nNodes)
+void MetisMesh::Init(int nBlock, int* nElements, int* nNodes)
 {
     nBlock_ = nBlock;
     nElements_ = new int[nBlock];
@@ -81,7 +81,7 @@ void Mesh::Init(int nBlock, int* nElements, int* nNodes)
     }
 }
 
-void Mesh::ReadSingleBlockMesh(std::string fileName)
+void MetisMesh::ReadSingleBlockMesh(std::string fileName)
 {
     std::ifstream myfile(fileName);
     std::string line;
@@ -119,7 +119,7 @@ void Mesh::ReadSingleBlockMesh(std::string fileName)
     myfile.close();
 }
 
-void Mesh::WriteMesh(std::string fileName)
+void MetisMesh::WriteMesh(std::string fileName)
 {
     FILE* fid = fopen(fileName.c_str(), "w");
 
@@ -146,7 +146,7 @@ void Mesh::WriteMesh(std::string fileName)
     fclose(fid);
 }
 
-Mesh* Mesh::Partition(int nPart)
+MetisMesh* MetisMesh::Partition(int nPart)
 {
     if (nBlock_ > 1)
     {
@@ -237,7 +237,7 @@ Mesh* Mesh::Partition(int nPart)
         newNnodes[blockI] = addedNode[blockI].size();
     }
 
-    Mesh* newMesh = new Mesh();
+    MetisMesh* newMesh = new MetisMesh();
     newMesh->Init(nPart, newNelements, newNnodes);
     newMesh->SetConnectivity(newConnectivity);
 
@@ -266,7 +266,7 @@ Mesh* Mesh::Partition(int nPart)
     return newMesh;
 }
 
-void Mesh::SetConnectivity(std::vector<int>** connectivity)
+void MetisMesh::SetConnectivity(std::vector<int>** connectivity)
 {
     for (int blockI = 0; blockI < nBlock_; blockI++)
         for (int elementI = 0; elementI < nElements_[blockI]; elementI++)

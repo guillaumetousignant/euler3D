@@ -3,7 +3,7 @@
 #include <vector>
 #include <string>
 
-class Mesh
+class MetisMesh
 {
 private:
     int* nElements_;
@@ -17,14 +17,14 @@ private:
     std::vector<int>** connectivity_;
 
 public:
-    Mesh();
-    ~Mesh();
+    MetisMesh();
+    ~MetisMesh();
 
 public:
     void Init(int nBlock, int* nElements, int* nNodes);
     void ReadSingleBlockMesh(std::string fileName);
     void WriteMesh(std::string fileName);
-    Mesh* Partition(int nPart);
+    MetisMesh* Partition(int nPart);
     void SetConnectivity(std::vector<int>** connectivity_);
 
 };
