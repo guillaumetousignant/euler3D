@@ -1,52 +1,64 @@
 import tkinter
 from tkinter import *
 from tkinter import ttk
-# from tkinter import messagebox
+from tkinter import messagebox
 
 
-class Root(Tk):
-    def __init__(self):
-        super(Root, self).__init__()
-        self.title("GRAPHICAL USER INTERFACE")
-        self.minsize(640, 400)
-
+class MainWindow():
+    def __init__(self, master): # Initialize the object
+        master.title("GRAPHICAL USER INTERFACE")
+        
         # TABS CREATION FOR THE MAIN WINDOW
-        tabControl = ttk.Notebook(self)
+        tabControl = ttk.Notebook(master)
+        tabControl.grid(row=0, column=0, columnspan=10, sticky='NESW')
 
         tab1 = ttk.Frame(tabControl)
         tabControl.add(tab1, text="1. Input")
 
         tab2 = ttk.Frame(tabControl)
-        tabControl.add(tab2, text = "2. Solver")
+        tabControl.add(tab2, text="2. Solver")
 
         tab3 = ttk.Frame(tabControl)
-        tabControl.add(tab3, text = "3. Output")
+        tabControl.add(tab3, text="3. Output")
 
-        tabControl.pack(expan = 1, fill = "both")
+        # SECTION 1. INPUT
+        # SECTION 1.1 GEOMETRY AND MESH
+        title_section_1_1 = ttk.LabelFrame(tab1, text="1.1 Geometry and mesh: ")
+        title_section_1_1.grid(row=0, column=0, columnspan=10)
+
+        text_section_1_1 = ttk.Label(title_section_1_1, text="Please select the desired mesh or geometry: ")
+        text_section_1_1.grid(row=0, column=0, columnspan=10, sticky='W')
+
+        import_mesh = Button(title_section_1_1, text='Import mesh', command=self.importMesh)
+        import_mesh.grid(row=1, column=0)
+
+        import_geometry = Button(title_section_1_1, text='Import geometry', command=self.importGeometry)
+        import_geometry.grid(row=1, column=1)
+
+        generate_geometry = Button(title_section_1_1, text='Generate geometry', command=self.generateGeometry)
+        generate_geometry.grid(row=1, column=2)
+
+        show_resulting_mesh = Button(title_section_1_1, text='Show resulting mesh', command=self.showResultingMesh)
+        show_resulting_mesh.grid(row=2, column=1)
+        
+    def importMesh(self):
+        messagebox.askokcancel('Mesh Importation', 'Import the desired mesh:')
+
+    def importGeometry(self):
+        messagebox.askokcancel('Geometry Importation', 'Import the desired geometry:')
+
+    def generateGeometry(self):
+        messagebox.askokcancel('Geometry Generation', 'Specify the needed information for geometry generation:')
+
+    def showResultingMesh(self):
+        messagebox.showinfo('Resulting Mesh')
+        
+
+
+        # SECTION 1.2 INPUT PARAMETERS
 
 
 
-
-# ##################### 1. INPUT #####################
-# # SECTION 1.1: GEOMETRY AND MESH
-# title_section_1_1 = LabelFrame(tab1, text="1.1 Geometry and mesh", padx=20, pady=20)
-# title_section_1_1.pack(fill="both", expand="yes")
-
-# text_section_1_1 = Label(title_section_1_1, text="Please select the desired mesh or geometry:")
-# text_section_1_1.pack()
-
-# # Aller chercher les fonctions des classes mesh et geometry??
-# def importMesh():
-#     messagebox.askokcancel('Mesh Importation', 'Import the desired mesh:')
-# Button(title_section_1_1, text='Import mesh', command=importMesh).pack(side=LEFT)
-
-# def importGeometry():
-#     messagebox.askokcancel('Geometry Importation', 'Import the desired geometry:')
-# Button(title_section_1_1, text='Import geometry', command=importGeometry).pack(side=TOP)
-
-# def generateGeometry():
-#     messagebox.askokcancel('Geometry Generation', 'Specify the needed information for geometry generation:')
-# Button(title_section_1_1, text='Generate geometry', command=generateGeometry).pack(side=RIGHT)
 
 # # SECTION 1.2: INPUT PARAMETERS
 # title_section_1_2 = LabelFrame(tab1, text="1.2 Input parameters", padx=20, pady=20)
@@ -84,5 +96,6 @@ class Root(Tk):
 # DISPLAYING OF THE MAIN WINDOW
 # main_window1.mainloop()
 
-root = Root()
-root.mainloop()
+root = Tk()
+main_window = MainWindow(root)
+root.mainloop() #Mainloop allows you to be display the window continuously until you close it
