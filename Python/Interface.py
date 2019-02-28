@@ -29,18 +29,27 @@ class MainWindow():
         text_section_1_1 = ttk.Label(title_section_1_1, text="Please select the desired mesh or geometry: ")
         text_section_1_1.grid(row=0, column=0, columnspan=10, sticky='W')
 
-        import_mesh = Button(title_section_1_1, text='Import mesh', command=self.importMesh)
-        import_mesh.grid(row=1, column=0)
+        import_mesh = Button(title_section_1_1, text="Import mesh", command=self.importMesh)
+        import_mesh.grid(row=1, column=1)
 
-        import_geometry = Button(title_section_1_1, text='Import geometry', command=self.importGeometry)
-        import_geometry.grid(row=1, column=1)
+        import_geometry = Button(title_section_1_1, text="Import geometry", command=self.importGeometry)
+        import_geometry.grid(row=1, column=3)
 
-        generate_geometry = Button(title_section_1_1, text='Generate geometry', command=self.generateGeometry)
-        generate_geometry.grid(row=1, column=2)
+        generate_geometry = Button(title_section_1_1, text="Generate geometry", command=self.generateGeometry)
+        generate_geometry.grid(row=1, column=5)
 
-        show_resulting_mesh = Button(title_section_1_1, text='Show resulting mesh', command=self.showResultingMesh)
-        show_resulting_mesh.grid(row=2, column=1)
-        
+        show_resulting_mesh = Button(title_section_1_1, text="Show resulting mesh", command=self.showResultingMesh)
+        show_resulting_mesh.grid(row=2, column=3)
+
+        label_nb_block = ttk.Label(title_section_1_1, text="Number of blocks")
+        label_nb_block.grid(row=4, column=2, columnspan=2)
+
+        nb_block = ttk.Entry(title_section_1_1)
+        nb_block.grid(row=4, column=4, columnspan=2)
+
+        # nb_process = Frame(text="Number of process")
+        # nb_process.grid()
+
     def importMesh(self):
         messagebox.askokcancel('Mesh Importation', 'Import the desired mesh:')
 
