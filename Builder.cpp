@@ -211,29 +211,8 @@ void Builder::setConnectivity()
 		{
 			idx_cell_2_faces[i]=0;
 			idx_cell_2_cells[i]=0;
+			my_block->block_cells[i]->cell_2_faces_connectivity_=allocate_1d_array_int(my_block->block_cells[i]->n_faces_per_cell_, "cell_2_faces_connectivity_");
 
-			switch (my_block->block_cells_[i]->cell_type_) 
-
-		 	{
-			  case 10: //tetrahedral
-			  my_block->block_cells->cell_2_faces_connectivity_=allocate_1d_array_int(int 4, "cell_2_faces_connectivity_");
-			  my_block->block_cells->cell_2_cells_connectivity_=allocate_1d_array_int(int 4, "cell_2_cells_connectivity_");
-			  
-			    break;
-			  case 12: //hexahedral
-			  my_block->block_cells->cell_2_faces_connectivity_=allocate_1d_array_int(int 6, "cell_2_faces_connectivity_");
-			  my_block->block_cells->cell_2_cells_connectivity_=allocate_1d_array_int(int 6, "cell_2_cells_connectivity_");
-			    break;
-			  case 13: //prism
-			  my_block->block_cells->cell_2_faces_connectivity_=allocate_1d_array_int(int 2+((my_block->block_cells_[i]->n_nodes_per_cell_)/2), "cell_2_faces_connectivity_");
-			  my_block->block_cells->cell_2_cells_connectivity_=allocate_1d_array_int(int 2+((my_block->block_cells_[i]->n_nodes_per_cell_)/2), "cell_2_cells_connectivity_");
-			    break;	    
-			  case 14: //pyramid
-			  my_block->block_cells->cell_2_faces_connectivity_=allocate_1d_array_int(int my_block->block_cells_[i]->n_nodes_per_cell_, "cell_2_faces_connectivity_");
-			  my_block->block_cells->cell_2_cells_connectivity_=allocate_1d_array_int(int my_block->block_cells_[i]->n_nodes_per_cell_, "cell_2_cells_connectivity_");
-			    break;
-
-			}
 			
 		}
 
