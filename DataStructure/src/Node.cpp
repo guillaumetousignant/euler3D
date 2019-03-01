@@ -10,7 +10,7 @@ Node::Node()
 
 Node::~Node()
 {
-	delete [] node_coordinates_;
+
 }
 
 #endif
