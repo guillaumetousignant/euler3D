@@ -10,6 +10,9 @@
 #include "PyramidCellCreator.h"
 #include "PrismCellCreator.h"
 #include "TetrahedralCellCreator.h"
+#include "BoundaryCellIds.h"
+#include "FarfieldCellIds.h"
+#include "WallCellIds.h"
 #include "ConcreteBlockBuilder.h"
 
 
@@ -50,6 +53,9 @@ void ConcreteBlockBuilder::readMyBlocks(Block* block)
 	std::string cell_2_nodes_connectivity_temp;
 	std::string ghost_cell_2_nodes_connectivity_temp;
 	std::string boundary_type_temp;
+
+	WallCellIds *wall_boundary_temp;
+	FarfieldCellIds *farfield_boundary_temp;
 
 	
 
@@ -106,21 +112,7 @@ void ConcreteBlockBuilder::readMyBlocks(Block* block)
 			getline(myfile, line);
 			sscanf (line.c_str(), "%s %s",str_temp,&n_ghost_cells_temp);
 
-			if (boundary_type_temp == "WALL") // wall
-			{
-				// key = 0;
-				// int* cell_2_nodes_connectivity;
-				// cell_2_nodes_connectivity = new int[4];
-				// sscanf (cell_2_nodes_connectivity_temp.c_str(), "%d %d %d %d",&cell_2_nodes_connectivity[0],&cell_2_nodes_connectivity[1],&cell_2_nodes_connectivity[2],&cell_2_nodes_connectivity[3]);
 
-			}
-			else if (boundary_type_temp == "FARFIELD") //farfield
-			{
-				// key = 1;
-				// int (cell_2_nodes_connectivity*)[8];
-				// sscanf (cell_2_nodes_connectivity_temp.c_str(), "%d %d %d %d %d %d %d %d",&cell_2_nodes_connectivity[0],&cell_2_nodes_connectivity[1],&cell_2_nodes_connectivity[2],&cell_2_nodes_connectivity[3],&cell_2_nodes_connectivity[4],&cell_2_nodes_connectivity[5],&cell_2_nodes_connectivity[6],&cell_2_nodes_connectivity[7]);
-
-			}
 
 			for( ; cell_id < n_ghost_cells_temp+cell_id; cell_id++)
 			{
@@ -128,8 +120,24 @@ void ConcreteBlockBuilder::readMyBlocks(Block* block)
 				sscanf (line.c_str(), "%s %s",&ghost_cell_type_temp,&ghost_cell_2_nodes_connectivity_temp);
 
 				new_cell = buildCell(cell_id, "ghost", ghost_cell_2_nodes_connectivity_temp, cell_creators, ghost_cell_type_temp);
-
 				block ->addCell(new_cell);
+
+				if (boundary_type_temp == "WALL") // wall
+				{
+					block ->addCellIdInBoundary(cell_id,block->block_boundary_cell_ids_[boundary_id]);
+					//block ->addFaceIdInWall(int face_id, int face_count)
+
+				}
+				else if (boundary_type_temp == "FARFIELD") //farfield
+				{
+					block ->addCellIdInBoundary(cell_id,block->block_boundary_cell_ids_[boundary_id]);
+
+				}
+				else if (boundary_type_temp == "CONNECTION") //Connection inter-bloc
+				{
+
+				}
+				block ->addCellIdInBoundary(cell_id,BoundaryCellIds* some_boundary);
 
 			}
 
