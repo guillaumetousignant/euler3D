@@ -70,7 +70,7 @@ void MetricsInitializer::MetricsInitializer::computeCenterCells(uint iNCells, ui
         double nodeCoord_y = 0.0;
         double nodeCoord_z = 0.0;
 
-        uint nbCell2Node = iCells[i].cell_2_nodes_connectivity_size_;
+        uint nbCell2Node = iCells[i].n_nodes_per_cell_;
         
         for(uint j(0);j < nbCell2Node;j++)
         {
@@ -119,7 +119,7 @@ void MetricsInitializer::computeCenterFaces(uint iNFaces, Face* iFaces, Node* iN
         double nodeCoord_y = 0.0;
         double nodeCoord_z = 0.0;
 
-        uint nbFace2Nodes = iFaces[i].face_2_nodes_connectivity_size_;
+        uint nbFace2Nodes = iFaces[i].n_nodes_per_face_;
 
 
         for(uint j(0);j < nbFace2Nodes;j++)
@@ -146,9 +146,9 @@ void MetricsInitializer::computeNormalFaces(uint iNFaces, Face* iFaces, Node* iN
 {
     for(uint i = 0; i < iNFaces;i++)
     {
-        vector<vector<double>> nodeCoord(iFaces[i].face_2_nodes_connectivity_size_);
+        vector<vector<double>> nodeCoord(iFaces[i].n_nodes_per_face_);
 
-        for(int j = 0;j < iFaces[i].face_2_nodes_connectivity_size_;j++)
+        for(int j = 0;j < iFaces[i].n_nodes_per_face_;j++)
         {
             uint nodeID = iFaces[i].face_2_nodes_connectivity_[j];
 
@@ -188,7 +188,7 @@ void MetricsInitializer::computeNormalFaces(uint iNFaces, Face* iFaces, Node* iN
         double y5,y6,y7,y8;
         double z5,z6,z7,z8;
 
-        if(iFaces[i].face_2_nodes_connectivity_size_ == 3)   
+        if(iFaces[i].n_nodes_per_face_ == 3)   
         {
             //Triangular face
             
@@ -221,7 +221,7 @@ void MetricsInitializer::computeNormalFaces(uint iNFaces, Face* iFaces, Node* iN
                 s_z = 0.5*(dxyA + dxyB + dxyC);
 
         }   
-        else if(iFaces[i].face_2_nodes_connectivity_size_ == 4)
+        else if(iFaces[i].n_nodes_per_face_ == 4)
         {
 
             //Quadrilateral case
@@ -389,7 +389,7 @@ void MetricsInitializer::computeVolumeCells(uint iNCells, uint iNCellsTot, Cell*
     
     for(uint i(0); i < iNCells; i++)
     {
-        int nbFaceOfCell = iCells[i].cell_2_faces_connectivity_size_;
+        int nbFaceOfCell = iCells[i].n_faces_per_cell_;
         double volume = 0;
 
         for(int j(0); j < nbFaceOfCell;j++)
@@ -437,7 +437,7 @@ void MetricsInitializer::computeWLS(uint iNCells, Cell* iCells)
 
     for(uint i(0);i < iNCells;i++)
     {
-        const uint nbCellsNeighbor = iCells[i].cell_2_cells_connectivity_size_;
+        const uint nbCellsNeighbor = iCells[i].n_faces_per_cell_;
 
         double dxij[nbCellsNeighbor];
         double dyij[nbCellsNeighbor];

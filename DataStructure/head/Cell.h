@@ -13,6 +13,7 @@ public:
 	double* cell_coordinates_;
 	double* cell_weights_;
 	int n_nodes_per_cell_;
+	int n_faces_per_cell_;
 
 	Cell();
 	~Cell();

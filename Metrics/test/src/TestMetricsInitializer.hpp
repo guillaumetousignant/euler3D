@@ -20,29 +20,29 @@ void buildConnectivity(Block *iBlock)
     iBlock->block_faces_ = new Face[iBlock->nb_faces_in_block_];
     iBlock->block_nodes_ = new Node[iBlock->nb_nodes_in_block_];
 
-    iBlock->block_cells_[0].cell_2_cells_connectivity_size_ = 1;
-    iBlock->block_cells_[0].cell_2_faces_connectivity_size_ = 5;
-    iBlock->block_cells_[0].cell_2_nodes_connectivity_size_ = 5;
+    iBlock->block_cells_[0].n_faces_per_cell_ = 1;
+    iBlock->block_cells_[0].n_faces_per_cell_ = 5;
+    iBlock->block_cells_[0].n_nodes_per_cell_ = 5;
 
     //Init sizes for ghots cells
     for(int i(1);i < iBlock->n_all_cells_in_block_;i++)
     {
-        iBlock->block_cells_[i].cell_2_cells_connectivity_size_ = 1;
-        iBlock->block_cells_[i].cell_2_faces_connectivity_size_ = 1;
+        iBlock->block_cells_[i].n_faces_per_cell_ = 1;
+        //iBlock->block_cells_[i].cell_2_faces_connectivity_size_ = 1;
     }
 
     //Init Cell block connectivity internal
-    iBlock->block_cells_[0].cell_2_cells_connectivity_ = new int[iBlock->block_cells_[0].cell_2_cells_connectivity_size_];
+    iBlock->block_cells_[0].cell_2_cells_connectivity_ = new int[iBlock->block_cells_[0].n_faces_per_cell_];
     iBlock->block_cells_[0].cell_2_cells_connectivity_[0] = 0;
 
-    iBlock->block_cells_[0].cell_2_faces_connectivity_ = new int[iBlock->block_cells_[0].cell_2_faces_connectivity_size_];
+    iBlock->block_cells_[0].cell_2_faces_connectivity_ = new int[iBlock->block_cells_[0].n_faces_per_cell_];
     iBlock->block_cells_[0].cell_2_faces_connectivity_[0] = 0;
     iBlock->block_cells_[0].cell_2_faces_connectivity_[1] = 1;
     iBlock->block_cells_[0].cell_2_faces_connectivity_[2] = 2;
     iBlock->block_cells_[0].cell_2_faces_connectivity_[3] = 3;
     iBlock->block_cells_[0].cell_2_faces_connectivity_[4] = 4;
 
-    iBlock->block_cells_[0].cell_2_nodes_connectivity_ = new int[iBlock->block_cells_[0].cell_2_nodes_connectivity_size_];
+    iBlock->block_cells_[0].cell_2_nodes_connectivity_ = new int[iBlock->block_cells_[0].n_nodes_per_cell_];
     iBlock->block_cells_[0].cell_2_nodes_connectivity_[0] = 0;
     iBlock->block_cells_[0].cell_2_nodes_connectivity_[1] = 1;
     iBlock->block_cells_[0].cell_2_nodes_connectivity_[2] = 2;
@@ -52,21 +52,21 @@ void buildConnectivity(Block *iBlock)
     //Init ghost connectivity
     for(int i(1);i < iBlock->n_all_cells_in_block_;i++)
     {
-        iBlock->block_cells_[i].cell_2_cells_connectivity_ = new int[iBlock->block_cells_[i].cell_2_cells_connectivity_size_];
+        iBlock->block_cells_[i].cell_2_cells_connectivity_ = new int[iBlock->block_cells_[i].n_faces_per_cell_];
         iBlock->block_cells_[i].cell_2_cells_connectivity_[0] = 0;
 
-        iBlock->block_cells_[i].cell_2_faces_connectivity_ = new int[iBlock->block_cells_[i].cell_2_faces_connectivity_size_];
+        iBlock->block_cells_[i].cell_2_faces_connectivity_ = new int[iBlock->block_cells_[i].n_faces_per_cell_];
         iBlock->block_cells_[i].cell_2_faces_connectivity_[0] = (i - 1);
     }
 
     //Init Faces block connectivity
-    for(int i(0);i < iBlock->nb_faces_in_block_;i++)
-        iBlock->block_faces_[i].face_2_cells_connectivity_size_ = 2;
+    //for(int i(0);i < iBlock->nb_faces_in_block_;i++)
+       // iBlock->block_faces_[i].face_2_cells_connectivity_size_ = 2;
 
     for(int i(0);i < iBlock->nb_faces_in_block_ - 1;i++)
-        iBlock->block_faces_[i].face_2_nodes_connectivity_size_ = 3; // Triangles
+        iBlock->block_faces_[i].n_nodes_per_face_ = 3; // Triangles
 
-    iBlock->block_faces_[iBlock->nb_faces_in_block_ - 1].face_2_nodes_connectivity_size_ = 4; //Square
+    iBlock->block_faces_[iBlock->nb_faces_in_block_ - 1].n_nodes_per_face_ = 4; //Square
 
     int face2cells_[iBlock->nb_faces_in_block_][2];
     face2cells_[0][0] = 0;
@@ -96,31 +96,31 @@ void buildConnectivity(Block *iBlock)
     }
 
     
-    iBlock->block_faces_[0].face_2_nodes_connectivity_ = new int[iBlock->block_faces_[0].face_2_nodes_connectivity_size_];
+    iBlock->block_faces_[0].face_2_nodes_connectivity_ = new int[iBlock->block_faces_[0].n_nodes_per_face_];
 
     iBlock->block_faces_[0].face_2_nodes_connectivity_[0] = 0;
     iBlock->block_faces_[0].face_2_nodes_connectivity_[1] = 1;
     iBlock->block_faces_[0].face_2_nodes_connectivity_[2] = 4;
 
-    iBlock->block_faces_[1].face_2_nodes_connectivity_ = new int[iBlock->block_faces_[1].face_2_nodes_connectivity_size_];
+    iBlock->block_faces_[1].face_2_nodes_connectivity_ = new int[iBlock->block_faces_[1].n_nodes_per_face_];
 
     iBlock->block_faces_[1].face_2_nodes_connectivity_[0] = 1;
     iBlock->block_faces_[1].face_2_nodes_connectivity_[1] = 2;
     iBlock->block_faces_[1].face_2_nodes_connectivity_[2] = 4;
 
-    iBlock->block_faces_[2].face_2_nodes_connectivity_ = new int[iBlock->block_faces_[2].face_2_nodes_connectivity_size_];
+    iBlock->block_faces_[2].face_2_nodes_connectivity_ = new int[iBlock->block_faces_[2].n_nodes_per_face_];
 
     iBlock->block_faces_[2].face_2_nodes_connectivity_[0] = 2;
     iBlock->block_faces_[2].face_2_nodes_connectivity_[1] = 3;
     iBlock->block_faces_[2].face_2_nodes_connectivity_[2] = 4;
 
-    iBlock->block_faces_[3].face_2_nodes_connectivity_ = new int[iBlock->block_faces_[3].face_2_nodes_connectivity_size_];
+    iBlock->block_faces_[3].face_2_nodes_connectivity_ = new int[iBlock->block_faces_[3].n_nodes_per_face_];
 
     iBlock->block_faces_[3].face_2_nodes_connectivity_[0] = 3;
     iBlock->block_faces_[3].face_2_nodes_connectivity_[1] = 0;
     iBlock->block_faces_[3].face_2_nodes_connectivity_[2] = 4;
 
-    iBlock->block_faces_[4].face_2_nodes_connectivity_ = new int[iBlock->block_faces_[4].face_2_nodes_connectivity_size_];
+    iBlock->block_faces_[4].face_2_nodes_connectivity_ = new int[iBlock->block_faces_[4].n_nodes_per_face_];
 
     iBlock->block_faces_[4].face_2_nodes_connectivity_[0] = 0;
     iBlock->block_faces_[4].face_2_nodes_connectivity_[1] = 3;

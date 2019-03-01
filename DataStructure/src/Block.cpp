@@ -16,7 +16,7 @@ Block::~Block()
 
 }
 
-void Block::addCell(Cell* new_cell)
+/*void Block::addCell(Cell* new_cell)
 {
 	int id = new_cell-> cell_id_;
 
@@ -51,5 +51,5 @@ void Block::addFaceIdInWall(int face_id, int face_count)
 	face_count += 1;
 
 }
-
+*/
 #endif

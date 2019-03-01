@@ -12,6 +12,8 @@ public:
 	double* face_normals_;
 	double* right_cell_r_vector_;
 	double* left_cell_r_vector_;
+	int n_nodes_per_face_;
+	double* face_center_;
 
 	Face();
 	~Face();
