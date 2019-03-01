@@ -12,7 +12,7 @@
 
 	}
 
-	Node* createNode()
+	Node* NodeCreator::createNode()
 	{
 		Node* new_node;
 		new_node = new Node;
