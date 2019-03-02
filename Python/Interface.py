@@ -2,6 +2,7 @@ import tkinter
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
+from tkinter import filedialog
 
 
 class MainWindow():
@@ -41,17 +42,22 @@ class MainWindow():
         show_resulting_mesh = Button(title_section_1_1, text="Show resulting mesh", command=self.showResultingMesh)
         show_resulting_mesh.grid(row=2, column=3)
 
-        label_nb_block = ttk.Label(title_section_1_1, text="Number of blocks")
-        label_nb_block.grid(row=4, column=2, columnspan=2)
+        # label_nb_block = ttk.Label(title_section_1_1, text="Number of blocks")
+        # label_nb_block.grid(row=4, column=2, columnspan=2)
 
-        nb_block = ttk.Entry(title_section_1_1)
-        nb_block.grid(row=4, column=4, columnspan=2)
+        # nb_block = ttk.Entry(title_section_1_1)
+        # nb_block.grid(row=4, column=4, columnspan=2)
 
         # nb_process = Frame(text="Number of process")
         # nb_process.grid()
 
     def importMesh(self):
-        messagebox.askokcancel('Mesh Importation', 'Import the desired mesh:')
+        meshwindow = Tk()
+        meshwindow.title("Mesh importation")
+        ttk.Label(meshwindow, text="Import the desired mesh: ").grid(row=0, column=0)
+        ttk.Button(meshwindow, text="Select a file", command=self.meshFileDialog).grid(row=1, column=1)
+        ttk.Button(meshwindow, text="Ok", command=meshwindow.destroy).grid(row=2, column=0)
+        ttk.Button(meshwindow, text="Cancel", command=meshwindow.destroy).grid(row=2, column=3)
 
     def importGeometry(self):
         messagebox.askokcancel('Geometry Importation', 'Import the desired geometry:')
@@ -62,7 +68,11 @@ class MainWindow():
     def showResultingMesh(self):
         messagebox.showinfo('Resulting Mesh')
         
-
+    def meshFileDialog(self):
+        self.filename = filedialog.askopenfilename(initialdir="/", title="Select a file", filetypes=(("jpeg", "*.jpg"),("All Files", "*.*")))
+        # self.label = ttk.Label(meshwindow, text="")
+        # self.label.grid(row=0, column=1)
+        # self.label.configure(text=self.filename)
 
         # SECTION 1.2 INPUT PARAMETERS
 
