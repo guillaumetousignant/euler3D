@@ -6,6 +6,7 @@ typedef  unsigned int uint;
 
 class Array
 {
+    public:
 
     Array();
 

@@ -33,7 +33,7 @@ void Array::allocate2D(double* iArray, uint* iLenght)
 
 void Array::deallocate(double* iArray)
 {
-
+    
 }
 
 void Array::deallocate(int* iArray)
@@ -53,7 +53,7 @@ uint Array::getSize(double* iArray)
 
 uint* Array::getSize(int** iArray)
 {
-    
+
 }
 
 uint* getSize(double** iArray)
