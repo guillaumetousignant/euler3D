@@ -24,6 +24,7 @@ void buildConnectivity(Block *iBlock)
     iBlock->block_cells_[0].n_faces_per_cell_ = 5;
     iBlock->block_cells_[0].n_nodes_per_cell_ = 5;
 
+
     //Init sizes for ghots cells
     for(int i(1);i < iBlock->n_all_cells_in_block_;i++)
     {
@@ -32,7 +33,8 @@ void buildConnectivity(Block *iBlock)
     }
 
     //Init Cell block connectivity internal
-    iBlock->block_cells_[0].cell_2_cells_connectivity_ = new int[iBlock->block_cells_[0].n_faces_per_cell_];
+    uint cell2cell_size = 1;
+    iBlock->block_cells_[0].cell_2_cells_connectivity_ = new int[cell2cell_size];
     iBlock->block_cells_[0].cell_2_cells_connectivity_[0] = 0;
 
     iBlock->block_cells_[0].cell_2_faces_connectivity_ = new int[iBlock->block_cells_[0].n_faces_per_cell_];
@@ -50,12 +52,16 @@ void buildConnectivity(Block *iBlock)
     iBlock->block_cells_[0].cell_2_nodes_connectivity_[4] = 4;
 
     //Init ghost connectivity
+
+    uint nbCell2CellGhost = 1;
+    uint nbFacesPerGhost = 1;
+
     for(int i(1);i < iBlock->n_all_cells_in_block_;i++)
     {
-        iBlock->block_cells_[i].cell_2_cells_connectivity_ = new int[iBlock->block_cells_[i].n_faces_per_cell_];
+        iBlock->block_cells_[i].cell_2_cells_connectivity_ = new int[nbCell2CellGhost];
         iBlock->block_cells_[i].cell_2_cells_connectivity_[0] = 0;
 
-        iBlock->block_cells_[i].cell_2_faces_connectivity_ = new int[iBlock->block_cells_[i].n_faces_per_cell_];
+        iBlock->block_cells_[i].cell_2_faces_connectivity_ = new int[nbFacesPerGhost];
         iBlock->block_cells_[i].cell_2_faces_connectivity_[0] = (i - 1);
     }
 
@@ -188,13 +194,19 @@ TEST_CASE( "TestComputeCenterCells", "Prove that center cells are well defined" 
     metricsInit->doInit();
 
     double centerCoord[3] = {0.0,0.0,0.4};
+    double resCenterCoord[3] = {0.0, 0.0, 0.0};
 
     //Test for internal cell and ghost cells
     for(int i(0);i < blockData->n_all_cells_in_block_;i++)
     {
-        REQUIRE(centerCoord[0] == blockData->block_cells_[i].cell_coordinates_[0]);
-        REQUIRE(centerCoord[1] == blockData->block_cells_[i].cell_coordinates_[1]);
-        REQUIRE(centerCoord[2] == blockData->block_cells_[i].cell_coordinates_[2]);
+
+        resCenterCoord[0] = blockData->block_cells_[i].cell_coordinates_[0];
+        resCenterCoord[1] = blockData->block_cells_[i].cell_coordinates_[1];
+        resCenterCoord[2] = blockData->block_cells_[i].cell_coordinates_[2];
+
+        REQUIRE(centerCoord[0] == resCenterCoord[0]);
+        REQUIRE(centerCoord[1] == resCenterCoord[1]);
+        REQUIRE(centerCoord[2] == resCenterCoord[2]);
     }
     
 

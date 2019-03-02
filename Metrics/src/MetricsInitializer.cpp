@@ -468,10 +468,10 @@ void MetricsInitializer::computeWLS(uint iNCells, Cell* iCells)
         double sumdxij_dot_dyij = 0.0;
         double sumdxij_dot_dzij = 0.0;
         double sumdyijSquare_minus_r12Square = 0.0;
-        double sumdyijdzij_minus_r12r13;
+        double sumdyijdzij_minus_r12r13 = 0.0;
         double sumdzijSquare_minus_r13Square_minusr23Square = 0.0;
 
-        for(int j(0);j < nbCellsNeighbor;j++)
+        for(uint j(0);j < nbCellsNeighbor;j++)
         {
             sumdxij2 += dxij[j]*dxij[j];
             sumdxij_dot_dyij += dxij[j]*dyij[j];
@@ -484,7 +484,7 @@ void MetricsInitializer::computeWLS(uint iNCells, Cell* iCells)
 
         double r13 = (1/r11)*sumdxij_dot_dzij;
 
-        for(int j(0);j < nbCellsNeighbor;j++)
+        for(uint j(0);j < nbCellsNeighbor;j++)
         {
             sumdyijSquare_minus_r12Square += dyij[j]*dyij[j] - r12*r12;
             sumdyijdzij_minus_r12r13 += dyij[j]*dzij[j] - r12*r13;
@@ -494,7 +494,7 @@ void MetricsInitializer::computeWLS(uint iNCells, Cell* iCells)
 
         double r23 = (1/r22)*sumdyijdzij_minus_r12r13;
 
-        for(int j(0);j < nbCellsNeighbor;j++)
+        for(uint j(0);j < nbCellsNeighbor;j++)
         {
             sumdzijSquare_minus_r13Square_minusr23Square += dzij[j]*dzij[j] - (r13*r13 + r23*r23);
         }
