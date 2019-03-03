@@ -133,11 +133,17 @@ if (myfile.is_open()) {
 
     for (int i = 0; i < nElements; i++) {
          
-        sscanf(line.c_str(), "%d %s", &elementType_[i], str_temp);
+        sscanf(line.c_str(), "%d %s", &elementType_[i], str_temp); 
+        elementType_[i] = NumberOfNodes(elementType_[i]);
         getline(myfile, line);  
     }
 
+    cout << elementType_[0] << endl;
+    cout << elementType_[2] << endl;
+    NumberOfNodes(elementType_[0]); 
+    
 
+    // Lecture du fichier
     for (int i = 0; i < nNodes; i++) {
         myfile >> x_[0][i] >> y_[0][i] >> z_[0][i];
         // cout << (**x_[0][i]) << (**y_[0][i]) << endl;
@@ -216,6 +222,58 @@ void MetisMesh::WriteMesh(std::string fileName)
 
     fclose(fid);
 }
+
+int MetisMesh::NumberOfNodes(int elementType) {
+
+int numberOfNodes(0);
+
+    // Line
+    if (elementType == 3) {
+
+       numberOfNodes = 2; 
+    }
+
+    // Triangle
+    else if (elementType == 5) {
+
+       numberOfNodes = 3; 
+    }
+
+    // Quadrlateral
+    else if (elementType == 9) {
+
+       numberOfNodes = 4; 
+    }
+
+    // Tetrahedral 
+    else if (elementType == 10) {
+
+       numberOfNodes = 4; 
+    }
+   
+    // Hexahedral 
+    else if (elementType == 12) {
+
+       numberOfNodes = 8; 
+    }
+    
+    // Wedge
+    else if (elementType == 13) {
+
+       numberOfNodes = 6; 
+    }
+
+    // Pyramid
+    else if (elementType == 14) {
+
+       numberOfNodes = 5; 
+    }
+
+   
+    return numberOfNodes;
+}
+
+
 
 MetisMesh* MetisMesh::Partition(int nPart)
 {
