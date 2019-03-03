@@ -8,11 +8,13 @@ class MetisMesh
 private:
     int* nElements_;
     int* nNodes_;
+    int* elementType_;
     int nBlock_;
 
     double** x_;
     double** y_;
     double** z_;
+    
 
     std::vector<int>** connectivity_;
 

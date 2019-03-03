@@ -34,9 +34,11 @@ MetisMesh::~MetisMesh()
 {
     if (nElements_ != nullptr) delete [] nElements_;
     if (nNodes_ != nullptr) delete [] nNodes_;
+    if (elementType_ != nullptr) delete [] elementType_;
 
     nElements_ = nullptr;
     nNodes_ = nullptr;
+    elementType_ = nullptr;
 
     for (int blockI = 0; blockI < nBlock_; blockI++)
     {
@@ -66,10 +68,11 @@ void MetisMesh::Init(int nBlock, int* nElements, int* nNodes)
     nBlock_ = nBlock; 
     nElements_ = new int[nBlock];
     nNodes_ = new int[nBlock];
+    elementType_ = new int[*nElements];
 
     x_ = new double*[nBlock]; 
     y_ = new double*[nBlock];
-    z_ = new double*[nBlock];
+    z_ = new double*[nBlock];  
 
     connectivity_ = new std::vector<int>*[nBlock];
 
@@ -101,93 +104,53 @@ if (myfile.is_open()) {
     int nElements(0);
     int nDimensions(0);
     int nBlock(1);
+    char str_temp[100];
 
-    getline (myfile,line);
+    // Prepass 1 :
+    getline (myfile, line);
     sscanf(line.c_str(), "NDIME=%d", &nDimensions);
     cout << "Nb de dimensions = " << nDimensions << endl;
 
-    getline (myfile,line);
+    getline (myfile, line);
     sscanf(line.c_str(), "NELEM=%d", &nElements);
     cout << "Nb d'elements= " << nElements << endl;   
     
-    for (int i = 0; i < nElements + 1; i++) {
-        getline (myfile,line);
-    }
+        for (int i = 0; i < nElements + 1; i++) {
+        getline (myfile,line);   
+        } 
 
     sscanf(line.c_str(), "NPOIN=%d", &nNodes);
     cout << "Nb de noeuds= " << nNodes << endl;  
-    
-    myfile.close(); 
 
+    // Fonction d'initialisation :
     Init(nBlock, &nElements, &nNodes);
+
+    // Prepass 2 :
+    myfile.seekg(0, myfile.beg); 
+    getline(myfile,line);
+    getline(myfile,line);
+    getline(myfile,line);
+
+    for (int i = 0; i < nElements; i++) {
+         
+        sscanf(line.c_str(), "%d %s", &elementType_[i], str_temp);
+        getline(myfile, line);  
     }
 
 
+    for (int i = 0; i < nNodes; i++) {
+        myfile >> x_[0][i] >> y_[0][i] >> z_[0][i];
+        // cout << (**x_[0][i]) << (**y_[0][i]) << endl;
+    }
+
+    
+    
+
+    myfile.close(); 
+    }
+
 
 }
-
-//else cout << "Unable to open file";  
-
-
-
-    // // Ouverture du fichier maillage
-    // std::ifstream myfile(fileName); 
-    // std::string line;
-
-    // if (myfile.is_open()) {
-        
-    //     //variable to stored data that we extract from file
-    //     int nNodes(0);
-    //     int nElements(0);
-    //     int nDimensions(0);
-    //     int nBlock(1);
-
-        
-    //     getline(myfile, line);
-    //     sscanf(line.c_str(), "NDIME=%d", &nDimensions);
-
-    //     //getline(myfile, line);
-    //     sscanf(line.c_str(), "NPOIN=%d", &nNodes);
-
-    //     std::cout << "Nb de dimensions = " << nDimensions << std::endl;
-    //     std::cout << "Nb de d'éléments = " << nElements << std::endl;
-
-
-    //     //Init(nBlock, &nElements, &nNodes);
-
-        /* getline(myfile, line);
-        getline(myfile, line); */
-
-     /*        //on parcourt le fichier et on store les coordonnées des noeuds
-            for (int nodeI = 0; nodeI < nNodes; nodeI++)
-            {
-                myfile >> x_[0][nodeI] >> y_[0][nodeI] >> z_[0][nodeI];
-            }
-
-            std::cout << "Nb de noeuds = " << nNodes << "" << " Nb d'elem = " << nElements << std::endl;
-
-            for (int elementI = 0; elementI < nElements; elementI++)
-            {
-                int n1, n2, n3;
-                myfile >> n1 >> n2 >> n3;
-                connectivity_[0][elementI].push_back(n1);
-                connectivity_[0][elementI].push_back(n2);
-                connectivity_[0][elementI].push_back(n3);
-            }*/
-
-/* 
-            cout << "file read and closed" << std::endl;
-            myfile.close(); 
-
-        }  */
-    
-        // else {
-
-        //     std::cout << "FAIL to ppen file" << std::endl; 
-        // }        
-    
-
-
 
 /*void MetisMesh::ReadSingleBlockMesh(std::string fileName)
 {
