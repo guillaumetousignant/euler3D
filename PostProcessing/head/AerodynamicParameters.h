@@ -13,64 +13,46 @@ class AerodynamicParameters
 
 public:
 
-  AerodynamicParameters(Block* block);
+  AerodynamicParameters(double cmac, double mach_aircraft, double aoa_deg, double gamma);
   ~AerodynamicParameters();
 
-void computeAerodynamic(Block* block, Solver* solver, int iter, int iteration_interval_, double cmac, double mach_aircraft, double aoa, double gamma);
+void computeAerodynamic(Block* block);
 
-double getCoefficients(int i);
-double getCp(int i);
-double getMach(int i);
 
-private:
 
-// Attributes
-int block_id_;
-int wall_face_id_;
+double cmac_;
+double mach_aircraft_;
+double aoa_rad_;
 
-double dynhead;
+double gamma_;
+
 double cl_;
 double cd_;
 double cmx_;
 double cmy_;
 double cmz_;
-double clglobal_;
-double cdglobal_;
-double pp_;
-double ro_;
-double uu_;
-double vv_;
-double ww_;
-double nx_;
-double ny_;
-double nz_;
+double cl_global_;
+double cd_global_;
+
 double force_;
 double fx_;
 double fy_;
 double fz_;
-double area_;
-double face_x_coordinate_;
-double face_y_coordinate_;
-double face_z_coordinate_;
 
 
-double* coefficients_;
-double* cp_;
-double* mach_;
+
 
   // Methods
-double calculateCl();
-double calculateCd();
+void calculateCl();
+void calculateCd();
 
-void calculateCmx();
-void calculateCmy();
-void calculateCmz();
-void calculateForce(double ppbc);
-void calculateMach(Block* block, double gamma);
-void calculateCp(int i);
-void calculateGlobalCl(double aoa);
-void calculateGlobalCd(double aoa);
-void checkClDriver();
+void calculateCmx(double cell_y_coordinate, double cell_z_coordinate);
+void calculateCmy(double cell_x_coordinate, double cell_z_coordinate);
+void calculateCmz(double cell_x_coordinate, double cell_y_coordinate);
+void calculateForce(double cpbc, double area, double nx, double ny, double nz);
+void calculateGlobalCl();
+void calculateGlobalCd();
+// À compléter void checkClDriver();
 
 };
 
