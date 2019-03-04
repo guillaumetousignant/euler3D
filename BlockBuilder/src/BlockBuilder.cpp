@@ -31,8 +31,8 @@ Cell* BlockBuilder::buildCell(int cell_id, std::string cell_type, std::string ce
 	Cell* new_cell;
 	Face* new_face;
 	int* cell_2_nodes_connectivity=NULL;
-	int n_nodes_per_cell;
-	int n_faces_per_cell;
+	int n_nodes_per_cell=0;
+	int n_faces_per_cell=0;
 	FaceCreator* face_creator= new FaceCreator();
 	
 
@@ -44,8 +44,23 @@ Cell* BlockBuilder::buildCell(int cell_id, std::string cell_type, std::string ce
 		n_nodes_per_cell = 4;
 		n_faces_per_cell = 4;
 
-		int* face_2_nodes_connectivity_local;
-		
+		// int (*face_2_nodes_connectivity_local)[3] = new int[4][3];
+
+		// int face_2_nodes_connectivity_local[4][3] = {{0,1,2},{0,1,3},{1,2,3},{0,3,2}};
+		// int n_nodes_per_face[4] = {3,3,3,3};
+
+		// for(int i=0;i<n_faces_per_cell;i++)
+		// {
+		// 	new_face = buildFace(face_count_,n_nodes_per_face[i],face_creator);
+		// 	for(int j=0;j<n_nodes_per_face[i];j++)
+		// 	{
+		// 		new_face -> face_2_nodes_connectivity_[j] = cell_2_nodes_connectivity_temp[face_2_nodes_connectivity_local[i][j]];
+		//		face_count_+=1;
+		// 	} 
+		// }
+
+
+
 		// new_face = buildFace(face_count_,3,face_creator);
 		// face_2_nodes_connectivity_local={ cell_2_nodes_connectivity[0],cell_2_nodes_connectivity[2],cell_2_nodes_connectivity[1]};
 		// face_count_+=1;
@@ -163,12 +178,17 @@ void BlockBuilder::setMetrics(Block* block)
 
 }
 
-void BlockBuilder::face_2_Nodes_Connectivity_Builder(Face* new_face,int* face_2_nodes_connectivity,int n_nodes_per_face)
+void BlockBuilder::face_2_Nodes_Connectivity_Builder(int n_faces_per_cell, int* face_2_nodes_connectivity_local, int* n_nodes_per_face, int* cell_2_nodes_connectivity_temp, FaceCreator* face_creator)
 {
-	for(int i=0;i<n_nodes_per_face;i++)
-	{
-		new_face->nodes_2_face_connectivity_[i] = face_2_nodes_connectivity[i]; 
-	}
+	Face* new_face;
+	for(int i=0;i<n_faces_per_cell;i++)
+		{
+			new_face = buildFace(face_count_,n_nodes_per_face[i],face_creator);
+			for(int j=0;j<n_nodes_per_face[i];j++)
+			{
+				new_face -> face_2_nodes_connectivity_[j] = cell_2_nodes_connectivity_temp[face_2_nodes_connectivity_local[i][j]];
+			} 
+		} 
 }
 
 

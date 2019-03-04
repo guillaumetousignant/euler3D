@@ -85,13 +85,35 @@ void ConcreteBlockBuilder::readMyBlock(Block* block)
 
 			new_cell = buildCell(cell_id, cell_type_temp, cell_2_nodes_connectivity_temp, cell_creators,"0");
 
-			block ->addCell(new_cell);
-
-			
+			block ->addCell(new_cell);	
 		}
 	}
 
 	delete node_creator; 
 
 }
+
+void ConcreteBlockBuilder::createMyFaces(Block* block)
+{
+
+	FaceCreator* face_creator= new FaceCreator();
+	CellCreator* cell_creators=NULL;
+	TetrahedralCellCreator tetrahedral_cell_creator= TetrahedralCellCreator();
+	GhostCellCreator ghost_cell_creator=  GhostCellCreator();
+	PrismCellCreator prims_cell_creator= PrismCellCreator();
+	PyramidCellCreator pyramid_cell_creator= PyramidCellCreator();
+
+	cell_creators[0] = tetrahedral_cell_creator;
+	cell_creators[1] = prims_cell_creator;
+	cell_creators[2] = pyramid_cell_creator;
+	cell_creators[3] = ghost_cell_creator;
+
+
+	for(int i=0; i<block->n_real_cells_in_block_;i++)
+	{
+		Cell* cell;
+		cell = block -> block_cells_[i];
+	}
+}
+
 #endif
