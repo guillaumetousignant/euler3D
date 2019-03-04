@@ -3,7 +3,7 @@
 
 #include "CellCreator.h"
 
-class TetrahedralCellCreator:CellCreator
+class TetrahedralCellCreator:public CellCreator
 {
 public:
 

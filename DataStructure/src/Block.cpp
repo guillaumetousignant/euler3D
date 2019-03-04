@@ -39,9 +39,9 @@ void Block::addFace(Face* new_face)
 void Block::addCellIdInBoundary(int cell_id,BoundaryCellIds* some_boundary)
 {
 	int* cell_ids_in_boundary = some_boundary->cell_ids_in_boundary_;
-	int cell_count = some_boundary->cell_count_;
+	int* cell_count = some_boundary->cell_count_;
 
-	cell_ids_in_boundary[cell_count] = cell_id;
+	cell_ids_in_boundary[*cell_count] = cell_id;
 	cell_count += 1;
 }
 

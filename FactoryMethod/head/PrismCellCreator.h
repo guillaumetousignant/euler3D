@@ -3,7 +3,7 @@
 
 #include "CellCreator.h"
 
-class PrismCellCreator:CellCreator
+class PrismCellCreator:public CellCreator
 {
 public:
 

@@ -20,8 +20,8 @@ public:
 	int n_real_cells_in_block_; 
 	int n_ghost_cells_in_block_;
 	int n_all_cells_in_block_;
-	int nb_nodes_in_block_;
-	int nb_faces_in_block_;
+	int n_nodes_in_block_;
+	int n_faces_in_block_;
 	Cell** block_cells_;
 	Node** block_nodes_;
 	Face** block_faces_;

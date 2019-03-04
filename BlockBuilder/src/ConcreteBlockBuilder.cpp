@@ -16,15 +16,14 @@
 #include "ConcreteBlockBuilder.h"
 
 
-void ConcreteBlockBuilder::readMyBlocks(Block* block)
+void ConcreteBlockBuilder::readMyBlock(Block* block)
 {
-	NodeCreator* node_creator;
-	FaceCreator* face_creator;
-	CellCreator (cell_creators*)[4];
-	TetrahedralCellCreator* tetrahedral_cell_creator;
-	GhostCellCreator* ghost_cell_creator;
-	PrismCellCreator* prims_cell_creator;
-	PyramidCellCreator* pyramid_cell_creator;
+	NodeCreator* node_creator= new NodeCreator();
+	CellCreator* cell_creators=NULL;
+	TetrahedralCellCreator tetrahedral_cell_creator= TetrahedralCellCreator();
+	GhostCellCreator ghost_cell_creator=  GhostCellCreator();
+	PrismCellCreator prims_cell_creator= PrismCellCreator();
+	PyramidCellCreator pyramid_cell_creator= PyramidCellCreator();
 
 	cell_creators[0] = tetrahedral_cell_creator;
 	cell_creators[1] = prims_cell_creator;
@@ -32,13 +31,13 @@ void ConcreteBlockBuilder::readMyBlocks(Block* block)
 	cell_creators[3] = ghost_cell_creator;
 
 	std::ifstream myfile(block_file_);
-	int n_dimensions
+	int n_dimensions;
 	char str_temp[200];
 	std::string line;
 	double x_temp,y_temp,z_temp;
 
-	int n_nodes_tmp;
-	int n_nodes = block->n_nodes_in_block_;
+	int n_nodes_temp;
+	int n_nodes;
 	double node_coordinates_temp[3];
 
 	int n_real_cells_tmp;
@@ -56,7 +55,8 @@ void ConcreteBlockBuilder::readMyBlocks(Block* block)
 
 	WallCellIds *wall_boundary_temp;
 	FarfieldCellIds *farfield_boundary_temp;
-
+	Node* new_node;
+	Cell* new_cell;
 	
 
 	if (myfile.is_open())
@@ -66,10 +66,10 @@ void ConcreteBlockBuilder::readMyBlocks(Block* block)
 
 		getline(myfile, line);
 		getline(myfile, line);
-		sscanf (line.c_str(), "%s %d",str_temp,&n_nodes_tmp);
+		sscanf (line.c_str(), "%s %d",str_temp,&n_nodes_temp);
 
-		n_nodes = n_nodes_tmp;
-
+		n_nodes = n_nodes_temp;
+		block->n_nodes_in_block_=n_nodes;
 		for( int node_id = 0; node_id < n_nodes; node_id++ )
 		{
 			getline(myfile, line);
@@ -79,26 +79,30 @@ void ConcreteBlockBuilder::readMyBlocks(Block* block)
 			node_coordinates_temp[1]=y_temp;
 			node_coordinates_temp[2]=z_temp;
 
-			new_node = buildNode(node_id,node_coordinates_tmp, node_creator)
+			new_node = buildNode(node_id,node_coordinates_temp, node_creator);
 			block ->addNode(new_node);
 
 		}
 
 		getline(myfile, line);
 		getline(myfile, line);
-		sscanf (line.c_str(), "%s %d",str_temp,&n_real_cells_tmp);
+		sscanf (line.c_str(), "%s %d",str_temp,&n_real_cells_temp);
 
-		n_real_cells = n_real_cells_tmp;
+		n_real_cells = n_real_cells_temp;
+		block->n_real_cells_in_block_ = n_real_cells;
 
 		for( ; cell_id < n_real_cells; cell_id++)
 		{
 			getline(myfile, line);
-			sscanf (line.c_str(), "%s %s",&cell_type_tmp,&cell_2_nodes_connectivity_temp);
+			sscanf (line.c_str(), "%s %s",&cell_type_temp,&cell_2_nodes_connectivity_temp);
 
-			new_cell = buildCell(cell_id, cell_type, cell_2_nodes_connectivity_temp, cell_creators);
+			new_cell = buildCell(cell_id, cell_type_temp, cell_2_nodes_connectivity_temp, cell_creators,"0");
 
 			block ->addCell(new_cell);
+
+			
 		}
+	
 
 		getline(myfile, line);
 		getline(myfile, line);
@@ -142,10 +146,9 @@ void ConcreteBlockBuilder::readMyBlocks(Block* block)
 			}
 
 		}
+	}
 
-
-
-	
-		
+	delete node_creator; 
 
 }
+#endif

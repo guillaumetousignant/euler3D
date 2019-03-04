@@ -3,7 +3,7 @@
 
 #include "CellCreator.h"
 
-class PyramidCellCreator:CellCreator
+class PyramidCellCreator:public CellCreator
 {
 public:
 
