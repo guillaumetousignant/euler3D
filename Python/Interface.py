@@ -30,16 +30,16 @@ class MainWindow():
         text_section_1_1 = ttk.Label(title_section_1_1, text="Please select the desired mesh or geometry: ")
         text_section_1_1.grid(row=0, column=0, columnspan=10, sticky=NSEW)
 
-        import_mesh = Button(title_section_1_1, text="Import mesh", command=self.importMesh)
+        import_mesh = ttk.Button(title_section_1_1, text="Import mesh", command=self.importMesh)
         import_mesh.grid(row=1, column=1, sticky=NSEW)
 
-        import_geometry = Button(title_section_1_1, text="Import geometry", command=self.importGeometry)
+        import_geometry = ttk.Button(title_section_1_1, text="Import geometry", command=self.importGeometry)
         import_geometry.grid(row=1, column=3, sticky=NSEW)
 
-        generate_geometry = Button(title_section_1_1, text="Generate geometry", command=self.generateGeometry)
+        generate_geometry = ttk.Button(title_section_1_1, text="Generate geometry", command=self.generateGeometry)
         generate_geometry.grid(row=1, column=5, sticky=NSEW)
 
-        show_resulting_mesh = Button(title_section_1_1, text="Show resulting mesh", command=self.showResultingMesh)
+        show_resulting_mesh = ttk.Button(title_section_1_1, text="Show resulting mesh", command=self.showResultingMesh)
         show_resulting_mesh.grid(row=2, column=3, sticky=NSEW)
 
         # SECTION 1.2 INPUT VALUES
@@ -98,9 +98,45 @@ class MainWindow():
         text_section_2_3 = ttk.Label(title_section_2_3, text="Please select a code option: ")
         text_section_2_3.grid(row=0, column=0, columnspan=10, sticky=NSEW)
 
+        # solver_option = 
+
         # SECTION 3 OUTPUT
-        text_section_3 = ttk.Label(tab3, text="Please specify what type of graphe(s) you would like to display: ")
-        text_section_3.grid(row=0, column=0)
+        text_section_3 = ttk.Label(tab3, text="Please specify what type of graphe(s) you would like to display:")
+        text_section_3.grid(row=0, column=0, columnspan=3, sticky=NSEW)
+
+        cl_alpha = Checkbutton(tab3, text="Cl vs alpha", relief="groove", justify=LEFT)
+        cl_alpha.grid(row=1, column=0, sticky=NSEW)
+
+        cd_alpha = Checkbutton(tab3, text="Cd vs alpha", relief="groove")
+        cd_alpha.grid(row=2, column=0, sticky=NSEW)
+
+        cm_alpha = Checkbutton(tab3, text="Cm vs alpha", relief="groove")
+        cm_alpha.grid(row=3, column=0, sticky=NSEW)
+
+        cl_convergence = Checkbutton(tab3, text="Cl convergence", relief="groove")
+        cl_convergence.grid(row=4, column=0, sticky=NSEW)
+
+        cd_convergence = Checkbutton(tab3, text="Cd convergence", relief="groove")
+        cd_convergence.grid(row=5, column=0, sticky=NSEW)
+
+        cm_convergence = Checkbutton(tab3, text="Cm convergence", relief="groove")
+        cm_convergence.grid(row=6, column=0, sticky=NSEW)
+
+        residual_convergence = Checkbutton(tab3, text="Residual convergence", relief="groove")
+        residual_convergence.grid(row=7, column=0, sticky=NSEW)
+
+        cp_xc = Checkbutton(tab3, text="Cp vs Xc", relief="groove")
+        cp_xc.grid(row=1, column=1, columnspan=2, sticky=NSEW)
+
+        mach_contour = Checkbutton(tab3, text="Mach contour", relief="groove")
+        mach_contour.grid(row=2, column=1, columnspan=2, sticky=NSEW)
+
+        cp_contour = Checkbutton(tab3, text="Cp contour", relief="groove")
+        cp_contour.grid(row=3, column=1, columnspan=2, sticky=NSEW)
+
+        slice_cp = Checkbutton(tab3, text="Slice Cp", relief="groove")
+        slice_cp.grid(row=4, column=1, columnspan=2, sticky=NSEW)
+
 
     # SECTION 1 METHODS
     def importMesh(self):
@@ -142,8 +178,17 @@ class MainWindow():
         self.flux_scheme_window = Tk()
         self.flux_scheme_window.title("Scheme selection")
         ttk.Label(self.flux_scheme_window, text="Please select the desired scheme: ").grid(row=0, column=0)
-        ttk.Button(self.flux_scheme_window, text="Ok", command=self.flux_scheme_window.destroy).grid(row=2, column=1)
-        ttk.Button(self.flux_scheme_window, text="Cancel", command=self.flux_scheme_window.destroy).grid(row=2, column=2)
+        
+        self.flux_scheme = ttk.Combobox(self.flux_scheme_window, width=15)
+        self.flux_scheme['values'] = ("Roe", "Ausm")
+        self.flux_scheme.grid(row=1, column=1)
+
+        self.scheme_order = ttk.Combobox(self.flux_scheme_window, width=15)
+        self.scheme_order['values'] = ("1", "2")
+        self.scheme_order.grid(row=2, column=1)
+        
+        ttk.Button(self.flux_scheme_window, text="Ok", command=self.flux_scheme_window.destroy).grid(row=3, column=1)
+        ttk.Button(self.flux_scheme_window, text="Cancel", command=self.flux_scheme_window.destroy).grid(row=3, column=2)
 
 
 root = Tk()
