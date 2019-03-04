@@ -52,15 +52,32 @@ class MainWindow():
         # nb_process.grid()
 
     def importMesh(self):
-        meshwindow = Tk()
-        meshwindow.title("Mesh importation")
-        ttk.Label(meshwindow, text="Import the desired mesh: ").grid(row=0, column=0)
-        ttk.Button(meshwindow, text="Select a file", command=self.meshFileDialog).grid(row=1, column=1)
-        ttk.Button(meshwindow, text="Ok", command=meshwindow.destroy).grid(row=2, column=0)
-        ttk.Button(meshwindow, text="Cancel", command=meshwindow.destroy).grid(row=2, column=3)
+        self.meshwindow = Tk()
+        self.meshwindow.title("Mesh importation")
+        ttk.Label(self.meshwindow, text="Import the desired mesh: ").grid(row=0, column=0)
+        ttk.Button(self.meshwindow, text="Select a file", command=self.meshFileDialog).grid(row=1, column=2)
+        ttk.Button(self.meshwindow, text="Ok", command=self.meshwindow.destroy).grid(row=2, column=1)
+        ttk.Button(self.meshwindow, text="Cancel", command=self.meshwindow.destroy).grid(row=2, column=2)
+
+    def meshFileDialog(self):
+        self.filename = filedialog.askopenfilename(initialdir="/", title="Select a file", filetypes=(("jpeg", "*.jpg"),("All Files", "*.*")))
+        self.label = ttk.Label(self.meshwindow, text="")
+        self.label.grid(row=1, column=1)
+        self.label.configure(text=self.filename)
 
     def importGeometry(self):
-        messagebox.askokcancel('Geometry Importation', 'Import the desired geometry:')
+        self.geometrywindow = Tk()
+        self.geometrywindow.title("Geometry importation")
+        ttk.Label(self.geometrywindow, text="Import the desired geometry: ").grid(row=0, column=0)
+        ttk.Button(self.geometrywindow, text="Select a file", command=self.geometryFileDialog).grid(row=1, column=2)
+        ttk.Button(self.geometrywindow, text="Ok", command=self.geometrywindow.destroy).grid(row=2, column=1)
+        ttk.Button(self.geometrywindow, text="Cancel", command=self.geometrywindow.destroy).grid(row=2, column=2)
+
+    def geometryFileDialog(self):
+        self.filename = filedialog.askopenfilename(initialdir="/", title="Select a file", filetypes=(("jpeg", "*.jpg"),("All Files", "*.*")))
+        self.label = ttk.Label(self.geometrywindow, text="")
+        self.label.grid(row=1, column=1)
+        self.label.configure(text=self.filename)
 
     def generateGeometry(self):
         messagebox.askokcancel('Geometry Generation', 'Specify the needed information for geometry generation:')
@@ -68,11 +85,7 @@ class MainWindow():
     def showResultingMesh(self):
         messagebox.showinfo('Resulting Mesh')
         
-    def meshFileDialog(self):
-        self.filename = filedialog.askopenfilename(initialdir="/", title="Select a file", filetypes=(("jpeg", "*.jpg"),("All Files", "*.*")))
-        # self.label = ttk.Label(meshwindow, text="")
-        # self.label.grid(row=0, column=1)
-        # self.label.configure(text=self.filename)
+    
 
         # SECTION 1.2 INPUT PARAMETERS
 
