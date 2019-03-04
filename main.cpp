@@ -4,35 +4,60 @@
 #include "BlockCommunicator.h"
 #include <fstream>
 #include <sstream>
+#include "ConnexionCellIds_dummy.h"
 
 int main(int argc, char** argv)
 {
     // Initialize the MPI environment
     MPI_Init(NULL, NULL);
 
-    DummyMesh* mesh = new DummyMesh(5);
+    int n_blocks_in_process;
+    int* my_blocks;
+    int n_blocks;
 
-    BlockCommunicator* communicator = new BlockCommunicator(mesh);
+    n_blocks = 5;
+    BlockCommunicator* communicator = new BlockCommunicator(n_blocks);
+    communicator->getMyBlocks(n_blocks_in_process, my_blocks);
 
-    communicator->getMyBlocks(mesh);
+    DummyMesh* mesh = new DummyMesh(n_blocks, n_blocks_in_process, my_blocks);
+
+    int coord00[3] = {7, 8, 9};
+    int coord01[3] = {2, 3, 4};
+    ConnexionCellIds_dummy* boundary0 = new ConnexionCellIds_dummy(coord00, 3, coord01, 1, 0);
+    int coord00[3] = {7, 8, 9};
+    int coord01[3] = {0, 1, 2};
+    ConnexionCellIds_dummy* boundary1 = new ConnexionCellIds_dummy(coord00, 3, coord01, 0, 1);
+
+    int coord00[2] = {5, 6};
+    int coord01[2] = {3, 4};
+    ConnexionCellIds_dummy* boundary2 = new ConnexionCellIds_dummy(coord00, 2, coord01, 2, 1);
+    int coord00[2] = {7, 8};
+    int coord01[2] = {0, 1};
+    ConnexionCellIds_dummy* boundary3 = new ConnexionCellIds_dummy(coord00, 2, coord01, 1, 2);
+
+    communicator->addCellIdInConnexion(boundary0);
+    communicator->addCellIdInConnexion(boundary1);
+    communicator->addCellIdInConnexion(boundary2);
+    communicator->addCellIdInConnexion(boundary3);
+
 
     // Print off a hello world message
     std::cout << "Hello from process " << communicator->process_id_ << " out of " 
                     << communicator->number_of_processes_ << " processes. I have " 
-                    << mesh->n_my_blocks_;
-    if (mesh->n_my_blocks_ > 1){
+                    << mesh->n_blocks_in_process_;
+    if (mesh->n_blocks_in_process_ > 1){
         std::cout << " blocks.";
     }
     else{
         std::cout << " block.";
     } 
 
-    for (int i = 0; i < mesh->n_my_blocks_; i++){
+    for (int i = 0; i < mesh->n_blocks_in_process_; i++){
         std::cout << " " << mesh->my_blocks_[i];
     }
     std::cout << std::endl;
 
-    for (int i = 0; i < mesh->n_my_blocks_; i++){
+    for (int i = 0; i < mesh->n_blocks_in_process_; i++){
         mesh->blocks_[mesh->my_blocks_[i]]->fillBlock(mesh->my_blocks_[i]);
     }
 
@@ -40,7 +65,7 @@ int main(int argc, char** argv)
 
     std::ofstream myfile;
     std::stringstream filename;
-    for (int i = 0; i < mesh->n_my_blocks_; i++){
+    for (int i = 0; i < mesh->n_blocks_in_process_; i++){
         filename.str(std::string());
         filename << "output" << mesh->my_blocks_[i] << ".txt";
         myfile.open(filename.str());
