@@ -2,10 +2,11 @@
 #define BLOCK_COMMUNICATOR_H
 
 #include "DummyMesh.h"
+#include "ConnexionCellIds_dummy.h"
 
 class BlockCommunicator {
     public:
-        BlockCommunicator(DummyMesh* mesh); // Should take a mesh as input
+        BlockCommunicator(int nblocks); // Should take a mesh as input
         ~BlockCommunicator();
 
         int number_of_processes_;
@@ -13,15 +14,11 @@ class BlockCommunicator {
         int* block_process_id_;
         int n_blocks_;
         int n_inter_block_boundaries_;
-        // BoundaryCellIds* inter_block_boundaries_;
-        int** boundary_blocks_;
-        int* boundary_width_;
-        int*** boundary_map_; // this is temporary
-
+        ConnexionCellIds_dummy** inter_block_boundaries_;
 
         void updateBoundaries(DummyMesh* mesh) const;
-        void addCellIdInConnexion();
-        void getMyBlocks(DummyMesh* mesh) const;
+        void addCellIdInConnexion(ConnexionCellIds_dummy* boundary);
+        void getMyBlocks(int& n_blocks_in_process, int* &my_blocks) const;
         void initialize();
         double getGlobal(double const coeff_local) const;
         void setBoundaryOffset();

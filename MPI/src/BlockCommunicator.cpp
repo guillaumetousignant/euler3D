@@ -3,13 +3,13 @@
 #include <algorithm>
 #include <iostream> // REMOVE
 
-BlockCommunicator::BlockCommunicator(DummyMesh* mesh): n_blocks_(mesh->n_blocks_), n_inter_block_boundaries_(2){
+BlockCommunicator::BlockCommunicator(int nblocks): n_blocks_(nblocks), n_inter_block_boundaries_(0), inter_block_boundaries_(nullptr) {
     MPI_Comm_size(MPI_COMM_WORLD, &number_of_processes_);
     MPI_Comm_rank(MPI_COMM_WORLD, &process_id_);
 
     block_process_id_ = new int[n_blocks_];
-    int n = mesh->n_blocks_/number_of_processes_;
-    int remainder = mesh->n_blocks_%number_of_processes_; 
+    int n = n_blocks_/number_of_processes_;
+    int remainder = n_blocks_%number_of_processes_; 
 
     // Calculates which process owns what block
     for (int i = 0; i < number_of_processes_; i++){
@@ -17,94 +17,48 @@ BlockCommunicator::BlockCommunicator(DummyMesh* mesh): n_blocks_(mesh->n_blocks_
             block_process_id_[i * n + std::min(i, remainder) + j] = i;
         }
     }
-
-    boundary_blocks_ = new int*[n_inter_block_boundaries_];
-    boundary_blocks_[0] = new int[2];
-    boundary_blocks_[1] = new int[2];
-    // Blocks from boundary
-    boundary_blocks_[0][0] = 0;
-    boundary_blocks_[0][1] = 1;
-    boundary_blocks_[1][0] = 1;
-    boundary_blocks_[1][1] = 2;
-
-    boundary_width_ = new int[n_inter_block_boundaries_];
-    // Number of elements in each boundary
-    boundary_width_[0] = 3;
-    boundary_width_[1] = 4;
-
-    boundary_map_ = new int**[n_inter_block_boundaries_];
-    boundary_map_[0] = new int*[2];
-    boundary_map_[1] = new int*[2];
-    boundary_map_[0][0] = new int[boundary_width_[0]];
-    boundary_map_[0][1] = new int[boundary_width_[0]];
-    boundary_map_[1][0] = new int[boundary_width_[1]];
-    boundary_map_[1][1] = new int[boundary_width_[1]];
-    // Mappings
-    boundary_map_[0][0][0] = 0;
-    boundary_map_[0][0][1] = 1;
-    boundary_map_[0][0][2] = 2;
-    boundary_map_[0][1][0] = 2;
-    boundary_map_[0][1][1] = 3;
-    boundary_map_[0][1][2] = 4;
-
-    boundary_map_[1][0][0] = 5;
-    boundary_map_[1][0][1] = 6;
-    boundary_map_[1][0][2] = 7;
-    boundary_map_[1][0][3] = 8;
-    boundary_map_[1][1][0] = 6;
-    boundary_map_[1][1][1] = 7;
-    boundary_map_[1][1][2] = 8;
-    boundary_map_[1][1][3] = 9;
-
 }
 
 BlockCommunicator::~BlockCommunicator(){
     if (block_process_id_ != nullptr){
         delete [] block_process_id_;
     }
+
+    if (inter_block_boundaries_ != nullptr){
+        delete [] inter_block_boundaries_;
+    }
 }
 
 void BlockCommunicator::updateBoundaries(DummyMesh* mesh) const {
-    int*** buffers = new int**[n_inter_block_boundaries_];
+    int *** buffers;
+
+    buffers = new int**[n_inter_block_boundaries_];
     for (int i = 0; i < n_inter_block_boundaries_; i++){ // Move ton constructor?
-        buffers[i] = new int*[4];
+        buffers[i] = new int*[2];
         buffers[i][0] = nullptr;
         buffers[i][1] = nullptr;
-        buffers[i][2] = nullptr;
-        buffers[i][3] = nullptr;
     }
 
     for (int i = 0; i < n_inter_block_boundaries_; i++){
         // If this process is sender
-        if (process_id_ == block_process_id_[boundary_blocks_[i][0]]){
-            buffers[i][0] = new int[boundary_width_[i]]; // Move to constructor?
-            buffers[i][1] = new int[boundary_width_[i]];
-            MPI_Request send_send_request;
-            MPI_Request send_receive_request;
+        if (process_id_ == block_process_id_[inter_block_boundaries_[i]->block_origin_]){
+            buffers[i][0] = new int[inter_block_boundaries_[i]->n_cell_in_boundary_]; // Move to constructor?
+            MPI_Request send_request;
 
             // Filling send buffer
-            for (int j = 0; j < boundary_width_[i]; j++){
-                buffers[i][0][j] = mesh->blocks_[boundary_blocks_[i][0]]->boundary_values_[boundary_map_[i][0][j]];
+            for (int j = 0; j < inter_block_boundaries_[i]->n_cell_in_boundary_; j++){
+                buffers[i][0][j] = mesh->blocks_[inter_block_boundaries_[i]->block_origin_]->boundary_values_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]]; 
             }
 
-            MPI_Isend(buffers[i][0], boundary_width_[i], MPI_INT, block_process_id_[boundary_blocks_[i][1]], 2*i, MPI_COMM_WORLD, &send_send_request);
-            MPI_Irecv(buffers[i][1], boundary_width_[i], MPI_INT, block_process_id_[boundary_blocks_[i][1]], 2*i+1, MPI_COMM_WORLD, &send_receive_request);
+            MPI_Isend(buffers[i][0], inter_block_boundaries_[i]->n_cell_in_boundary_, MPI_INT, block_process_id_[inter_block_boundaries_[i]->block_destination_], i, MPI_COMM_WORLD, &send_request);
         }
 
         // If this process is receiver
-        if (process_id_ == block_process_id_[boundary_blocks_[i][1]]){
-            buffers[i][2] = new int[boundary_width_[i]];
-            buffers[i][3] = new int[boundary_width_[i]];
-            MPI_Request receive_send_request;
-            MPI_Request receive_receive_request;
+        if (process_id_ == block_process_id_[inter_block_boundaries_[i]->block_destination_]){
+            buffers[i][1] = new int[inter_block_boundaries_[i]->n_cell_in_boundary_];
+            MPI_Request receive_request;
 
-            // Filling send buffer
-            for (int j = 0; j < boundary_width_[i]; j++){
-                buffers[i][2][j] = mesh->blocks_[boundary_blocks_[i][1]]->boundary_values_[boundary_map_[i][1][j]];
-            }
-
-            MPI_Isend(buffers[i][2], boundary_width_[i], MPI_INT, block_process_id_[boundary_blocks_[i][0]], 2*i+1, MPI_COMM_WORLD, &receive_send_request);
-            MPI_Irecv(buffers[i][3], boundary_width_[i], MPI_INT, block_process_id_[boundary_blocks_[i][0]], 2*i, MPI_COMM_WORLD, &receive_receive_request);
+            MPI_Irecv(buffers[i][1], inter_block_boundaries_[i]->n_cell_in_boundary_, MPI_INT, block_process_id_[inter_block_boundaries_[i]->block_origin_], i, MPI_COMM_WORLD, &receive_request);
         }
     }
 
@@ -112,52 +66,16 @@ void BlockCommunicator::updateBoundaries(DummyMesh* mesh) const {
 
     // Put in blocks
     for (int i = 0; i < n_inter_block_boundaries_; i++){
-        if (process_id_ == block_process_id_[boundary_blocks_[i][0]]){
-            //if (block_process_id_[boundary_blocks_[i][0]] == block_process_id_[boundary_blocks_[i][1]]) {
-            if (i == 1){
-                std::cout << boundary_blocks_[i][0] << " Block receiving ";
-                for (int j = 0; j < boundary_width_[i]; j++){
-                    std::cout << " " << buffers[i][1][j];
-                }   
+        if (process_id_ == block_process_id_[inter_block_boundaries_[i]->block_destination_]){
+            for (int j = 0; j < inter_block_boundaries_[i]->n_cell_in_boundary_; j++){
+                mesh->blocks_[inter_block_boundaries_[i]->block_destination_]->boundary_values_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]] = buffers[i][1][j];
             }
-            for (int j = 0; j < boundary_width_[i]; j++){
-                mesh->blocks_[boundary_blocks_[i][0]]->boundary_values_[boundary_map_[i][0][j]] = buffers[i][1][j];
-            }
-            //if (block_process_id_[boundary_blocks_[i][0]] == block_process_id_[boundary_blocks_[i][1]]) {
-            if (i == 1){
-                std::cout << "   " << boundary_blocks_[i][0] << " Block writing ";
-                for (int j = 0; j < boundary_width_[i]; j++){
-                    std::cout << " " << mesh->blocks_[boundary_blocks_[i][0]]->boundary_values_[boundary_map_[i][0][j]];
-                } 
-                std::cout << std::endl;
-            } 
-        }
-
-        if (process_id_ == block_process_id_[boundary_blocks_[i][1]]){
-            //if (block_process_id_[boundary_blocks_[i][0]] == block_process_id_[boundary_blocks_[i][1]]) {
-            if (i == 1){
-                std::cout << boundary_blocks_[i][1] << " Block receiving";
-                for (int j = 0; j < boundary_width_[i]; j++){
-                    std::cout << " " << buffers[i][3][j];
-                } 
-            }
-            for (int j = 0; j < boundary_width_[i]; j++){
-                mesh->blocks_[boundary_blocks_[i][1]]->boundary_values_[boundary_map_[i][1][j]] = buffers[i][3][j];                                                                                                                                             
-            }
-            //if (block_process_id_[boundary_blocks_[i][0]] == block_process_id_[boundary_blocks_[i][1]]) {
-            if (i == 1){
-                std::cout << "   " << boundary_blocks_[i][1] << " Block writing";
-                for (int j = 0; j < boundary_width_[i]; j++){
-                    std::cout << " " << mesh->blocks_[boundary_blocks_[i][1]]->boundary_values_[boundary_map_[i][1][j]];
-                } 
-                std::cout << std::endl;
-            } 
         }
     }
 
     // Delete buffers
     for (int i = 0; i < n_inter_block_boundaries_; i++){
-        for (int j = 0; j < 4; j++){
+        for (int j = 0; j < 2; j++){
             if (buffers[i][j] != nullptr){
                 delete [] buffers[i][j];
             }
@@ -167,23 +85,31 @@ void BlockCommunicator::updateBoundaries(DummyMesh* mesh) const {
     delete [] buffers;
 }
 
-void BlockCommunicator::addCellIdInConnexion(){
+void BlockCommunicator::addCellIdInConnexion(ConnexionCellIds_dummy* boundary){
+    ConnexionCellIds_dummy** inter_block_boundaries = new ConnexionCellIds_dummy*[n_inter_block_boundaries_ + 1];
+    for (int i = 0; i < n_inter_block_boundaries_; i++){
+        inter_block_boundaries[i] = inter_block_boundaries_[i];
+    }
+    inter_block_boundaries[n_inter_block_boundaries_] = boundary;
+    n_inter_block_boundaries_++;
 
+    delete [] inter_block_boundaries_;
+    inter_block_boundaries_ = inter_block_boundaries;
 }
 
-void BlockCommunicator::getMyBlocks(DummyMesh* mesh) const {
-    int n = mesh->n_blocks_/number_of_processes_;
-    int remainder = mesh->n_blocks_%number_of_processes_; 
+void BlockCommunicator::getMyBlocks(int& n_blocks_in_process, int* &my_blocks) const {
+    int n = n_blocks_/number_of_processes_;
+    int remainder = n_blocks_%number_of_processes_; 
     int index_start = process_id_ * n + std::min(process_id_, remainder);
-    mesh->n_my_blocks_ = n + (process_id_ < remainder);
+    n_blocks_in_process = n + (process_id_ < remainder);
 
     /*if (mesh->my_blocks_ != nullptr){
         delete [] mesh->my_blocks_;
     }*/
 
-    mesh->my_blocks_ = new int[mesh->n_my_blocks_];
-    for (int i = 0; i < mesh->n_my_blocks_; i++){
-        mesh->my_blocks_[i] = index_start + i;
+    my_blocks = new int[n_blocks_in_process];
+    for (int i = 0; i < n_blocks_in_process; i++){
+        my_blocks[i] = index_start + i;
     }    
 }
 
