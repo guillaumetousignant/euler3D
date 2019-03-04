@@ -30,7 +30,7 @@ void buildConnectivity(Block *iBlock)
     iBlock->block_cells_[0].n_nodes_per_cell_ = nbNodesTot;
 
     //Init nb of faces for each ghots cells
-    for(int i(1);i < nbCellsTot;i++)
+    for(uint i(1);i < nbCellsTot;i++)
     {
         iBlock->block_cells_[i].n_faces_per_cell_ = 1;
     }
@@ -58,7 +58,7 @@ void buildConnectivity(Block *iBlock)
     uint nbCell2CellGhost = 1;
     uint nbFacesPerGhost = 1;
 
-    for(int i(1);i < nbCellsTot;i++)
+    for(uint i(1);i < nbCellsTot;i++)
     {
         iBlock->block_cells_[i].cell_2_cells_connectivity_ = new int[nbCell2CellGhost];
         iBlock->block_cells_[i].cell_2_cells_connectivity_[0] = 0;
@@ -72,7 +72,7 @@ void buildConnectivity(Block *iBlock)
     const uint nbNodesTriangle = 3;
     const uint nbNodesSquare = 4;
 
-    for(int i(0);i < nbFacesTot - 1;i++)
+    for(uint i(0);i < nbFacesTot - 1;i++)
         iBlock->block_faces_[i].n_nodes_per_face_ = nbNodesTriangle; // Triangles
 
     iBlock->block_faces_[nbFacesTot - 1].n_nodes_per_face_ = nbNodesSquare; //Square
@@ -93,7 +93,7 @@ void buildConnectivity(Block *iBlock)
     face2cells_[4][0] = 0;
     face2cells_[4][1] = 5;
 
-    for(int i(0);i < iBlock->nb_faces_in_block_;i++)
+    for(uint i(0);i < nbFacesTot;i++)
     {
         iBlock->block_faces_[i].face_2_cells_connectivity_ = new int[2];
 
@@ -171,12 +171,10 @@ void buildConnectivity(Block *iBlock)
 void tearDown(Block *iBlock)
 {
 
-    uint nbCells = 1;
     uint nbCellsTot = 6;
     uint nbFacesTot = 5;
-    uint nbNodesTot = 5;
 
-    for(int i(0);i < nbCellsTot;i++)
+    for(uint i(0);i < nbCellsTot;i++)
     { 
         delete [] iBlock->block_cells_[i].cell_2_cells_connectivity_;
         delete [] iBlock->block_cells_[i].cell_2_faces_connectivity_;
@@ -185,7 +183,7 @@ void tearDown(Block *iBlock)
 
     delete [] iBlock->block_cells_[0].cell_2_nodes_connectivity_;
 
-    for(int i(0);i < nbFacesTot;i++)
+    for(uint i(0);i < nbFacesTot;i++)
     {
         delete [] iBlock->block_faces_[i].face_2_cells_connectivity_;
         delete [] iBlock->block_faces_[i].face_2_nodes_connectivity_;
