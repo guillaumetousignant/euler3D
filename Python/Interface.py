@@ -24,7 +24,7 @@ class MainWindow():
 
         # SECTION 1. INPUT
         # SECTION 1.1 GEOMETRY AND MESH
-        title_section_1_1 = ttk.LabelFrame(tab1, text="1.1 Geometry and mesh: ")
+        title_section_1_1 = ttk.LabelFrame(tab1, text="1.1 Geometry and mesh")
         title_section_1_1.grid(row=0, column=0, columnspan=10)
 
         text_section_1_1 = ttk.Label(title_section_1_1, text="Please select the desired mesh or geometry: ")
@@ -41,6 +41,31 @@ class MainWindow():
 
         show_resulting_mesh = Button(title_section_1_1, text="Show resulting mesh", command=self.showResultingMesh)
         show_resulting_mesh.grid(row=2, column=3)
+
+        # SECTION 1.2 INPUT VALUES
+        title_section_1_2 = ttk.LabelFrame(tab1, text="1.2 Input parameters")
+        title_section_1_2.grid(row=1, column=0, columnspan=10)
+
+        text_section_1_2 = ttk.Label(title_section_1_2, text="Please specify the required input values: ")
+        text_section_1_2.grid(row=0, column=0, columnspan=10, sticky='W')
+
+        ttk.Label(title_section_1_2, text="cfl").grid(row=1, column=0)
+        ttk.Entry(title_section_1_2).grid(row=1, column=1)
+
+        ttk.Label(title_section_1_2, text="gamma").grid(row=2, column=0)
+        ttk.Entry(title_section_1_2).grid(row=2, column=1)
+
+        ttk.Label(title_section_1_2, text="mach").grid(row=3, column=0)
+        ttk.Entry(title_section_1_2).grid(row=3, column=1)
+
+        ttk.Label(title_section_1_2, text="cmac").grid(row=1, column=2)
+        ttk.Entry(title_section_1_2).grid(row=1, column=3)
+
+        ttk.Label(title_section_1_2, text="Angle of attack (deg)").grid(row=2, column=2)
+        ttk.Entry(title_section_1_2).grid(row=2, column=3)
+
+        ttk.Label(title_section_1_2, text="Number of stages (RK)").grid(row=3, column=2)
+        ttk.Entry(title_section_1_2).grid(row=3, column=3)
 
         # label_nb_block = ttk.Label(title_section_1_1, text="Number of blocks")
         # label_nb_block.grid(row=4, column=2, columnspan=2)
