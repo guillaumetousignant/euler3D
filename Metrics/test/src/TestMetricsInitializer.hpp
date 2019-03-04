@@ -6,7 +6,6 @@
 //Project files
 #include "Block.h"
 #include "Metrics/src/MetricsInitializer.h"
-#include "Array/Array.h"
 
 using namespace std;
 
