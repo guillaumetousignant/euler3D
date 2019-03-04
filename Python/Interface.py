@@ -24,10 +24,11 @@ class MainWindow():
 
         # SECTION 1. INPUT
         # SECTION 1.1 GEOMETRY AND MESH
-        title_section_1_1 = ttk.LabelFrame(tab1, text="1.1 Geometry and mesh")
-        title_section_1_1.grid(row=0, column=0, columnspan=10)
+        title_section_1_1 = LabelFrame(tab1, text="1.1 Geometry and mesh", labelanchor=N, height=195, width=385)
+        title_section_1_1.grid(row=0, column=0)
+        title_section_1_1.grid_propagate(False)
 
-        text_section_1_1 = ttk.Label(title_section_1_1, text="Please select the desired mesh or geometry: ")
+        text_section_1_1 = ttk.Label(title_section_1_1, text="\nPlease select the desired mesh or geometry:\n")
         text_section_1_1.grid(row=0, column=0, columnspan=10, sticky=NSEW)
 
         import_mesh = ttk.Button(title_section_1_1, text="Import mesh", command=self.importMesh)
@@ -43,99 +44,124 @@ class MainWindow():
         show_resulting_mesh.grid(row=2, column=3, sticky=NSEW)
 
         # SECTION 1.2 INPUT VALUES
-        title_section_1_2 = ttk.LabelFrame(tab1, text="1.2 Input parameters")
-        title_section_1_2.grid(row=1, column=0, columnspan=10)
+        title_section_1_2 = ttk.LabelFrame(tab1, text="1.2 Input parameters", labelanchor=N, height=195, width=385)
+        title_section_1_2.grid(row=1, column=0)
+        title_section_1_2.grid_propagate(False)
 
-        text_section_1_2 = ttk.Label(title_section_1_2, text="Please specify the required input values: ")
+        text_section_1_2 = ttk.Label(title_section_1_2, text="\nPlease specify the required input values:\n")
         text_section_1_2.grid(row=0, column=0, columnspan=10, sticky=NSEW)
 
         ttk.Label(title_section_1_2, text="cfl", borderwidth=2, relief="groove").grid(row=1, column=0, sticky=NSEW)
-        ttk.Entry(title_section_1_2, width=18).grid(row=1, column=1)
+        ttk.Entry(title_section_1_2, width=10).grid(row=1, column=1)
 
         ttk.Label(title_section_1_2, text="gamma", borderwidth=2, relief="groove").grid(row=2, column=0, sticky=NSEW)
-        ttk.Entry(title_section_1_2, width=18).grid(row=2, column=1)
+        ttk.Entry(title_section_1_2, width=10).grid(row=2, column=1)
 
         ttk.Label(title_section_1_2, text="mach", borderwidth=2, relief="groove").grid(row=3, column=0, sticky=NSEW)
-        ttk.Entry(title_section_1_2, width=18).grid(row=3, column=1)
+        ttk.Entry(title_section_1_2, width=10).grid(row=3, column=1)
 
         ttk.Label(title_section_1_2, text="cmac", borderwidth=2, relief="groove").grid(row=1, column=2, sticky=NSEW)
-        ttk.Entry(title_section_1_2, width=18).grid(row=1, column=3)
+        ttk.Entry(title_section_1_2, width=10).grid(row=1, column=3)
 
-        ttk.Label(title_section_1_2, text="Angle of\nattack (deg)", borderwidth=2, relief="groove").grid(row=2, column=2, sticky=NSEW)
-        ttk.Entry(title_section_1_2, width=18).grid(row=2, column=3)
+        ttk.Label(title_section_1_2, text="Angle of attack (deg)", borderwidth=2, relief="groove").grid(row=2, column=2, sticky=NSEW)
+        ttk.Entry(title_section_1_2, width=10).grid(row=2, column=3)
 
-        ttk.Label(title_section_1_2, text="Number of\nstages (RK)", borderwidth=2, relief="groove").grid(row=3, column=2, sticky=NSEW)
-        ttk.Entry(title_section_1_2, width=18).grid(row=3, column=3)
+        ttk.Label(title_section_1_2, text="Number of stages (RK)", borderwidth=2, relief="groove").grid(row=3, column=2, sticky=NSEW)
+        ttk.Entry(title_section_1_2, width=10).grid(row=3, column=3)
 
         # SECTION 2. SOLVER
         # SECTION 2.1 CONVERGENCE CRITERIA
-        title_section_2_1 = ttk.LabelFrame(tab2, text="2.1 Convergence criteria")
+        title_section_2_1 = ttk.LabelFrame(tab2, text="2.1 Convergence criteria", labelanchor=N, height=130, width=385)
         title_section_2_1.grid(row=0, column=0, columnspan=10)
+        title_section_2_1.grid_propagate(False)
 
-        text_section_2_1 = ttk.Label(title_section_2_1, text="Please specify the required convergence criteria: ")
+        text_section_2_1 = ttk.Label(title_section_2_1, text="\nPlease specify the required convergence criteria:\n")
         text_section_2_1.grid(row=0, column=0, columnspan=10, sticky=NSEW)
 
-        ttk.Label(title_section_2_1, text="Max number\nof itterations", borderwidth=2, relief="groove").grid(row=1, column=1, sticky=NSEW)
+        ttk.Label(title_section_2_1, text="Max number of itterations", borderwidth=2, relief="groove").grid(row=1, column=1, sticky=NSEW)
         ttk.Entry(title_section_2_1, width=18).grid(row=1, column=2)
 
-        ttk.Label(title_section_2_1, text="Convergence\ncriterion", borderwidth=2, relief="groove").grid(row=2, column=1, sticky=NSEW)
+        ttk.Label(title_section_2_1, text="Convergence criterion", borderwidth=2, relief="groove").grid(row=2, column=1, sticky=NSEW)
         ttk.Entry(title_section_2_1, width=18).grid(row=2, column=2)
 
         # SECTION 2.2 SCHEME SELECTION
-        title_section_2_2 = ttk.LabelFrame(tab2, text="2.2 Scheme Selection")
-        title_section_2_2.grid(row=1, column=0, columnspan=10)
+        title_section_2_2 = ttk.LabelFrame(tab2, text="2.2 Scheme Selection", labelanchor=N, height=130, width=385)
+        title_section_2_2.grid(row=1, column=0)
+        title_section_2_2.grid_propagate(False)
 
-        text_section_2_2 = ttk.Label(title_section_2_2, text="Please select the required flux scheme: ")
-        text_section_2_2.grid(row=0, column=0, columnspan=10, sticky=NSEW)
+        text_section_2_2 = ttk.Label(title_section_2_2, text="\nPlease select the required flux scheme:\n")
+        text_section_2_2.grid(row=0, column=0, columnspan=3, sticky=NSEW)
 
-        flux_scheme = ttk.Button(title_section_2_2, text="Select\nflux scheme", command=self.selectFluxScheme)
-        flux_scheme.grid(row=1, column=1)
+        flux_scheme = ttk.Button(title_section_2_2, text="Select flux scheme", command=self.selectFluxScheme)
+        flux_scheme.grid(row=1, column=2, sticky=N)
 
         # SECTION 2.3 SOLVER OPTIONS
-        title_section_2_3 = ttk.LabelFrame(tab2, text="2.3 Solver options")
+        title_section_2_3 = ttk.LabelFrame(tab2, text="2.3 Solver options", labelanchor=N, height=130, width=385)
         title_section_2_3.grid(row=2, column=0, columnspan=10)
+        title_section_2_3.grid_propagate(False)
 
-        text_section_2_3 = ttk.Label(title_section_2_3, text="Please select a code option: ")
-        text_section_2_3.grid(row=0, column=0, columnspan=10, sticky=NSEW)
+        text_section_2_3 = ttk.Label(title_section_2_3, text="\nPlease select a code option:\n")
+        text_section_2_3.grid(row=0, column=0, columnspan=5, sticky=NSEW)
 
         # solver_option = 
 
         # SECTION 3 OUTPUT
-        text_section_3 = ttk.Label(tab3, text="Please specify what type of graphe(s) you would like to display:")
-        text_section_3.grid(row=0, column=0, columnspan=3, sticky=NSEW)
+        text_section_3 = ttk.Label(tab3, text="\nPlease specify what type of graphe(s) you would like\nto display:\n")
+        text_section_3.grid(row=0, column=0, columnspan=2, sticky=NSEW)
 
-        cl_alpha = Checkbutton(tab3, text="Cl vs alpha", relief="groove", justify=LEFT)
-        cl_alpha.grid(row=1, column=0, sticky=NSEW)
+        cl_alpha = Checkbutton(tab3, text="Cl vs alpha", relief="groove", width=20)
+        cl_alpha.grid(row=1, column=0)
+        cl_alpha.grid_propagate(False)
 
-        cd_alpha = Checkbutton(tab3, text="Cd vs alpha", relief="groove")
-        cd_alpha.grid(row=2, column=0, sticky=NSEW)
+        cd_alpha = Checkbutton(tab3, text="Cd vs alpha", relief="groove", width=20)
+        cd_alpha.grid(row=2, column=0)
+        cd_alpha.grid_propagate(False)
 
-        cm_alpha = Checkbutton(tab3, text="Cm vs alpha", relief="groove")
-        cm_alpha.grid(row=3, column=0, sticky=NSEW)
+        cm_alpha = Checkbutton(tab3, text="Cm vs alpha", relief="groove", width=20)
+        cm_alpha.grid(row=3, column=0)
+        cm_alpha.grid_propagate(False)
 
-        cl_convergence = Checkbutton(tab3, text="Cl convergence", relief="groove")
-        cl_convergence.grid(row=4, column=0, sticky=NSEW)
+        cl_convergence = Checkbutton(tab3, text="Cl convergence", relief="groove", width=20)
+        cl_convergence.grid(row=4, column=0)
+        cl_convergence.grid_propagate(False)
 
-        cd_convergence = Checkbutton(tab3, text="Cd convergence", relief="groove")
-        cd_convergence.grid(row=5, column=0, sticky=NSEW)
+        cd_convergence = Checkbutton(tab3, text="Cd convergence", relief="groove", width=20)
+        cd_convergence.grid(row=5, column=0)
+        cd_convergence.grid_propagate(False)
 
-        cm_convergence = Checkbutton(tab3, text="Cm convergence", relief="groove")
-        cm_convergence.grid(row=6, column=0, sticky=NSEW)
+        cm_convergence = Checkbutton(tab3, text="Cm convergence", relief="groove", width=20)
+        cm_convergence.grid(row=6, column=0)
+        cm_convergence.grid_propagate(False)
 
-        residual_convergence = Checkbutton(tab3, text="Residual convergence", relief="groove")
-        residual_convergence.grid(row=7, column=0, sticky=NSEW)
+        residual_convergence = Checkbutton(tab3, text="Residual convergence", relief="groove", width=20)
+        residual_convergence.grid(row=7, column=0)
+        residual_convergence.grid_propagate(False)
 
-        cp_xc = Checkbutton(tab3, text="Cp vs Xc", relief="groove")
-        cp_xc.grid(row=1, column=1, columnspan=2, sticky=NSEW)
+        cp_xc = Checkbutton(tab3, text="Cp vs Xc", relief="groove", width=20)
+        cp_xc.grid(row=1, column=1, columnspan=2)
+        cp_xc.grid_propagate(False)
 
-        mach_contour = Checkbutton(tab3, text="Mach contour", relief="groove")
-        mach_contour.grid(row=2, column=1, columnspan=2, sticky=NSEW)
+        mach_contour = Checkbutton(tab3, text="Mach contour", relief="groove", width=20)
+        mach_contour.grid(row=2, column=1, columnspan=2)
+        mach_contour.grid_propagate(False)
 
-        cp_contour = Checkbutton(tab3, text="Cp contour", relief="groove")
-        cp_contour.grid(row=3, column=1, columnspan=2, sticky=NSEW)
+        cp_contour = Checkbutton(tab3, text="Cp contour", relief="groove", width=20)
+        cp_contour.grid(row=3, column=1, columnspan=2)
+        cp_contour.grid_propagate(False)
 
-        slice_cp = Checkbutton(tab3, text="Slice Cp", relief="groove")
-        slice_cp.grid(row=4, column=1, columnspan=2, sticky=NSEW)
+        slice_cp = Checkbutton(tab3, text="Slice Cp", relief="groove", width=20)
+        slice_cp.grid(row=4, column=1, columnspan=2)
+        slice_cp.grid_propagate(False)
+
+        ttk.Label(tab3, text="Axis of cut", relief="groove").grid(row=5, column=1, sticky=NSEW)
+        ttk.Label(tab3, text="X coord", relief="groove").grid(row=6, column=1, sticky=NSEW)
+        ttk.Label(tab3, text="Y coord", relief="groove").grid(row=7, column=1, sticky=NSEW)
+        ttk.Label(tab3, text="Z coord", relief="groove").grid(row=8, column=1, sticky=NSEW)
+
+        ttk.Entry(tab3, width=8).grid(row=5, column=2)
+        ttk.Entry(tab3, width=8).grid(row=6, column=2)
+        ttk.Entry(tab3, width=8).grid(row=7, column=2)
+        ttk.Entry(tab3, width=8).grid(row=8, column=2)
 
 
     # SECTION 1 METHODS
