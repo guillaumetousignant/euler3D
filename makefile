@@ -77,16 +77,16 @@ SourceFiles := $(filter-out $(ExecutableSourceFile),$(subst ./,,$(subst .//,,$(s
 ActiveSourceFiles = $(filter-out $(DeactivatedFiles),$(SourceFiles))
 
 # Debug object files (names of the object files that are produced by make debug)
-DebugObjectFiles := $(addprefix .debug/,$(subst .cpp,.o,$(ActiveSourceFiles))) 
+DebugObjectFiles := $(addprefix .debug/,$(subst .cpp,.o,$(ActiveSourceFiles)))
 
 # Release object files (names of the object files that are produced by make release)
-ReleaseObjectFiles := $(addprefix .release/,$(subst .cpp,.o,$(ActiveSourceFiles))) 
+ReleaseObjectFiles := $(addprefix .release/,$(subst .cpp,.o,$(ActiveSourceFiles)))
 
 # Debug object files (names of the object files that are produced by make debug)
-MPIDebugObjectFiles := $(addprefix .mpidebug/,$(subst .cpp,.o,$(ActiveSourceFiles))) 
+MPIDebugObjectFiles := $(addprefix .mpidebug/,$(subst .cpp,.o,$(ActiveSourceFiles)))
 
 # Release object files (names of the object files that are produced by make release)
-MPIReleaseObjectFiles := $(addprefix .mpirelease/,$(subst .cpp,.o,$(ActiveSourceFiles))) 
+MPIReleaseObjectFiles := $(addprefix .mpirelease/,$(subst .cpp,.o,$(ActiveSourceFiles)))
 
 # Concatenate all object files
 AnyObjectFiles := $(notdir $(shell find ./ -regex .*.o))
@@ -136,13 +136,13 @@ mpidebug : .mpidebug  begun $(MPIDebugObjectFiles) $(ExecutableMPIDebugObjectFil
 	@printf 'Done'
 	@printf '\n'
 
-mpirelease : .mpirelease begun $(MPIReleaseObjectFiles) $(ExecutableMPIReleaseObjectFile)	
+mpirelease : .mpirelease begun $(MPIReleaseObjectFiles) $(ExecutableMPIReleaseObjectFile)
 	@printf '   Linking MpiRelease...'
 	@$(MPICXX) $(CXXFLAGS) $(RELEASEFLAGS) $(MPIReleaseObjectFiles) $(ExecutableMPIReleaseObjectFile) -o $(addprefix bin/,$(Executable)) $(METISLIBS)
 	@printf 'Done'
 	@printf '\n'
 
-reset : clean 
+reset : clean
 	@$(shell reset)
 
 verify : mpirelease $(MPIReleaseObjectFiles)
@@ -152,19 +152,19 @@ verify : mpirelease $(MPIReleaseObjectFiles)
 # Pattern Rules
 
 .debug/%.o : %.cpp
-	@$(CXX) -c $(CXXFLAGS) $(DEBUGFLAGS)  -I$(subst $(space), -I,$(AllDirs)) -I$(METIS_INCLUDE_PATH) $< -o $@ 
+	@$(CXX) -c $(CXXFLAGS) $(DEBUGFLAGS)  -I$(subst $(space), -I,$(AllDirs)) -I$(METIS_INCLUDE_PATH) $< -o $@
 	@echo '   Pattern Rule | Compiling | '$(CXXFLAGS) $(DEBUGFLAGS) ' | ' $<' ... Done'
 
 .release/%.o : %.cpp
-	@$(CXX) -c $(CXXFLAGS) $(RELEASEFLAGS)  -I$(subst $(space), -I,$(AllDirs)) -I$(METIS_INCLUDE_PATH) $< -o $@ 
+	@$(CXX) -c $(CXXFLAGS) $(RELEASEFLAGS)  -I$(subst $(space), -I,$(AllDirs)) -I$(METIS_INCLUDE_PATH) $< -o $@
 	@echo '   Pattern Rule | Compiling | '$(CXXFLAGS) $(RELEASEFLAGS) ' | ' $<' ... Done '
 
 .mpidebug/%.o : %.cpp
-	@$(MPICXX) -c $(CXXFLAGS) $(DEBUGFLAGS)  -I$(subst $(space), -I,$(AllDirs)) -I$(METIS_INCLUDE_PATH) $< -o $@ 
+	@$(MPICXX) -c $(CXXFLAGS) $(DEBUGFLAGS)  -I$(subst $(space), -I,$(AllDirs)) -I$(METIS_INCLUDE_PATH) $< -o $@
 	@echo '   Pattern Rule | Compiling | '$(CXXFLAGS) $(DEBUGFLAGS) ' | ' $<' ... Done'
 
 .mpirelease/%.o : %.cpp
-	@$(MPICXX) -c $(CXXFLAGS) $(RELEASEFLAGS)  -I$(subst $(space), -I,$(AllDirs)) -I$(METIS_INCLUDE_PATH) $< -o $@ 
+	@$(MPICXX) -c $(CXXFLAGS) $(RELEASEFLAGS)  -I$(subst $(space), -I,$(AllDirs)) -I$(METIS_INCLUDE_PATH) $< -o $@
 	@echo '   Pattern Rule | Compiling | '$(CXXFLAGS) $(RELEASEFLAGS) ' | ' $<' ... Done '
 
 #---------------------------------------------------------------------------------------+
@@ -178,7 +178,7 @@ begun :
 clean : cleandebug cleanrelease cleanmpidebug cleanmpirelease
 	@-rm -rf $(AnyObjectFiles)
 	@-rm -f bin/$(current_dir)
-	
+
 cleandebug :
 	@-rm -rf .debug .debugtimestamp
 	@-rm -f $(addprefix .debug/,$(Executable))
