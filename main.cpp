@@ -24,16 +24,16 @@ int main(int argc, char** argv)
     int coord00[3] = {7, 8, 9};
     int coord01[3] = {2, 3, 4};
     ConnexionCellIds_dummy* boundary0 = new ConnexionCellIds_dummy(coord00, 3, coord01, 1, 0);
-    int coord00[3] = {7, 8, 9};
-    int coord01[3] = {0, 1, 2};
-    ConnexionCellIds_dummy* boundary1 = new ConnexionCellIds_dummy(coord00, 3, coord01, 0, 1);
+    int coord10[3] = {7, 8, 9};
+    int coord11[3] = {0, 1, 2};
+    ConnexionCellIds_dummy* boundary1 = new ConnexionCellIds_dummy(coord10, 3, coord11, 0, 1);
 
-    int coord00[2] = {5, 6};
-    int coord01[2] = {3, 4};
-    ConnexionCellIds_dummy* boundary2 = new ConnexionCellIds_dummy(coord00, 2, coord01, 2, 1);
-    int coord00[2] = {7, 8};
-    int coord01[2] = {0, 1};
-    ConnexionCellIds_dummy* boundary3 = new ConnexionCellIds_dummy(coord00, 2, coord01, 1, 2);
+    int coord20[2] = {5, 6};
+    int coord21[2] = {3, 4};
+    ConnexionCellIds_dummy* boundary2 = new ConnexionCellIds_dummy(coord20, 2, coord21, 2, 1);
+    int coord30[2] = {7, 8};
+    int coord31[2] = {0, 1};
+    ConnexionCellIds_dummy* boundary3 = new ConnexionCellIds_dummy(coord30, 2, coord31, 1, 2);
 
     communicator->addCellIdInConnexion(boundary0);
     communicator->addCellIdInConnexion(boundary1);
