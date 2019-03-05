@@ -70,7 +70,7 @@ class MainWindow():
         ttk.Entry(title_section_1_2, width=10).grid(row=3, column=3, padx=2, pady=2)
 
         # SECTION 1 GENERAL BUTTONS
-        
+
 
         # SECTION 2. SOLVER
         # SECTION 2.1 CONVERGENCE CRITERIA
@@ -106,13 +106,13 @@ class MainWindow():
         text_section_2_3 = ttk.Label(title_section_2_3, text="\nPlease select a code option:\n")
         text_section_2_3.grid(row=0, column=0, columnspan=3, sticky=NSEW, padx=2)
 
-        solver_option_1 = Radiobutton(title_section_2_3, text="Build the code", value=1, relief="groove", width=23, anchor=W)
+        solver_option_1 = Radiobutton(title_section_2_3, text="Build the code", value=1, relief="groove", borderwidth=2, width=23, anchor=W)
         solver_option_1.grid(row=1, column=1, columnspan=2, padx=2, pady=2)
 
-        solver_option_2 = Radiobutton(title_section_2_3, text="Execute the code", value=2, relief="groove", width=23, anchor=W)
+        solver_option_2 = Radiobutton(title_section_2_3, text="Execute the code", value=2, relief="groove", borderwidth=2, width=23, anchor=W)
         solver_option_2.grid(row=2, column=1, columnspan=2, padx=2, pady=2)
 
-        solver_option_3 = Radiobutton(title_section_2_3, text="Build and execute the code", value=3, relief="groove", width=23, anchor=W)
+        solver_option_3 = Radiobutton(title_section_2_3, text="Build and execute the code", value=3, relief="groove", borderwidth=2, width=23, anchor=W)
         solver_option_3.grid(row=3, column=1, columnspan=2, padx=2, pady=2)
 
         # SECTION 3 OUTPUT
@@ -223,18 +223,44 @@ class MainWindow():
     def selectFluxScheme(self):
         self.flux_scheme_window = Tk()
         self.flux_scheme_window.title("Scheme selection")
-        ttk.Label(self.flux_scheme_window, text="Please select the desired scheme: ").grid(row=0, column=0)
+        ttk.Label(self.flux_scheme_window, text="\nPlease configure the following parameters:\n", anchor=W).grid(row=0, column=0, columnspan=4, padx=2, sticky=W)
         
+        ttk.Label(self.flux_scheme_window, text="Flux scheme:", anchor=CENTER).grid(row=1, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
         self.flux_scheme = ttk.Combobox(self.flux_scheme_window, width=15)
         self.flux_scheme['values'] = ("Roe", "Ausm")
-        self.flux_scheme.grid(row=1, column=1)
+        self.flux_scheme.grid(row=2, column=1, columnspan=2, pady=2)
 
+        ttk.Label(self.flux_scheme_window, text="Scheme order:", anchor=CENTER).grid(row=3, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
         self.scheme_order = ttk.Combobox(self.flux_scheme_window, width=15)
         self.scheme_order['values'] = ("1", "2")
-        self.scheme_order.grid(row=2, column=1)
+        self.scheme_order.grid(row=4, column=1, columnspan=2, pady=2)
         
-        ttk.Button(self.flux_scheme_window, text="Ok", command=self.flux_scheme_window.destroy).grid(row=3, column=1)
-        ttk.Button(self.flux_scheme_window, text="Cancel", command=self.flux_scheme_window.destroy).grid(row=3, column=2)
+        ttk.Label(self.flux_scheme_window, text="Gradient:", anchor=CENTER).grid(row=5, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
+        self.gradient = ttk.Combobox(self.flux_scheme_window, width=15)
+        self.gradient['values'] = ("Green Gauss", "Least Squares")
+        self.gradient.grid(row=6, column=1, columnspan=2, pady=2)
+
+        ttk.Label(self.flux_scheme_window, text="Limiter:", anchor=CENTER).grid(row=7, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
+        self.gradient = ttk.Combobox(self.flux_scheme_window, width=15)
+        self.gradient['values'] = ("Barth Jespersen", "Venkatakrishnan")
+        self.gradient.grid(row=8, column=1, columnspan=2, pady=2)
+
+        ttk.Label(self.flux_scheme_window, text="Omega", width=10, anchor=CENTER, borderwidth=2, relief="groove").grid(row=9, column=0, padx=2, pady=7)
+        ttk.Entry(self.flux_scheme_window, width=10).grid(row=9, column=1, padx=2, pady=10)
+
+        ttk.Label(self.flux_scheme_window, text="k", width=10, anchor=CENTER, borderwidth=2, relief="groove").grid(row=9, column=2, padx=2, pady=7)
+        ttk.Entry(self.flux_scheme_window, width=10).grid(row=9, column=3, padx=2, pady=10)
+
+        ttk.Label(self.flux_scheme_window, text="Residual smoothing?", anchor=CENTER).grid(row=10, column=1, columnspan=2, padx=2)
+        
+        self.smoothing_yes = Radiobutton(self.flux_scheme_window, text="Yes", value=1, relief="groove", borderwidth=2, width=8, anchor=W)
+        self.smoothing_yes.grid(row=11, column=1, columnspan=2, padx=2, pady=2)
+
+        self.smoothing_no = Radiobutton(self.flux_scheme_window, text="No", value=2, relief="groove", borderwidth=2, width=8, anchor=W)
+        self.smoothing_no.grid(row=12, column=1, columnspan=2, padx=2, pady=2)
+
+        ttk.Button(self.flux_scheme_window, text="Ok", command=self.flux_scheme_window.destroy).grid(row=13, column=1, pady=10)
+        ttk.Button(self.flux_scheme_window, text="Cancel", command=self.flux_scheme_window.destroy).grid(row=13, column=2, pady=10)
 
 
 root = Tk()
