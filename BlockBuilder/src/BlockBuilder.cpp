@@ -148,14 +148,6 @@ Cell* BlockBuilder::buildCell(int cell_id, std::string cell_type, std::string ce
 
 	}
 
-
-
-
-	
-
-
-
-
 	delete cell_2_nodes_connectivity; 
 	return new_cell;
 
@@ -169,7 +161,11 @@ Node* BlockBuilder::buildNode(int node_id,double node_coordinates[3], NodeCreato
 
 	new_node ->node_id_= node_id;
 
-	new_node->node_coordinates_ = node_coordinates;
+
+	new_node->node_coordinates_[0] = node_coordinates[0];
+	new_node->node_coordinates_[1] = node_coordinates[1];
+	new_node->node_coordinates_[2] = node_coordinates[2];
+
 
 	return new_node;
 

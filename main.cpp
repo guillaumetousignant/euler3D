@@ -21,4 +21,15 @@ int main()
     ConcreteBlockBuilder concrete_block_builder = ConcreteBlockBuilder(block_file);
 
     concrete_block_builder.readMyBlock(new_block);
+
+    
+    // Cell* test_cell;
+    // test_cell = new_block ->block_cells_[12];
+    // cout<<test_cell->cell_2_nodes_connectivity_[1]<<endl;
+    // Node* test_node;
+    // test_node = new_block ->block_nodes_[12];
+    // cout<<test_node->node_coordinates_[1]<<endl;
+    // cout<<test_node->node_coordinates_[2]<<endl;
+
+
 }

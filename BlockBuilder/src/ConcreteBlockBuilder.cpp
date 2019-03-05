@@ -75,7 +75,6 @@ void ConcreteBlockBuilder::readMyBlock(Block* block)
 			node_coordinates_temp[1]=y_temp;
 			node_coordinates_temp[2]=z_temp;
 
-
 			new_node = buildNode(node_id,node_coordinates_temp, node_creator);
 			block ->addNode(new_node);
 
