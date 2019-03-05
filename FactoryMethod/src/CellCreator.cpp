@@ -13,5 +13,11 @@ CellCreator::~CellCreator()
 
 }
 
+Cell* CellCreator::createCell()
+{
+	Cell* new_cell = new Cell;
+	return new_cell;
+}
+
 
 #endif

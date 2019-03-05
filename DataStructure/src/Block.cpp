@@ -19,8 +19,8 @@ Block::~Block()
 void Block::addCell(Cell* new_cell)
 {
 	int id = new_cell-> cell_id_;
-
 	block_cells_[id] = new_cell;
+
 }
 
 void Block::addNode(Node* new_node)

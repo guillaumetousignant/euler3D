@@ -19,11 +19,7 @@ class Initializer
 
 		// Solver* initializeSolver(Interface* interface);
 		CompleteMesh* InitializeMesh(Interface* interface);
-		
-
-
 		Initializer();
-		
 		~Initializer();
 
 
