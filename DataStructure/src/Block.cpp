@@ -42,7 +42,7 @@ void Block::addCellIdInBoundary(int cell_id,BoundaryCellIds* some_boundary)
 	int* cell_count = some_boundary->cell_count_;
 
 	cell_ids_in_boundary[*cell_count] = cell_id;
-	cell_count += 1;
+	some_boundary->cell_count_ += 1;
 }
 
 void Block::addFaceIdInWall(int face_id, int face_count)

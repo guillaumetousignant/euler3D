@@ -40,14 +40,14 @@ void ConcreteBlockBuilder::readMyBlock(Block* block)
 	int n_nodes;
 	double node_coordinates_temp[3];
 
-	int n_real_cells_tmp;
+	int n_real_cells_temp;
 	int n_real_cells;
 	int n_boundaries_temp;
 	int n_boundaries;
 	int n_ghost_cells_temp;
 	int n_ghost_cells;
 	int cell_id = 0;
-	std::string cell_type_tmp;
+	std::string cell_type_temp;
 	std::string ghost_cell_type_temp;
 	std::string cell_2_nodes_connectivity_temp;
 	std::string ghost_cell_2_nodes_connectivity_temp;
@@ -106,15 +106,16 @@ void ConcreteBlockBuilder::readMyBlock(Block* block)
 
 		getline(myfile, line);
 		getline(myfile, line);
-		sscanf (line.c_str(), "%s %d",str_temp,&n_boundaries_temp);
+		sscanf (line.c_str(), "%s %i",str_temp,&n_boundaries_temp);
 		n_boundaries=n_boundaries_temp;
+		block ->block_boundary_cell_ids_ = new WallCellIds [n_boundaries];
 
 		for(int boundary_id = 0; boundary_id < n_boundaries; boundary_id++)
 		{
 			getline(myfile, line);
 			sscanf (line.c_str(), "%s %s",str_temp,&boundary_type_temp);
 			getline(myfile, line);
-			sscanf (line.c_str(), "%s %s",str_temp,&n_ghost_cells_temp);
+			sscanf (line.c_str(), "%s %i",str_temp,&n_ghost_cells_temp);
 
 
 
@@ -128,20 +129,20 @@ void ConcreteBlockBuilder::readMyBlock(Block* block)
 
 				if (boundary_type_temp == "WALL") // wall
 				{
-					block ->addCellIdInBoundary(cell_id,block->block_boundary_cell_ids_[boundary_id]);
+					block ->addCellIdInBoundary(cell_id,&(block->block_boundary_cell_ids_[boundary_id]));
 					//block ->addFaceIdInWall(int face_id, int face_count)
 
 				}
 				else if (boundary_type_temp == "FARFIELD") //farfield
 				{
-					block ->addCellIdInBoundary(cell_id,block->block_boundary_cell_ids_[boundary_id]);
+					block ->addCellIdInBoundary(cell_id,&(block->block_boundary_cell_ids_[boundary_id]));
 
 				}
 				else if (boundary_type_temp == "CONNECTION") //Connection inter-bloc
 				{
 
 				}
-				block ->addCellIdInBoundary(cell_id,BoundaryCellIds* some_boundary);
+				//block ->addCellIdInBoundary(cell_id,BoundaryCellIds* some_boundary);
 
 			}
 

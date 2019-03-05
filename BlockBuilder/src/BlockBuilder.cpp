@@ -167,7 +167,7 @@ void BlockBuilder::face_2_Nodes_Connectivity_Builder(Face* new_face,int* face_2_
 {
 	for(int i=0;i<n_nodes_per_face;i++)
 	{
-		new_face->nodes_2_face_connectivity_[i] = face_2_nodes_connectivity[i]; 
+		new_face->face_2_nodes_connectivity_[i] = face_2_nodes_connectivity[i]; 
 	}
 }
 
