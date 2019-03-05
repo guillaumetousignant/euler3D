@@ -137,20 +137,75 @@ if (myfile.is_open()) {
         elementType_[i] = NumberOfNodes(elementType_[i]);
         getline(myfile, line);  
     }
-
-    cout << elementType_[0] << endl;
-    cout << elementType_[2] << endl;
-    NumberOfNodes(elementType_[0]); 
     
+    cout << line << endl;
+    getline(myfile,line);
+    cout << line << endl;
 
-    // Lecture du fichier
-    for (int i = 0; i < nNodes; i++) {
-        myfile >> x_[0][i] >> y_[0][i] >> z_[0][i];
-        // cout << (**x_[0][i]) << (**y_[0][i]) << endl;
+    for (int nodeI = 0; nodeI < 8; nodeI++)
+    {
+        myfile >> x_[0][nodeI] >> y_[0][nodeI];
+        cout << "x = " << x_[0][nodeI] << endl;
+        cout << "y = " << y_[0][nodeI] << endl;
+        
     }
 
+   /*   for (int nodeI = 0; nodeI < 8; nodeI++)
+    {
+        maybe juste une loop pour feeder des 0 a z_[0][nodeI]
+        myfile >> x_[0][nodeI] >> y_[0][nodeI] >> z_[0][nodeI]];
+        cout << "x = " << x_[0][nodeI] << endl;
+        cout << "y = " << y_[0][nodeI] << endl;
+        
+    }
+ */
+    myfile.seekg(0, myfile.beg); 
+    getline(myfile,line);
+    getline(myfile,line);
+
+
+    int temp;
+
+    for (int elementI = 0; elementI < nElements; elementI ++) {
+
+    myfile >> temp;
+
+        for (int numberOfNodes = 0; numberOfNodes < elementType_[elementI]; numberOfNodes ++) {
+        
+        int node;
+        myfile >> node; 
+        connectivity_[0][elementI].push_back(node);
+        
+        }
+    }
+  
     
     
+
+ /*    for (int i = 0; i < nElements; i++) {
+         
+        for (int j = 0; j < elementType_[i]; j++) {
+
+            getline(myfile, line);
+            int element[elementType_[i]];
+            connectivity_[0][j].push_back(element[j]);
+
+            sscanf(line.c_str(), "%d %s", &elementType_[i], str_temp); 
+            
+            int n1, n2, n3;
+            myfile >> n1 >> n2 >> n3;
+            connectivity_[0][elementI].push_back(n1);
+            connectivity_[0][elementI].push_back(n2);
+            connectivity_[0][elementI].push_back(n3); 
+
+        }
+       
+    }  */
+
+    // Lecture du fichier
+  
+    
+    // cout << (**x_[0][i]) << (**y_[0][i]) << endl;
 
     myfile.close(); 
     }
