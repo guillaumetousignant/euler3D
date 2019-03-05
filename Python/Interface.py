@@ -176,29 +176,38 @@ class MainWindow():
     def importMesh(self):
         self.mesh_window = Tk()
         self.mesh_window.title("Mesh importation")
-        ttk.Label(self.mesh_window, text="Import the desired mesh: ").grid(row=0, column=0)
-        ttk.Button(self.mesh_window, text="Select a file", command=self.meshFileDialog).grid(row=1, column=2)
+        ttk.Label(self.mesh_window, text="\nImport the desired mesh:\n").grid(row=0, column=0, columnspan=4, sticky=W)
+        
+        ttk.Button(self.mesh_window, text="Select a file", command=self.meshFileDialog).grid(row=1, column=0)
+        
+        self.label = ttk.Label(self.mesh_window, text="", relief="solid", width=40)
+        self.label.grid(row=1, column=1, columnspan=3)
+        
         ttk.Button(self.mesh_window, text="Ok", command=self.mesh_window.destroy).grid(row=2, column=1)
         ttk.Button(self.mesh_window, text="Cancel", command=self.mesh_window.destroy).grid(row=2, column=2)
 
     def meshFileDialog(self):
         self.filename = filedialog.askopenfilename(initialdir="/", title="Select a file", filetypes=(("jpeg", "*.jpg"),("All Files", "*.*")))
-        self.label = ttk.Label(self.mesh_window, text="")
-        self.label.grid(row=1, column=1)
         self.label.configure(text=self.filename)
 
     def importGeometry(self):
         self.geometry_window = Tk()
         self.geometry_window.title("Geometry importation")
-        ttk.Label(self.geometry_window, text="Import the desired geometry: ").grid(row=0, column=0)
-        ttk.Button(self.geometry_window, text="Select a file", command=self.geometryFileDialog).grid(row=1, column=2)
-        ttk.Button(self.geometry_window, text="Ok", command=self.geometry_window.destroy).grid(row=2, column=1)
-        ttk.Button(self.geometry_window, text="Cancel", command=self.geometry_window.destroy).grid(row=2, column=2)
+        ttk.Label(self.geometry_window, text="\nImport the desired geometry:\n").grid(row=0, column=0, columnspan=4, sticky=W)
+        
+        ttk.Button(self.geometry_window, text="Select a file", command=self.geometryFileDialog).grid(row=1, column=0)
+        
+        self.label = ttk.Label(self.geometry_window, text="", relief="solid", width=40)
+        self.label.grid(row=1, column=1, columnspan=3)
+
+        ttk.Label(self.geometry_window, text="Number of blocks", borderwidth=2, relief="groove").grid(row=2, column=1)
+        ttk.Entry(self.geometry_window, width=10).grid(row=2, column=2)
+
+        ttk.Button(self.geometry_window, text="Ok", command=self.geometry_window.destroy).grid(row=3, column=1)
+        ttk.Button(self.geometry_window, text="Cancel", command=self.geometry_window.destroy).grid(row=3, column=2)
 
     def geometryFileDialog(self):
         self.filename = filedialog.askopenfilename(initialdir="/", title="Select a file", filetypes=(("jpeg", "*.jpg"),("All Files", "*.*")))
-        self.label = ttk.Label(self.geometry_window, text="")
-        self.label.grid(row=1, column=1)
         self.label.configure(text=self.filename)
 
     def generateGeometry(self):
