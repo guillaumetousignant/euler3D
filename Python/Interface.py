@@ -24,7 +24,7 @@ class MainWindow():
 
         # SECTION 1. INPUT
         # SECTION 1.1 GEOMETRY AND MESH
-        title_section_1_1 = LabelFrame(tab1, text="1.1 Geometry and mesh", labelanchor=N, height=195, width=385)
+        title_section_1_1 = LabelFrame(tab1, text="1.1 Geometry and mesh", labelanchor=N, height=215, width=396)
         title_section_1_1.grid(row=0, column=0)
         title_section_1_1.grid_propagate(False)
 
@@ -44,7 +44,7 @@ class MainWindow():
         show_resulting_mesh.grid(row=2, column=3, sticky=NSEW, padx=2, pady=2)
 
         # SECTION 1.2 INPUT VALUES
-        title_section_1_2 = ttk.LabelFrame(tab1, text="1.2 Input parameters", labelanchor=N, height=195, width=385)
+        title_section_1_2 = ttk.LabelFrame(tab1, text="1.2 Input parameters", labelanchor=N, height=215, width=396)
         title_section_1_2.grid(row=1, column=0)
         title_section_1_2.grid_propagate(False)
 
@@ -74,7 +74,7 @@ class MainWindow():
 
         # SECTION 2. SOLVER
         # SECTION 2.1 CONVERGENCE CRITERIA
-        title_section_2_1 = ttk.LabelFrame(tab2, text="2.1 Convergence criteria", labelanchor=N, height=130, width=385)
+        title_section_2_1 = ttk.LabelFrame(tab2, text="2.1 Convergence criteria", labelanchor=N, height=130, width=396)
         title_section_2_1.grid(row=0, column=0, columnspan=10)
         title_section_2_1.grid_propagate(False)
 
@@ -88,7 +88,7 @@ class MainWindow():
         ttk.Entry(title_section_2_1, width=18).grid(row=2, column=2, padx=2, pady=2)
 
         # SECTION 2.2 SCHEME SELECTION
-        title_section_2_2 = ttk.LabelFrame(tab2, text="2.2 Scheme Selection", labelanchor=N, height=130, width=385)
+        title_section_2_2 = ttk.LabelFrame(tab2, text="2.2 Scheme Selection", labelanchor=N, height=110, width=396)
         title_section_2_2.grid(row=1, column=0)
         title_section_2_2.grid_propagate(False)
 
@@ -99,7 +99,7 @@ class MainWindow():
         flux_scheme.grid(row=1, column=2, sticky=N)
 
         # SECTION 2.3 SOLVER OPTIONS
-        title_section_2_3 = ttk.LabelFrame(tab2, text="2.3 Solver options", labelanchor=N, height=130, width=385)
+        title_section_2_3 = ttk.LabelFrame(tab2, text="2.3 Solver options", labelanchor=N, height=190, width=396)
         title_section_2_3.grid(row=2, column=0)
         title_section_2_3.grid_propagate(False)
 
@@ -238,21 +238,21 @@ class MainWindow():
         self.scheme_order['values'] = ("1", "2")
         self.scheme_order.grid(row=4, column=1, columnspan=2, pady=2)
         
-        ttk.Label(self.flux_scheme_window, text="Gradient:", anchor=CENTER).grid(row=5, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
-        self.gradient = ttk.Combobox(self.flux_scheme_window, width=15)
+        ttk.Label(self.flux_scheme_window, text="Gradient:", anchor=CENTER, state="disabled").grid(row=5, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
+        self.gradient = ttk.Combobox(self.flux_scheme_window, width=15, state="disabled")
         self.gradient['values'] = ("Green Gauss", "Least Squares")
         self.gradient.grid(row=6, column=1, columnspan=2, pady=2)
 
-        ttk.Label(self.flux_scheme_window, text="Limiter:", anchor=CENTER).grid(row=7, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
-        self.gradient = ttk.Combobox(self.flux_scheme_window, width=15)
-        self.gradient['values'] = ("Barth Jespersen", "Venkatakrishnan")
-        self.gradient.grid(row=8, column=1, columnspan=2, pady=2)
+        ttk.Label(self.flux_scheme_window, text="Limiter:", anchor=CENTER, state="disabled").grid(row=7, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
+        self.limiter = ttk.Combobox(self.flux_scheme_window, width=15, state="disabled")
+        self.limiter['values'] = ("Barth Jespersen", "Venkatakrishnan")
+        self.limiter.grid(row=8, column=1, columnspan=2, pady=2)
 
-        ttk.Label(self.flux_scheme_window, text="Omega", width=10, anchor=CENTER, borderwidth=2, relief="groove").grid(row=9, column=0, padx=2, pady=7)
-        ttk.Entry(self.flux_scheme_window, width=10).grid(row=9, column=1, padx=2, pady=10)
+        ttk.Label(self.flux_scheme_window, text="Omega", width=10, anchor=CENTER, borderwidth=2, relief="groove", state="disabled").grid(row=9, column=0, padx=2, pady=7)
+        ttk.Entry(self.flux_scheme_window, width=10, state="disabled").grid(row=9, column=1, padx=2, pady=10)
 
-        ttk.Label(self.flux_scheme_window, text="k", width=10, anchor=CENTER, borderwidth=2, relief="groove").grid(row=9, column=2, padx=2, pady=7)
-        ttk.Entry(self.flux_scheme_window, width=10).grid(row=9, column=3, padx=2, pady=10)
+        ttk.Label(self.flux_scheme_window, text="k", width=10, anchor=CENTER, borderwidth=2, relief="groove", state="disabled").grid(row=9, column=2, padx=2, pady=7)
+        ttk.Entry(self.flux_scheme_window, width=10, state="disabled").grid(row=9, column=3, padx=2, pady=10)
 
         ttk.Label(self.flux_scheme_window, text="Residual smoothing?", anchor=CENTER).grid(row=10, column=1, columnspan=2, padx=2)
         
