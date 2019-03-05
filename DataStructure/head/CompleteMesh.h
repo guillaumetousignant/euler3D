@@ -11,7 +11,7 @@ public:
 	int* my_blocks_;
 	Block* all_blocks_;
 	
-	CompleteMesh(int n_blocks, int n_block_in_process, int my_blocks[], Block all_blocks[]);
+	CompleteMesh(int n_blocks, int n_block_in_process, int* my_blocks, Block* all_blocks);
 	~CompleteMesh();
 	
 };
