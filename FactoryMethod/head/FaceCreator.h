@@ -11,7 +11,7 @@ public:
 	FaceCreator();
 	~FaceCreator();
 
-	virtual Face* createFace() = 0;
+	Face* createFace();
 	
 };
 
