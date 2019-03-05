@@ -106,14 +106,17 @@ class MainWindow():
         text_section_2_3 = ttk.Label(title_section_2_3, text="\nPlease select a code option:\n")
         text_section_2_3.grid(row=0, column=0, columnspan=3, sticky=NSEW, padx=2)
 
+        ttk.Label(title_section_2_3, text="Number of process", relief="groove", borderwidth=2, anchor=CENTER, width=7).grid(row=1, column=1, sticky=NSEW, padx=2, pady=2)
+        ttk.Entry(title_section_2_3, width=7).grid(row=1, column=2, sticky=NSEW, padx=2, pady=2)
+
         solver_option_1 = Radiobutton(title_section_2_3, text="Build the code", value=1, relief="groove", borderwidth=2, width=23, anchor=W)
-        solver_option_1.grid(row=1, column=1, columnspan=2, padx=2, pady=2)
+        solver_option_1.grid(row=2, column=1, columnspan=2, padx=2, pady=2)
 
         solver_option_2 = Radiobutton(title_section_2_3, text="Execute the code", value=2, relief="groove", borderwidth=2, width=23, anchor=W)
-        solver_option_2.grid(row=2, column=1, columnspan=2, padx=2, pady=2)
+        solver_option_2.grid(row=3, column=1, columnspan=2, padx=2, pady=2)
 
         solver_option_3 = Radiobutton(title_section_2_3, text="Build and execute the code", value=3, relief="groove", borderwidth=2, width=23, anchor=W)
-        solver_option_3.grid(row=3, column=1, columnspan=2, padx=2, pady=2)
+        solver_option_3.grid(row=4, column=1, columnspan=2, padx=2, pady=2)
 
         # SECTION 3 OUTPUT
         text_section_3 = ttk.Label(tab3, text="\nPlease specify what type of graphe(s) you would like to\ndisplay:\n")
