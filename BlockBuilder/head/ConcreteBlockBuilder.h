@@ -25,6 +25,7 @@ public:
 	ConcreteBlockBuilder(std::string block_file);
 	~ConcreteBlockBuilder();
 
+	void preReadMyBlock(Block* block);
 	void readMyBlock(Block* block);
 	void createMyFaces(Block* block);
 
