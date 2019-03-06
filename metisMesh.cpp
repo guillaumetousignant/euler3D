@@ -131,8 +131,6 @@ if (myfile.is_open()) {
     // Prepass 2 :
     myfile.seekg(0, myfile.beg); 
     getline(myfile,line);
-    cout << "ligne debut : " << line << endl;
-
     getline(myfile,line);
     getline(myfile,line);
     
@@ -145,10 +143,6 @@ if (myfile.is_open()) {
         getline(myfile, line); 
     
     }
-
-    cout << elementType_[0] << " " << elementType_[nElements-1] << " " << elementType_[2345] << endl;
-    cout << line << endl;
-    cout << line << endl;
 
     if (nDimensions == 3) {
         for (int nodeI = 0; nodeI < nNodes; nodeI++) { 
@@ -166,9 +160,7 @@ if (myfile.is_open()) {
      
     myfile.seekg(0, myfile.beg); 
     getline(myfile,line);
-    cout << "ligne 1 : " << line << endl;
     getline(myfile,line);
-    cout << "ligne 2 : " << line << endl;
 
     int temp;
 
@@ -347,28 +339,24 @@ MetisMesh* MetisMesh::Partition(int nPart)
     // Converting conncectivity into METIS data structure See Metis reference doc
     eptr[0] = 0;
     int count = 0;
+    int count1 = 0;
 
     for (int i = 1; i < nElements_[0]+1; i++)
     {
-        count += connectivity_[0][i].size();
+
+        count += elementType_[i];
         eptr[i] = count;
+      
     }
-    cout << "count is : " << count << endl;
-    cout << "fin conversion" << endl;
-    cout << "element 0 : " << nElements_[0] << endl;
     
-    int count1 = 0;
     for (int i = 0; i < nElements_[0]; i++)
     {
         for (int j = 0; j < elementType_[i]; j++) {
         
-        eind[count1] = connectivity_[0][i][j]; 
-        count1++;
+            eind[count1] = connectivity_[0][i][j]; 
+            count1++;
         }
     }
-
-    cout << *nTotalNode_ << endl;
-    cout << eind[*nTotalNode_ -1] << endl;
     
     cout << "fin connectivite" << endl;
 
