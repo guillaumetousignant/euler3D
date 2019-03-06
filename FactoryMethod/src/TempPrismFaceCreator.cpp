@@ -18,7 +18,7 @@
 TempPrismFaceCreator::TempPrismFaceCreator()
 {
 
-	int face_2_nodes_connectivity_local_temp[6][4] = {{0,3,2,1},{1,2,6,5},{2,3,7,6},{3,0,4,7},{0,1,5,4},{4,5,6,7}};
+	int face_2_nodes_connectivity_local_temp[6][4] = {{3,2,1,0},{1,2,6,5},{2,3,7,6},{3,0,4,7},{0,1,5,4},{4,5,6,7}};
 	int n_nodes_per_face_temp[6] = {4,4,4,4,4,4};
 
 	face_2_nodes_connectivity_local_ = new int*[6]; 

@@ -17,7 +17,7 @@ int main()
     MPI_Finalize();
 
     Block* new_block = new Block(0);
-    string block_file ="../MeshTest2x1.su2";
+    string block_file ="../UnstructuredMesh5x5.su2";
     ConcreteBlockBuilder concrete_block_builder = ConcreteBlockBuilder(block_file);
     concrete_block_builder.preReadMyBlock(new_block);
     concrete_block_builder.readMyBlock(new_block);

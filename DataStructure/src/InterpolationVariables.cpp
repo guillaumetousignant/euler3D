@@ -5,11 +5,21 @@
 
 InterpolationVariables::InterpolationVariables(int n_all_cells_in_block)
 {
-	grad_ro_ = new double[n_all_cells_in_block][3];
-	grad_uu_ = new double[n_all_cells_in_block][3];
-	grad_vv_ = new double[n_all_cells_in_block][3];
-	grad_ww_ = new double[n_all_cells_in_block][3];
-	grad_pp_ = new double[n_all_cells_in_block][3];
+	grad_ro_ = new double*[n_all_cells_in_block];
+	grad_uu_ = new double*[n_all_cells_in_block];
+	grad_vv_ = new double*[n_all_cells_in_block];
+	grad_ww_ = new double*[n_all_cells_in_block];
+	grad_pp_ = new double*[n_all_cells_in_block];
+
+	for(int i=0;i<n_all_cells_in_block;i++)
+	{
+		grad_ro_[i]=new double[3];
+		grad_uu_[i]=new double[3];
+		grad_vv_[i]=new double[3];
+		grad_ww_[i]=new double[3];
+		grad_pp_[i]=new double[3];
+
+	}
 
 	limiter_ro_ = new double[n_all_cells_in_block];
 	limiter_uu_ = new double[n_all_cells_in_block];

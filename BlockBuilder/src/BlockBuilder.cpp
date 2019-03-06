@@ -29,7 +29,6 @@ Cell* BlockBuilder::buildCell(int cell_id, std::string cell_type, std::string ce
 	char str_temp[2];
 	int key=0;
 	Cell* new_cell;
-	Face* new_face;
 	int* cell_2_nodes_connectivity=NULL;
 	int n_nodes_per_cell=0;
 	int n_faces_per_cell=0;
