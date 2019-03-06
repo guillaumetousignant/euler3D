@@ -9,7 +9,9 @@ private:
     int* nElements_;
     int* nNodes_;
     int* elementType_;
+    int* nTotalNode_;
     int nBlock_;
+    
 
     double** x_;
     double** y_;
