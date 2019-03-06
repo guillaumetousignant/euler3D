@@ -1,6 +1,7 @@
 #ifndef BLOCKBUILDER_HEAD_CONCRETEBLOCKBUILDER_H
 #define BLOCKBUILDER_HEAD_CONCRETEBLOCKBUILDER_H
 
+#include <string>
 #include "BlockBuilder.h"
 #include "NodeCreator.h"
 #include "FaceCreator.h"
