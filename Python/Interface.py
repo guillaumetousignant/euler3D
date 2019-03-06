@@ -75,17 +75,21 @@ class MainWindow():
         # SECTION 2. SOLVER
         # SECTION 2.1 CONVERGENCE CRITERIA
         title_section_2_1 = ttk.LabelFrame(tab2, text="2.1 Convergence criteria", labelanchor=N, height=130, width=396)
-        title_section_2_1.grid(row=0, column=0, columnspan=10)
+        title_section_2_1.grid(row=0, column=0)
         title_section_2_1.grid_propagate(False)
 
         text_section_2_1 = ttk.Label(title_section_2_1, text="\nPlease specify the required convergence criteria:\n")
-        text_section_2_1.grid(row=0, column=0, columnspan=10, sticky=NSEW, padx=2)
+        text_section_2_1.grid(row=0, column=0, columnspan=6, sticky=NSEW, padx=2)
 
-        ttk.Label(title_section_2_1, text="Max number of itterations", borderwidth=2, relief="groove", anchor=CENTER).grid(row=1, column=1, sticky=NSEW, padx=2, pady=2)
-        ttk.Entry(title_section_2_1, width=18).grid(row=1, column=2, padx=2, pady=2)
+        ttk.Label(title_section_2_1, text="", width=5).grid(row=1, column=0)
 
-        ttk.Label(title_section_2_1, text="Convergence criterion", borderwidth=2, relief="groove", anchor=CENTER).grid(row=2, column=1, sticky=NSEW, padx=2, pady=2)
-        ttk.Entry(title_section_2_1, width=18).grid(row=2, column=2, padx=2, pady=2)
+        ttk.Label(title_section_2_1, text="Max number of itterations", borderwidth=2, relief="groove", anchor=CENTER, width=22).grid(row=1, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
+        ttk.Entry(title_section_2_1, width=15).grid(row=1, column=3, columnspan=2, padx=2, pady=2)
+
+        ttk.Label(title_section_2_1, text="", width=4).grid(row=1, column=5)
+
+        ttk.Label(title_section_2_1, text="Convergence criterion", borderwidth=2, relief="groove", anchor=CENTER, width=22).grid(row=2, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
+        ttk.Entry(title_section_2_1, width=15).grid(row=2, column=3, columnspan=2, padx=2, pady=2)
 
         # SECTION 2.2 SCHEME SELECTION
         title_section_2_2 = ttk.LabelFrame(tab2, text="2.2 Scheme Selection", labelanchor=N, height=110, width=396)
@@ -95,8 +99,12 @@ class MainWindow():
         text_section_2_2 = ttk.Label(title_section_2_2, text="\nPlease select the required flux scheme:\n")
         text_section_2_2.grid(row=0, column=0, columnspan=3, sticky=NSEW, padx=2)
 
-        flux_scheme = ttk.Button(title_section_2_2, text="Select flux scheme", command=self.selectFluxScheme)
-        flux_scheme.grid(row=1, column=2, sticky=N)
+        ttk.Label(title_section_2_2, text="", width=12).grid(row=1, column=0)
+
+        flux_scheme = ttk.Button(title_section_2_2, text="Select flux scheme", command=self.selectFluxScheme, width=23)
+        flux_scheme.grid(row=1, column=1, sticky=NSEW)
+
+        ttk.Label(title_section_2_2, text="", width=4).grid(row=1, column=2)
 
         # SECTION 2.3 SOLVER OPTIONS
         title_section_2_3 = ttk.LabelFrame(tab2, text="2.3 Solver options", labelanchor=N, height=190, width=396)
@@ -104,19 +112,23 @@ class MainWindow():
         title_section_2_3.grid_propagate(False)
 
         text_section_2_3 = ttk.Label(title_section_2_3, text="\nPlease select a code option:\n")
-        text_section_2_3.grid(row=0, column=0, columnspan=3, sticky=NSEW, padx=2)
+        text_section_2_3.grid(row=0, column=0, columnspan=6, sticky=NSEW, padx=2)
+        
+        ttk.Label(title_section_2_3, text="", width=5).grid(row=1, column=0)
+        
+        ttk.Label(title_section_2_3, text="Number of process", relief="groove", borderwidth=2, anchor=CENTER, width=22).grid(row=1, column=1, columnspan=2, sticky=NSEW, padx=2, pady=2)
+        ttk.Entry(title_section_2_3, width=15).grid(row=1, column=3, columnspan=2, padx=2, pady=2)
 
-        ttk.Label(title_section_2_3, text="Number of process", relief="groove", borderwidth=2, anchor=CENTER, width=7).grid(row=1, column=1, sticky=NSEW, padx=2, pady=2)
-        ttk.Entry(title_section_2_3, width=7).grid(row=1, column=2, sticky=NSEW, padx=2, pady=2)
-
+        ttk.Label(title_section_2_3, text="", width=4).grid(row=1, column=5)
+        
         solver_option_1 = Radiobutton(title_section_2_3, text="Build the code", value=1, relief="groove", borderwidth=2, width=23, anchor=W)
-        solver_option_1.grid(row=2, column=1, columnspan=2, padx=2, pady=2)
+        solver_option_1.grid(row=2, column=1, columnspan=4, padx=2, pady=2)
 
         solver_option_2 = Radiobutton(title_section_2_3, text="Execute the code", value=2, relief="groove", borderwidth=2, width=23, anchor=W)
-        solver_option_2.grid(row=3, column=1, columnspan=2, padx=2, pady=2)
+        solver_option_2.grid(row=3, column=1, columnspan=4, padx=2, pady=2)
 
         solver_option_3 = Radiobutton(title_section_2_3, text="Build and execute the code", value=3, relief="groove", borderwidth=2, width=23, anchor=W)
-        solver_option_3.grid(row=4, column=1, columnspan=2, padx=2, pady=2)
+        solver_option_3.grid(row=4, column=1, columnspan=4, padx=2, pady=2)
 
         # SECTION 3 OUTPUT
         text_section_3 = ttk.Label(tab3, text="\nPlease specify what type of graphe(s) you would like to\ndisplay:\n")
