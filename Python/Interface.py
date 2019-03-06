@@ -192,7 +192,7 @@ class MainWindow():
         Checkbutton(title_section_3, text="Cp contour", variable=cp_contour, relief="groove", width=20, anchor=W, borderwidth=2).grid(row=3, column=1, columnspan=2, padx=2, pady=2)
 
         self.slice_cp = IntVar()
-        Checkbutton(title_section_3, text="Slice Cp", variable=self.slice_cp, command=self.activeEntries, relief="groove", width=20, anchor=W, borderwidth=2).grid(row=4, column=1, columnspan=2, padx=2, pady=2)
+        Checkbutton(title_section_3, text="Slice Cp", variable=self.slice_cp, command=self.activateAxisOfCut, relief="groove", width=20, anchor=W, borderwidth=2).grid(row=4, column=1, columnspan=2, padx=2, pady=2)
 
         self.axis_cut_label = ttk.Label(title_section_3, text="Axis of cut", relief="groove", state="disabled", borderwidth=2, width=10, anchor=CENTER)
         self.axis_cut_label.grid(row=5, column=1)
@@ -278,7 +278,7 @@ class MainWindow():
         self.scheme_order_label.grid(row=3, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
         self.scheme_order_entry = ttk.Combobox(self.flux_scheme_window, values=("1", "2"), width=15)
         self.scheme_order_entry.grid(row=4, column=1, columnspan=2, pady=2)
-        # self.scheme_order_entry.bind(self.activeOptions)
+        self.scheme_order_entry.bind('<<ComboboxSelected>>', self.activateGradientAndLimiter)
         
         self.gradient_label = ttk.Label(self.flux_scheme_window, text="Gradient:", anchor=CENTER, state="disabled")
         self.gradient_label.grid(row=5, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
@@ -289,11 +289,12 @@ class MainWindow():
         self.limiter_label.grid(row=7, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
         self.limiter_entry = ttk.Combobox(self.flux_scheme_window, values=("Barth Jespersen", "Venkatakrishnan"), width=15, state="disabled")
         self.limiter_entry.grid(row=8, column=1, columnspan=2, pady=2)
+        self.limiter_entry.bind('<<ComboboxSelected>>', self.activateOmegaOrK)
 
         self.omega_label = ttk.Label(self.flux_scheme_window, text="Omega", width=10, anchor=CENTER, borderwidth=2, relief="groove", state="disabled")
         self.omega_label.grid(row=9, column=0, padx=2, pady=7)
-        self.omega_label_entry = ttk.Entry(self.flux_scheme_window, width=10, state="disabled")
-        self.omega_label_entry.grid(row=9, column=1, padx=2, pady=10)
+        self.omega_entry = ttk.Entry(self.flux_scheme_window, width=10, state="disabled")
+        self.omega_entry.grid(row=9, column=1, padx=2, pady=10)
 
         self.k_label = ttk.Label(self.flux_scheme_window, text="k", width=10, anchor=CENTER, borderwidth=2, relief="groove", state="disabled")
         self.k_label.grid(row=9, column=2, padx=2, pady=7)
@@ -311,7 +312,7 @@ class MainWindow():
         ttk.Button(self.flux_scheme_window, text="Ok", command=self.flux_scheme_window.destroy).grid(row=13, column=1, pady=10)
         ttk.Button(self.flux_scheme_window, text="Cancel", command=self.flux_scheme_window.destroy).grid(row=13, column=2, pady=10)
     
-    def activeOptions(self, event):
+    def activateGradientAndLimiter(self, event):
         scheme_order_result = self.scheme_order_entry.get()
 
         if scheme_order_result == "2":
@@ -321,9 +322,23 @@ class MainWindow():
             self.limiter_label.configure(state="Normal")
             self.limiter_entry.configure(state="Normal")
 
+    def activateOmegaOrK(self, event):
+        limiter_result = self.limiter_entry.get()
+        
+        if limiter_result == "Barth Jespersen":
+            self.omega_label.configure(state="Normal")
+            self.omega_entry.configure(state="Normal")
+            self.k_label.configure(state="Disabled")
+            self.k_entry.configure(state="Disabled")
+
+        elif limiter_result == "Venkatakrishnan":
+            self.k_label.configure(state="Normal")
+            self.k_entry.configure(state="Normal")
+            self.omega_label.configure(state="Disabled")
+            self.omega_entry.configure(state="Disabled")
 
     # SECTION 3 METHODS
-    def activeEntries(self):
+    def activateAxisOfCut(self):
         slice_cp_result = self.slice_cp.get()
 
         if slice_cp_result == 1:
@@ -337,14 +352,14 @@ class MainWindow():
             self.z_coord_entry.configure(state="Normal")
 
         elif slice_cp_result == 0:
-            self.axis_cut_label.configure(state="Normal")
-            self.axis_cut_entry.configure(state="Normal")
-            self.x_coord_label.configure(state="Normal")
-            self.x_coord_entry.configure(state="Normal")
-            self.y_coord_label.configure(state="Normal")
-            self.y_coord_entry.configure(state="Normal")
-            self.z_coord_label.configure(state="Normal")
-            self.z_coord_entry.configure(state="Normal")
+            self.axis_cut_label.configure(state="Disabled")
+            self.axis_cut_entry.configure(state="Disabled")
+            self.x_coord_label.configure(state="Disabled")
+            self.x_coord_entry.configure(state="Disabled")
+            self.y_coord_label.configure(state="Disabled")
+            self.y_coord_entry.configure(state="Disabled")
+            self.z_coord_label.configure(state="Disabled")
+            self.z_coord_entry.configure(state="Disabled")
 
     # # GENERAL BUTTONS
     # def clearAll(self):
