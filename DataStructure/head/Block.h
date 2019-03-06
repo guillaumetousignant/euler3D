@@ -4,13 +4,14 @@
 #include "Cell.h"
 #include "Face.h"
 #include "Node.h"
-#include "BoundaryCellIds.h"
+class BoundaryCellIds;
 #include "TimeVariables.h"
 #include "PrimitiveVariables.h"
 #include "InterpolationVariables.h"
-#include "ConnexionCellIds.h"
-#include "FarfieldCellIds.h"
-#include "WallCellIds.h"
+#include "BoundaryCellIds.h"
+//#include "ConnexionCellIds.h"
+//#include "FarfieldCellIds.h"
+//#include "WallCellIds.h"
 
 class Block
 {
@@ -22,6 +23,7 @@ public:
 	int n_all_cells_in_block_;
 	int n_nodes_in_block_;
 	int n_faces_in_block_;
+	int n_real_boundaries_in_block_;
 	Cell** block_cells_;
 	Node** block_nodes_;
 	Face** block_faces_;
@@ -30,7 +32,7 @@ public:
 	PrimitiveVariables* block_primitive_variables_;
 	InterpolationVariables* block_interpolation_variables_;
 
-	BoundaryCellIds* block_boundary_cell_ids_;
+	BoundaryCellIds** block_boundary_cell_ids_;
 	int* block_wall_face_ids_;
 
 	void addCell(Cell* new_cell);

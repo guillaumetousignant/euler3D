@@ -21,6 +21,7 @@ int main()
     ConcreteBlockBuilder concrete_block_builder = ConcreteBlockBuilder(block_file);
     concrete_block_builder.preReadMyBlock(new_block);
     concrete_block_builder.readMyBlock(new_block);
+
     concrete_block_builder.createMyFaces(new_block);
 
     cout<<"Cellules\n";
@@ -58,6 +59,15 @@ int main()
 	    cout<<"n_nodes_per_face_\t"<<test_face->n_nodes_per_face_<<endl;
 	    cout<<"block_id_\t"<<test_face->block_id_<<endl;
     }
+
+        
+
+    for (int i=0; i<new_block->n_real_boundaries_in_block_;i++) 
+    {
+        std::cout << "test de boundary: "<< ((new_block->block_boundary_cell_ids_[i])->n_cell_in_boundary_) <<std::endl;
+        (new_block->block_boundary_cell_ids_[i])->updateBoundary();
+    }
+    std::cout << "test de boundary deep: "<< new_block->n_real_boundaries_in_block_ <<std::endl;
 
 
 }

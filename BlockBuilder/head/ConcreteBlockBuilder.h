@@ -1,6 +1,7 @@
 #ifndef BLOCKBUILDER_HEAD_CONCRETEBLOCKBUILDER_H
 #define BLOCKBUILDER_HEAD_CONCRETEBLOCKBUILDER_H
 
+#include <string>
 #include "BlockBuilder.h"
 #include "NodeCreator.h"
 #include "FaceCreator.h"
@@ -14,6 +15,9 @@
 #include "PyramidCellCreator.h"
 #include "PrismCellCreator.h"
 #include "TetrahedralCellCreator.h"
+#include "BoundaryCellIds.h"
+#include "FarfieldCellIds.h"
+#include "WallCellIds.h"
 
 
 

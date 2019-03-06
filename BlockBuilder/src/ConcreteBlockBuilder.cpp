@@ -5,7 +5,6 @@
 
 
 using namespace std;
-
 #include "ConcreteBlockBuilder.h"
 
 
@@ -108,7 +107,7 @@ void ConcreteBlockBuilder::preReadMyBlock(Block* block)
 			getline(myfile, line);
 			sscanf (line.c_str(), "%s %d",str_temp,&n_elements_in_boundary);
 
-			if(boundary_type=="farfield")
+			if(boundary_type=="FARFIELD")
 			{
 				faces_sum_in_boundaries+=n_elements_in_boundary;
 			}
@@ -130,6 +129,16 @@ void ConcreteBlockBuilder::preReadMyBlock(Block* block)
 		n_faces = faces_sum_for_each_cell-(faces_sum_for_each_cell - faces_sum_in_boundaries)/2.;
 		block->block_faces_ = new Face*[n_faces];
 		block->n_faces_in_block_ = n_faces;
+		
+		PrimitiveVariables* prim= new PrimitiveVariables(block->n_all_cells_in_block_);
+		block->block_primitive_variables_=prim;
+		
+		TimeVariables* tim= new TimeVariables(block->n_all_cells_in_block_);
+		block->block_time_variables_=tim;
+		
+		InterpolationVariables* inpvar= new InterpolationVariables(block->n_all_cells_in_block_);
+		block->block_interpolation_variables_=inpvar;
+
 		std::cout<<n_faces<<std::endl;
 
 
@@ -166,12 +175,22 @@ void ConcreteBlockBuilder::readMyBlock(Block* block)
 
 	int n_real_cells_temp;
 	int n_real_cells;
+	int n_boundaries_temp;
+	int n_boundaries;
+	int n_ghost_cells_temp;
+	//int n_ghost_cells;
+	int cell_id = 0;
 	std::string cell_type_temp;
+	std::string ghost_cell_type_temp;
 	std::string cell_2_nodes_connectivity_temp;
+	std::string ghost_cell_2_nodes_connectivity_temp;
+	char boundary_type_temp[50];
+
+	//WallCellIds *wall_boundary_temp;
+	//FarfieldCellIds *farfield_boundary_temp;
 	Node* new_node;
 	Cell* new_cell;
-	
-	
+
 	if (myfile.is_open())
 	{
 
@@ -212,8 +231,9 @@ void ConcreteBlockBuilder::readMyBlock(Block* block)
 
 		// block->block_cells_ = new Cell*[n_real_cells];
 
+		for( ; cell_id < n_real_cells; cell_id++)
+		//for(int cell_id = 0; cell_id < n_real_cells; cell_id++)
 
-		for(int cell_id = 0; cell_id < n_real_cells; cell_id++)
 		{
 			getline(myfile, line);
 			sscanf (line.c_str(), "%s",str_temp);
@@ -226,6 +246,95 @@ void ConcreteBlockBuilder::readMyBlock(Block* block)
 
 			new_cell -> block_id_ = block_id;
 			block ->addCell(new_cell);	
+		}
+	
+
+		getline(myfile, line);
+		getline(myfile, line);
+		sscanf (line.c_str(), "%s %i",str_temp,&n_boundaries_temp);
+		n_boundaries=n_boundaries_temp;
+		block->n_real_boundaries_in_block_=n_boundaries;
+		//std::cout<<"test bound: "<< n_boundaries<<std::endl;
+		block ->block_boundary_cell_ids_ = new BoundaryCellIds* [n_boundaries];
+
+
+		for(int boundary_id = 0; boundary_id < n_boundaries; boundary_id++)
+		{
+			getline(myfile, line);
+			sscanf (line.c_str(), "%s %s",str_temp,boundary_type_temp);
+			std::string boundary_type_temp_str(boundary_type_temp);
+			getline(myfile, line);
+			sscanf (line.c_str(), "%s %i",str_temp,&n_ghost_cells_temp);
+
+				if (boundary_type_temp_str=="WALL") // wall
+				{
+					//std::cout<<"on a un wall"<< std::endl;
+					block->block_boundary_cell_ids_[boundary_id]= new WallCellIds;
+
+					(block->block_boundary_cell_ids_[boundary_id])->n_cell_in_boundary_=n_ghost_cells_temp;
+					(block->block_boundary_cell_ids_[boundary_id])->cell_ids_in_boundary_=new int[n_ghost_cells_temp];
+					(block->block_boundary_cell_ids_[boundary_id])->cell_count_= new int;
+					*((block->block_boundary_cell_ids_[boundary_id])->cell_count_)=0;
+					(block->block_boundary_cell_ids_[boundary_id])->owner_block_=block;
+
+
+				}
+				else if (boundary_type_temp_str == "FARFIELD") //farfield
+				{
+					//std::cout<<"on a un farfield"<< std::endl;
+					block->block_boundary_cell_ids_[boundary_id]= new FarfieldCellIds;
+					
+					(block->block_boundary_cell_ids_[boundary_id])->n_cell_in_boundary_=n_ghost_cells_temp;
+					(block->block_boundary_cell_ids_[boundary_id])->cell_ids_in_boundary_=new int[n_ghost_cells_temp];
+					(block->block_boundary_cell_ids_[boundary_id])->cell_count_= new int;
+					*((block->block_boundary_cell_ids_[boundary_id])->cell_count_)=0;
+					(block->block_boundary_cell_ids_[boundary_id])->owner_block_=block;
+
+				}
+				else if (boundary_type_temp_str == "CONNECTION") //Connection inter-bloc
+				{
+
+				}
+
+
+			//std::cout<<"test type bound: "<< boundary_type_temp <<std::endl;
+			//std::cout<<"test nbcell in bound: "<< n_ghost_cells_temp <<std::endl;
+			//std::cout<<"test la ou on est: "<< cell_id <<std::endl;
+			int cond=n_ghost_cells_temp+cell_id;
+			//std::cout<<"limite boucle test: "<< cond <<std::endl;
+			for( ; cell_id < (cond); cell_id++)
+			{
+				getline(myfile, line);
+				sscanf (line.c_str(), "%s",str_temp);
+				ghost_cell_type_temp = str_temp;
+				ghost_cell_2_nodes_connectivity_temp =line;
+
+				new_cell = buildCell(cell_id, "ghost", ghost_cell_2_nodes_connectivity_temp, cell_creators, ghost_cell_type_temp);
+				new_cell -> block_id_ = block_id; //necessary?
+				block ->addCell(new_cell);
+				//std::cout<< "comparaison: "<< "WALL" << boundary_type_temp <<std::endl;
+
+				if (boundary_type_temp_str=="WALL") // wall
+				{
+					//std::cout<<"on a un wall"<< std::endl;
+					block ->addCellIdInBoundary(cell_id,block->block_boundary_cell_ids_[boundary_id]);
+					//block ->addFaceIdInWall(int face_id, int face_count)
+
+				}
+				else if (boundary_type_temp_str == "FARFIELD") //farfield
+				{
+					//std::cout<<"on a un farfield"<< std::endl;
+					block ->addCellIdInBoundary(cell_id,block->block_boundary_cell_ids_[boundary_id]);
+
+				}
+				else if (boundary_type_temp_str == "CONNECTION") //Connection inter-bloc
+				{
+
+				}
+				//block ->addCellIdInBoundary(cell_id,BoundaryCellIds* some_boundary);
+
+			}
+
 		}
 	}
 	myfile.close();

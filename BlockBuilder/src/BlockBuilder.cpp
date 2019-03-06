@@ -152,6 +152,7 @@ void BlockBuilder::setMetrics(Block* block)
 
 }
 
+
 // void BlockBuilder::face_2_Nodes_Connectivity_Builder(int n_faces_per_cell, int* face_2_nodes_connectivity_local, int* n_nodes_per_face, int* cell_2_nodes_connectivity_temp, FaceCreator* face_creator)
 // {
 // 	Face* new_face;
