@@ -44,33 +44,6 @@ Cell* BlockBuilder::buildCell(int cell_id, std::string cell_type, std::string ce
 		n_nodes_per_cell = 4;
 		n_faces_per_cell = 4;
 
-		// int (*face_2_nodes_connectivity_local)[3] = new int[4][3]
-
-		// for(int i=0;i<n_faces_per_cell;i++)
-		// {
-		// 	new_face = buildFace(face_count_,n_nodes_per_face[i],face_creator);
-		// 	for(int j=0;j<n_nodes_per_face[i];j++)
-		// 	{
-		// 		new_face -> face_2_nodes_connectivity_[j] = cell_2_nodes_connectivity_temp[face_2_nodes_connectivity_local[i][j]];
-		// 		face_count_+=1;
-		// 	} 
-		// }
-
-
-
-		// new_face = buildFace(face_count_,3,face_creator);
-		// face_2_nodes_connectivity_local={ cell_2_nodes_connectivity[0],cell_2_nodes_connectivity[2],cell_2_nodes_connectivity[1]};
-		// face_count_+=1;
-		// new_face = buildFace(face_count_,3,face_creator);
-		// new_face ->face_2_nodes_connectivity_={ cell_2_nodes_connectivity[0],cell_2_nodes_connectivity[1],cell_2_nodes_connectivity[3]};
-		// face_count_+=1;
-		// new_face = buildFace(face_count_,3,face_creator);
-		// new_face ->face_2_nodes_connectivity_={ cell_2_nodes_connectivity[1],cell_2_nodes_connectivity[2],cell_2_nodes_connectivity[3]};
-		// face_count_+=1;
-		// new_face = buildFace(face_count_,3,face_creator);
-		// new_face ->face_2_nodes_connectivity_={ cell_2_nodes_connectivity[0],cell_2_nodes_connectivity[3],cell_2_nodes_connectivity[2]};
-		// face_count_+=1;
-
 	}
 	else if (cell_type == "14") //pyramid
 	{
@@ -90,21 +63,6 @@ Cell* BlockBuilder::buildCell(int cell_id, std::string cell_type, std::string ce
 		sscanf (cell_2_nodes_connectivity_temp.c_str(), "%s %d %d %d %d %d %d %d %d",str_temp,&cell_2_nodes_connectivity[0],&cell_2_nodes_connectivity[1],&cell_2_nodes_connectivity[2],&cell_2_nodes_connectivity[3],&cell_2_nodes_connectivity[4],&cell_2_nodes_connectivity[5],&cell_2_nodes_connectivity[6],&cell_2_nodes_connectivity[7]);
 		n_nodes_per_cell = 8;
 		n_faces_per_cell = 6;
-
-
-
-		// new_face = buildFace(face_count_,4,face_creator);
-		// new_face ->face_2_nodes_connectivity_={ cell_2_nodes_connectivity[0],cell_2_nodes_connectivity[3],cell_2_nodes_connectivity[2],cell_2_nodes_connectivity[1]};
-		// face_count_+=1;
-		// new_face = buildFace(face_count_,4,face_creator);
-		// new_face ->face_2_nodes_connectivity_={ cell_2_nodes_connectivity[0],cell_2_nodes_connectivity[1],cell_2_nodes_connectivity[4],cell_2_nodes_connectivity[4]};
-		// face_count_+=1;
-		// new_face = buildFace(face_count_,4,face_creator);
-		// new_face ->face_2_nodes_connectivity_={ cell_2_nodes_connectivity[1],cell_2_nodes_connectivity[3],cell_2_nodes_connectivity[7],cell_2_nodes_connectivity[5]};
-		// face_count_+=1;
-		// new_face = buildFace(face_count_,3,face_creator);
-		// new_face ->face_2_nodes_connectivity_={ cell_2_nodes_connectivity[0],cell_2_nodes_connectivity[3],cell_2_nodes_connectivity[2]};
-		// face_count_+=1;
 
 	}
 	
@@ -133,6 +91,7 @@ Cell* BlockBuilder::buildCell(int cell_id, std::string cell_type, std::string ce
 
 	new_cell = creators[key].createCell();
 	new_cell ->cell_id_ = cell_id;
+	new_cell ->creator_key_ = key;
 	new_cell -> n_nodes_per_cell_ = n_nodes_per_cell;
 	new_cell -> n_faces_per_cell_ = n_faces_per_cell;
 

@@ -7,12 +7,12 @@
 class TempFaceCreator
 {
 public:
-	int* face_2_nodes_connectivity_local;
-	int* n_nodes_per_face;
+	int** face_2_nodes_connectivity_local_;
+	int* n_nodes_per_face_;
 
 	TempFaceCreator();
 	~TempFaceCreator();
-	virtual int* createFace(Cell* cell);
+	Face** createFace(Cell* cell);
 
 	
 };
