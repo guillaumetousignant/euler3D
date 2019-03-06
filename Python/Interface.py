@@ -25,11 +25,11 @@ class MainWindow():
         # SECTION 1. INPUT
         # SECTION 1.1 GEOMETRY AND MESH
         title_section_1_1 = LabelFrame(tab1, text="1.1 Geometry and mesh", labelanchor=N, height=215, width=396)
-        title_section_1_1.grid(row=0, column=0)
+        title_section_1_1.grid(row=0, column=0, columnspan=3)
         title_section_1_1.grid_propagate(False)
 
         text_section_1_1 = ttk.Label(title_section_1_1, text="\nPlease select the desired mesh or geometry:\n")
-        text_section_1_1.grid(row=0, column=0, columnspan=10, sticky=NSEW, padx=2)
+        text_section_1_1.grid(row=0, column=0, columnspan=6, sticky=NSEW, padx=2)
 
         import_mesh = ttk.Button(title_section_1_1, text="Import mesh", command=self.importMesh)
         import_mesh.grid(row=1, column=1, sticky=NSEW, padx=2, pady=2)
@@ -45,7 +45,7 @@ class MainWindow():
 
         # SECTION 1.2 INPUT VALUES
         title_section_1_2 = ttk.LabelFrame(tab1, text="1.2 Input parameters", labelanchor=N, height=215, width=396)
-        title_section_1_2.grid(row=1, column=0)
+        title_section_1_2.grid(row=1, column=0, columnspan=3)
         title_section_1_2.grid_propagate(False)
 
         text_section_1_2 = ttk.Label(title_section_1_2, text="\nPlease specify the required input values:\n")
@@ -71,6 +71,9 @@ class MainWindow():
 
         # SECTION 1 GENERAL BUTTONS
 
+        ttk.Button(tab1, text="Clear all").grid(row=2, column=0, padx=2, pady=2)
+        ttk.Button(tab1, text="Clear this page").grid(row=2, column=1, padx=2, pady=2)
+        ttk.Button(tab1, text="Solve").grid(row=2, column=2, padx=2, pady=2)
 
         # SECTION 2. SOLVER
         # SECTION 2.1 CONVERGENCE CRITERIA
@@ -276,6 +279,11 @@ class MainWindow():
 
         ttk.Button(self.flux_scheme_window, text="Ok", command=self.flux_scheme_window.destroy).grid(row=13, column=1, pady=10)
         ttk.Button(self.flux_scheme_window, text="Cancel", command=self.flux_scheme_window.destroy).grid(row=13, column=2, pady=10)
+
+    # # GENERAL BUTTONS
+    # def clearAll(self):
+    #     #commandes....
+
 
 
 root = Tk()
