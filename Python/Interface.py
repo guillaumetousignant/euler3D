@@ -70,7 +70,6 @@ class MainWindow():
         ttk.Entry(title_section_1_2, width=10).grid(row=3, column=3, padx=2, pady=2)
 
         # SECTION 1 GENERAL BUTTONS
-
         ttk.Button(tab1, text="Clear all").grid(row=2, column=0, padx=2, pady=2)
         ttk.Button(tab1, text="Clear this page").grid(row=2, column=1, padx=2, pady=2)
         ttk.Button(tab1, text="Solve").grid(row=2, column=2, padx=2, pady=2)
@@ -134,70 +133,78 @@ class MainWindow():
         solver_option_3.grid(row=4, column=1, columnspan=4, padx=2, pady=2)
 
         # SECTION 2 GENERAL BUTTONS
-
         ttk.Button(tab2, text="Clear all").grid(row=3, column=0, padx=2, pady=2)
         ttk.Button(tab2, text="Clear this page").grid(row=3, column=1, padx=2, pady=2)
         ttk.Button(tab2, text="Solve").grid(row=3, column=2, padx=2, pady=2)
 
         # SECTION 3 OUTPUT
-        text_section_3 = ttk.Label(tab3, text="\nPlease specify what type of graphe(s) you would like to\ndisplay:\n")
+        title_section_3 = ttk.LabelFrame(tab3, text="", labelanchor=N, height=430, width=396)
+        title_section_3.grid(row=0, column=0, columnspan=3)
+        title_section_3.grid_propagate(False)
+        
+        text_section_3 = ttk.Label(title_section_3, text="\nPlease specify what type of graphe(s) you would like to\ndisplay:\n")
         text_section_3.grid(row=0, column=0, columnspan=3, sticky=NSEW)
 
-        cl_alpha = Checkbutton(tab3, text="Cl vs alpha", relief="groove", width=20, anchor=W, borderwidth=2)
+        cl_alpha = Checkbutton(title_section_3, text="Cl vs alpha", relief="groove", width=20, anchor=W, borderwidth=2)
         cl_alpha.grid(row=1, column=0, padx=2, pady=2)
         cl_alpha.grid_propagate(False)
 
-        cd_alpha = Checkbutton(tab3, text="Cd vs alpha", relief="groove", width=20, anchor=W, borderwidth=2)
+        cd_alpha = Checkbutton(title_section_3, text="Cd vs alpha", relief="groove", width=20, anchor=W, borderwidth=2)
         cd_alpha.grid(row=2, column=0, padx=2, pady=2)
         cd_alpha.grid_propagate(False)
 
-        cm_alpha = Checkbutton(tab3, text="Cm vs alpha", relief="groove", width=20, anchor=W, borderwidth=2)
+        cm_alpha = Checkbutton(title_section_3, text="Cm vs alpha", relief="groove", width=20, anchor=W, borderwidth=2)
         cm_alpha.grid(row=3, column=0, padx=2, pady=2)
         cm_alpha.grid_propagate(False)
 
-        cl_convergence = Checkbutton(tab3, text="Cl convergence", relief="groove", width=20, anchor=W, borderwidth=2)
+        cl_convergence = Checkbutton(title_section_3, text="Cl convergence", relief="groove", width=20, anchor=W, borderwidth=2)
         cl_convergence.grid(row=4, column=0, padx=2, pady=2)
         cl_convergence.grid_propagate(False)
 
-        cd_convergence = Checkbutton(tab3, text="Cd convergence", relief="groove", width=20, anchor=W, borderwidth=2)
+        cd_convergence = Checkbutton(title_section_3, text="Cd convergence", relief="groove", width=20, anchor=W, borderwidth=2)
         cd_convergence.grid(row=5, column=0, padx=2, pady=2)
         cd_convergence.grid_propagate(False)
 
-        cm_convergence = Checkbutton(tab3, text="Cm convergence", relief="groove", width=20, anchor=W, borderwidth=2)
+        cm_convergence = Checkbutton(title_section_3, text="Cm convergence", relief="groove", width=20, anchor=W, borderwidth=2)
         cm_convergence.grid(row=6, column=0, padx=2, pady=2)
         cm_convergence.grid_propagate(False)
 
-        residual_convergence = Checkbutton(tab3, text="Residual convergence", relief="groove", width=20, anchor=W, borderwidth=2)
+        residual_convergence = Checkbutton(title_section_3, text="Residual convergence", relief="groove", width=20, anchor=W, borderwidth=2)
         residual_convergence.grid(row=7, column=0, padx=2, pady=2)
         residual_convergence.grid_propagate(False)
 
-        cp_xc = Checkbutton(tab3, text="Cp vs Xc", relief="groove", width=20, anchor=W, borderwidth=2)
+        cp_xc = Checkbutton(title_section_3, text="Cp vs Xc", relief="groove", width=20, anchor=W, borderwidth=2)
         cp_xc.grid(row=1, column=1, columnspan=2, padx=2, pady=2)
         cp_xc.grid_propagate(False)
 
-        mach_contour = Checkbutton(tab3, text="Mach contour", relief="groove", width=20, anchor=W, borderwidth=2)
+        mach_contour = Checkbutton(title_section_3, text="Mach contour", relief="groove", width=20, anchor=W, borderwidth=2)
         mach_contour.grid(row=2, column=1, columnspan=2, padx=2, pady=2)
         mach_contour.grid_propagate(False)
 
-        cp_contour = Checkbutton(tab3, text="Cp contour", relief="groove", width=20, anchor=W, borderwidth=2)
+        cp_contour = Checkbutton(title_section_3, text="Cp contour", relief="groove", width=20, anchor=W, borderwidth=2)
         cp_contour.grid(row=3, column=1, columnspan=2, padx=2, pady=2)
         cp_contour.grid_propagate(False)
 
-        slice_cp = Checkbutton(tab3, text="Slice Cp", relief="groove", width=20, anchor=W, borderwidth=2)
+        slice_cp = Checkbutton(title_section_3, text="Slice Cp", relief="groove", width=20, anchor=W, borderwidth=2)
         slice_cp.grid(row=4, column=1, columnspan=2, padx=2, pady=2)
         slice_cp.grid_propagate(False)
 
-        ttk.Label(tab3, text="Axis of cut", relief="groove", state="disabled", borderwidth=2, width=10, anchor=CENTER).grid(row=5, column=1)
-        ttk.Entry(tab3, width=11, state="disabled").grid(row=5, column=2, padx=2, pady=2)
+        ttk.Label(title_section_3, text="Axis of cut", relief="groove", state="disabled", borderwidth=2, width=10, anchor=CENTER).grid(row=5, column=1)
+        ttk.Entry(title_section_3, width=11, state="disabled").grid(row=5, column=2, padx=2, pady=2)
         
-        ttk.Label(tab3, text="X coord", relief="groove", state="disabled", borderwidth=2, width=10, anchor=CENTER).grid(row=6, column=1)
-        ttk.Entry(tab3, width=11, state="disabled").grid(row=6, column=2, padx=2, pady=2)
+        ttk.Label(title_section_3, text="X coord", relief="groove", state="disabled", borderwidth=2, width=10, anchor=CENTER).grid(row=6, column=1)
+        ttk.Entry(title_section_3, width=11, state="disabled").grid(row=6, column=2, padx=2, pady=2)
         
-        ttk.Label(tab3, text="Y coord", relief="groove", state="disabled", borderwidth=2, width=10, anchor=CENTER).grid(row=7, column=1)
-        ttk.Entry(tab3, width=11, state="disabled").grid(row=7, column=2, padx=2, pady=2)
+        ttk.Label(title_section_3, text="Y coord", relief="groove", state="disabled", borderwidth=2, width=10, anchor=CENTER).grid(row=7, column=1)
+        ttk.Entry(title_section_3, width=11, state="disabled").grid(row=7, column=2, padx=2, pady=2)
         
-        ttk.Label(tab3, text="Z coord", relief="groove", state="disabled", borderwidth=2, width=10, anchor=CENTER).grid(row=8, column=1)
-        ttk.Entry(tab3, width=11, state="disabled").grid(row=8, column=2, padx=2, pady=2)
+        ttk.Label(title_section_3, text="Z coord", relief="groove", state="disabled", borderwidth=2, width=10, anchor=CENTER).grid(row=8, column=1)
+        ttk.Entry(title_section_3, width=11, state="disabled").grid(row=8, column=2, padx=2, pady=2)
+
+        # SECTION 1 GENERAL BUTTONS
+        ttk.Button(tab3, text="Clear all").grid(row=1, column=0, padx=2, pady=2)
+        ttk.Button(tab3, text="Clear this page").grid(row=1, column=1, padx=2, pady=2)
+        ttk.Button(tab3, text="Solve").grid(row=1, column=2, padx=2, pady=2)
 
     # SECTION 1 METHODS
     def importMesh(self):
