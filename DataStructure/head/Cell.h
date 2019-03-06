@@ -14,6 +14,7 @@ public:
 	double* cell_weights_;
 	int n_nodes_per_cell_;
 	int n_faces_per_cell_;
+	int creator_key_;
 
 	Cell();
 	~Cell();

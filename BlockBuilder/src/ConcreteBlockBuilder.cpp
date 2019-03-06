@@ -130,6 +130,7 @@ void ConcreteBlockBuilder::preReadMyBlock(Block* block)
 		n_faces = faces_sum_for_each_cell-(faces_sum_for_each_cell - faces_sum_in_boundaries)/2.;
 		block->block_faces_ = new Face*[n_faces];
 		block->n_faces_in_block_ = n_faces;
+		std::cout<<n_faces<<std::endl;
 
 
 
@@ -194,6 +195,8 @@ void ConcreteBlockBuilder::readMyBlock(Block* block)
 			node_coordinates_temp[2]=z_temp;
 
 			new_node = buildNode(node_id,node_coordinates_temp, node_creator);
+			new_node -> block_id_ = block_id;
+
 			block ->addNode(new_node);
 
 		}
@@ -238,37 +241,96 @@ void ConcreteBlockBuilder::createMyFaces(Block* block)
 	TempPrismFaceCreator prism_face_creator= TempPrismFaceCreator();
 	TempPyramidFaceCreator pyramid_face_creator= TempPyramidFaceCreator();
 
-	TempFaceCreator face_creators[4];
+	TempFaceCreator temp_face_creators[3];
+
+	FaceCreator* real_face_creator = new FaceCreator();
 	Cell* cell;
+	Face* face;
+	Face* face_already_in_block;
 
+	
 
-	face_creators[0] = tetrahedral_face_creator;
-	face_creators[1] = pyramid_face_creator;
-	face_creators[2] = prism_face_creator;
-	// face_creators[3] = ghost_face_creator;
-
-	// int* face_2_nodes_connectivity_created;
-
-	// int (*face_2_nodes_connectivity_local)[3] = new int[4][3];
-
-		// int face_2_nodes_connectivity_local[4][3] = {{0,1,2},{0,1,3},{1,2,3},{0,3,2}};
-		// int n_nodes_per_face[4] = {3,3,3,3};
-
-		// for(int i=0;i<n_faces_per_cell;i++)
-		// {
-		// 	new_face = buildFace(face_count_,n_nodes_per_face[i],face_creator);
-		// 	for(int j=0;j<n_nodes_per_face[i];j++)
-		// 	{
-		// 		new_face -> face_2_nodes_connectivity_[j] = cell_2_nodes_connectivity_temp[face_2_nodes_connectivity_local[i][j]];
-		//		face_count_+=1;
-		// 	} 
-		// }
+	temp_face_creators[0] = tetrahedral_face_creator;
+	temp_face_creators[1] = pyramid_face_creator;
+	temp_face_creators[2] = prism_face_creator;
 
 
 	for(int i=0; i<block->n_real_cells_in_block_;i++)
 	{
+		Face** temp_face_array;
+
+
 		cell = block -> block_cells_[i];
+		temp_face_array = new Face*[cell->n_faces_per_cell_];
+		temp_face_array = temp_face_creators[cell->creator_key_].createFace(cell);
+
+		for(int j=0;j<cell->n_faces_per_cell_;j++)
+		{
+			int* temp_nodes = new int[3];
+
+			face =  temp_face_array[j];
+
+			temp_nodes[0] = face -> face_2_nodes_connectivity_[1];
+			temp_nodes[1] = face -> face_2_nodes_connectivity_[0];
+			temp_nodes[2] = face -> face_2_nodes_connectivity_[face->n_nodes_per_face_-1];
+
+			// double modulo_product=1.;
+			// double modulo_sum = 0.;
+
+			bool flag=true;
+
+			for(int face_in_block=0;face_in_block<face_count_;face_in_block++)
+			{
+				face_already_in_block = block->block_faces_[face_in_block];
+				// cout<<face_already_in_block->face_2_nodes_connectivity_[0]<<"\t"<<face_already_in_block->face_2_nodes_connectivity_[1]<<"\t"<<face_already_in_block->face_2_nodes_connectivity_[2]<<"\t"<<face_already_in_block->face_2_nodes_connectivity_[3]<<endl;
+				// modulo_sum = (temp_nodes[0]+1)%(face_already_in_block->face_2_nodes_connectivity_[0]+1)+(temp_nodes[1]+1)%(face_already_in_block->face_2_nodes_connectivity_[1]+1)+(temp_nodes[2]+1)%(face_already_in_block->face_2_nodes_connectivity_[2]+1);
+
+				if((temp_nodes[0]==face_already_in_block->face_2_nodes_connectivity_[0]) && (temp_nodes[1]==face_already_in_block->face_2_nodes_connectivity_[1]) && (temp_nodes[2]==face_already_in_block->face_2_nodes_connectivity_[2]) )
+				{
+					flag = false;
+				}
+				// modulo_product*=modulo_sum;
+
+			}
+			// if(modulo_product!=0.)
+			if(flag)
+			{
+				Face* new_face;
+				new_face = buildFace(face_count_, face->n_nodes_per_face_,real_face_creator);
+				new_face -> block_id_ = block->block_id_;
+
+
+				for(int node_in_face=0;node_in_face<face->n_nodes_per_face_;node_in_face++)
+				{
+					new_face->face_2_nodes_connectivity_[node_in_face]=face->face_2_nodes_connectivity_[node_in_face];
+				}
+
+				block->addFace(new_face);
+				face_count_+=1;
+
+			}
+			free(temp_nodes);
+
+		}
+		free(temp_face_array);
 	}
+
 }
 
 #endif
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
