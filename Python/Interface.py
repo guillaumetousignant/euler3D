@@ -28,7 +28,7 @@ class MainWindow():
         title_section_1_1.grid(row=0, column=0, columnspan=3)
         title_section_1_1.grid_propagate(False)
 
-        text_section_1_1 = ttk.Label(title_section_1_1, text="\nPlease select the desired mesh or geometry:\n")
+        text_section_1_1 = ttk.Label(title_section_1_1, text="\n\nPlease select the desired mesh or geometry:\n")
         text_section_1_1.grid(row=0, column=0, columnspan=6, sticky=NSEW, padx=2)
 
         import_mesh = ttk.Button(title_section_1_1, text="Import mesh", command=self.importMesh)
@@ -36,7 +36,7 @@ class MainWindow():
 
         import_geometry = ttk.Button(title_section_1_1, text="Import geometry", command=self.importGeometry)
         import_geometry.grid(row=1, column=3, sticky=NSEW, padx=2, pady=2)
-
+        
         generate_geometry = ttk.Button(title_section_1_1, text="Generate geometry", command=self.generateGeometry)
         generate_geometry.grid(row=1, column=5, sticky=NSEW, padx=2, pady=2)
 
@@ -48,26 +48,38 @@ class MainWindow():
         title_section_1_2.grid(row=1, column=0, columnspan=3)
         title_section_1_2.grid_propagate(False)
 
-        text_section_1_2 = ttk.Label(title_section_1_2, text="\nPlease specify the required input values:\n")
+        text_section_1_2 = ttk.Label(title_section_1_2, text="\n\nPlease specify the required input values:\n")
         text_section_1_2.grid(row=0, column=0, columnspan=10, sticky=NSEW, padx=2)
 
-        ttk.Label(title_section_1_2, text="cfl", borderwidth=2, relief="groove", anchor=CENTER).grid(row=1, column=0, sticky=NSEW, padx=2, pady=2)
-        ttk.Entry(title_section_1_2, width=10).grid(row=1, column=1, padx=2, pady=2)
+        cfl_label = ttk.Label(title_section_1_2, text="cfl", borderwidth=2, relief="groove", anchor=CENTER)
+        cfl_label.grid(row=1, column=0, sticky=NSEW, padx=2, pady=2)
+        cfl_entry = ttk.Entry(title_section_1_2, width=10)
+        cfl_entry.grid(row=1, column=1, padx=2, pady=2)
 
-        ttk.Label(title_section_1_2, text="gamma", borderwidth=2, relief="groove", anchor=CENTER).grid(row=2, column=0, sticky=NSEW, padx=2, pady=2)
-        ttk.Entry(title_section_1_2, width=10).grid(row=2, column=1, padx=2, pady=2)
+        gamma_label = ttk.Label(title_section_1_2, text="gamma", borderwidth=2, relief="groove", anchor=CENTER)
+        gamma_label.grid(row=2, column=0, sticky=NSEW, padx=2, pady=2)
+        gamma_entry = ttk.Entry(title_section_1_2, width=10)
+        gamma_entry.grid(row=2, column=1, padx=2, pady=2)
 
-        ttk.Label(title_section_1_2, text="mach", borderwidth=2, relief="groove", anchor=CENTER).grid(row=3, column=0, sticky=NSEW, padx=2, pady=2)
-        ttk.Entry(title_section_1_2, width=10).grid(row=3, column=1, padx=2, pady=2)
+        mach_label = ttk.Label(title_section_1_2, text="mach", borderwidth=2, relief="groove", anchor=CENTER)
+        mach_label.grid(row=3, column=0, sticky=NSEW, padx=2, pady=2)
+        mach_entry = ttk.Entry(title_section_1_2, width=10)
+        mach_entry.grid(row=3, column=1, padx=2, pady=2)
 
-        ttk.Label(title_section_1_2, text="cmac", borderwidth=2, relief="groove", anchor=CENTER).grid(row=1, column=2, sticky=NSEW, padx=2, pady=2)
-        ttk.Entry(title_section_1_2, width=10).grid(row=1, column=3, padx=2, pady=2)
+        cmac_label = ttk.Label(title_section_1_2, text="cmac", borderwidth=2, relief="groove", anchor=CENTER)
+        cmac_label.grid(row=1, column=2, sticky=NSEW, padx=2, pady=2)
+        cmac_entry = ttk.Entry(title_section_1_2, width=10)
+        cmac_entry.grid(row=1, column=3, padx=2, pady=2)
 
-        ttk.Label(title_section_1_2, text="Angle of attack (deg)", borderwidth=2, relief="groove", anchor=CENTER).grid(row=2, column=2, sticky=NSEW, padx=2, pady=2)
-        ttk.Entry(title_section_1_2, width=10).grid(row=2, column=3, padx=2, pady=2)
+        angle_attack_label = ttk.Label(title_section_1_2, text="Angle of attack (deg)", borderwidth=2, relief="groove", anchor=CENTER)
+        angle_attack_label.grid(row=2, column=2, sticky=NSEW, padx=2, pady=2)
+        angle_attack_entry = ttk.Entry(title_section_1_2, width=10)
+        angle_attack_entry.grid(row=2, column=3, padx=2, pady=2)
 
-        ttk.Label(title_section_1_2, text="Number of stages (RK)", borderwidth=2, relief="groove", anchor=CENTER).grid(row=3, column=2, sticky=NSEW, padx=2, pady=2)
-        ttk.Entry(title_section_1_2, width=10).grid(row=3, column=3, padx=2, pady=2)
+        rk_label = ttk.Label(title_section_1_2, text="Number of stages (RK)", borderwidth=2, relief="groove", anchor=CENTER)
+        rk_label.grid(row=3, column=2, sticky=NSEW, padx=2, pady=2)
+        rk_entry = ttk.Entry(title_section_1_2, width=10)
+        rk_entry.grid(row=3, column=3, padx=2, pady=2)
 
         # SECTION 1 GENERAL BUTTONS
         ttk.Button(tab1, text="Clear all").grid(row=2, column=0, padx=2, pady=2)
@@ -85,13 +97,17 @@ class MainWindow():
 
         ttk.Label(title_section_2_1, text="", width=5).grid(row=1, column=0)
 
-        ttk.Label(title_section_2_1, text="Max number of itterations", borderwidth=2, relief="groove", anchor=CENTER, width=22).grid(row=1, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
-        ttk.Entry(title_section_2_1, width=15).grid(row=1, column=3, columnspan=2, padx=2, pady=2)
+        max_iter_label = ttk.Label(title_section_2_1, text="Max number of itterations", borderwidth=2, relief="groove", anchor=CENTER, width=22)
+        max_iter_label.grid(row=1, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
+        max_iter_entry = ttk.Entry(title_section_2_1, width=15)
+        max_iter_entry.grid(row=1, column=3, columnspan=2, padx=2, pady=2)
 
         ttk.Label(title_section_2_1, text="", width=4).grid(row=1, column=5)
 
-        ttk.Label(title_section_2_1, text="Convergence criterion", borderwidth=2, relief="groove", anchor=CENTER, width=22).grid(row=2, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
-        ttk.Entry(title_section_2_1, width=15).grid(row=2, column=3, columnspan=2, padx=2, pady=2)
+        convergence_crit_label = ttk.Label(title_section_2_1, text="Convergence criterion", borderwidth=2, relief="groove", anchor=CENTER, width=22)
+        convergence_crit_label.grid(row=2, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
+        convergence_crit_entry = ttk.Entry(title_section_2_1, width=15)
+        convergence_crit_entry.grid(row=2, column=3, columnspan=2, padx=2, pady=2)
 
         # SECTION 2.2 SCHEME SELECTION
         title_section_2_2 = ttk.LabelFrame(tab2, text="2.2 Scheme Selection", labelanchor=N, height=110, width=396)
@@ -123,14 +139,14 @@ class MainWindow():
 
         ttk.Label(title_section_2_3, text="", width=4).grid(row=1, column=5)
         
-        solver_option_1 = Radiobutton(title_section_2_3, text="Build the code", value=1, relief="groove", borderwidth=2, width=23, anchor=W)
-        solver_option_1.grid(row=2, column=1, columnspan=4, padx=2, pady=2)
+        solver_option_build = Radiobutton(title_section_2_3, text="Build the code", value=1, relief="groove", borderwidth=2, width=23, anchor=W)
+        solver_option_build.grid(row=2, column=1, columnspan=4, padx=2, pady=2)
 
-        solver_option_2 = Radiobutton(title_section_2_3, text="Execute the code", value=2, relief="groove", borderwidth=2, width=23, anchor=W)
-        solver_option_2.grid(row=3, column=1, columnspan=4, padx=2, pady=2)
+        solver_option_execute = Radiobutton(title_section_2_3, text="Execute the code", value=2, relief="groove", borderwidth=2, width=23, anchor=W)
+        solver_option_execute.grid(row=3, column=1, columnspan=4, padx=2, pady=2)
 
-        solver_option_3 = Radiobutton(title_section_2_3, text="Build and execute the code", value=3, relief="groove", borderwidth=2, width=23, anchor=W)
-        solver_option_3.grid(row=4, column=1, columnspan=4, padx=2, pady=2)
+        solver_option_build_execute = Radiobutton(title_section_2_3, text="Build and execute the code", value=3, relief="groove", borderwidth=2, width=23, anchor=W)
+        solver_option_build_execute.grid(row=4, column=1, columnspan=4, padx=2, pady=2)
 
         # SECTION 2 GENERAL BUTTONS
         ttk.Button(tab2, text="Clear all").grid(row=3, column=0, padx=2, pady=2)
@@ -142,66 +158,63 @@ class MainWindow():
         title_section_3.grid(row=0, column=0, columnspan=3)
         title_section_3.grid_propagate(False)
         
-        text_section_3 = ttk.Label(title_section_3, text="\nPlease specify what type of graphe(s) you would like to\ndisplay:\n")
+        text_section_3 = ttk.Label(title_section_3, text="\n\n\n\nPlease specify what type of graphe(s) you would like to\ndisplay:\n")
         text_section_3.grid(row=0, column=0, columnspan=3, sticky=NSEW)
 
-        cl_alpha = Checkbutton(title_section_3, text="Cl vs alpha", relief="groove", width=20, anchor=W, borderwidth=2)
-        cl_alpha.grid(row=1, column=0, padx=2, pady=2)
-        cl_alpha.grid_propagate(False)
-
-        cd_alpha = Checkbutton(title_section_3, text="Cd vs alpha", relief="groove", width=20, anchor=W, borderwidth=2)
-        cd_alpha.grid(row=2, column=0, padx=2, pady=2)
-        cd_alpha.grid_propagate(False)
-
-        cm_alpha = Checkbutton(title_section_3, text="Cm vs alpha", relief="groove", width=20, anchor=W, borderwidth=2)
-        cm_alpha.grid(row=3, column=0, padx=2, pady=2)
-        cm_alpha.grid_propagate(False)
-
-        cl_convergence = Checkbutton(title_section_3, text="Cl convergence", relief="groove", width=20, anchor=W, borderwidth=2)
-        cl_convergence.grid(row=4, column=0, padx=2, pady=2)
-        cl_convergence.grid_propagate(False)
-
-        cd_convergence = Checkbutton(title_section_3, text="Cd convergence", relief="groove", width=20, anchor=W, borderwidth=2)
-        cd_convergence.grid(row=5, column=0, padx=2, pady=2)
-        cd_convergence.grid_propagate(False)
-
-        cm_convergence = Checkbutton(title_section_3, text="Cm convergence", relief="groove", width=20, anchor=W, borderwidth=2)
-        cm_convergence.grid(row=6, column=0, padx=2, pady=2)
-        cm_convergence.grid_propagate(False)
-
-        residual_convergence = Checkbutton(title_section_3, text="Residual convergence", relief="groove", width=20, anchor=W, borderwidth=2)
-        residual_convergence.grid(row=7, column=0, padx=2, pady=2)
-        residual_convergence.grid_propagate(False)
-
-        cp_xc = Checkbutton(title_section_3, text="Cp vs Xc", relief="groove", width=20, anchor=W, borderwidth=2)
-        cp_xc.grid(row=1, column=1, columnspan=2, padx=2, pady=2)
-        cp_xc.grid_propagate(False)
-
-        mach_contour = Checkbutton(title_section_3, text="Mach contour", relief="groove", width=20, anchor=W, borderwidth=2)
-        mach_contour.grid(row=2, column=1, columnspan=2, padx=2, pady=2)
-        mach_contour.grid_propagate(False)
-
-        cp_contour = Checkbutton(title_section_3, text="Cp contour", relief="groove", width=20, anchor=W, borderwidth=2)
-        cp_contour.grid(row=3, column=1, columnspan=2, padx=2, pady=2)
-        cp_contour.grid_propagate(False)
-
-        slice_cp = Checkbutton(title_section_3, text="Slice Cp", relief="groove", width=20, anchor=W, borderwidth=2)
-        slice_cp.grid(row=4, column=1, columnspan=2, padx=2, pady=2)
-        slice_cp.grid_propagate(False)
-
-        ttk.Label(title_section_3, text="Axis of cut", relief="groove", state="disabled", borderwidth=2, width=10, anchor=CENTER).grid(row=5, column=1)
-        ttk.Entry(title_section_3, width=11, state="disabled").grid(row=5, column=2, padx=2, pady=2)
+        cl_alpha = IntVar()
+        Checkbutton(title_section_3, text="Cl vs alpha", variable=cl_alpha, relief="groove", width=20, anchor=W, borderwidth=2).grid(row=1, column=0, padx=2, pady=2)
         
-        ttk.Label(title_section_3, text="X coord", relief="groove", state="disabled", borderwidth=2, width=10, anchor=CENTER).grid(row=6, column=1)
-        ttk.Entry(title_section_3, width=11, state="disabled").grid(row=6, column=2, padx=2, pady=2)
-        
-        ttk.Label(title_section_3, text="Y coord", relief="groove", state="disabled", borderwidth=2, width=10, anchor=CENTER).grid(row=7, column=1)
-        ttk.Entry(title_section_3, width=11, state="disabled").grid(row=7, column=2, padx=2, pady=2)
-        
-        ttk.Label(title_section_3, text="Z coord", relief="groove", state="disabled", borderwidth=2, width=10, anchor=CENTER).grid(row=8, column=1)
-        ttk.Entry(title_section_3, width=11, state="disabled").grid(row=8, column=2, padx=2, pady=2)
+        cd_alpha = IntVar()
+        Checkbutton(title_section_3, text="Cd vs alpha", variable=cd_alpha, relief="groove", width=20, anchor=W, borderwidth=2).grid(row=2, column=0, padx=2, pady=2)
 
-        # SECTION 1 GENERAL BUTTONS
+        cm_alpha = IntVar()
+        Checkbutton(title_section_3, text="Cm vs alpha", variable=cm_alpha, relief="groove", width=20, anchor=W, borderwidth=2).grid(row=3, column=0, padx=2, pady=2)
+
+        cl_convergence = IntVar()
+        Checkbutton(title_section_3, text="Cl convergence", variable=cl_convergence, relief="groove", width=20, anchor=W, borderwidth=2).grid(row=4, column=0, padx=2, pady=2)
+
+        cd_convergence = IntVar()
+        Checkbutton(title_section_3, text="Cd convergence", variable=cd_convergence, relief="groove", width=20, anchor=W, borderwidth=2).grid(row=5, column=0, padx=2, pady=2)
+
+        cm_convergence = IntVar()
+        Checkbutton(title_section_3, text="Cm convergence", variable=cm_convergence, relief="groove", width=20, anchor=W, borderwidth=2).grid(row=6, column=0, padx=2, pady=2)
+
+        residual_convergence = IntVar()
+        Checkbutton(title_section_3, text="Residual convergence", variable=residual_convergence, relief="groove", width=20, anchor=W, borderwidth=2).grid(row=7, column=0, padx=2, pady=2)
+
+        cp_xc = IntVar()
+        Checkbutton(title_section_3, text="Cp vs Xc", variable=cp_xc, relief="groove", width=20, anchor=W, borderwidth=2).grid(row=1, column=1, columnspan=2, padx=2, pady=2)
+
+        mach_contour = IntVar()
+        Checkbutton(title_section_3, text="Mach contour", variable=mach_contour, relief="groove", width=20, anchor=W, borderwidth=2).grid(row=2, column=1, columnspan=2, padx=2, pady=2)
+
+        cp_contour = IntVar()
+        Checkbutton(title_section_3, text="Cp contour", variable=cp_contour, relief="groove", width=20, anchor=W, borderwidth=2).grid(row=3, column=1, columnspan=2, padx=2, pady=2)
+
+        self.slice_cp = IntVar()
+        Checkbutton(title_section_3, text="Slice Cp", variable=self.slice_cp, command=self.activeEntries, relief="groove", width=20, anchor=W, borderwidth=2).grid(row=4, column=1, columnspan=2, padx=2, pady=2)
+
+        self.axis_cut_label = ttk.Label(title_section_3, text="Axis of cut", relief="groove", state="disabled", borderwidth=2, width=10, anchor=CENTER)
+        self.axis_cut_label.grid(row=5, column=1)
+        self.axis_cut_entry = ttk.Entry(title_section_3, width=11, state="disabled")
+        self.axis_cut_entry.grid(row=5, column=2, padx=2, pady=2)
+        
+        self.x_coord_label = ttk.Label(title_section_3, text="X coord", relief="groove", state="disabled", borderwidth=2, width=10, anchor=CENTER)
+        self.x_coord_label.grid(row=6, column=1)
+        self.x_coord_entry = ttk.Entry(title_section_3, width=11, state="disabled")
+        self.x_coord_entry.grid(row=6, column=2, padx=2, pady=2)
+        
+        self.y_coord_label = ttk.Label(title_section_3, text="Y coord", relief="groove", state="disabled", borderwidth=2, width=10, anchor=CENTER)
+        self.y_coord_label.grid(row=7, column=1)
+        self.y_coord_entry = ttk.Entry(title_section_3, width=11, state="disabled")
+        self.y_coord_entry.grid(row=7, column=2, padx=2, pady=2)
+        
+        self.z_coord_label = ttk.Label(title_section_3, text="Z coord", relief="groove", state="disabled", borderwidth=2, width=10, anchor=CENTER)
+        self.z_coord_label.grid(row=8, column=1)
+        self.z_coord_entry = ttk.Entry(title_section_3, width=11, state="disabled")
+        self.z_coord_entry.grid(row=8, column=2, padx=2, pady=2)
+
+        # SECTION 3 GENERAL BUTTONS
         ttk.Button(tab3, text="Clear all").grid(row=1, column=0, padx=2, pady=2)
         ttk.Button(tab3, text="Clear this page").grid(row=1, column=1, padx=2, pady=2)
         ttk.Button(tab3, text="Solve").grid(row=1, column=2, padx=2, pady=2)
@@ -256,31 +269,36 @@ class MainWindow():
         self.flux_scheme_window.title("Scheme selection")
         ttk.Label(self.flux_scheme_window, text="\nPlease configure the following parameters:\n", anchor=W).grid(row=0, column=0, columnspan=4, padx=2, sticky=W)
         
-        ttk.Label(self.flux_scheme_window, text="Flux scheme:", anchor=CENTER).grid(row=1, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
-        self.flux_scheme = ttk.Combobox(self.flux_scheme_window, width=15)
-        self.flux_scheme['values'] = ("Roe", "Ausm")
-        self.flux_scheme.grid(row=2, column=1, columnspan=2, pady=2)
-
-        ttk.Label(self.flux_scheme_window, text="Scheme order:", anchor=CENTER).grid(row=3, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
-        self.scheme_order = ttk.Combobox(self.flux_scheme_window, width=15)
-        self.scheme_order['values'] = ("1", "2")
-        self.scheme_order.grid(row=4, column=1, columnspan=2, pady=2)
+        self.flux_scheme_label = ttk.Label(self.flux_scheme_window, text="Flux scheme:", anchor=CENTER)
+        self.flux_scheme_label.grid(row=1, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
+        self.flux_scheme_entry = ttk.Combobox(self.flux_scheme_window, values=("Roe", "Ausm"), width=15)
+        self.flux_scheme_entry.grid(row=2, column=1, columnspan=2, pady=2)
         
-        ttk.Label(self.flux_scheme_window, text="Gradient:", anchor=CENTER, state="disabled").grid(row=5, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
-        self.gradient = ttk.Combobox(self.flux_scheme_window, width=15, state="disabled")
-        self.gradient['values'] = ("Green Gauss", "Least Squares")
-        self.gradient.grid(row=6, column=1, columnspan=2, pady=2)
+        self.scheme_order_label = ttk.Label(self.flux_scheme_window, text="Scheme order:", anchor=CENTER)
+        self.scheme_order_label.grid(row=3, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
+        self.scheme_order_entry = ttk.Combobox(self.flux_scheme_window, values=("1", "2"), width=15)
+        self.scheme_order_entry.grid(row=4, column=1, columnspan=2, pady=2)
+        # self.scheme_order_entry.bind(self.activeOptions)
+        
+        self.gradient_label = ttk.Label(self.flux_scheme_window, text="Gradient:", anchor=CENTER, state="disabled")
+        self.gradient_label.grid(row=5, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
+        self.gradient_entry = ttk.Combobox(self.flux_scheme_window, values=("Green Gauss", "Least Squares"), width=15, state="disabled")
+        self.gradient_entry.grid(row=6, column=1, columnspan=2, pady=2)
 
-        ttk.Label(self.flux_scheme_window, text="Limiter:", anchor=CENTER, state="disabled").grid(row=7, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
-        self.limiter = ttk.Combobox(self.flux_scheme_window, width=15, state="disabled")
-        self.limiter['values'] = ("Barth Jespersen", "Venkatakrishnan")
-        self.limiter.grid(row=8, column=1, columnspan=2, pady=2)
+        self.limiter_label = ttk.Label(self.flux_scheme_window, text="Limiter:", anchor=CENTER, state="disabled")
+        self.limiter_label.grid(row=7, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
+        self.limiter_entry = ttk.Combobox(self.flux_scheme_window, values=("Barth Jespersen", "Venkatakrishnan"), width=15, state="disabled")
+        self.limiter_entry.grid(row=8, column=1, columnspan=2, pady=2)
 
-        ttk.Label(self.flux_scheme_window, text="Omega", width=10, anchor=CENTER, borderwidth=2, relief="groove", state="disabled").grid(row=9, column=0, padx=2, pady=7)
-        ttk.Entry(self.flux_scheme_window, width=10, state="disabled").grid(row=9, column=1, padx=2, pady=10)
+        self.omega_label = ttk.Label(self.flux_scheme_window, text="Omega", width=10, anchor=CENTER, borderwidth=2, relief="groove", state="disabled")
+        self.omega_label.grid(row=9, column=0, padx=2, pady=7)
+        self.omega_label_entry = ttk.Entry(self.flux_scheme_window, width=10, state="disabled")
+        self.omega_label_entry.grid(row=9, column=1, padx=2, pady=10)
 
-        ttk.Label(self.flux_scheme_window, text="k", width=10, anchor=CENTER, borderwidth=2, relief="groove", state="disabled").grid(row=9, column=2, padx=2, pady=7)
-        ttk.Entry(self.flux_scheme_window, width=10, state="disabled").grid(row=9, column=3, padx=2, pady=10)
+        self.k_label = ttk.Label(self.flux_scheme_window, text="k", width=10, anchor=CENTER, borderwidth=2, relief="groove", state="disabled")
+        self.k_label.grid(row=9, column=2, padx=2, pady=7)
+        self.k_entry = ttk.Entry(self.flux_scheme_window, width=10, state="disabled")
+        self.k_entry.grid(row=9, column=3, padx=2, pady=10)
 
         ttk.Label(self.flux_scheme_window, text="Residual smoothing?", anchor=CENTER).grid(row=10, column=1, columnspan=2, padx=2)
         
@@ -292,6 +310,41 @@ class MainWindow():
 
         ttk.Button(self.flux_scheme_window, text="Ok", command=self.flux_scheme_window.destroy).grid(row=13, column=1, pady=10)
         ttk.Button(self.flux_scheme_window, text="Cancel", command=self.flux_scheme_window.destroy).grid(row=13, column=2, pady=10)
+    
+    def activeOptions(self, event):
+        scheme_order_result = self.scheme_order_entry.get()
+
+        if scheme_order_result == "2":
+            self.gradient_label.configure(state="Normal")
+            self.gradient_entry.configure(state="Normal")
+
+            self.limiter_label.configure(state="Normal")
+            self.limiter_entry.configure(state="Normal")
+
+
+    # SECTION 3 METHODS
+    def activeEntries(self):
+        slice_cp_result = self.slice_cp.get()
+
+        if slice_cp_result == 1:
+            self.axis_cut_label.configure(state="Normal")
+            self.axis_cut_entry.configure(state="Normal")
+            self.x_coord_label.configure(state="Normal")
+            self.x_coord_entry.configure(state="Normal")
+            self.y_coord_label.configure(state="Normal")
+            self.y_coord_entry.configure(state="Normal")
+            self.z_coord_label.configure(state="Normal")
+            self.z_coord_entry.configure(state="Normal")
+
+        elif slice_cp_result == 0:
+            self.axis_cut_label.configure(state="Normal")
+            self.axis_cut_entry.configure(state="Normal")
+            self.x_coord_label.configure(state="Normal")
+            self.x_coord_entry.configure(state="Normal")
+            self.y_coord_label.configure(state="Normal")
+            self.y_coord_entry.configure(state="Normal")
+            self.z_coord_label.configure(state="Normal")
+            self.z_coord_entry.configure(state="Normal")
 
     # # GENERAL BUTTONS
     # def clearAll(self):
@@ -301,4 +354,4 @@ class MainWindow():
 
 root = Tk()
 main_window = MainWindow(root)
-root.mainloop() #Mainloop allows you to be display the window continuously until you close it
+root.mainloop()
