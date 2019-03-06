@@ -107,7 +107,7 @@ void ConcreteBlockBuilder::preReadMyBlock(Block* block)
 			getline(myfile, line);
 			sscanf (line.c_str(), "%s %d",str_temp,&n_elements_in_boundary);
 
-			if(boundary_type=="farfield")
+			if(boundary_type=="FARFIELD")
 			{
 				faces_sum_in_boundaries+=n_elements_in_boundary;
 			}
@@ -168,7 +168,7 @@ void ConcreteBlockBuilder::readMyBlock(Block* block)
 	int n_boundaries_temp;
 	int n_boundaries;
 	int n_ghost_cells_temp;
-	int n_ghost_cells;
+	//int n_ghost_cells;
 	int cell_id = 0;
 	std::string cell_type_temp;
 	std::string ghost_cell_type_temp;
@@ -176,8 +176,8 @@ void ConcreteBlockBuilder::readMyBlock(Block* block)
 	std::string ghost_cell_2_nodes_connectivity_temp;
 	char boundary_type_temp[50];
 
-	WallCellIds *wall_boundary_temp;
-	FarfieldCellIds *farfield_boundary_temp;
+	//WallCellIds *wall_boundary_temp;
+	//FarfieldCellIds *farfield_boundary_temp;
 	Node* new_node;
 	Cell* new_cell;
 
@@ -265,6 +265,7 @@ void ConcreteBlockBuilder::readMyBlock(Block* block)
 					(block->block_boundary_cell_ids_[boundary_id])->cell_ids_in_boundary_=new int[n_ghost_cells_temp];
 					(block->block_boundary_cell_ids_[boundary_id])->cell_count_= new int;
 					*((block->block_boundary_cell_ids_[boundary_id])->cell_count_)=0;
+					(block->block_boundary_cell_ids_[boundary_id])->owner_block_=block;
 
 
 				}
@@ -277,6 +278,7 @@ void ConcreteBlockBuilder::readMyBlock(Block* block)
 					(block->block_boundary_cell_ids_[boundary_id])->cell_ids_in_boundary_=new int[n_ghost_cells_temp];
 					(block->block_boundary_cell_ids_[boundary_id])->cell_count_= new int;
 					*((block->block_boundary_cell_ids_[boundary_id])->cell_count_)=0;
+					(block->block_boundary_cell_ids_[boundary_id])->owner_block_=block;
 
 				}
 				else if (boundary_type_temp_str == "CONNECTION") //Connection inter-bloc

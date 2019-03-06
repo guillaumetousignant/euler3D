@@ -1,6 +1,7 @@
 #ifndef DATASTRUCTURE_HEAD_PRIMITIVEVARIABLES_H
 #define DATASTRUCTURE_HEAD_PRIMITIVEVARIABLES_H
 
+#include "Interface.h"
 class PrimitiveVariables
 {
 public:
@@ -28,7 +29,17 @@ public:
 	double* rw_0_;
 	double* re_0_;
 
+	double ro_free_;
+	double uu_free_;
+	double vv_free_;
+	double ww_free_;
+	double pp_free_;
+	double gamma_;
+	double alpha_rad_;
+	double mach_;
+
 	PrimitiveVariables(int n_all_cells_in_blocks);
+	void calculateFreeVariables(Interface inter);
 	~PrimitiveVariables();
 	
 };

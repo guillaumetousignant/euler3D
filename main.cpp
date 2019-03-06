@@ -63,7 +63,7 @@ int main()
     for (int i=0; i<new_block->n_real_boundaries_in_block_;i++) 
     {
         std::cout << "test de boundary: "<< ((new_block->block_boundary_cell_ids_[i])->n_cell_in_boundary_) <<std::endl;
-        (new_block->block_boundary_cell_ids_[i])->updateBoundary();
+        //(new_block->block_boundary_cell_ids_[i])->updateBoundary();
     }
     std::cout << "test de boundary deep: "<< new_block->n_real_boundaries_in_block_ <<std::endl;
 

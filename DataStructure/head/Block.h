@@ -4,13 +4,14 @@
 #include "Cell.h"
 #include "Face.h"
 #include "Node.h"
-#include "BoundaryCellIds.h"
+class BoundaryCellIds;
 #include "TimeVariables.h"
 #include "PrimitiveVariables.h"
 #include "InterpolationVariables.h"
-#include "ConnexionCellIds.h"
-#include "FarfieldCellIds.h"
-#include "WallCellIds.h"
+#include "BoundaryCellIds.h"
+//#include "ConnexionCellIds.h"
+//#include "FarfieldCellIds.h"
+//#include "WallCellIds.h"
 
 class Block
 {
