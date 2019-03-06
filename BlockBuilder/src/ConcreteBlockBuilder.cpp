@@ -129,6 +129,9 @@ void ConcreteBlockBuilder::preReadMyBlock(Block* block)
 		n_faces = faces_sum_for_each_cell-(faces_sum_for_each_cell - faces_sum_in_boundaries)/2.;
 		block->block_faces_ = new Face*[n_faces];
 		block->n_faces_in_block_ = n_faces;
+		PrimitiveVariables* prim= new PrimitiveVariables(block->n_all_cells_in_block_);
+		block->block_primitive_variables_=prim;
+
 		std::cout<<n_faces<<std::endl;
 
 

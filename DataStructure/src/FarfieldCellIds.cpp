@@ -21,11 +21,11 @@ void FarfieldCellIds::updateBoundary()
 	for(int farfield_cells_idx=0;farfield_cells_idx<n_cell_in_boundary_;farfield_cells_idx++)
 	{
 		int farfield_face_idx= (block->block_cells_[farfield_cells_idx])->cell_2_faces_connectivity_[0];
-		std::cout<<"boucle update face: "<<farfield_face_idx<<std::endl;
+		//std::cout<<"boucle update face: "<<farfield_face_idx<<std::endl;
 		int int_cell_idx=block->block_faces_[farfield_face_idx]->face_2_cells_connectivity_[0];
-		std::cout<<"boucle update int cell: "<<int_cell_idx<<std::endl;
+		//std::cout<<"boucle update int cell: "<<int_cell_idx<<std::endl;
 		int ext_cell_idx=block->block_faces_[farfield_face_idx]->face_2_cells_connectivity_[1];
-		std::cout<<"boucle update ext cell: "<<ext_cell_idx<<std::endl;
+		//std::cout<<"boucle update ext cell: "<<ext_cell_idx<<std::endl;
 
 		double normalized_x=block->block_faces_[farfield_face_idx]->face_normals_[0];
 		double normalized_y=block->block_faces_[farfield_face_idx]->face_normals_[1];
