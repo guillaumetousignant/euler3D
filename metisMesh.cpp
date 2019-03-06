@@ -157,16 +157,13 @@ if (myfile.is_open()) {
     }
 
     else {
-
        for (int nodeI = 0; nodeI < nNodes; nodeI++)
         {
             myfile >> x_[0][nodeI] >> y_[0][nodeI];
             z_[0][nodeI] = 0.0;      
         } 
     }
-    
-    
-         
+     
     myfile.seekg(0, myfile.beg); 
     getline(myfile,line);
     cout << "ligne 1 : " << line << endl;
@@ -175,16 +172,14 @@ if (myfile.is_open()) {
 
     int temp;
 
-    for (int elementI = 0; elementI < 10; elementI ++) {
+    for (int elementI = 0; elementI < nElements; elementI ++) {
         myfile >> temp;
-        cout << temp << endl;
 
         for (int numberOfNodes = 0; numberOfNodes < elementType_[elementI]; numberOfNodes ++) {
         
         int node;
         myfile >> node; 
-        connectivity_[0][elementI].push_back(node); 
-        cout << "node: " << node << endl;    
+        connectivity_[0][elementI].push_back(node);    
         }
     }
 
@@ -361,19 +356,19 @@ MetisMesh* MetisMesh::Partition(int nPart)
     cout << "count is : " << count << endl;
     cout << "fin conversion" << endl;
     cout << "element 0 : " << nElements_[0] << endl;
-
+    
+    int count1 = 0;
     for (int i = 0; i < nElements_[0]; i++)
     {
         for (int j = 0; j < elementType_[i]; j++) {
-
-        eind[i+j] = connectivity_[0][i][j];
         
+        eind[count1] = connectivity_[0][i][j]; 
+        count1++;
         }
     }
 
-    for (int i = 0; i < 10; i++) {
-        cout << "con: " << connectivity_[0][0][i] << endl;
-    }
+    cout << *nTotalNode_ << endl;
+    cout << eind[*nTotalNode_ -1] << endl;
     
     cout << "fin connectivite" << endl;
 
