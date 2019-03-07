@@ -239,19 +239,23 @@ void MetisMesh::WriteMesh(std::string fileName)
         int nNodes = nNodes_[blockI];
         int nElements = nElements_[blockI];
 
-        fprintf(fid, "Block=%d\n", blockI+1);
-        
+        fprintf(fid, "Block=%d\n", blockI+1);    
         fprintf(fid, "NDIME=%d\n", nDimensions_);
 
         for (int nodeI = 0; nodeI < nNodes; nodeI++)
         {
-            // ici ajouter coordonnee y
             fprintf(fid, "%.12e %.12e %.12e\n", x_[blockI][nodeI], y_[blockI][nodeI], z_[blockI][nodeI]);
         }
 
         for (int elementI = 0; elementI < nElements; elementI++)
         {
-            fprintf(fid, "%d %d %d\n", connectivity_[blockI][elementI][0], connectivity_[blockI][elementI][1], connectivity_[blockI][elementI][2]);
+
+            for (int j = 0; j < connectivity_[blockI][elementI].size(); j++) {
+                fprintf(fid, "%d " , connectivity_[blockI][elementI][j]);
+            }
+
+            fprintf(fid, "\n");
+            
         }
     }
 
@@ -394,12 +398,16 @@ MetisMesh* MetisMesh::Partition(int nPart)
         elementTypePerBlock[blockId].push_back(elementType_[i]);
     }
 
+    cout << "1ere boucle ok" << endl;
+
     for (int i = 0; i < nNodes_[0]; i++)
     {
         int blockId = npart[i];
         nodesPerBlock[blockId].push_back(i);
+
     }
 
+    cout << "2eme boucle ok" << endl;
     int newNelements[nPart];
 
     for (int blockI = 0; blockI < nPart; blockI++) {
@@ -407,11 +415,13 @@ MetisMesh* MetisMesh::Partition(int nPart)
         // Nombre delements par block
         newNelements[blockI] = elementsPerBlock[blockI].size();
     }
+    cout << "3eme boucle ok" << endl;
 
     std::vector<int> addedNode[nPart];
     std::vector<int>** newConnectivity;
 
     newConnectivity = new std::vector<int>*[nPart];
+    cout << "newconnectivity ok" << endl;
 
     for (int blockI = 0; blockI < nPart; blockI++)
     {
@@ -428,6 +438,7 @@ MetisMesh* MetisMesh::Partition(int nPart)
         }
     }
 
+    cout << "find node index ok" << endl;
     int newNnodes[nPart];
 
     for (int blockI = 0; blockI < nPart; blockI++)
@@ -435,9 +446,13 @@ MetisMesh* MetisMesh::Partition(int nPart)
         newNnodes[blockI] = addedNode[blockI].size();
     }
 
+    cout << "newNodes ok" << endl;
+
     MetisMesh* newMesh = new MetisMesh();
     newMesh->Init(nPart, newNelements, newNnodes);
     newMesh->SetConnectivity(newConnectivity);
+
+    cout << "newMesh ok" << endl;
 
     for (int blockI = 0; blockI < nPart; blockI++)
     {
