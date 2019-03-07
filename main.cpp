@@ -26,6 +26,8 @@ int main()
 
     concrete_block_builder.createMyFaces(new_block);
 
+    concrete_block_builder.setConnectivity(new_block);
+
     cout<<"Cellules\n";
     Cell* test_cell;
     for(int i=0;i<new_block->n_real_cells_in_block_;i++)
@@ -73,7 +75,9 @@ int main()
 	    cout<<"block_id_\t"<<test_face->block_id_<<endl;
     }
 
-        
+
+
+        cout<<"HAAAAAAAAAAAAAAAAAAAAAAAA"<<endl;
 
     // for (int i=0; i<new_block->n_real_boundaries_in_block_;i++) 
     // {
