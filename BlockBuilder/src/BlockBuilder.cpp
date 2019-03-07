@@ -144,10 +144,11 @@ Face* BlockBuilder::buildFace(int face_id, int n_nodes_per_face,FaceCreator* fac
 
 void BlockBuilder::setConnectivity(Block* block)
 {
-	int i,j,k,w,idx,node_0,node_1,node_2,n_cells_linked;
+	int i,j,k,idx,node_0,node_1,node_2,n_cells_linked;
 	int *idx_node,*idx_cell_2_faces,*idx_cell_2_cells; 
 
 	//node_2_cells_connectivity_
+	std::cout<<"DÉBUT node2cellsconnectivity"<<std::endl;
 		
 		idx_node=allocate_1d_array_int(block->n_nodes_in_block_, "idx_node");
 		
@@ -156,19 +157,22 @@ void BlockBuilder::setConnectivity(Block* block)
 			block->block_nodes_[i]->node_2_cells_connectivity_=allocate_1d_array_int(block->block_nodes_[i]->n_cells_per_node_, "node_2_cells_connectivity_");
 			idx_node[i]=0;
 		}
-
+std::cout<<"ICI"<<std::endl;
 		for(i=0;i < block->n_all_cells_in_block_-1 ;i++)
 		{
-			{
 			
-			for(j=0;j < block->block_cells_[i]->n_nodes_per_cell_-1 ;i++)
+			std::cout<<i<<" "<<block->n_all_cells_in_block_<<std::endl;
+			for(j=0;j < block->block_cells_[i]->n_nodes_per_cell_-1 ;j++)
+			{	
+
+			std::cout<<j<<" "<<block->block_cells_[i]->n_nodes_per_cell_<<std::endl;
 				idx=block->block_cells_[i]->cell_2_nodes_connectivity_[j];
 				block->block_nodes_[idx]->node_2_cells_connectivity_[idx_node[idx]]=i;
 				idx_node[idx]+=1;
 			}
 
 		}
-
+std::cout<<"DÉBUT face_2_cells"<<std::endl;
 	//face_2_cells_connectivity_
 		for(i=0;i < block->n_faces_in_block_-1 ;i++)
 		{
@@ -202,7 +206,7 @@ void BlockBuilder::setConnectivity(Block* block)
 				}
 			}
 		}
-
+std::cout<<"DÉBUT cell2facesconnectivity"<<std::endl;
 	//cell_2_faces_connectivity_ & cell_2_cells_connectivity_
 		idx_cell_2_faces=allocate_1d_array_int(block->n_all_cells_in_block_, "idx_cell_2_faces");
 		idx_cell_2_cells=allocate_1d_array_int(block->n_all_cells_in_block_, "idx_cell_2_cells");
