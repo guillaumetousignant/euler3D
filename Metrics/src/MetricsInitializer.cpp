@@ -50,13 +50,14 @@ void MetricsInitializer::doInit()
     //Compute Weight Least-Squared metrics;
 
 
-   *iCells = nullptr;
+   /**iCells = nullptr;
    *iFaces = nullptr;
    *iNodes = nullptr;
 
     iCells = nullptr;
     iFaces = nullptr;
     iNodes = nullptr;
+    */
 
 
 }

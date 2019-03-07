@@ -231,7 +231,6 @@ TEST_CASE( "TestComputeCenterCells", "Prove that center cells are well defined" 
     //Test for internal cell and ghost cells
     for(int i(0);i < blockData->n_all_cells_in_block_;i++)
     {
-
         resCenterCoord[0] = blockData->block_cells_[i]->cell_coordinates_[0];
         resCenterCoord[1] = blockData->block_cells_[i]->cell_coordinates_[1];
         resCenterCoord[2] = blockData->block_cells_[i]->cell_coordinates_[2];
