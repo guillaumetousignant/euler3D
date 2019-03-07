@@ -5,9 +5,10 @@
 
 Face::Face()
 {
-	face_normals_ = new double[3];
-	right_cell_r_vector_ = new double[3];
-	left_cell_r_vector_ = new double[3];
+	face_normals_ = new double[3]();
+	face_2_cells_connectivity_ = new int[2]();
+	right_cell_r_vector_ = new double[3]();
+	left_cell_r_vector_ = new double[3]();
 }
 
 Face::~Face()

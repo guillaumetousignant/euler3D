@@ -7,7 +7,7 @@
 #include <iostream>
 using namespace std;
 
-CompleteMesh::CompleteMesh(int n_blocks, int n_blocks_in_process, int my_blocks[], Block all_blocks[])
+CompleteMesh::CompleteMesh(int n_blocks, int n_blocks_in_process, int* my_blocks, Block* all_blocks)
 
 {		
 		n_blocks_=n_blocks;

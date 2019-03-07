@@ -3,6 +3,7 @@
 
 #include "FaceCreator.h"
 
+
 FaceCreator::FaceCreator()
 {
 
@@ -14,9 +15,11 @@ FaceCreator::~FaceCreator()
 
 Face* FaceCreator::createFace()
 {
-	Face* new_face;
-	new_face = new Face;
+	Face* new_face = new Face;
 	return new_face;
 }
+
+
+
 
 #endif

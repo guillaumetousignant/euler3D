@@ -4,11 +4,11 @@
 class InterpolationVariables
 {
 public:
-	double (*grad_ro_)[3];
-	double (*grad_uu_)[3];
-	double (*grad_vv_)[3];
-	double (*grad_ww_)[3];
-	double (*grad_pp_)[3];
+	double** grad_ro_;
+	double** grad_uu_;
+	double** grad_vv_;
+	double** grad_ww_;
+	double** grad_pp_;
 
 	double* limiter_ro_;
 	double* limiter_uu_;
