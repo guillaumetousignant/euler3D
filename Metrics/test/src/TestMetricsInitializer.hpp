@@ -19,40 +19,57 @@ void buildConnectivity(Block *iBlock)
 
     iBlock->n_real_cells_in_block_ = nbCells;
     iBlock->n_all_cells_in_block_ = nbCellsTot;
-    iBlock->nb_faces_in_block_ = nbFacesTot;
-    iBlock->nb_nodes_in_block_ = nbNodesTot;
+    iBlock->n_faces_in_block_ = nbFacesTot;
+    iBlock->n_nodes_in_block_ = nbNodesTot;
 
-    iBlock->block_cells_ = new Cell[nbCellsTot];
-    iBlock->block_faces_ = new Face[nbFacesTot];
-    iBlock->block_nodes_ = new Node[nbNodesTot];
+    iBlock->block_cells_ = new Cell*[nbCellsTot];
+    iBlock->block_faces_ = new Face*[nbFacesTot];
+    iBlock->block_nodes_ = new Node*[nbNodesTot];
 
-    iBlock->block_cells_[0].n_faces_per_cell_ = nbFacesTot;
-    iBlock->block_cells_[0].n_nodes_per_cell_ = nbNodesTot;
+    for(uint i(0);i < nbCellsTot;i++)
+    {
+        iBlock->block_cells_[i] = new Cell;
+    }
+
+    for(uint i(0);i < nbFacesTot;i++)
+    {
+        iBlock->block_faces_[i] = new Face;
+    }
+
+    for(uint i(0);i < nbNodesTot;i++)
+    {
+        iBlock->block_nodes_[i] = new Node;
+    }
+
+
+
+    iBlock->block_cells_[0]->n_faces_per_cell_ = nbFacesTot;
+    iBlock->block_cells_[0]->n_nodes_per_cell_ = nbNodesTot;
 
     //Init nb of faces for each ghots cells
     for(uint i(1);i < nbCellsTot;i++)
     {
-        iBlock->block_cells_[i].n_faces_per_cell_ = 1;
+        iBlock->block_cells_[i]->n_faces_per_cell_ = 1;
     }
 
     //Init Cell block connectivity internal
     uint cell2cell_size = 1;
-    iBlock->block_cells_[0].cell_2_cells_connectivity_ = new int[cell2cell_size];
-    iBlock->block_cells_[0].cell_2_cells_connectivity_[0] = 0;
+    iBlock->block_cells_[0]->cell_2_cells_connectivity_ = new int[cell2cell_size];
+    iBlock->block_cells_[0]->cell_2_cells_connectivity_[0] = 0;
 
-    iBlock->block_cells_[0].cell_2_faces_connectivity_ = new int[nbFacesTot];
-    iBlock->block_cells_[0].cell_2_faces_connectivity_[0] = 0;
-    iBlock->block_cells_[0].cell_2_faces_connectivity_[1] = 1;
-    iBlock->block_cells_[0].cell_2_faces_connectivity_[2] = 2;
-    iBlock->block_cells_[0].cell_2_faces_connectivity_[3] = 3;
-    iBlock->block_cells_[0].cell_2_faces_connectivity_[4] = 4;
+    iBlock->block_cells_[0]->cell_2_faces_connectivity_ = new int[nbFacesTot];
+    iBlock->block_cells_[0]->cell_2_faces_connectivity_[0] = 0;
+    iBlock->block_cells_[0]->cell_2_faces_connectivity_[1] = 1;
+    iBlock->block_cells_[0]->cell_2_faces_connectivity_[2] = 2;
+    iBlock->block_cells_[0]->cell_2_faces_connectivity_[3] = 3;
+    iBlock->block_cells_[0]->cell_2_faces_connectivity_[4] = 4;
 
-    iBlock->block_cells_[0].cell_2_nodes_connectivity_ = new int[nbNodesTot];
-    iBlock->block_cells_[0].cell_2_nodes_connectivity_[0] = 0;
-    iBlock->block_cells_[0].cell_2_nodes_connectivity_[1] = 1;
-    iBlock->block_cells_[0].cell_2_nodes_connectivity_[2] = 2;
-    iBlock->block_cells_[0].cell_2_nodes_connectivity_[3] = 3;
-    iBlock->block_cells_[0].cell_2_nodes_connectivity_[4] = 4;
+    iBlock->block_cells_[0]->cell_2_nodes_connectivity_ = new int[nbNodesTot];
+    iBlock->block_cells_[0]->cell_2_nodes_connectivity_[0] = 0;
+    iBlock->block_cells_[0]->cell_2_nodes_connectivity_[1] = 1;
+    iBlock->block_cells_[0]->cell_2_nodes_connectivity_[2] = 2;
+    iBlock->block_cells_[0]->cell_2_nodes_connectivity_[3] = 3;
+    iBlock->block_cells_[0]->cell_2_nodes_connectivity_[4] = 4;
 
     //Init ghost connectivity
     uint nbCell2CellGhost = 1;
@@ -60,11 +77,11 @@ void buildConnectivity(Block *iBlock)
 
     for(uint i(1);i < nbCellsTot;i++)
     {
-        iBlock->block_cells_[i].cell_2_cells_connectivity_ = new int[nbCell2CellGhost];
-        iBlock->block_cells_[i].cell_2_cells_connectivity_[0] = 0;
+        iBlock->block_cells_[i]->cell_2_cells_connectivity_ = new int[nbCell2CellGhost];
+        iBlock->block_cells_[i]->cell_2_cells_connectivity_[0] = 0;
 
-        iBlock->block_cells_[i].cell_2_faces_connectivity_ = new int[nbFacesPerGhost];
-        iBlock->block_cells_[i].cell_2_faces_connectivity_[0] = (i - 1);
+        iBlock->block_cells_[i]->cell_2_faces_connectivity_ = new int[nbFacesPerGhost];
+        iBlock->block_cells_[i]->cell_2_faces_connectivity_[0] = (i - 1);
     }
 
     //Setting nb of nodes for all faces
@@ -73,9 +90,9 @@ void buildConnectivity(Block *iBlock)
     const uint nbNodesSquare = 4;
 
     for(uint i(0);i < nbFacesTot - 1;i++)
-        iBlock->block_faces_[i].n_nodes_per_face_ = nbNodesTriangle; // Triangles
+        iBlock->block_faces_[i]->n_nodes_per_face_ = nbNodesTriangle; // Triangles
 
-    iBlock->block_faces_[nbFacesTot - 1].n_nodes_per_face_ = nbNodesSquare; //Square
+    iBlock->block_faces_[nbFacesTot - 1]->n_nodes_per_face_ = nbNodesSquare; //Square
 
     int face2cells_[nbFacesTot][2];
     face2cells_[0][0] = 0;
@@ -95,104 +112,106 @@ void buildConnectivity(Block *iBlock)
 
     for(uint i(0);i < nbFacesTot;i++)
     {
-        iBlock->block_faces_[i].face_2_cells_connectivity_ = new int[2];
+        iBlock->block_faces_[i]->face_2_cells_connectivity_ = new int[2];
 
         for(int j(0);j < 2;j++)
         {
             int value = face2cells_[i][j];
-            iBlock->block_faces_[i].face_2_cells_connectivity_[j] = value;
+            iBlock->block_faces_[i]->face_2_cells_connectivity_[j] = value;
         }
     }
     
     //First face
-    iBlock->block_faces_[0].face_2_nodes_connectivity_ = new int[nbNodesTriangle];
+    iBlock->block_faces_[0]->face_2_nodes_connectivity_ = new int[nbNodesTriangle];
 
-    iBlock->block_faces_[0].face_2_nodes_connectivity_[0] = 0;
-    iBlock->block_faces_[0].face_2_nodes_connectivity_[1] = 1;
-    iBlock->block_faces_[0].face_2_nodes_connectivity_[2] = 4;
+    iBlock->block_faces_[0]->face_2_nodes_connectivity_[0] = 0;
+    iBlock->block_faces_[0]->face_2_nodes_connectivity_[1] = 1;
+    iBlock->block_faces_[0]->face_2_nodes_connectivity_[2] = 4;
 
     //Second face
-    iBlock->block_faces_[1].face_2_nodes_connectivity_ = new int[nbNodesTriangle];
+    iBlock->block_faces_[1]->face_2_nodes_connectivity_ = new int[nbNodesTriangle];
 
-    iBlock->block_faces_[1].face_2_nodes_connectivity_[0] = 1;
-    iBlock->block_faces_[1].face_2_nodes_connectivity_[1] = 2;
-    iBlock->block_faces_[1].face_2_nodes_connectivity_[2] = 4;
+    iBlock->block_faces_[1]->face_2_nodes_connectivity_[0] = 1;
+    iBlock->block_faces_[1]->face_2_nodes_connectivity_[1] = 2;
+    iBlock->block_faces_[1]->face_2_nodes_connectivity_[2] = 4;
 
     //Third face
-    iBlock->block_faces_[2].face_2_nodes_connectivity_ = new int[nbNodesTriangle];
+    iBlock->block_faces_[2]->face_2_nodes_connectivity_ = new int[nbNodesTriangle];
 
-    iBlock->block_faces_[2].face_2_nodes_connectivity_[0] = 2;
-    iBlock->block_faces_[2].face_2_nodes_connectivity_[1] = 3;
-    iBlock->block_faces_[2].face_2_nodes_connectivity_[2] = 4;
+    iBlock->block_faces_[2]->face_2_nodes_connectivity_[0] = 2;
+    iBlock->block_faces_[2]->face_2_nodes_connectivity_[1] = 3;
+    iBlock->block_faces_[2]->face_2_nodes_connectivity_[2] = 4;
 
     //Fourth face
-    iBlock->block_faces_[3].face_2_nodes_connectivity_ = new int[nbNodesTriangle];
+    iBlock->block_faces_[3]->face_2_nodes_connectivity_ = new int[nbNodesTriangle];
 
-    iBlock->block_faces_[3].face_2_nodes_connectivity_[0] = 3;
-    iBlock->block_faces_[3].face_2_nodes_connectivity_[1] = 0;
-    iBlock->block_faces_[3].face_2_nodes_connectivity_[2] = 4;
+    iBlock->block_faces_[3]->face_2_nodes_connectivity_[0] = 3;
+    iBlock->block_faces_[3]->face_2_nodes_connectivity_[1] = 0;
+    iBlock->block_faces_[3]->face_2_nodes_connectivity_[2] = 4;
 
     //Fifth face
-    iBlock->block_faces_[4].face_2_nodes_connectivity_ = new int[nbNodesSquare];
+    iBlock->block_faces_[4]->face_2_nodes_connectivity_ = new int[nbNodesSquare];
 
-    iBlock->block_faces_[4].face_2_nodes_connectivity_[0] = 0;
-    iBlock->block_faces_[4].face_2_nodes_connectivity_[1] = 3;
-    iBlock->block_faces_[4].face_2_nodes_connectivity_[2] = 2;
-    iBlock->block_faces_[4].face_2_nodes_connectivity_[3] = 1;
+    iBlock->block_faces_[4]->face_2_nodes_connectivity_[0] = 0;
+    iBlock->block_faces_[4]->face_2_nodes_connectivity_[1] = 3;
+    iBlock->block_faces_[4]->face_2_nodes_connectivity_[2] = 2;
+    iBlock->block_faces_[4]->face_2_nodes_connectivity_[3] = 1;
     
     
     int node2cells[1] = {0};
 
-    for(int i(0);i < iBlock->nb_nodes_in_block_;i++)
-        iBlock->block_nodes_[i].node_2_cells_connectivity_ = node2cells;
+    for(int i(0);i < iBlock->n_nodes_in_block_;i++)
+        iBlock->block_nodes_[i]->node_2_cells_connectivity_ = node2cells;
 
-    iBlock->block_nodes_[0].node_coordinates_[0] = 1.0;
-    iBlock->block_nodes_[0].node_coordinates_[1] = 0.0;
-    iBlock->block_nodes_[0].node_coordinates_[2] = 0.0;
+    iBlock->block_nodes_[0]->node_coordinates_[0] = 1.0;
+    iBlock->block_nodes_[0]->node_coordinates_[1] = 0.0;
+    iBlock->block_nodes_[0]->node_coordinates_[2] = 0.0;
 
-    iBlock->block_nodes_[1].node_coordinates_[0] = 0.0;
-    iBlock->block_nodes_[1].node_coordinates_[1] = 1.0;
-    iBlock->block_nodes_[1].node_coordinates_[2] = 0.0;
+    iBlock->block_nodes_[1]->node_coordinates_[0] = 0.0;
+    iBlock->block_nodes_[1]->node_coordinates_[1] = 1.0;
+    iBlock->block_nodes_[1]->node_coordinates_[2] = 0.0;
 
-    iBlock->block_nodes_[2].node_coordinates_[0] = -1.0;
-    iBlock->block_nodes_[2].node_coordinates_[1] = 0.0;
-    iBlock->block_nodes_[2].node_coordinates_[2] = 0.0;
+    iBlock->block_nodes_[2]->node_coordinates_[0] = -1.0;
+    iBlock->block_nodes_[2]->node_coordinates_[1] = 0.0;
+    iBlock->block_nodes_[2]->node_coordinates_[2] = 0.0;
 
-    iBlock->block_nodes_[3].node_coordinates_[0] = 0.0;
-    iBlock->block_nodes_[3].node_coordinates_[1] = -1.0;
-    iBlock->block_nodes_[3].node_coordinates_[2] = 0.0;
+    iBlock->block_nodes_[3]->node_coordinates_[0] = 0.0;
+    iBlock->block_nodes_[3]->node_coordinates_[1] = -1.0;
+    iBlock->block_nodes_[3]->node_coordinates_[2] = 0.0;
 
-    iBlock->block_nodes_[4].node_coordinates_[0] = 0.0;
-    iBlock->block_nodes_[4].node_coordinates_[1] = 0.0;
-    iBlock->block_nodes_[4].node_coordinates_[2] = 2.0;
+    iBlock->block_nodes_[4]->node_coordinates_[0] = 0.0;
+    iBlock->block_nodes_[4]->node_coordinates_[1] = 0.0;
+    iBlock->block_nodes_[4]->node_coordinates_[2] = 2.0;
 
 }
 
 void tearDown(Block *iBlock)
 {
-
+    /*
     uint nbCellsTot = 6;
     uint nbFacesTot = 5;
 
     for(uint i(0);i < nbCellsTot;i++)
     { 
-        delete [] iBlock->block_cells_[i].cell_2_cells_connectivity_;
-        delete [] iBlock->block_cells_[i].cell_2_faces_connectivity_;
+        delete [] iBlock->block_cells_[i]->cell_2_cells_connectivity_;
+        delete [] iBlock->block_cells_[i]->cell_2_faces_connectivity_;
         
     }
 
-    delete [] iBlock->block_cells_[0].cell_2_nodes_connectivity_;
+    delete [] iBlock->block_cells_[0]->cell_2_nodes_connectivity_;
 
     for(uint i(0);i < nbFacesTot;i++)
     {
-        delete [] iBlock->block_faces_[i].face_2_cells_connectivity_;
-        delete [] iBlock->block_faces_[i].face_2_nodes_connectivity_;
+        delete [] iBlock->block_faces_[i]->face_2_cells_connectivity_;
+        delete [] iBlock->block_faces_[i]->face_2_nodes_connectivity_;
     }
 
 
     delete [] iBlock->block_cells_;
     delete [] iBlock->block_faces_;
     delete [] iBlock->block_nodes_;
+    */
+    
 }
 
 TEST_CASE( "TestComputeCenterCells", "Prove that center cells are well defined" )
@@ -213,9 +232,9 @@ TEST_CASE( "TestComputeCenterCells", "Prove that center cells are well defined" 
     for(int i(0);i < blockData->n_all_cells_in_block_;i++)
     {
 
-        resCenterCoord[0] = blockData->block_cells_[i].cell_coordinates_[0];
-        resCenterCoord[1] = blockData->block_cells_[i].cell_coordinates_[1];
-        resCenterCoord[2] = blockData->block_cells_[i].cell_coordinates_[2];
+        resCenterCoord[0] = blockData->block_cells_[i]->cell_coordinates_[0];
+        resCenterCoord[1] = blockData->block_cells_[i]->cell_coordinates_[1];
+        resCenterCoord[2] = blockData->block_cells_[i]->cell_coordinates_[2];
 
         REQUIRE(centerCoord[0] == resCenterCoord[0]);
         REQUIRE(centerCoord[1] == resCenterCoord[1]);
@@ -260,8 +279,8 @@ TEST_CASE("TestComputeCenterFaces", "Prove that center of faces are correct")
 
     for(int i(0);i<nbNodesTriangle;i++)
     {
-            REQUIRE(blockData->block_faces_[0].face_center_[i] <= centerFace1[i] + epsilon);
-            REQUIRE(blockData->block_faces_[0].face_center_[i] >= centerFace1[i] - epsilon);
+            REQUIRE(blockData->block_faces_[0]->face_center_[i] <= centerFace1[i] + epsilon);
+            REQUIRE(blockData->block_faces_[0]->face_center_[i] >= centerFace1[i] - epsilon);
     }
         
     centerFace2[0] = -0.33;
@@ -270,8 +289,8 @@ TEST_CASE("TestComputeCenterFaces", "Prove that center of faces are correct")
 
     for(int i(0);i<nbNodesTriangle;i++)
     {
-        REQUIRE(blockData->block_faces_[1].face_center_[i] <= centerFace2[i] + epsilon);
-        REQUIRE(blockData->block_faces_[1].face_center_[i] >= centerFace2[i] - epsilon);
+        REQUIRE(blockData->block_faces_[1]->face_center_[i] <= centerFace2[i] + epsilon);
+        REQUIRE(blockData->block_faces_[1]->face_center_[i] >= centerFace2[i] - epsilon);
     }
 
     centerFace3[0] = -0.33;
@@ -280,8 +299,8 @@ TEST_CASE("TestComputeCenterFaces", "Prove that center of faces are correct")
 
     for(int i(0);i<nbNodesTriangle;i++)
     {
-        REQUIRE(blockData->block_faces_[2].face_center_[i] <= centerFace3[i] + epsilon);
-        REQUIRE(blockData->block_faces_[2].face_center_[i] >= centerFace3[i] - epsilon);
+        REQUIRE(blockData->block_faces_[2]->face_center_[i] <= centerFace3[i] + epsilon);
+        REQUIRE(blockData->block_faces_[2]->face_center_[i] >= centerFace3[i] - epsilon);
     }
 
     centerFace4[0] = 0.33;
@@ -290,8 +309,8 @@ TEST_CASE("TestComputeCenterFaces", "Prove that center of faces are correct")
 
     for(int i(0);i<nbNodesTriangle;i++)
     {
-        REQUIRE(blockData->block_faces_[3].face_center_[i] <= centerFace4[i] + epsilon);
-        REQUIRE(blockData->block_faces_[3].face_center_[i] >= centerFace4[i] - epsilon);
+        REQUIRE(blockData->block_faces_[3]->face_center_[i] <= centerFace4[i] + epsilon);
+        REQUIRE(blockData->block_faces_[3]->face_center_[i] >= centerFace4[i] - epsilon);
     }
 
     centerFace5[0] = 0.0;
@@ -301,8 +320,8 @@ TEST_CASE("TestComputeCenterFaces", "Prove that center of faces are correct")
 
     for(int i(0);i<nbNodesTriangle;i++)
     {
-        REQUIRE(blockData->block_faces_[4].face_center_[i] <= centerFace5[i] + epsilon);
-        REQUIRE(blockData->block_faces_[4].face_center_[i] >= centerFace5[i] - epsilon);
+        REQUIRE(blockData->block_faces_[4]->face_center_[i] <= centerFace5[i] + epsilon);
+        REQUIRE(blockData->block_faces_[4]->face_center_[i] >= centerFace5[i] - epsilon);
     }
 
     tearDown(blockData);
@@ -342,8 +361,8 @@ TEST_CASE( "TestComputeNormals", "Prove that normales of each faces are well def
 
     for(int i(0);i<nbCoordVect;i++)
     {
-            REQUIRE(blockData->block_faces_[0].face_normals_[i] <= normalFace1[i] + epsilon);
-            REQUIRE(blockData->block_faces_[0].face_normals_[i] >= normalFace1[i] - epsilon);
+            REQUIRE(blockData->block_faces_[0]->face_normals_[i] <= normalFace1[i] + epsilon);
+            REQUIRE(blockData->block_faces_[0]->face_normals_[i] >= normalFace1[i] - epsilon);
     }
         
     normalFace2[0] = -1.0;
@@ -352,8 +371,8 @@ TEST_CASE( "TestComputeNormals", "Prove that normales of each faces are well def
 
     for(int i(0);i<nbCoordVect;i++)
     {
-        REQUIRE(blockData->block_faces_[1].face_normals_[i] <= normalFace2[i] + epsilon);
-        REQUIRE(blockData->block_faces_[1].face_normals_[i] >= normalFace2[i] - epsilon);
+        REQUIRE(blockData->block_faces_[1]->face_normals_[i] <= normalFace2[i] + epsilon);
+        REQUIRE(blockData->block_faces_[1]->face_normals_[i] >= normalFace2[i] - epsilon);
     }
 
     normalFace3[0] = -1.0;
@@ -362,8 +381,8 @@ TEST_CASE( "TestComputeNormals", "Prove that normales of each faces are well def
 
     for(int i(0);i<nbCoordVect;i++)
     {
-        REQUIRE(blockData->block_faces_[2].face_normals_[i] <= normalFace3[i] + epsilon);
-        REQUIRE(blockData->block_faces_[2].face_normals_[i] >= normalFace3[i] - epsilon);
+        REQUIRE(blockData->block_faces_[2]->face_normals_[i] <= normalFace3[i] + epsilon);
+        REQUIRE(blockData->block_faces_[2]->face_normals_[i] >= normalFace3[i] - epsilon);
     }
 
     normalFace4[0] = 1.0;
@@ -372,8 +391,8 @@ TEST_CASE( "TestComputeNormals", "Prove that normales of each faces are well def
 
     for(int i(0);i<nbCoordVect;i++)
     {
-        REQUIRE(blockData->block_faces_[3].face_normals_[i] <= normalFace4[i] + epsilon);
-        REQUIRE(blockData->block_faces_[3].face_normals_[i] >= normalFace4[i] - epsilon);
+        REQUIRE(blockData->block_faces_[3]->face_normals_[i] <= normalFace4[i] + epsilon);
+        REQUIRE(blockData->block_faces_[3]->face_normals_[i] >= normalFace4[i] - epsilon);
     }
 
     normalFace5[0] = 0.0;
@@ -382,8 +401,8 @@ TEST_CASE( "TestComputeNormals", "Prove that normales of each faces are well def
 
     for(int i(0);i<nbCoordVect;i++)
     {
-        REQUIRE(blockData->block_faces_[4].face_normals_[i] <= normalFace5[i] + epsilon);
-        REQUIRE(blockData->block_faces_[4].face_normals_[i] >= normalFace5[i] - epsilon);
+        REQUIRE(blockData->block_faces_[4]->face_normals_[i] <= normalFace5[i] + epsilon);
+        REQUIRE(blockData->block_faces_[4]->face_normals_[i] >= normalFace5[i] - epsilon);
     }
 
     tearDown(blockData);
@@ -415,7 +434,7 @@ TEST_CASE("Test ComputeAreaFaces", "Testing if areas are well defined")
     area[4] = 2;
 
     for(int i(0);i < nbFaces;i++)
-        REQUIRE(blockData->block_faces_[i].face_area_ == area[i]);
+        REQUIRE(blockData->block_faces_[i]->face_area_ == area[i]);
 
     tearDown(blockData);
 
@@ -445,7 +464,7 @@ TEST_CASE("Test interpolation vector")
     vec_interp_left[1] = 0.33;
     vec_interp_left[2] = 0.27;
 
-    double *result_left = blockData->block_faces_[0].left_cell_r_vector_;
+    double *result_left = blockData->block_faces_[0]->left_cell_r_vector_;
 
     for(int i(0);i < 3;i++)
     {

@@ -61,7 +61,7 @@ class MetricsInitializer
          * @param iSynchs: Array of Cell objects to represent ghost cell of type synchs.
          * @param iNodes: Array of Node objects to represent the properties of nodes.
          */
-        void computeCenterCells(uint iNCells, uint iNCellsTot, Cell* iCells, Node* iNodes);
+        void computeCenterCells(uint iNCells, uint iNCellsTot, Cell** iCells, Node** iNodes);
 
         /**
          * @brief 
@@ -70,7 +70,7 @@ class MetricsInitializer
          * @param iFaces: Array containing objects of type Faces.
          * @param iNodes: Array containing objects of type Nodes.
          */
-        void computeCenterFaces(uint iNFaces, Face* iFaces, Node* iNodes);
+        void computeCenterFaces(uint iNFaces, Face** iFaces, Node** iNodes);
 
         /**
          * @brief 
@@ -84,7 +84,7 @@ class MetricsInitializer
          * @param iSynchs 
          * @param iFaces 
          */
-        void computeInterpVect(uint iNCells, uint iNCellsTot, uint iNFaces, Cell* iCells, Face* iFaces);
+        void computeInterpVect(uint iNCells, uint iNCellsTot, uint iNFaces, Cell** iCells, Face** iFaces);
 
         /**
          * @brief 
@@ -92,7 +92,7 @@ class MetricsInitializer
          * @param iNFaces 
          * @param iFaces 
          */
-        void computeAreaFaces(uint iNFaces, Face* iFaces);
+        void computeAreaFaces(uint iNFaces, Face** iFaces);
 
         /**
          * @brief 
@@ -101,7 +101,7 @@ class MetricsInitializer
          * @param iFaces 
          * @param iNodes 
          */
-        void computeNormalFaces(uint iNFaces, Face* iFaces, Node* iNodes);
+        void computeNormalFaces(uint iNFaces, Face** iFaces, Node** iNodes);
 
         /**
          * @brief 
@@ -114,7 +114,7 @@ class MetricsInitializer
          * @param iSynchs 
          * @param iFaces 
          */
-        void computeVolumeCells(uint iNCells, uint iNCellsTot, Cell* iCells, Face* iFaces);
+        void computeVolumeCells(uint iNCells, uint iNCellsTot, Cell** iCells, Face** iFaces);
 
         /**
          * @brief 
@@ -122,7 +122,7 @@ class MetricsInitializer
          * @param iNCells: 
          * @param iCells 
          */
-        void computeWLS(uint iNCells, Cell* iCells);
+        void computeWLS(uint iNCells, Cell** iCells);
 
     private:
 
