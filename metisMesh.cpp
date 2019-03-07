@@ -35,12 +35,14 @@ MetisMesh::~MetisMesh()
     if (nElements_ != nullptr) delete [] nElements_;
     if (nNodes_ != nullptr) delete [] nNodes_;
     if (elementType_ != nullptr) delete [] elementType_;
-    if (nTotalNode_ != nullptr) delete nTotalNode_;
+    if (nTotalNode_ != nullptr) delete [] nTotalNode_;
+    if (nBoundaries_ != nullptr) delete [] nBoundaries_;
 
     nElements_ = nullptr;
     nNodes_ = nullptr;
     elementType_ = nullptr;
     nTotalNode_ = nullptr;
+    nBoundaries_ = nullptr;
 
     for (int blockI = 0; blockI < nBlock_; blockI++)
     {
@@ -56,13 +58,11 @@ MetisMesh::~MetisMesh()
     if (y_ != nullptr) delete [] y_;
     if (z_ != nullptr) delete [] z_;
     
-
     if (connectivity_ != nullptr) delete [] connectivity_;
 
     x_ = nullptr;
     y_ = nullptr;
     z_ = nullptr;
-
 
     connectivity_ = nullptr;
 }
@@ -74,6 +74,8 @@ void MetisMesh::Init(int nBlock, int* nElements, int* nNodes)
     nNodes_ = new int[nBlock];
     elementType_ = new int[*nElements];
     nTotalNode_ = new int[1];
+    nBoundaries_ = new int[nBlock];
+
 
     x_ = new double*[nBlock]; 
     y_ = new double*[nBlock];
@@ -85,6 +87,7 @@ void MetisMesh::Init(int nBlock, int* nElements, int* nNodes)
     {
         nElements_[i] = nElements[i];
         nNodes_[i] = nNodes[i];
+        // nBoundaries_[i] = nBoundaries[i];
         x_[i] = new double[nNodes[i]];
         y_[i] = new double[nNodes[i]];
         z_[i] = new double[nNodes[i]];
@@ -105,6 +108,7 @@ if (myfile.is_open()) {
     cout << "Reading : " << fileName << endl;
     int nNodes(0);
     int nElements(0);
+    int nBoundaries(0);
     int nDimensions(0);
     int nBlock(1);
     char str_temp[100];
@@ -113,6 +117,7 @@ if (myfile.is_open()) {
     getline (myfile, line);
     sscanf(line.c_str(), "NDIME=%d", &nDimensions);
     cout << "Nb de dimensions = " << nDimensions << endl;
+    nDimensions_ = nDimensions;;
 
     getline (myfile, line);
     sscanf(line.c_str(), "NELEM=%d", &nElements);
@@ -123,7 +128,14 @@ if (myfile.is_open()) {
         } 
 
     sscanf(line.c_str(), "NPOIN=%d", &nNodes);
-    cout << "Nb de noeuds= " << nNodes << endl;  
+    cout << "Nb de noeuds= " << nNodes << endl; 
+
+        for (int i = 0; i < nNodes + 1; i++) {
+        getline (myfile,line);   
+        } 
+
+    sscanf(line.c_str(), "NMARK=%d", &nBoundaries);
+    cout << "Nb de conditions frontieres = " << nBoundaries << endl; 
 
     // Fonction d'initialisation :
     Init(nBlock, &nElements, &nNodes);
@@ -222,17 +234,18 @@ void MetisMesh::WriteMesh(std::string fileName)
 {
     FILE* fid = fopen(fileName.c_str(), "w");
 
-    fprintf(fid, "VARIABLES=\"X\",\"Y\"\n");
-
     for (int blockI = 0; blockI < nBlock_; blockI++)
     {
         int nNodes = nNodes_[blockI];
         int nElements = nElements_[blockI];
 
-        fprintf(fid, "ZONE T=\"Element\"\nNodes=%d, Elements=%d, ZONETYPE=FETriangle\nDATAPACKING=POINT\n", nNodes, nElements);
+        fprintf(fid, "Block=%d\n", blockI+1);
+        
+        fprintf(fid, "NDIME=%d\n", nDimensions_);
 
         for (int nodeI = 0; nodeI < nNodes; nodeI++)
         {
+            // ici ajouter coordonnee y
             fprintf(fid, "%.12e %.12e\n", x_[blockI][nodeI], y_[blockI][nodeI]);
         }
 
@@ -341,12 +354,10 @@ MetisMesh* MetisMesh::Partition(int nPart)
     int count = 0;
     int count1 = 0;
 
-    for (int i = 1; i < nElements_[0]+1; i++)
-    {
-
+    for (int i = 1; i < nElements_[0]+1; i++) {
+    
         count += elementType_[i];
-        eptr[i] = count;
-      
+        eptr[i] = count;   
     }
     
     for (int i = 0; i < nElements_[0]; i++)
@@ -373,12 +384,14 @@ MetisMesh* MetisMesh::Partition(int nPart)
     std::cout << "Partition Success: " << success << std::endl;
 
     std::vector<int> elementsPerBlock[nPart];
+    std::vector<int> elementTypePerBlock[nPart];
     std::vector<int> nodesPerBlock[nPart];
 
     for (int i = 0; i < nElements_[0]; i++)
     {
         int blockId = epart[i];
         elementsPerBlock[blockId].push_back(i);
+        elementTypePerBlock[blockId].push_back(elementType_[i]);
     }
 
     for (int i = 0; i < nNodes_[0]; i++)
@@ -389,8 +402,11 @@ MetisMesh* MetisMesh::Partition(int nPart)
 
     int newNelements[nPart];
 
-    for (int blockI = 0; blockI < nPart; blockI++)
+    for (int blockI = 0; blockI < nPart; blockI++) {
+
+        // Nombre delements par block
         newNelements[blockI] = elementsPerBlock[blockI].size();
+    }
 
     std::vector<int> addedNode[nPart];
     std::vector<int>** newConnectivity;
@@ -403,17 +419,16 @@ MetisMesh* MetisMesh::Partition(int nPart)
 
         for (int i = 0; i < newNelements[blockI]; i++)
         {
-            int n1 = connectivity_[0][elementsPerBlock[blockI][i]][0];
-            int n2 = connectivity_[0][elementsPerBlock[blockI][i]][1];
-            int n3 = connectivity_[0][elementsPerBlock[blockI][i]][2];
+            for (int j = 0; j < elementTypePerBlock[blockI][i]; j++) {
 
-            int newN1 = findNodeIndex(addedNode[blockI], n1);
-            int newN2 = findNodeIndex(addedNode[blockI], n2);
-            int newN3 = findNodeIndex(addedNode[blockI], n3);
-
-            newConnectivity[blockI][i].push_back(newN1);
-            newConnectivity[blockI][i].push_back(newN2);
-            newConnectivity[blockI][i].push_back(newN3);
+                int n1 = connectivity_[0][elementsPerBlock[blockI][i]][j];
+              
+                int newN1 = findNodeIndex(addedNode[blockI], n1);
+            
+                newConnectivity[blockI][i].push_back(newN1);
+               
+            }
+            
         }
     }
 
