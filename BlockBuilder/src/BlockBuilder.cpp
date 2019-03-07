@@ -106,7 +106,7 @@ Cell* BlockBuilder::buildCell(int cell_id, std::string cell_type, std::string ce
 
 	}
 
-	delete cell_2_nodes_connectivity; 
+	delete [] cell_2_nodes_connectivity; 
 	return new_cell;
 
 

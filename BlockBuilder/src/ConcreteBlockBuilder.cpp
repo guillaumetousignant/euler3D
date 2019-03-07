@@ -129,6 +129,8 @@ void ConcreteBlockBuilder::preReadMyBlock(Block* block)
 		n_faces = faces_sum_for_each_cell-(faces_sum_for_each_cell - faces_sum_in_boundaries)/2.;
 		block->block_faces_ = new Face*[n_faces];
 		block->n_faces_in_block_ = n_faces;
+
+		std::cout<<n_faces<<std::endl;
 		
 		PrimitiveVariables* prim= new PrimitiveVariables(block->n_all_cells_in_block_);
 		block->block_primitive_variables_=prim;
@@ -214,7 +216,10 @@ void ConcreteBlockBuilder::readMyBlock(Block* block)
 			node_coordinates_temp[2]=z_temp;
 
 			new_node = buildNode(node_id,node_coordinates_temp, node_creator);
+
 			new_node -> block_id_ = block_id;
+
+			block->block_nodes_[node_id] = new Node;
 
 			block ->addNode(new_node);
 
@@ -352,6 +357,7 @@ void ConcreteBlockBuilder::createMyFaces(Block* block)
 
 	TempFaceCreator temp_face_creators[3];
 
+	std::cout<<"1\n";
 	FaceCreator* real_face_creator = new FaceCreator();
 	Cell* cell;
 	Face* face;
@@ -370,11 +376,15 @@ void ConcreteBlockBuilder::createMyFaces(Block* block)
 
 
 		cell = block -> block_cells_[i];
+		std::cout<<"2\n";
+
 		temp_face_array = new Face*[cell->n_faces_per_cell_];
 		temp_face_array = temp_face_creators[cell->creator_key_].createFace(cell);
 
 		for(int j=0;j<cell->n_faces_per_cell_;j++)
 		{
+			std::cout<<"3\n";
+
 			int* temp_nodes = new int[3];
 
 			face =  temp_face_array[j];
@@ -418,10 +428,10 @@ void ConcreteBlockBuilder::createMyFaces(Block* block)
 				face_count_+=1;
 
 			}
-			free(temp_nodes);
+			delete [] temp_nodes;
 
 		}
-		free(temp_face_array);
+		delete [] temp_face_array;
 	}
 
 }

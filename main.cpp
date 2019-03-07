@@ -18,6 +18,8 @@ int main()
 
     Block* new_block = new Block(0);
     string block_file ="../UnstructuredMesh5x5.su2";
+    // string block_file ="../TestMesh2x1.su2";
+
     ConcreteBlockBuilder concrete_block_builder = ConcreteBlockBuilder(block_file);
     concrete_block_builder.preReadMyBlock(new_block);
     concrete_block_builder.readMyBlock(new_block);
@@ -35,6 +37,17 @@ int main()
 	    cout<<"n_faces_per_cell_\t"<<test_cell->n_faces_per_cell_<<endl;
 	    cout<<"block_id_\t"<<test_cell->block_id_<<endl;
     }
+
+    for(int i=new_block->n_real_cells_in_block_;i<new_block->n_all_cells_in_block_;i++)
+    {
+    	test_cell = new_block ->block_cells_[i];
+    	cout<<"cell_id_\t"<<test_cell->cell_id_<<endl;
+	    cout<<"cell_2_nodes_connectivity_\t"<<test_cell->cell_2_nodes_connectivity_[0]<<"\t"<<test_cell->cell_2_nodes_connectivity_[1]<<"\t"<<test_cell->cell_2_nodes_connectivity_[2]<<"\t"<<test_cell->cell_2_nodes_connectivity_[3]<<endl;
+	    cout<<"n_nodes_per_cell_\t"<<test_cell->n_nodes_per_cell_<<endl;
+	    cout<<"n_faces_per_cell_\t"<<test_cell->n_faces_per_cell_<<endl;
+	    cout<<"block_id_\t"<<test_cell->block_id_<<endl;
+    }
+
     // test_cell = new_block ->block_cells_[12];
     // cout<<test_cell->cell_2_nodes_connectivity_[1]<<endl;
     cout<<"Noeuds\n";
@@ -62,12 +75,12 @@ int main()
 
         
 
-    for (int i=0; i<new_block->n_real_boundaries_in_block_;i++) 
-    {
-        std::cout << "test de boundary: "<< ((new_block->block_boundary_cell_ids_[i])->n_cell_in_boundary_) <<std::endl;
-        (new_block->block_boundary_cell_ids_[i])->updateBoundary();
-    }
-    std::cout << "test de boundary deep: "<< new_block->n_real_boundaries_in_block_ <<std::endl;
+    // for (int i=0; i<new_block->n_real_boundaries_in_block_;i++) 
+    // {
+    //     std::cout << "test de boundary: "<< ((new_block->block_boundary_cell_ids_[i])->n_cell_in_boundary_) <<std::endl;
+    //     (new_block->block_boundary_cell_ids_[i])->updateBoundary();
+    // }
+    // std::cout << "test de boundary deep: "<< new_block->n_real_boundaries_in_block_ <<std::endl;
 
 
 }
