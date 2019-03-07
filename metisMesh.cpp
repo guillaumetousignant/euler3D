@@ -188,6 +188,7 @@ if (myfile.is_open()) {
     }
 
     myfile.close(); 
+    cout << "closing... " << fileName << endl;
     }
 }
 
@@ -342,6 +343,9 @@ int numberOfNodes(0);
 
 MetisMesh* MetisMesh::Partition(int nPart)
 {
+    cout << "fonction Partition start " << endl;
+    cout << *nTotalNode_ << endl;
+
     if (nBlock_ > 1)
     {
         throw std::runtime_error("Cannot partition a multiblock mesh!");
