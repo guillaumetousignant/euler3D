@@ -42,7 +42,7 @@ Initializer::~Initializer()
 CompleteMesh* Initializer::InitializeMesh(Interface* interface)
 {
 	cout<<"Initialisation du maillage entier"<<endl<<endl;
-	//string mesh_file_name=interface->mesh_file_name_interface_;
+	string mesh_file_name=interface->mesh_file_name_interface_;
 	/*
 	double gamma=interface->gamma_interface_;
 	double cfl=interface->cfl_interface_;

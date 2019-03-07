@@ -1,7 +1,7 @@
-//#ifndef BLOCKBUILDER_SRC_CONCRETEBLOCKBUILDER_CPP
-//#define BLOCKBUILDER_SRC_CONCRETEBLOCKBUILDER_CPP
+#ifndef BLOCKBUILDER_SRC_CONCRETEBLOCKBUILDER_CPP
+#define BLOCKBUILDER_SRC_CONCRETEBLOCKBUILDER_CPP
 
-/*
+
 #include "BlockBuilder.h"
 #include "NodeCreator.h"
 #include "FaceCreator.h"
@@ -149,6 +149,3 @@ void ConcreteBlockBuilder::readMyBlocks(Block* block)
 		
 
 }
-
-
-*/

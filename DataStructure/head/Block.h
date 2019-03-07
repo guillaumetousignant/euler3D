@@ -22,9 +22,9 @@ public:
 	int n_all_cells_in_block_;
 	int nb_nodes_in_block_;
 	int nb_faces_in_block_;
-	Cell* block_cells_;
-	Node* block_nodes_;
-	Face* block_faces_;
+	Cell** block_cells_;
+	Node** block_nodes_;
+	Face** block_faces_;
 
 	TimeVariables* block_time_variables_;
 	PrimitiveVariables* block_primitive_variables_;

@@ -1,6 +1,6 @@
-//#ifndef BLOCKBUILDER_SRC_BLOCKBUILDER_CPP
-//#define BLOCKBUILDER_SRC_BLOCKBUILDER_CPP
-/*
+#ifndef BLOCKBUILDER_SRC_BLOCKBUILDER_CPP
+#define BLOCKBUILDER_SRC_BLOCKBUILDER_CPP
+
 #include "BlockBuilder.h"
 #include "CellCreator.h"
 #include "FaceCreator.h"
@@ -32,7 +32,7 @@ Cell* buildCell(int cell_id, std::string cell_type, std::string cell_2_nodes_con
 	if (cell_type == "10") // tetrahede
 	{
 		key = 0;
-		
+		int* cell_2_nodes_connectivity;
 		cell_2_nodes_connectivity = new int[4];
 		sscanf (cell_2_nodes_connectivity_temp.c_str(), "%d %d %d %d",&cell_2_nodes_connectivity[0],&cell_2_nodes_connectivity[1],&cell_2_nodes_connectivity[2],&cell_2_nodes_connectivity[3]);
 
@@ -103,6 +103,4 @@ void setMetrics(Block* block)
 {
 
 }
-//#endif
-
-*/
+#endif
