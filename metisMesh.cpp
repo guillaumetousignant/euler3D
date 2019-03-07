@@ -147,6 +147,7 @@ if (myfile.is_open()) {
     getline(myfile,line);
     
     *nTotalNode_ = 0;
+
     for (int i = 0; i < nElements; i++) {
          
         sscanf(line.c_str(), "%d %s", &elementType_[i], str_temp); 
@@ -155,7 +156,7 @@ if (myfile.is_open()) {
         getline(myfile, line); 
     
     }
-
+    
     if (nDimensions == 3) {
         for (int nodeI = 0; nodeI < nNodes; nodeI++) { 
             myfile >> x_[0][nodeI] >> y_[0][nodeI] >> z_[0][nodeI];         
