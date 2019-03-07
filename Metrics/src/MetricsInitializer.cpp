@@ -29,23 +29,23 @@ void MetricsInitializer::doInit()
 
     uint iNCells = blockData_->n_real_cells_in_block_;
     uint iNCellsTot = blockData_->n_all_cells_in_block_;
-    uint iNFaces = blockData_->nb_faces_in_block_;
+    uint iNFaces = blockData_->n_faces_in_block_;
     
-    Cell* iCells = blockData_->block_cells_;
-    Face* iFaces = blockData_->block_faces_;
-    Node* iNodes = blockData_->block_nodes_;
+    Cell** iCells = blockData_->block_cells_;
+    Face** iFaces = blockData_->block_faces_;
+    Node** iNodes = blockData_->block_nodes_;
 
-    computeCenterCells(iNCells, iNCellsTot, iCells, iNodes);
+    computeCenterCells(iNCells, iNCellsTot, *iCells, *iNodes);
     
-    computeCenterFaces(iNFaces, iFaces, iNodes);
+    computeCenterFaces(iNFaces, *iFaces, *iNodes);
 
-    computeNormalFaces(iNFaces, iFaces, iNodes);
+    computeNormalFaces(iNFaces, *iFaces, *iNodes);
 
-    computeAreaFaces(iNFaces, iFaces);
+    computeAreaFaces(iNFaces, *iFaces);
 
-    computeVolumeCells(iNCells, iNCellsTot, iCells, iFaces);
+    computeVolumeCells(iNCells, iNCellsTot, *iCells, *iFaces);
 
-    computeInterpVect(iNCells, iNCellsTot,iNFaces, iCells, iFaces);
+    computeInterpVect(iNCells, iNCellsTot,iNFaces, *iCells, *iFaces);
     
     //Compute Weight Least-Squared metrics;
 

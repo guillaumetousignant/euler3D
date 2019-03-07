@@ -5,8 +5,9 @@
 
 Cell::Cell()
 {
-	cell_coordinates_ = new double[3];
-	cell_weights_ = new double[3];
+	cell_coordinates_ = new double[3]();
+	
+	cell_weights_ = new double[3]();
 }
 
 Cell::~Cell()

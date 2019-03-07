@@ -3,7 +3,7 @@
 
 #include "CellCreator.h"
 
-class GhostCellCreator:CellCreator
+class GhostCellCreator:public CellCreator
 {
 public:
 
