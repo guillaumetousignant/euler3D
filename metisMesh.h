@@ -10,13 +10,13 @@ private:
     int* nNodes_;
     int* elementType_;
     int* nTotalNode_;
+    int* nBoundaries_;
+    int nDimensions_;
     int nBlock_;
     
-
     double** x_;
     double** y_;
     double** z_;
-    
 
     std::vector<int>** connectivity_;
 

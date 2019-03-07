@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
     //Input arguments
 	std::string meshFile = argv[1];
 	int nPart = atoi(argv[2]);
-	std::string outputMeshFile = argv[3];
+	std::string outputMeshFile = argv[3]; 
 
 
 	MetisMesh reader;
@@ -37,5 +37,5 @@ int main(int argc, char *argv[])
     
     MetisMesh* newMesh = reader.Partition(nPart);
 
-	newMesh->WriteMesh(outputMeshFile);
+	newMesh->WriteMesh(outputMeshFile); 
 }

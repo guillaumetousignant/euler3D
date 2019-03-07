@@ -246,7 +246,7 @@ void MetisMesh::WriteMesh(std::string fileName)
         for (int nodeI = 0; nodeI < nNodes; nodeI++)
         {
             // ici ajouter coordonnee y
-            fprintf(fid, "%.12e %.12e\n", x_[blockI][nodeI], y_[blockI][nodeI]);
+            fprintf(fid, "%.12e %.12e %.12e\n", x_[blockI][nodeI], y_[blockI][nodeI], z_[blockI][nodeI]);
         }
 
         for (int elementI = 0; elementI < nElements; elementI++)
@@ -417,18 +417,14 @@ MetisMesh* MetisMesh::Partition(int nPart)
     {
         newConnectivity[blockI] = new std::vector<int>[newNelements[blockI]];
 
-        for (int i = 0; i < newNelements[blockI]; i++)
-        {
+        for (int i = 0; i < newNelements[blockI]; i++) {
+        
             for (int j = 0; j < elementTypePerBlock[blockI][i]; j++) {
 
                 int n1 = connectivity_[0][elementsPerBlock[blockI][i]][j];
-              
                 int newN1 = findNodeIndex(addedNode[blockI], n1);
-            
-                newConnectivity[blockI][i].push_back(newN1);
-               
-            }
-            
+                newConnectivity[blockI][i].push_back(newN1);         
+            }           
         }
     }
 
