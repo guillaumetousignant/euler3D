@@ -389,11 +389,20 @@ void ConcreteBlockBuilder::createMyFaces(Block* block)
 			temp_nodes[0] = face -> face_2_nodes_connectivity_[1];
 			temp_nodes[1] = face -> face_2_nodes_connectivity_[0];
 			temp_nodes[2] = face -> face_2_nodes_connectivity_[face->n_nodes_per_face_-1];
+			
+			// std::cout << "\n Press return to continue \n" ;
+    		// std::cin.ignore();
+
+			// std::cout<<"nodes to check\n";
+			// std::cout<<temp_nodes[0]<<"\t"<<temp_nodes[1]<<"\t"<<temp_nodes[2]<<"\t"<<std::endl;
 
 			// double modulo_product=1.;
 			// double modulo_sum = 0.;
 
 			bool flag=true;
+
+			// std::cout<<"face_already_in_block\n";
+
 
 			for(int face_in_block=0;face_in_block<face_count_;face_in_block++)
 			{
@@ -411,6 +420,7 @@ void ConcreteBlockBuilder::createMyFaces(Block* block)
 			// if(modulo_product!=0.)
 			if(flag)
 			{
+				// std::cout<<"New face created\n";
 				Face* new_face;
 				new_face = buildFace(face_count_, face->n_nodes_per_face_,real_face_creator);
 				new_face -> block_id_ = block->block_id_;
