@@ -85,7 +85,7 @@ void ConcreteBlockBuilder::preReadMyBlock(Block* block)
 			{
 				faces_sum_for_each_cell+=5;
 			}
-			else if (cell_type_temp == "13") //pyramid
+			else if (cell_type_temp == "12") //prism
 			{
 				faces_sum_for_each_cell+=6;
 			}
@@ -357,7 +357,6 @@ void ConcreteBlockBuilder::createMyFaces(Block* block)
 
 	TempFaceCreator temp_face_creators[3];
 
-	std::cout<<"1\n";
 	FaceCreator* real_face_creator = new FaceCreator();
 	Cell* cell;
 	Face* face;
@@ -376,14 +375,12 @@ void ConcreteBlockBuilder::createMyFaces(Block* block)
 
 
 		cell = block -> block_cells_[i];
-		std::cout<<"2\n";
 
 		temp_face_array = new Face*[cell->n_faces_per_cell_];
 		temp_face_array = temp_face_creators[cell->creator_key_].createFace(cell);
 
 		for(int j=0;j<cell->n_faces_per_cell_;j++)
 		{
-			std::cout<<"3\n";
 
 			int* temp_nodes = new int[3];
 

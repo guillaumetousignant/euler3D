@@ -55,7 +55,7 @@ Cell* BlockBuilder::buildCell(int cell_id, std::string cell_type, std::string ce
 		n_faces_per_cell = 5;
 
 	}
-	else if (cell_type == "13") //prism
+	else if (cell_type == "12") //prism
 	{
 		key = 2;
 		cell_2_nodes_connectivity =new int[8]();
