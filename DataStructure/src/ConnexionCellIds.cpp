@@ -9,7 +9,7 @@ using namespace std;
 
 void ConnexionCellIds::updateBoundary()
 {
-	cout<<"Connexion cells updated \n";
+	cout<<"Connexion cells (fakely) updated \n";
 }
 	
 ConnexionCellIds::ConnexionCellIds()
