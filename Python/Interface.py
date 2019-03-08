@@ -86,72 +86,8 @@ class Interface():
         ttk.Button(tab1, text="Clear this page").grid(row=2, column=1, padx=2, pady=2)
         ttk.Button(tab1, text="Solve").grid(row=2, column=2, padx=2, pady=2)
 
-        # SECTION 2. SOLVER
-        # SECTION 2.1 CONVERGENCE CRITERIA
-        title_section_2_1 = ttk.LabelFrame(tab2, text="2.1 Convergence criteria", labelanchor=N, height=130, width=396)
-        title_section_2_1.grid(row=0, column=0, columnspan=3)
-        title_section_2_1.grid_propagate(False)
-
-        text_section_2_1 = ttk.Label(title_section_2_1, text="\nPlease specify the required convergence criteria:\n")
-        text_section_2_1.grid(row=0, column=0, columnspan=6, sticky=NSEW, padx=2)
-
-        ttk.Label(title_section_2_1, text="", width=5).grid(row=1, column=0)
-
-        max_iter_label = ttk.Label(title_section_2_1, text="Max number of itterations", borderwidth=2, relief="groove", anchor=CENTER, width=22)
-        max_iter_label.grid(row=1, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
-        max_iter_entry = ttk.Entry(title_section_2_1, width=15)
-        max_iter_entry.grid(row=1, column=3, columnspan=2, padx=2, pady=2)
-
-        ttk.Label(title_section_2_1, text="", width=4).grid(row=1, column=5)
-
-        convergence_crit_label = ttk.Label(title_section_2_1, text="Convergence criterion", borderwidth=2, relief="groove", anchor=CENTER, width=22)
-        convergence_crit_label.grid(row=2, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
-        convergence_crit_entry = ttk.Entry(title_section_2_1, width=15)
-        convergence_crit_entry.grid(row=2, column=3, columnspan=2, padx=2, pady=2)
-
-        # SECTION 2.2 SCHEME SELECTION
-        title_section_2_2 = ttk.LabelFrame(tab2, text="2.2 Scheme Selection", labelanchor=N, height=110, width=396)
-        title_section_2_2.grid(row=1, column=0, columnspan=3)
-        title_section_2_2.grid_propagate(False)
-
-        text_section_2_2 = ttk.Label(title_section_2_2, text="\nPlease select the required flux scheme:\n")
-        text_section_2_2.grid(row=0, column=0, columnspan=3, sticky=NSEW, padx=2)
-
-        ttk.Label(title_section_2_2, text="", width=12).grid(row=1, column=0)
-
-        flux_scheme = ttk.Button(title_section_2_2, text="Select flux scheme", command=self.selectFluxScheme, width=23)
-        flux_scheme.grid(row=1, column=1, sticky=NSEW)
-
-        ttk.Label(title_section_2_2, text="", width=4).grid(row=1, column=2)
-
-        # SECTION 2.3 SOLVER OPTIONS
-        title_section_2_3 = ttk.LabelFrame(tab2, text="2.3 Solver options", labelanchor=N, height=190, width=396)
-        title_section_2_3.grid(row=2, column=0, columnspan=3)
-        title_section_2_3.grid_propagate(False)
-
-        text_section_2_3 = ttk.Label(title_section_2_3, text="\nPlease select a code option:\n")
-        text_section_2_3.grid(row=0, column=0, columnspan=6, sticky=NSEW, padx=2)
-        
-        ttk.Label(title_section_2_3, text="", width=5).grid(row=1, column=0)
-        
-        ttk.Label(title_section_2_3, text="Number of process", relief="groove", borderwidth=2, anchor=CENTER, width=22).grid(row=1, column=1, columnspan=2, sticky=NSEW, padx=2, pady=2)
-        ttk.Entry(title_section_2_3, width=15).grid(row=1, column=3, columnspan=2, padx=2, pady=2)
-
-        ttk.Label(title_section_2_3, text="", width=4).grid(row=1, column=5)
-        
-        solver_option_build = Radiobutton(title_section_2_3, text="Build the code", value=1, relief="groove", borderwidth=2, width=23, anchor=W)
-        solver_option_build.grid(row=2, column=1, columnspan=4, padx=2, pady=2)
-
-        solver_option_execute = Radiobutton(title_section_2_3, text="Execute the code", value=2, relief="groove", borderwidth=2, width=23, anchor=W)
-        solver_option_execute.grid(row=3, column=1, columnspan=4, padx=2, pady=2)
-
-        solver_option_build_execute = Radiobutton(title_section_2_3, text="Build and execute the code", value=3, relief="groove", borderwidth=2, width=23, anchor=W)
-        solver_option_build_execute.grid(row=4, column=1, columnspan=4, padx=2, pady=2)
-
-        # SECTION 2 GENERAL BUTTONS
-        ttk.Button(tab2, text="Clear all").grid(row=3, column=0, padx=2, pady=2)
-        ttk.Button(tab2, text="Clear this page").grid(row=3, column=1, padx=2, pady=2)
-        ttk.Button(tab2, text="Solve").grid(row=3, column=2, padx=2, pady=2)
+        # # SECTION 2. SOLVER
+        self.solver = Solver(tab2)
 
         # SECTION 3 OUTPUT
         self.output = Output(tab3)
@@ -200,7 +136,78 @@ class Interface():
     def showResultingMesh(self):
         messagebox.showinfo('Resulting Mesh')
     
-    # SECTION 2 METHODS
+
+class Solver(Interface):
+    def __init__(self, master):
+        self.master = master
+        
+        # SECTION 2. SOLVER
+        # SECTION 2.1 CONVERGENCE CRITERIA
+        title_section_2_1 = ttk.LabelFrame(master, text="2.1 Convergence criteria", labelanchor=N, height=130, width=396)
+        title_section_2_1.grid(row=0, column=0, columnspan=3)
+        title_section_2_1.grid_propagate(False)
+
+        text_section_2_1 = ttk.Label(title_section_2_1, text="\nPlease specify the required convergence criteria:\n")
+        text_section_2_1.grid(row=0, column=0, columnspan=6, sticky=NSEW, padx=2)
+
+        ttk.Label(title_section_2_1, text="", width=5).grid(row=1, column=0)
+
+        max_iter_label = ttk.Label(title_section_2_1, text="Max number of itterations", borderwidth=2, relief="groove", anchor=CENTER, width=22)
+        max_iter_label.grid(row=1, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
+        max_iter_entry = ttk.Entry(title_section_2_1, width=15)
+        max_iter_entry.grid(row=1, column=3, columnspan=2, padx=2, pady=2)
+
+        ttk.Label(title_section_2_1, text="", width=4).grid(row=1, column=5)
+
+        convergence_crit_label = ttk.Label(title_section_2_1, text="Convergence criterion", borderwidth=2, relief="groove", anchor=CENTER, width=22)
+        convergence_crit_label.grid(row=2, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
+        convergence_crit_entry = ttk.Entry(title_section_2_1, width=15)
+        convergence_crit_entry.grid(row=2, column=3, columnspan=2, padx=2, pady=2)
+
+        # SECTION 2.2 SCHEME SELECTION
+        title_section_2_2 = ttk.LabelFrame(master, text="2.2 Scheme Selection", labelanchor=N, height=110, width=396)
+        title_section_2_2.grid(row=1, column=0, columnspan=3)
+        title_section_2_2.grid_propagate(False)
+
+        text_section_2_2 = ttk.Label(title_section_2_2, text="\nPlease select the required flux scheme:\n")
+        text_section_2_2.grid(row=0, column=0, columnspan=3, sticky=NSEW, padx=2)
+
+        ttk.Label(title_section_2_2, text="", width=12).grid(row=1, column=0)
+
+        flux_scheme = ttk.Button(title_section_2_2, text="Select flux scheme", command=self.selectFluxScheme, width=23)
+        flux_scheme.grid(row=1, column=1, sticky=NSEW)
+
+        ttk.Label(title_section_2_2, text="", width=4).grid(row=1, column=2)
+
+        # SECTION 2.3 SOLVER OPTIONS
+        title_section_2_3 = ttk.LabelFrame(master, text="2.3 Solver options", labelanchor=N, height=190, width=396)
+        title_section_2_3.grid(row=2, column=0, columnspan=3)
+        title_section_2_3.grid_propagate(False)
+
+        text_section_2_3 = ttk.Label(title_section_2_3, text="\nPlease select a code option:\n")
+        text_section_2_3.grid(row=0, column=0, columnspan=6, sticky=NSEW, padx=2)
+        
+        ttk.Label(title_section_2_3, text="", width=5).grid(row=1, column=0)
+        
+        ttk.Label(title_section_2_3, text="Number of process", relief="groove", borderwidth=2, anchor=CENTER, width=22).grid(row=1, column=1, columnspan=2, sticky=NSEW, padx=2, pady=2)
+        ttk.Entry(title_section_2_3, width=15).grid(row=1, column=3, columnspan=2, padx=2, pady=2)
+
+        ttk.Label(title_section_2_3, text="", width=4).grid(row=1, column=5)
+        
+        solver_option_build = Radiobutton(title_section_2_3, text="Build the code", value=1, relief="groove", borderwidth=2, width=23, anchor=W)
+        solver_option_build.grid(row=2, column=1, columnspan=4, padx=2, pady=2)
+
+        solver_option_execute = Radiobutton(title_section_2_3, text="Execute the code", value=2, relief="groove", borderwidth=2, width=23, anchor=W)
+        solver_option_execute.grid(row=3, column=1, columnspan=4, padx=2, pady=2)
+
+        solver_option_build_execute = Radiobutton(title_section_2_3, text="Build and execute the code", value=3, relief="groove", borderwidth=2, width=23, anchor=W)
+        solver_option_build_execute.grid(row=4, column=1, columnspan=4, padx=2, pady=2)
+
+        # SECTION 2 GENERAL BUTTONS
+        ttk.Button(master, text="Clear all").grid(row=3, column=0, padx=2, pady=2)
+        ttk.Button(master, text="Clear this page").grid(row=3, column=1, padx=2, pady=2)
+        ttk.Button(master, text="Solve").grid(row=3, column=2, padx=2, pady=2)
+
     def selectFluxScheme(self):
         self.flux_scheme_window = Tk()
         self.flux_scheme_window.title("Scheme selection")
@@ -274,40 +281,20 @@ class Interface():
             self.omega_label.configure(state="Disabled")
             self.omega_entry.configure(state="Disabled")
 
-    # SECTION 3 METHODS
-    def activateAxisOfCut(self):
-        slice_cp_result = self.slice_cp.get()
 
-        if slice_cp_result == 1:
-            self.axis_cut_label.configure(state="Normal")
-            self.axis_cut_entry.configure(state="Normal")
-            self.x_coord_label.configure(state="Normal")
-            self.x_coord_entry.configure(state="Normal")
-            self.y_coord_label.configure(state="Normal")
-            self.y_coord_entry.configure(state="Normal")
-            self.z_coord_label.configure(state="Normal")
-            self.z_coord_entry.configure(state="Normal")
 
-        elif slice_cp_result == 0:
-            self.axis_cut_label.configure(state="Disabled")
-            self.axis_cut_entry.configure(state="Disabled")
-            self.x_coord_label.configure(state="Disabled")
-            self.x_coord_entry.configure(state="Disabled")
-            self.y_coord_label.configure(state="Disabled")
-            self.y_coord_entry.configure(state="Disabled")
-            self.z_coord_label.configure(state="Disabled")
-            self.z_coord_entry.configure(state="Disabled")
 
-    # # GENERAL BUTTONS
-    # def clearAll(self):
-    #     #commandes....
+# class SelectFluxScheme(Solver):
+#     def __init__(self, master):
+#         self.master = master
+
 
 
 class Output(Interface):
     def __init__(self, master):
         self.master = master
         
-        #SECTION 3 OUTPUT
+        #SECTION 3 GENERAL WIDGETS
         title_section_3 = ttk.LabelFrame(master, text="", labelanchor=N, height=430, width=396)
         title_section_3.grid(row=0, column=0, columnspan=3)
         title_section_3.grid_propagate(False)
@@ -372,6 +359,30 @@ class Output(Interface):
         ttk.Button(master, text="Clear all").grid(row=1, column=0, padx=2, pady=2)
         ttk.Button(master, text="Clear this page").grid(row=1, column=1, padx=2, pady=2)
         ttk.Button(master, text="Solve").grid(row=1, column=2, padx=2, pady=2)
+
+    # SECTION 3 METHODS
+    def activateAxisOfCut(self):
+        slice_cp_result = self.slice_cp.get()
+
+        if slice_cp_result == 1:
+            self.axis_cut_label.configure(state="Normal")
+            self.axis_cut_entry.configure(state="Normal")
+            self.x_coord_label.configure(state="Normal")
+            self.x_coord_entry.configure(state="Normal")
+            self.y_coord_label.configure(state="Normal")
+            self.y_coord_entry.configure(state="Normal")
+            self.z_coord_label.configure(state="Normal")
+            self.z_coord_entry.configure(state="Normal")
+
+        elif slice_cp_result == 0:
+            self.axis_cut_label.configure(state="Disabled")
+            self.axis_cut_entry.configure(state="Disabled")
+            self.x_coord_label.configure(state="Disabled")
+            self.x_coord_entry.configure(state="Disabled")
+            self.y_coord_label.configure(state="Disabled")
+            self.y_coord_entry.configure(state="Disabled")
+            self.z_coord_label.configure(state="Disabled")
+            self.z_coord_entry.configure(state="Disabled")
 
 root = Tk()
 main_window = Interface(root)
