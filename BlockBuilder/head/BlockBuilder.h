@@ -26,7 +26,6 @@ public:
 	Node* buildNode(int node_id,double node_coordinates[3], NodeCreator* node_creator);
 	Face* buildFace(int face_id, int n_nodes_per_face,FaceCreator* face_creator);
 	void setConnectivity(Block* block);
-	int* allocate_1d_array_int(int nbpt,std::string str);
 	void setMetrics(Block* block);
 	// void face_2_Nodes_Connectivity_Builder(Face* new_face,int* face_2_nodes_connectivity,int n_nodes_per_face);
 
