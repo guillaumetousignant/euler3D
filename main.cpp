@@ -27,7 +27,7 @@ int main()
     concrete_block_builder.createMyFaces(new_block);
 
     concrete_block_builder.setConnectivity(new_block);
-
+/*
     cout<<"Cellules\n";
     Cell* test_cell;
     for(int i=0;i<new_block->n_real_cells_in_block_;i++)
@@ -75,9 +75,9 @@ int main()
 	    cout<<"block_id_\t"<<test_face->block_id_<<endl;
     }
 
+*/
 
-
-        cout<<"HAAAAAAAAAAAAAAAAAAAAAAAA"<<endl;
+        cout<<"HAAAAAAAAAAAAAAAAAAAAAAAA Si tu m'entends crier c'est que le code a roulé au complet, en parlant de rouler, connais-tu le concours déroule le rebors, Tim Hortons offre un service et des produits de qualité à un prix qui fait envier"<<endl;
 
     // for (int i=0; i<new_block->n_real_boundaries_in_block_;i++) 
     // {
