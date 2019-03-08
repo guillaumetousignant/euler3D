@@ -96,6 +96,7 @@ void ConcreteBlockBuilder::preReadMyBlock(Block* block)
 		getline(myfile, line);
 		getline(myfile, line);
 		sscanf (line.c_str(), "%s %d",str_temp,&n_boundaries);
+		block->n_real_boundaries_in_block_=n_boundaries;
 
 
 		for(int boundary=0;boundary<n_boundaries;boundary++)
@@ -110,6 +111,22 @@ void ConcreteBlockBuilder::preReadMyBlock(Block* block)
 			if(boundary_type=="FARFIELD")
 			{
 				faces_sum_in_boundaries+=n_elements_in_boundary;
+				//std::cout<<"on a une boundary farfield"<<std::endl;
+			}
+
+
+			if(boundary_type=="WALL")
+			{
+				//std::cout<<"on a une boundary wall"<<std::endl;
+				//faces_sum_in_boundaries+=n_elements_in_boundary;
+			}
+
+
+			if(boundary_type=="CONNECTION")
+			{
+				//std::cout<<"on a une boundary connection"<<std::endl;
+				//faces_sum_in_boundaries+=n_elements_in_boundary;
+				block->n_real_boundaries_in_block_=(block->n_real_boundaries_in_block_)-1;
 			}
 
 			n_ghost_cells +=n_elements_in_boundary;
@@ -119,6 +136,8 @@ void ConcreteBlockBuilder::preReadMyBlock(Block* block)
 				getline(myfile, line);
 			}
 		}
+		n_boundaries=block->n_real_boundaries_in_block_;
+		block ->block_boundary_cell_ids_ = new BoundaryCellIds* [n_boundaries];
 
 		n_all_cells = n_real_cells + n_ghost_cells;
 		block->block_cells_ = new Cell*[n_all_cells];
@@ -182,6 +201,7 @@ void ConcreteBlockBuilder::readMyBlock(Block* block)
 	int n_ghost_cells_temp;
 	//int n_ghost_cells;
 	int cell_id = 0;
+	int real_boundary_id;
 	std::string cell_type_temp;
 	std::string ghost_cell_type_temp;
 	std::string cell_2_nodes_connectivity_temp;
@@ -258,9 +278,10 @@ void ConcreteBlockBuilder::readMyBlock(Block* block)
 		getline(myfile, line);
 		sscanf (line.c_str(), "%s %i",str_temp,&n_boundaries_temp);
 		n_boundaries=n_boundaries_temp;
-		block->n_real_boundaries_in_block_=n_boundaries;
+		real_boundary_id=0;
+		//block->n_real_boundaries_in_block_=n_boundaries;
 		//std::cout<<"test bound: "<< n_boundaries<<std::endl;
-		block ->block_boundary_cell_ids_ = new BoundaryCellIds* [n_boundaries];
+		//block ->block_boundary_cell_ids_ = new BoundaryCellIds* [n_boundaries];
 
 
 		for(int boundary_id = 0; boundary_id < n_boundaries; boundary_id++)
@@ -274,30 +295,33 @@ void ConcreteBlockBuilder::readMyBlock(Block* block)
 				if (boundary_type_temp_str=="WALL") // wall
 				{
 					//std::cout<<"on a un wall"<< std::endl;
-					block->block_boundary_cell_ids_[boundary_id]= new WallCellIds;
+					block->block_boundary_cell_ids_[real_boundary_id]= new WallCellIds;
 
-					(block->block_boundary_cell_ids_[boundary_id])->n_cell_in_boundary_=n_ghost_cells_temp;
-					(block->block_boundary_cell_ids_[boundary_id])->cell_ids_in_boundary_=new int[n_ghost_cells_temp];
-					(block->block_boundary_cell_ids_[boundary_id])->cell_count_= new int;
-					*((block->block_boundary_cell_ids_[boundary_id])->cell_count_)=0;
-					(block->block_boundary_cell_ids_[boundary_id])->owner_block_=block;
+					(block->block_boundary_cell_ids_[real_boundary_id])->n_cell_in_boundary_=n_ghost_cells_temp;
+					(block->block_boundary_cell_ids_[real_boundary_id])->cell_ids_in_boundary_=new int[n_ghost_cells_temp];
+					(block->block_boundary_cell_ids_[real_boundary_id])->cell_count_= new int;
+					*((block->block_boundary_cell_ids_[real_boundary_id])->cell_count_)=0;
+					(block->block_boundary_cell_ids_[real_boundary_id])->owner_block_=block;
+					real_boundary_id=real_boundary_id+1;
 
 
 				}
 				else if (boundary_type_temp_str == "FARFIELD") //farfield
 				{
 					//std::cout<<"on a un farfield"<< std::endl;
-					block->block_boundary_cell_ids_[boundary_id]= new FarfieldCellIds;
+					block->block_boundary_cell_ids_[real_boundary_id]= new FarfieldCellIds;
 					
-					(block->block_boundary_cell_ids_[boundary_id])->n_cell_in_boundary_=n_ghost_cells_temp;
-					(block->block_boundary_cell_ids_[boundary_id])->cell_ids_in_boundary_=new int[n_ghost_cells_temp];
-					(block->block_boundary_cell_ids_[boundary_id])->cell_count_= new int;
-					*((block->block_boundary_cell_ids_[boundary_id])->cell_count_)=0;
-					(block->block_boundary_cell_ids_[boundary_id])->owner_block_=block;
+					(block->block_boundary_cell_ids_[real_boundary_id])->n_cell_in_boundary_=n_ghost_cells_temp;
+					(block->block_boundary_cell_ids_[real_boundary_id])->cell_ids_in_boundary_=new int[n_ghost_cells_temp];
+					(block->block_boundary_cell_ids_[real_boundary_id])->cell_count_= new int;
+					*((block->block_boundary_cell_ids_[real_boundary_id])->cell_count_)=0;
+					(block->block_boundary_cell_ids_[real_boundary_id])->owner_block_=block;
+					real_boundary_id=real_boundary_id+1;
 
 				}
 				else if (boundary_type_temp_str == "CONNECTION") //Connection inter-bloc
 				{
+					//block->n_real_boundaries_in_block_=(block->n_real_boundaries_in_block_)-1;
 
 				}
 
@@ -322,14 +346,14 @@ void ConcreteBlockBuilder::readMyBlock(Block* block)
 				if (boundary_type_temp_str=="WALL") // wall
 				{
 					//std::cout<<"on a un wall"<< std::endl;
-					block ->addCellIdInBoundary(cell_id,block->block_boundary_cell_ids_[boundary_id]);
+					block ->addCellIdInBoundary(cell_id,block->block_boundary_cell_ids_[real_boundary_id-1]);
 					//block ->addFaceIdInWall(int face_id, int face_count)
 
 				}
 				else if (boundary_type_temp_str == "FARFIELD") //farfield
 				{
 					//std::cout<<"on a un farfield"<< std::endl;
-					block ->addCellIdInBoundary(cell_id,block->block_boundary_cell_ids_[boundary_id]);
+					block ->addCellIdInBoundary(cell_id,block->block_boundary_cell_ids_[real_boundary_id-1]);
 
 				}
 				else if (boundary_type_temp_str == "CONNECTION") //Connection inter-bloc
