@@ -41,6 +41,7 @@ Initializer::~Initializer()
 
 CompleteMesh* Initializer::InitializeMesh(Interface* interface) 
 {
+	// CompleteMesh complete_mesh = new CompleteMesh(n_blocks,n_blocks_in_process,my_blocks);
 
 	// cout<<"Initialisation du maillage entier"<<endl<<endl;
 	// string mesh_file_name=interface->mesh_file_name_interface_;

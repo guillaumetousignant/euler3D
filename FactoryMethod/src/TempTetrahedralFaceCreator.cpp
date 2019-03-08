@@ -64,6 +64,15 @@ TempTetrahedralFaceCreator::TempTetrahedralFaceCreator()
 		}
 	}
 
+	for(int i=0;i<4;i++)
+	{
+		delete [] face_2_nodes_connectivity_local_[i];
+	}
+
+	delete [] face_2_nodes_connectivity_local_;
+	delete [] n_nodes_per_face_;
+
+
 }
 
 #endif
