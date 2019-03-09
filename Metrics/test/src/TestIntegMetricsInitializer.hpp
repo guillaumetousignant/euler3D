@@ -97,7 +97,7 @@ TEST_CASE("Compute Normales (cellID = 0)")
         
         for(int j(0);j < vectorPerFace[i].size();j++)
         {
-            double result = blockData->block_faces_[actualFace]->face_normals_[j] * -1; // Problem of Face2Node here.
+            double result = blockData->block_faces_[actualFace]->face_normals_[j] * -1; // Problem of Face2Node here CCW vs CW.
             REQUIRE(vectorPerFace[i][j] == result);
         }
     }
@@ -107,19 +107,43 @@ TEST_CASE("Compute Normales (cellID = 0)")
 
 }
 
-TEST_CASE("Compute areas")
+TEST_CASE("Compute areas", "")
 {
 
     Block *blockData = new Block(0);
     buildConnectivityInteg(blockData);
 
     double area = 1.0;
+    int nbFacesCube = 6;
+    std::vector<int> faceID;
 
-    for(blockData->block_faces_[i])
+    for(int i(0);i < nbFacesCube;i++)
+    {
+        faceID.push_back(blockData->block_cells_[0]->cell_2_faces_connectivity_[i]);
+    }
 
-    
+    for(int i(0);i < nbFacesCube;i++)
+    {
+        int actualFace = faceID[i];
 
+        double result = blockData->block_faces_[actualFace]->face_area_;
 
+        REQUIRE(area == result);
 
+    }
 
 }
+
+TEST_CASE("Compute Volume", "")
+{
+
+    Block *blockData = new Block(0);
+    buildConnectivityInteg(blockData);
+
+    double volume = 1.0;
+    double result = blockData->block_cells_[0]->cell_volume_;
+
+    REQUIRE(volume == result);
+
+}
+
