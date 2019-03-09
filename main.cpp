@@ -2,6 +2,8 @@
 #include <mpi.h>
 #include "Block.h"
 #include "ConcreteBlockBuilder.h"
+#include "CompleteMesh.h"
+
 
 
 using namespace std;
@@ -11,20 +13,29 @@ int main()
     // Initialize the MPI environment
     MPI_Init(NULL, NULL);
 
-    cout << "This is the main" << endl;
+    cout << "This is the main 3" << endl;
     
     // Finalize the MPI environment.
     MPI_Finalize();
 
-    Block* new_block = new Block(0);
-    string block_file ="../UnstructuredMesh5x5.su2";
-    // string block_file ="../TestMesh2x1.su2";
+    int* my_blocks = new int[1];
+    my_blocks[0] = 0;
 
-    ConcreteBlockBuilder concrete_block_builder = ConcreteBlockBuilder(block_file);
-    concrete_block_builder.preReadMyBlock(new_block);
-    concrete_block_builder.readMyBlock(new_block);
+    CompleteMesh* complete_mesh = new CompleteMesh(1,1,my_blocks);
+    complete_mesh->InitializeMyBlocks();
 
-    concrete_block_builder.createMyFaces(new_block);
+
+    // Block* new_block = new Block(0);
+    // string block_file ="../UnstructuredMesh5x5.su2";
+
+
+    // // string block_file ="../TestMesh2x1.su2";
+
+    // ConcreteBlockBuilder concrete_block_builder = ConcreteBlockBuilder(block_file);
+    // concrete_block_builder.preReadMyBlock(new_block);
+    // concrete_block_builder.readMyBlock(new_block);
+
+    // concrete_block_builder.createMyFaces(new_block);
 
     // cout<<"Cellules\n";
     // Cell* test_cell;
@@ -73,15 +84,13 @@ int main()
 	   //  cout<<"block_id_\t"<<test_face->block_id_<<endl;
     // }
 
-        
-    std::cout << "test de nombre de boundary: "<< new_block->n_real_boundaries_in_block_ <<std::endl;
-    for (int i=0; i<new_block->n_real_boundaries_in_block_;i++) 
-    {
-        //std::cout << "test de type de boundary: "<< ((new_block->block_boundary_cell_ids_[i])->n_cell_in_boundary_) <<std::endl;
-        std::cout << "test de boundary: "<< ((new_block->block_boundary_cell_ids_[i])->n_cell_in_boundary_) <<std::endl;
-        //(new_block->block_boundary_cell_ids_[i])->updateBoundary();
-    }
-    std::cout << "test de boundary deep: "<< new_block->n_real_boundaries_in_block_ <<std::endl;
-
+    // std::cout << "test de nombre de boundary: "<< new_block->n_real_boundaries_in_block_ <<std::endl;
+    // for (int i=0; i<new_block->n_real_boundaries_in_block_;i++) 
+    // {
+    //     //std::cout << "test de type de boundary: "<< ((new_block->block_boundary_cell_ids_[i])->n_cell_in_boundary_) <<std::endl;
+    //     //std::cout << "test de boundary: "<< ((new_block->block_boundary_cell_ids_[i])->n_cell_in_boundary_) <<std::endl;
+    //     //(new_block->block_boundary_cell_ids_[i])->updateBoundary();
+    // }
+    // delete new_block;
 
 }
