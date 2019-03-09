@@ -3,6 +3,7 @@
 #include <mpi.h>
 #include "Block.h"
 #include "ConcreteBlockBuilder.h"
+#include "Metrics/src/MetricsInitializer.h"
 
 
 using namespace std;
@@ -28,6 +29,9 @@ int main()
     concrete_block_builder.createMyFaces(new_block);
 
     concrete_block_builder.setConnectivity(new_block);
+
+    MetricsInitializer metricsInit(new_block);
+    metricsInit.doInit();  
 /*
     cout<<"Cellules\n";
     Cell* test_cell;
