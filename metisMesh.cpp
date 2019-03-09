@@ -426,19 +426,20 @@ MetisMesh *MetisMesh::Partition(int nPart)
         int blockId = epart[i];
         elementsPerBlock[blockId].push_back(i);
         elementTypePerBlock[blockId].push_back(elementType_[i]);
+    }
 
-        cout << "1ere boucle ok" << endl;
-        cout << "nNodes " << nNodes_[0] << endl;
+    cout << "1ere boucle ok" << endl;
 
-        for (int i = 0; i < nNodes_[0]; i++)
-        {
+    for (int i = 0; i < nNodes_[0]; i++)
+    {
 
-            cout << i << " " << npart[i] << endl;
-        }
+        cout << i << " " << npart[i] << endl;
+    }
 
-        for (int i = 0; i < nNodes_[0]; i++)
+    for (int i = 0; i < nNodes_[0]; i++)
+    {
 
-            int blockId = npart[i];
+        int blockId = npart[i];
         nodesPerBlock[blockId].push_back(i);
     }
 
