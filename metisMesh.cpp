@@ -355,7 +355,7 @@ MetisMesh* MetisMesh::Partition(int nPart)
 
 // alloc memoire
     int eptr[nElements_[0] + 1];
-    int eind[*nTotalNode_];
+    int* eind = new int[*nTotalNode_];
     cout << "fin alloc memoire" << endl;
 
     // Converting conncectivity into METIS data structure See Metis reference doc
@@ -386,7 +386,7 @@ MetisMesh* MetisMesh::Partition(int nPart)
     int epart[nElements_[0]];
     int npart[nNodes_[0]];
 
-    int success = METIS_PartMeshDual(&nElements_[0], &nNodes_[0], &eptr[0], &eind[0], NULL, NULL,
+    int success = METIS_PartMeshDual(&nElements_[0], &nNodes_[0], &eptr[0], eind, NULL, NULL,
                                      &ncommon, &nPart, NULL, NULL, &objval,
                                      &epart[0], &npart[0]);
 
@@ -401,17 +401,24 @@ MetisMesh* MetisMesh::Partition(int nPart)
         int blockId = epart[i];
         elementsPerBlock[blockId].push_back(i);
         elementTypePerBlock[blockId].push_back(elementType_[i]);
-    }
+    
 
     cout << "1ere boucle ok" << endl;
+    cout << "nNodes " << nNodes_[0] << endl;
+
+    
+    for (int i = 0; i < nNodes_[0]; i++) {
+        
+        cout << i << " " << npart[i] << endl;
+    }
+      
 
     for (int i = 0; i < nNodes_[0]; i++)
-    {
+    
         int blockId = npart[i];
         nodesPerBlock[blockId].push_back(i);
-
     }
-
+    
     cout << "2eme boucle ok" << endl;
     int newNelements[nPart];
 
@@ -480,6 +487,9 @@ MetisMesh* MetisMesh::Partition(int nPart)
 
     if (newConnectivity != nullptr) delete [] newConnectivity;
     newConnectivity = nullptr;
+
+    delete [] eind;
+    eind = nullptr;
 
     return newMesh;
 }

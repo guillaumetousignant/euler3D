@@ -19,6 +19,7 @@ private:
     double** z_;
 
     std::vector<int>** connectivity_;
+    // std::vector<int>** connectivity_boundary;
 
 public:
     MetisMesh();
