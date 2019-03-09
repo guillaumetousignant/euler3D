@@ -66,11 +66,60 @@ TEST_CASE("Compute Normales (cellID = 0)")
     Block *blockData = new Block(0);
     buildConnectivityInteg(blockData);
 
-    
+    const int nbFaceCube = 6;
+    const int nbCoordVec3D = 3;
 
+    std::vector<std::vector<double>> vectorPerFace;
+    vectorPerFace.resize(nbFaceCube);
+    
+    for(int i(0);i < vectorPerFace.size();i++)
+    {
+        vectorPerFace[i].resize(nbCoordVec3D);
+    }
+
+    vectorPerFace[0] = {0., 0., -1.};
+    vectorPerFace[1] = {1., 0., 0.};
+    vectorPerFace[2] = {0., 1., 0.};
+    vectorPerFace[3] = {-1., 0., 0.};
+    vectorPerFace[4] = {0., -1., 0.};
+    vectorPerFace[5] = {0., 0., 1.};
+
+    std::vector<int> faceID;
+    
+    for(int i(0);i < nbFaceCube;i++)
+    {
+        faceID.push_back(blockData->block_cells_[0]->cell_2_faces_connectivity_[i]);
+    }
+    
+    for(int i(0);i < nbFaceCube;i++)
+    {
+        int actualFace = faceID[i];
+        
+        for(int j(0);j < vectorPerFace[i].size();j++)
+        {
+            double result = blockData->block_faces_[actualFace]->face_normals_[j] * -1; // Problem of Face2Node here.
+            REQUIRE(vectorPerFace[i][j] == result);
+        }
+    }
 
     delete blockData;
     blockData = nullptr;
 
 }
 
+TEST_CASE("Compute areas")
+{
+
+    Block *blockData = new Block(0);
+    buildConnectivityInteg(blockData);
+
+    double area = 1.0;
+
+    for(blockData->block_faces_[i])
+
+    
+
+
+
+
+}
