@@ -271,7 +271,7 @@ void MetisMesh::WriteMesh(std::string fileName)
         for (int elementI = 0; elementI < nElements; elementI++)
         {
 
-            for (int j = 0; j < connectivity_[blockI][elementI].size(); j++)
+            for (int j = 0; j < (int) connectivity_[blockI][elementI].size(); j++)
             {
                 fprintf(fid, "%d ", connectivity_[blockI][elementI][j]);
             }
