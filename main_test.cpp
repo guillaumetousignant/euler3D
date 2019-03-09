@@ -4,6 +4,7 @@
 
 //Project files
 #include "Metrics/test/src/TestMetricsInitializer.hpp"
+#include "Metrics/test/src/TestIntegMetricsInitializer.hpp"
 
 TEST_CASE( "stupid/1=1", "Prove that one equals 1" )
 {
