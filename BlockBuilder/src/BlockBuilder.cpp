@@ -146,6 +146,8 @@ void BlockBuilder::setConnectivity(Block* block)
 {
 	int i,j,k,idx,node_0,node_1,node_2,n_cells_linked;
 	int *idx_node,*idx_cell_2_faces,*idx_cell_2_cells; 
+	double THETA[10],THETA_TEMP,centre_TEMP,VECTX[10],VECTY[10],VECTZ[10],norm1,norm2,cos_TEMP;
+	int face2nodes_TEMP;
 
 	
 	std::cout<<"DÉBUT node2cellsconnectivity"<<std::endl;
@@ -240,7 +242,6 @@ std::cout<<"DÉBUT face_2_cells"<<std::endl;
 		*/
 
 
-
 std::cout<<"DÉBUT cell2facesconnectivity"<<std::endl;
 
 	//cell_2_faces_connectivity_ & cell_2_cells_connectivity_
@@ -283,6 +284,54 @@ std::cout<<"DÉBUT cell2facesconnectivity"<<std::endl;
 
 	}
 	*/
+
+		/*
+std::cout<<"DÉBUT CENTRE CELLS"<<std::endl;
+
+std::cout<<"DÉBUT face2nodes CCW"<<std::endl;
+
+for(i=0;;i <= block->n_faces_in_block_-1 ;i++)
+{
+	block->block_faces_[i]->face_center_[0]=0;
+	block->block_faces_[i]->face_center_[1]=0;
+	block->block_faces_[i]->face_center_[2]=0;
+	for(j=0;j <= block->block_faces_[i]->n_nodes_per_face_-1;j++)
+	{
+		block->block_faces_[i]->face_center_[0]+=block->block_nodes_[block->block_faces_[i]->face_2_nodes_connectivity_[j]]->node_coordinates[0];
+		block->block_faces_[i]->face_center_[1]+=block->block_nodes_[block->block_faces_[i]->face_2_nodes_connectivity_[j]]->node_coordinates[0];
+		block->block_faces_[i]->face_center_[2]+=block->block_nodes_[block->block_faces_[i]->face_2_nodes_connectivity_[j]]->node_coordinates[0];
+	}
+	block->block_faces_[i]->face_center_[0]=block->block_faces_[i]->face_center_[0]/block->block_faces_[i]->n_nodes_per_face_;
+	block->block_faces_[i]->face_center_[1]=block->block_faces_[i]->face_center_[1]/block->block_faces_[i]->n_nodes_per_face_;
+	block->block_faces_[i]->face_center_[2]=block->block_faces_[i]->face_center_[2]/block->block_faces_[i]->n_nodes_per_face_;
+
+	VECTX[0]=block->block_nodes_[block->block_faces_[i]->face_2_nodes_connectivity_[0]]->node_coordinates[0]-block->block_faces_[i]->face_center_[0];
+	VECTY[0]=block->block_nodes_[block->block_faces_[i]->face_2_nodes_connectivity_[0]]->node_coordinates[1]-block->block_faces_[i]->face_center_[1];
+	VECTZ[0]=block->block_nodes_[block->block_faces_[i]->face_2_nodes_connectivity_[0]]->node_coordinates[2]-block->block_faces_[i]->face_center_[2];
+
+	norm1=sqrt(VECTX[0]*VECTX[0]+VECTY[0]*VECTY[0]+VECTZ[0]*VECTZ[0]);
+	
+	for(j=1;j <= block->block_faces_[i]->n_nodes_per_face_-1;j++)
+	{
+
+		VECTX[j]=block->block_nodes_[block->block_faces_[i]->face_2_nodes_connectivity_[j]]->node_coordinates[0]-block->block_faces_[i]->face_center_[0];
+		VECTY[j]=block->block_nodes_[block->block_faces_[i]->face_2_nodes_connectivity_[j]]->node_coordinates[1]-block->block_faces_[i]->face_center_[1];
+		VECTZ[j]=block->block_nodes_[block->block_faces_[i]->face_2_nodes_connectivity_[j]]->node_coordinates[2]-block->block_faces_[i]->face_center_[2];
+
+		norm2=sqrt(VECTX[j]*VECTX[j]+VECTY[j]*VECTY[j]+VECTZ[j]*VECTZ[j]);
+
+
+		cos_TEMP=(VECTX[0]*VECTX[j]+VECTY[0]*VECTY[j]+VECTZ[0]*VECTZ[j])/(norm1*norm2);
+
+
+	}
+
+
+}
+
+
+*/
+
 }
 
 

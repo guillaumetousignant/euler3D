@@ -9,6 +9,7 @@
 #include "Face.h"
 #include "Block.h"
 #include <fstream>
+#include <math.h>
 
 class BlockBuilder
 {
