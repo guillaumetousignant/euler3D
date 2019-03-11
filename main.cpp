@@ -11,12 +11,16 @@
 
 #include <iostream>
 #include <string>
+#ifdef MPI_VERSION
 #include <mpi.h>
+#endif
 using namespace std;
 
 int main()
 {
+	#ifdef MPI_VERSION
 	MPI_Init(NULL, NULL);
+	#endif
 
     int n_blocks_in_process;
     int* my_blocks;
@@ -44,7 +48,9 @@ int main()
 
 
 	// Finalize the MPI environment.
+	#ifdef MPI_VERSION
 	MPI_Finalize();
+	#endif
 
 
 	/*

@@ -1,11 +1,18 @@
 #include "BlockCommunicator.h"
+#ifdef MPI_VERSION
 #include <mpi.h>
+#endif
 #include <algorithm>
 #include <iostream> // REMOVE
 
 BlockCommunicator::BlockCommunicator(int nblocks): n_blocks_(nblocks), n_inter_block_boundaries_(0), inter_block_boundaries_(nullptr) {
+    #ifdef MPI_VERSION
     MPI_Comm_size(MPI_COMM_WORLD, &number_of_processes_);
     MPI_Comm_rank(MPI_COMM_WORLD, &process_id_);
+    #else
+    number_of_processes_ = 1;
+    process_id_ = 0;
+    #endif
 
     block_process_id_ = new int[n_blocks_];
     int n = n_blocks_/number_of_processes_;
@@ -30,6 +37,7 @@ BlockCommunicator::~BlockCommunicator(){
 }
 
 void BlockCommunicator::updateBoundaries(DummyMesh* mesh) const {
+    #ifdef MPI_VERSION
     int *** buffers;
 
     buffers = new int**[n_inter_block_boundaries_];
@@ -43,21 +51,21 @@ void BlockCommunicator::updateBoundaries(DummyMesh* mesh) const {
         // If this process is sender
         if (process_id_ == block_process_id_[inter_block_boundaries_[i]->block_origin_]){
             buffers[i][0] = new int[inter_block_boundaries_[i]->n_cell_in_boundary_]; // Move to constructor?
-            MPI_Request send_request;
 
-            // Filling send buffer
+            // Filling send buffer            
             for (int j = 0; j < inter_block_boundaries_[i]->n_cell_in_boundary_; j++){
                 buffers[i][0][j] = mesh->blocks_[inter_block_boundaries_[i]->block_origin_]->boundary_values_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]]; 
             }
 
+            MPI_Request send_request;
             MPI_Isend(buffers[i][0], inter_block_boundaries_[i]->n_cell_in_boundary_, MPI_INT, block_process_id_[inter_block_boundaries_[i]->block_destination_], i, MPI_COMM_WORLD, &send_request);
         }
 
         // If this process is receiver
         if (process_id_ == block_process_id_[inter_block_boundaries_[i]->block_destination_]){
             buffers[i][1] = new int[inter_block_boundaries_[i]->n_cell_in_boundary_];
-            MPI_Request receive_request;
 
+            MPI_Request receive_request;
             MPI_Irecv(buffers[i][1], inter_block_boundaries_[i]->n_cell_in_boundary_, MPI_INT, block_process_id_[inter_block_boundaries_[i]->block_origin_], i, MPI_COMM_WORLD, &receive_request);
         }
     }
@@ -83,6 +91,14 @@ void BlockCommunicator::updateBoundaries(DummyMesh* mesh) const {
         delete [] buffers[i];
     }
     delete [] buffers;
+
+    #else
+    for (int i = 0; i < n_inter_block_boundaries_; i++){
+        for (int j = 0; j < inter_block_boundaries_[i]->n_cell_in_boundary_; j++){
+            mesh->blocks_[inter_block_boundaries_[i]->block_destination_]->boundary_values_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]] = mesh->blocks_[inter_block_boundaries_[i]->block_origin_]->boundary_values_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]];
+        }
+    }
+    #endif
 }
 
 void BlockCommunicator::addCellIdInConnexion(ConnexionCellIds_dummy* boundary){
