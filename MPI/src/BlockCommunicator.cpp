@@ -1,12 +1,12 @@
 #include "BlockCommunicator.h"
-#ifdef MPI_VERSION
+#ifdef HAVE_MPI
 #include <mpi.h>
 #endif
 #include <algorithm>
 #include <iostream> // REMOVE
 
 BlockCommunicator::BlockCommunicator(int nblocks): n_blocks_(nblocks), n_inter_block_boundaries_(0), inter_block_boundaries_(nullptr) {
-    #ifdef MPI_VERSION
+    #ifdef HAVE_MPI
     MPI_Comm_size(MPI_COMM_WORLD, &number_of_processes_);
     MPI_Comm_rank(MPI_COMM_WORLD, &process_id_);
     #else
@@ -37,7 +37,7 @@ BlockCommunicator::~BlockCommunicator(){
 }
 
 void BlockCommunicator::updateBoundaries(DummyMesh* mesh) const {
-    #ifdef MPI_VERSION
+    #ifdef HAVE_MPI
     int *** buffers;
 
     buffers = new int**[n_inter_block_boundaries_];

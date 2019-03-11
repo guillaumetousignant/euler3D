@@ -11,14 +11,14 @@
 
 #include <iostream>
 #include <string>
-#ifdef MPI_VERSION
+#ifdef HAVE_MPI
 #include <mpi.h>
 #endif
 using namespace std;
 
 int main()
 {
-	#ifdef MPI_VERSION
+	#ifdef HAVE_MPI
 	MPI_Init(NULL, NULL);
 	#endif
 
@@ -48,7 +48,7 @@ int main()
 
 
 	// Finalize the MPI environment.
-	#ifdef MPI_VERSION
+	#ifdef HAVE_MPI
 	MPI_Finalize();
 	#endif
 
