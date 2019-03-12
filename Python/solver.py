@@ -135,23 +135,38 @@ class SelectFluxScheme():
         scheme_order_result = self.scheme_order_entry.get()
 
         if scheme_order_result == "2":
-            self.gradient_label.configure(state="Normal")
-            self.gradient_entry.configure(state="Normal")
+            self.gradient_label.configure(state="normal")
+            self.gradient_entry.configure(state="normal")
 
-            self.limiter_label.configure(state="Normal")
-            self.limiter_entry.configure(state="Normal")
+            self.limiter_label.configure(state="normal")
+            self.limiter_entry.configure(state="normal")
+
+        elif scheme_order_result == "1":
+            self.gradient_label.configure(state="disabled")
+            self.gradient_entry.configure(state="disabled")
+
+            self.limiter_label.configure(state="disabled")
+            self.limiter_entry.configure(state="disabled")
+
+            self.omega_label.configure(state="disabled")
+            self.omega_entry.configure(state="disabled")
+            
+            self.k_label.configure(state="disabled")
+            self.k_entry.configure(state="disabled")
 
     def activateOmegaOrK(self, event):
         limiter_result = self.limiter_entry.get()
         
         if limiter_result == "Barth Jespersen":
-            self.omega_label.configure(state="Normal")
-            self.omega_entry.configure(state="Normal")
-            self.k_label.configure(state="Disabled")
-            self.k_entry.configure(state="Disabled")
+            self.omega_label.configure(state="normal")
+            self.omega_entry.configure(state="normal")
+
+            self.k_label.configure(state="disabled")
+            self.k_entry.configure(state="disabled")
 
         elif limiter_result == "Venkatakrishnan":
-            self.k_label.configure(state="Normal")
-            self.k_entry.configure(state="Normal")
-            self.omega_label.configure(state="Disabled")
-            self.omega_entry.configure(state="Disabled")
+            self.k_label.configure(state="normal")
+            self.k_entry.configure(state="normal")
+
+            self.omega_label.configure(state="disabled")
+            self.omega_entry.configure(state="disabled")
