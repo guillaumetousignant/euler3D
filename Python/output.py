@@ -50,24 +50,28 @@ class Output():
         self.slice_cp = IntVar()
         Checkbutton(title_section_3, text="Slice Cp", variable=self.slice_cp, command=self.activateAxisOfCut, relief="groove", width=20, anchor=W, borderwidth=2).grid(row=4, column=1, columnspan=2, padx=2, pady=2)
 
+        self.axis_cut_var = StringVar()
         self.axis_cut_label = ttk.Label(title_section_3, text="Axis of cut", relief="groove", state="disabled", borderwidth=2, width=10, anchor=CENTER)
         self.axis_cut_label.grid(row=5, column=1)
-        self.axis_cut_entry = ttk.Entry(title_section_3, width=11, state="disabled")
+        self.axis_cut_entry = ttk.Entry(title_section_3, textvariable=self.axis_cut_var, width=11, state="disabled")
         self.axis_cut_entry.grid(row=5, column=2, padx=2, pady=2)
-            
+
+        self.x_coord_var = DoubleVar()    
         self.x_coord_label = ttk.Label(title_section_3, text="X coord", relief="groove", state="disabled", borderwidth=2, width=10, anchor=CENTER)
         self.x_coord_label.grid(row=6, column=1)
-        self.x_coord_entry = ttk.Entry(title_section_3, width=11, state="disabled")
+        self.x_coord_entry = ttk.Entry(title_section_3, textvariable=self.x_coord_var, width=11, state="disabled")
         self.x_coord_entry.grid(row=6, column=2, padx=2, pady=2)
-            
+
+        self.y_coord_var = DoubleVar()    
         self.y_coord_label = ttk.Label(title_section_3, text="Y coord", relief="groove", state="disabled", borderwidth=2, width=10, anchor=CENTER)
         self.y_coord_label.grid(row=7, column=1)
-        self.y_coord_entry = ttk.Entry(title_section_3, width=11, state="disabled")
+        self.y_coord_entry = ttk.Entry(title_section_3, textvariable=self.y_coord_var, width=11, state="disabled")
         self.y_coord_entry.grid(row=7, column=2, padx=2, pady=2)
-            
+
+        self.z_coord_var = DoubleVar()
         self.z_coord_label = ttk.Label(title_section_3, text="Z coord", relief="groove", state="disabled", borderwidth=2, width=10, anchor=CENTER)
         self.z_coord_label.grid(row=8, column=1)
-        self.z_coord_entry = ttk.Entry(title_section_3, width=11, state="disabled")
+        self.z_coord_entry = ttk.Entry(title_section_3, textvariable=self.z_coord_var, width=11, state="disabled")
         self.z_coord_entry.grid(row=8, column=2, padx=2, pady=2)
 
         # GENERAL BUTTONS
@@ -112,12 +116,12 @@ class Output():
         mach_cont_str = str(self.mach_contour.get())
         cp_cont_str = str(self.cp_contour.get())
         slice_cp_str = str(self.slice_cp.get())
-        # axis_str = self.axis_cut_entry.get()
-        # xcoord_str = self.x_coord_entry.get()
-        # ycoord_str = self.y_coord_entry.get()
-        # zcoord_str = self.z_coord_entry.get()
+        axis_str = self.axis_cut_var.get()
+        xcoord_str = str(self.x_coord_var.get())
+        ycoord_str = str(self.y_coord_var.get())
+        zcoord_str = str(self.z_coord_var.get())
 
-        partial_output = "OUTPUT (0-no 1-yes)\nclalpha cdalpha cmalpha\n"+(
+        partial_output = "\nOUTPUT (0-no 1-yes)\nclalpha cdalpha cmalpha\n"+(
                         cl_alpha_str+" "+cd_alpha_str+" "+cm_alpha_str)+(
                         "\nclconv cdconv cmconv residualconv\n")+(
                         cl_conv_str+" "+cd_conv_str+" "+cm_conv_str+" "+res_conv_str)+(
@@ -125,7 +129,7 @@ class Output():
                         cp_xc_str+" "+mach_cont_str+" "+cp_cont_str)+(
                         "\nslicecp\n")+(
                         slice_cp_str)+(
-                        "\naxis xcoord ycoord zcoord\n")
-                        # axis_str+" "+xcoord_str+" "+ycoord_str+" "+zcoord_str)
+                        "\naxis xcoord ycoord zcoord\n")+(
+                        axis_str+" "+xcoord_str+" "+ycoord_str+" "+zcoord_str)
 
         return partial_output

@@ -36,35 +36,35 @@ class Input():
         text_section_1_2 = ttk.Label(title_section_1_2, text="\n\nPlease specify the required input values:\n")
         text_section_1_2.grid(row=0, column=0, columnspan=10, sticky=NSEW, padx=2)
 
+        self.cfl_entry = DoubleVar()
         cfl_label = ttk.Label(title_section_1_2, text="cfl", borderwidth=2, relief="groove", anchor=CENTER)
         cfl_label.grid(row=1, column=0, sticky=NSEW, padx=2, pady=2)
-        cfl_entry = ttk.Entry(title_section_1_2, width=10)
-        cfl_entry.grid(row=1, column=1, padx=2, pady=2)
+        ttk.Entry(title_section_1_2, textvariable=self.cfl_entry, width=10).grid(row=1, column=1, padx=2, pady=2)
 
+        self.gamma_entry = DoubleVar()
         gamma_label = ttk.Label(title_section_1_2, text="gamma", borderwidth=2, relief="groove", anchor=CENTER)
         gamma_label.grid(row=2, column=0, sticky=NSEW, padx=2, pady=2)
-        gamma_entry = ttk.Entry(title_section_1_2, width=10)
-        gamma_entry.grid(row=2, column=1, padx=2, pady=2)
+        ttk.Entry(title_section_1_2, textvariable=self.gamma_entry, width=10).grid(row=2, column=1, padx=2, pady=2)
 
+        self.mach_entry = DoubleVar()
         mach_label = ttk.Label(title_section_1_2, text="mach", borderwidth=2, relief="groove", anchor=CENTER)
         mach_label.grid(row=3, column=0, sticky=NSEW, padx=2, pady=2)
-        mach_entry = ttk.Entry(title_section_1_2, width=10)
-        mach_entry.grid(row=3, column=1, padx=2, pady=2)
+        ttk.Entry(title_section_1_2, textvariable=self.mach_entry, width=10).grid(row=3, column=1, padx=2, pady=2)
 
+        self.cmac_entry = DoubleVar()
         cmac_label = ttk.Label(title_section_1_2, text="cmac", borderwidth=2, relief="groove", anchor=CENTER)
         cmac_label.grid(row=1, column=2, sticky=NSEW, padx=2, pady=2)
-        cmac_entry = ttk.Entry(title_section_1_2, width=10)
-        cmac_entry.grid(row=1, column=3, padx=2, pady=2)
+        ttk.Entry(title_section_1_2, textvariable=self.cmac_entry, width=10).grid(row=1, column=3, padx=2, pady=2)
 
+        self.angle_attack_entry = DoubleVar()
         angle_attack_label = ttk.Label(title_section_1_2, text="Angle of attack (deg)", borderwidth=2, relief="groove", anchor=CENTER)
         angle_attack_label.grid(row=2, column=2, sticky=NSEW, padx=2, pady=2)
-        angle_attack_entry = ttk.Entry(title_section_1_2, width=10)
-        angle_attack_entry.grid(row=2, column=3, padx=2, pady=2)
+        ttk.Entry(title_section_1_2, textvariable=self.angle_attack_entry, width=10).grid(row=2, column=3, padx=2, pady=2)
 
+        self.rk_entry = DoubleVar()
         rk_label = ttk.Label(title_section_1_2, text="Number of stages (RK)", borderwidth=2, relief="groove", anchor=CENTER)
         rk_label.grid(row=3, column=2, sticky=NSEW, padx=2, pady=2)
-        rk_entry = ttk.Entry(title_section_1_2, width=10)
-        rk_entry.grid(row=3, column=3, padx=2, pady=2)
+        ttk.Entry(title_section_1_2, textvariable=self.rk_entry, width=10).grid(row=3, column=3, padx=2, pady=2)
 
         # GENERAL BUTTONS
         ttk.Button(master, text="Clear all").grid(row=2, column=0, padx=2, pady=2)
@@ -114,3 +114,18 @@ class Input():
 
     def showResultingMesh(self):
         messagebox.showinfo('Resulting Mesh')
+
+    def writePartialOutput(self):
+        cfl_str = str(self.cfl_entry.get())
+        gamma_str = str(self.gamma_entry.get())
+        angleattackdeg_str = str(self.angle_attack_entry.get())
+        rk_str = str(self.rk_entry.get())
+        mach_str = str(self.mach_entry.get())
+        cmac_str = str(self.cmac_entry.get())
+
+        partial_output = "INPUT\ncfl gamma angleattackdeg\n"+(
+                        cfl_str+" "+gamma_str+" "+angleattackdeg_str)+(
+                        "\nrkstage mach cmac\n")+(
+                        rk_str+" "+mach_str+" "+cmac_str)                        
+        
+        return partial_output

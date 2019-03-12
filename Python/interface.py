@@ -38,7 +38,7 @@ class Interface(Input, Solver, Output):
         
     def save_entry(self):
 
-        # input = self.input.writePartialOutput()
+        input = self.input.writePartialOutput()
         # solver = self.solver.writePartialOutput()
         output = self.output.writePartialOutput()
 
@@ -49,7 +49,7 @@ class Interface(Input, Solver, Output):
 
         file = open(complete_file_name,"w")
 
-        file.write(output)
+        file.write(input+output)
 
         file.close()        
 
