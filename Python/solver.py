@@ -19,17 +19,17 @@ class Solver():
 
         ttk.Label(title_section_2_1, text="", width=5).grid(row=1, column=0)
 
+        self.max_iter_entry = IntVar()
         max_iter_label = ttk.Label(title_section_2_1, text="Max number of itterations", borderwidth=2, relief="groove", anchor=CENTER, width=22)
         max_iter_label.grid(row=1, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
-        max_iter_entry = ttk.Entry(title_section_2_1, width=15)
-        max_iter_entry.grid(row=1, column=3, columnspan=2, padx=2, pady=2)
+        ttk.Entry(title_section_2_1, textvariable=self.max_iter_entry, width=15).grid(row=1, column=3, columnspan=2, padx=2, pady=2)
 
         ttk.Label(title_section_2_1, text="", width=4).grid(row=1, column=5)
 
+        self.convergence_crit_entry = DoubleVar()
         convergence_crit_label = ttk.Label(title_section_2_1, text="Convergence criterion", borderwidth=2, relief="groove", anchor=CENTER, width=22)
         convergence_crit_label.grid(row=2, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
-        convergence_crit_entry = ttk.Entry(title_section_2_1, width=15)
-        convergence_crit_entry.grid(row=2, column=3, columnspan=2, padx=2, pady=2)
+        ttk.Entry(title_section_2_1, textvariable=self.convergence_crit_entry, width=15).grid(row=2, column=3, columnspan=2, padx=2, pady=2)
 
         # SECTION 2.2: SCHEME SELECTION
         title_section_2_2 = ttk.LabelFrame(master, text="2.2 Scheme Selection", labelanchor=N, height=110, width=396)
@@ -80,6 +80,15 @@ class Solver():
         self.newWindow = Toplevel(self.master)
         self.flux_Scheme = SelectFluxScheme(self.newWindow)
 
+    def writePartialOutput(self):
+               
+        nbnitermax_str = str(self.max_iter_entry.get())
+        convcriterion_str = str(self.convergence_crit_entry.get())
+        # smoothing_str = str(self.flux_Scheme.smoothing.get())
+
+        partial_output = "\nnbitermax convcriterion\n"+nbnitermax_str+" "+convcriterion_str+self.flux_Scheme.writePartialOutput()
+        return partial_output
+
 
 class SelectFluxScheme():
     def __init__(self, master):
@@ -88,47 +97,54 @@ class SelectFluxScheme():
         self.master.title("Scheme selection")
         ttk.Label(self.master, text="\nPlease configure the following parameters:\n", anchor=W).grid(row=0, column=0, columnspan=4, padx=2, sticky=W)
         
+        self.flux_scheme = StringVar()
         self.flux_scheme_label = ttk.Label(self.master, text="Flux scheme:", anchor=CENTER)
         self.flux_scheme_label.grid(row=1, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
-        self.flux_scheme_entry = ttk.Combobox(self.master, values=("Roe", "Ausm"), width=15)
+        self.flux_scheme_entry = ttk.Combobox(self.master, values=("Roe", "Ausm"), textvariable=self.flux_scheme, width=15)
         self.flux_scheme_entry.grid(row=2, column=1, columnspan=2, pady=2)
         
+        self.scheme_order = StringVar()
         self.scheme_order_label = ttk.Label(self.master, text="Scheme order:", anchor=CENTER)
         self.scheme_order_label.grid(row=3, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
-        self.scheme_order_entry = ttk.Combobox(self.master, values=("1", "2"), width=15)
+        self.scheme_order_entry = ttk.Combobox(self.master, values=("1", "2"), textvariable=self.scheme_order, width=15)
         self.scheme_order_entry.grid(row=4, column=1, columnspan=2, pady=2)
         self.scheme_order_entry.bind('<<ComboboxSelected>>', self.activateGradientAndLimiter)
         
+        self.gradient = StringVar()
         self.gradient_label = ttk.Label(self.master, text="Gradient:", anchor=CENTER, state="disabled")
         self.gradient_label.grid(row=5, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
-        self.gradient_entry = ttk.Combobox(self.master, values=("Green Gauss", "Least Squares"), width=15, state="disabled")
+        self.gradient_entry = ttk.Combobox(self.master, values=("Green Gauss", "Least Squares"), textvariable = self.gradient, width=15, state="disabled")
         self.gradient_entry.grid(row=6, column=1, columnspan=2, pady=2)
 
+        self.limiter = StringVar()
         self.limiter_label = ttk.Label(self.master, text="Limiter:", anchor=CENTER, state="disabled")
         self.limiter_label.grid(row=7, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
-        self.limiter_entry = ttk.Combobox(self.master, values=("Barth Jespersen", "Venkatakrishnan"), width=15, state="disabled")
+        self.limiter_entry = ttk.Combobox(self.master, values=("Barth Jespersen", "Venkatakrishnan"), textvariable=self.limiter, width=15, state="disabled")
         self.limiter_entry.grid(row=8, column=1, columnspan=2, pady=2)
         self.limiter_entry.bind('<<ComboboxSelected>>', self.activateOmegaOrK)
 
+        # self.omega = 
         self.omega_label = ttk.Label(self.master, text="Omega", width=10, anchor=CENTER, borderwidth=2, relief="groove", state="disabled")
         self.omega_label.grid(row=9, column=0, padx=2, pady=7)
         self.omega_entry = ttk.Entry(self.master, width=10, state="disabled")
         self.omega_entry.grid(row=9, column=1, padx=2, pady=10)
 
+        self.k = DoubleVar()
         self.k_label = ttk.Label(self.master, text="k", width=10, anchor=CENTER, borderwidth=2, relief="groove", state="disabled")
         self.k_label.grid(row=9, column=2, padx=2, pady=7)
-        self.k_entry = ttk.Entry(self.master, width=10, state="disabled")
+        self.k_entry = ttk.Entry(self.master, textvariable=self.k, width=10, state="disabled")
         self.k_entry.grid(row=9, column=3, padx=2, pady=10)
 
         ttk.Label(self.master, text="Residual smoothing?", anchor=CENTER).grid(row=10, column=1, columnspan=2, padx=2)
         
-        self.smoothing_yes = Radiobutton(self.master, text="Yes", value=1, relief="groove", borderwidth=2, width=8, anchor=W)
+        self.smoothing = IntVar()
+        self.smoothing_yes = Radiobutton(self.master, text="Yes", value=1, variable=self.smoothing, relief="groove", borderwidth=2, width=8, anchor=W)
         self.smoothing_yes.grid(row=11, column=1, columnspan=2, padx=2, pady=2)
 
-        self.smoothing_no = Radiobutton(self.master, text="No", value=2, relief="groove", borderwidth=2, width=8, anchor=W)
+        self.smoothing_no = Radiobutton(self.master, text="No", value=0, variable=self.smoothing, relief="groove", borderwidth=2, width=8, anchor=W)
         self.smoothing_no.grid(row=12, column=1, columnspan=2, padx=2, pady=2)
 
-        ttk.Button(self.master, text="Ok", command=self.master.destroy).grid(row=13, column=1, pady=10)
+        ttk.Button(self.master, text="Ok", command=self.writePartialOutput).grid(row=13, column=1, pady=10)
         ttk.Button(self.master, text="Cancel", command=self.master.destroy).grid(row=13, column=2, pady=10)
     
     def activateGradientAndLimiter(self, event):
@@ -170,3 +186,15 @@ class SelectFluxScheme():
 
             self.omega_label.configure(state="disabled")
             self.omega_entry.configure(state="disabled")
+    
+    def writePartialOutput(self):
+        smoothing_str = str(self.smoothing.get())
+        fluxscheme_str = self.flux_scheme.get()
+
+        partial_output = "\nresidual smoothing (0-no 1-yes)\n"+smoothing_str+"\nfluxscheme schemeorder\n"+fluxscheme_str
+        
+        self.master.destroy()
+        return partial_output
+        
+        
+        
