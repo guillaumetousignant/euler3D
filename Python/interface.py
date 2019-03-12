@@ -3,12 +3,13 @@ from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
 from tkinter import filedialog
+import os.path
 from input import Input
 from solver import Solver
 from output import Output
 
 
-class Interface():
+class Interface(Input, Solver, Output):
     def __init__(self, master): # Initialize the class
         master.title("GRAPHICAL USER INTERFACE")
         
@@ -33,8 +34,27 @@ class Interface():
 
         # SECTION 3: OUTPUT
         self.output = Output(tab3)
-    
+
+        
+    def save_entry(self):
+
+        # input = self.input.writePartialOutput()
+        # solver = self.solver.writePartialOutput()
+        output = self.output.writePartialOutput()
+
+        file_path = '/home/etudiant/Documents/'
+        file_name = "output_interface.txt"
+
+        complete_file_name = os.path.join(file_path, file_name)
+
+        file = open(complete_file_name,"w")
+
+        file.write(output)
+
+        file.close()        
+
 
 root = Tk()
 main_window = Interface(root)
 root.mainloop()
+main_window.save_entry()
