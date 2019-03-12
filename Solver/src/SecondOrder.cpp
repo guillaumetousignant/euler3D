@@ -33,7 +33,7 @@ void SecondOrder::computeInterpolation(Block* block)
 void SecondOrder::setGradient(string gradient_choice)
 {
 	delete gradient_;
-	if (gradient_choice=="Least Squares")
+	if (gradient_choice=="leastsquares")
 		gradient_=new LeastSquares();
 	else
 		gradient_=new GreenGauss();
@@ -42,7 +42,7 @@ void SecondOrder::setGradient(string gradient_choice)
 void SecondOrder::setLimiter(string limiter_choice)
 {
 	delete limiter_;
-	if (limiter_choice=="Venkatakrishnan")
+	if (limiter_choice=="venkatakrishnan")
 		limiter_=new Venkatakrishnan();
 	else
 		limiter_=new BarthJespersen();
@@ -50,12 +50,12 @@ void SecondOrder::setLimiter(string limiter_choice)
 
 SecondOrder::SecondOrder(string gradient_choice, string limiter_choice)
 {
-	if (gradient_choice=="Least Squares")
+	if (gradient_choice=="leastsquares")
 		gradient_=new LeastSquares();
 	else
 		gradient_=new GreenGauss();
 
-	if (limiter_choice=="Venkatakrishnan")
+	if (limiter_choice=="venkatakrishnan")
 		limiter_=new Venkatakrishnan();
 	else
 		limiter_=new BarthJespersen();

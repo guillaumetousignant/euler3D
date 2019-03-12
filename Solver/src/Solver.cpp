@@ -12,7 +12,7 @@
 #include <iostream>
 using namespace std;
 
-Solver::Solver(double gamma, double cfl, int stage_number, string interpolation_choice, string gradient_choice, string limiter_choice, string flux_scheme_choice, string residual_smoother_choice, int n_blocks, int max_iter, double convergence_criterion, double cmac, double aoa_deg, double mach_aircraft)
+Solver::Solver(double gamma, double cfl, int stage_number, int interpolation_choice, string gradient_choice, string limiter_choice, string flux_scheme_choice, bool residual_smoother_choice, int n_blocks, int max_iter, double convergence_criterion, double cmac, double aoa_deg, double mach_aircraft)
 {
 	gamma_=gamma;
 	timestep_= new Timestep(gamma, cfl);
@@ -50,14 +50,43 @@ void Solver::solve(Block* block, CompleteMesh* complete_mesh)
 	}
 
 	/*
+
+	int i;
+	int n_blocks_in_process;
+	int* my_blocks;
+	Block* all_blocks;
+	Block* current_block;
+
+	n_blocks_in_process=complete_mesh->n_blocks_in_process_;
+	my_blocks=complete_mesh->my_blocks_;
+	all_blocks=complete_mesh->all_blocks_;
+
+	// AJOUTER INITIALISATION
+
 	while (true) 
 	{
-		timestep_->computeSpectralRadius(block);
-		timestep_->computeTimestep(block);
-		this->saveW0(block);
-		runge_kutta_->computeRungeKutta(block);
-		post_processing_->process(block, complete_mesh);
+		///INSÉRER LES TRUCS DE MPI ICI JE CROIS
+		updater_->synchroniseUpdate(complete_mesh??); // SYNCHRONISE LES VARIABLES PRIMITIVES DES CELLULES PHANTOMES
+		timestep_->synchroniseGradient(complete_mesh??); //SYNCHRONISE LES GRADIENTS DES CELLULES PHANTOMES (peut-être déplacer la fonction autre que dans timestep_??)
+		timestep_->synchroniseLimiter(complete_mesh??); //SYNCHRONISE LES LIMITERS DES CELLULES PHANTOMES (peut-être déplacer la fonction autre que dans timestep_??)
+		post_processing_->decision(complete_mesh??); //PARTIE QUI CALCULE LES SOMMES, PRENDS LES DÉCISIONS ET PUBLISH
+		/// FIN DES TRUCS MPI
+
+		for	(i=0;i<n_blocks_in_process;i++)
+		{
+			current_block=all_blocks[my_blocks[i]];
+			timestep_->computeSpectralRadius(current_block);
+			timestep_->computeTimestep(current_block);
+			this->saveW0(current_block);
+			runge_kutta_->computeRungeKutta(current_block);
+			post_processing_->process(current_block, complete_mesh); //PARTIE QUI FAIT JUSTE CALCULER LES CL ET CONVERGENCE PARTIELLE
+		}	
+		
 	}
+
+	// REMPLACER EXIT
+
+
 	*/
 }
 

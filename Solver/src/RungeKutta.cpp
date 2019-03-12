@@ -10,7 +10,7 @@
 #include <iostream>
 using namespace std;
 
-RungeKutta::RungeKutta(double gamma, int stage_number, string interpolation_choice, string gradient_choice, string limiter_choice, string flux_scheme_choice,string residual_smoother_choice)
+RungeKutta::RungeKutta(double gamma, int stage_number, int interpolation_choice, string gradient_choice, string limiter_choice, string flux_scheme_choice, bool residual_smoother_choice)
 
 {
 	stage_number_=stage_number;
