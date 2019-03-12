@@ -11,7 +11,7 @@ class Interface
 {
 	public:
 
-		void readInputFile();
+		void readInputFile(string input_file_name);
 
 		// MESH
 		string topology_file_name_interface_;
@@ -19,7 +19,7 @@ class Interface
 		// INPUT
 		double cfl_interface_;
 		double gamma_interface_;
-		double aoa_deg_interface_
+		double aoa_deg_interface_;
 
 		int stage_number_interface_;
 		double mach_aircraft_interface_;
@@ -73,7 +73,6 @@ class Interface
 		int n_blocks_interface_; // RÉGLER CE PROBLÈME LÀ
 		
 
-		Interface(double gamma, double cfl, int stage_number,int interpolation_choice, string gradient_choice, string limiter_choice, string flux_scheme_choice, bool residual_smoother_choice);
 		Interface();
 		~Interface();
 

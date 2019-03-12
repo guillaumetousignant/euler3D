@@ -33,7 +33,7 @@ class ResidualCalculator
 		double *alpha_rk_;
 		double *beta_rk_;
 
-		void setInterpolation(int interpolation_choice, string gradient_choice, string limiter_choice);
+		void setInterpolation(int interpolation_choice, string gradient_choice, string limiter_choice, double omega, double k);
 		void setFluxScheme(double gamma, string flux_scheme_choice);
 		void setResidualSmoother(bool residual_smoother_choice);
 
@@ -41,7 +41,7 @@ class ResidualCalculator
 
 
 		ResidualCalculator();
-		ResidualCalculator(double gamma, double *beta_rk, int interpolation_choice, string gradient_choice, string limiter_choice, string flux_scheme_choice, bool residual_smoother_choice);
+		ResidualCalculator(double gamma, double *beta_rk, int interpolation_choice, string gradient_choice, string limiter_choice, string flux_scheme_choice, bool residual_smoother_choice, double omega, double k);
 		~ResidualCalculator();
 
 

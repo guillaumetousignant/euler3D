@@ -39,16 +39,16 @@ void SecondOrder::setGradient(string gradient_choice)
 		gradient_=new GreenGauss();
 }
 
-void SecondOrder::setLimiter(string limiter_choice)
+void SecondOrder::setLimiter(string limiter_choice, double omega, double k)
 {
 	delete limiter_;
 	if (limiter_choice=="venkatakrishnan")
-		limiter_=new Venkatakrishnan();
+		limiter_=new Venkatakrishnan(k);
 	else
-		limiter_=new BarthJespersen();
+		limiter_=new BarthJespersen(omega);
 }
 
-SecondOrder::SecondOrder(string gradient_choice, string limiter_choice)
+SecondOrder::SecondOrder(string gradient_choice, string limiter_choice, double omega, double k)
 {
 	if (gradient_choice=="leastsquares")
 		gradient_=new LeastSquares();
@@ -56,9 +56,9 @@ SecondOrder::SecondOrder(string gradient_choice, string limiter_choice)
 		gradient_=new GreenGauss();
 
 	if (limiter_choice=="venkatakrishnan")
-		limiter_=new Venkatakrishnan();
+		limiter_=new Venkatakrishnan(k);
 	else
-		limiter_=new BarthJespersen();
+		limiter_=new BarthJespersen(omega);
 }
 
 

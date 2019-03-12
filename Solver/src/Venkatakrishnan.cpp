@@ -17,9 +17,9 @@ void Venkatakrishnan::computeLimiters(Block* block)
 
 
 
-Venkatakrishnan::Venkatakrishnan()
+Venkatakrishnan::Venkatakrishnan(double k)
 {
-	k_=5;
+	k_=k;
 }
 
 Venkatakrishnan::~Venkatakrishnan()
