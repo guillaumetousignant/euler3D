@@ -12,7 +12,7 @@ class Venkatakrishnan : public Limiter
 		
 		double k_;
 
-		Venkatakrishnan();
+		Venkatakrishnan(double k);
 		~Venkatakrishnan();
 
 		void computeLimiters(Block* block);

@@ -17,9 +17,9 @@ void BarthJespersen::computeLimiters(Block* block)
 
 
 
-BarthJespersen::BarthJespersen()
+BarthJespersen::BarthJespersen(double omega)
 {
-	omega_=10^-16;
+	omega_=omega;
 }
 
 BarthJespersen::~BarthJespersen()

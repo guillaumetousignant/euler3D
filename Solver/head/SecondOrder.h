@@ -28,11 +28,11 @@ class SecondOrder : public Interpolation
 		Limiter *limiter_;
 
 		void setGradient(string gradient_choice);
-		void setLimiter(string limiter_choice);
+		void setLimiter(string limiter_choice, double omega, double k);
 
 
 		SecondOrder();
-		SecondOrder(string gradient_choice, string limiter_choice);
+		SecondOrder(string gradient_choice, string limiter_choice, double omega, double k);
 		~SecondOrder();
 
 		void computeInterpolation(Block* block);

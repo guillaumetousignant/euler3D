@@ -22,7 +22,7 @@ class RungeKutta
 		void computeRungeKutta(Block* block);
 
 
-		RungeKutta(double gamma, int stage_number, string interpolation_choice, string gradient_choice, string limiter_choice, string flux_scheme_choice, string residual_smoother_choice);
+		RungeKutta(double gamma, int stage_number, int interpolation_choice, string gradient_choice, string limiter_choice, string flux_scheme_choice, bool residual_smoother_choice, double omega, double k);
 		
 		~RungeKutta();
 

@@ -12,7 +12,7 @@ class BarthJespersen : public Limiter
 		
 		double omega_;
 
-		BarthJespersen();
+		BarthJespersen(double omega);
 		~BarthJespersen();
 
 		void computeLimiters(Block* block);

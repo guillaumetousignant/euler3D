@@ -10,7 +10,7 @@
 #include <iostream>
 using namespace std;
 
-RungeKutta::RungeKutta(double gamma, int stage_number, string interpolation_choice, string gradient_choice, string limiter_choice, string flux_scheme_choice,string residual_smoother_choice)
+RungeKutta::RungeKutta(double gamma, int stage_number, int interpolation_choice, string gradient_choice, string limiter_choice, string flux_scheme_choice, bool residual_smoother_choice, double omega, double k)
 
 {
 	stage_number_=stage_number;
@@ -68,7 +68,7 @@ RungeKutta::RungeKutta(double gamma, int stage_number, string interpolation_choi
 	}
 
 	updater_=new Updater(gamma, alpha_rk);
-	residual_calculator_=new ResidualCalculator(gamma, beta_rk, interpolation_choice, gradient_choice, limiter_choice, flux_scheme_choice, residual_smoother_choice);
+	residual_calculator_=new ResidualCalculator(gamma, beta_rk, interpolation_choice, gradient_choice, limiter_choice, flux_scheme_choice, residual_smoother_choice, omega, k);
 }
 
 
