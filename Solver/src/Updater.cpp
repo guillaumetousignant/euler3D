@@ -10,8 +10,7 @@ using namespace std;
 
 void Updater::updateInternalBlock(Block* block)
 {
-	block->test_block_+=10;
-	cout<<"\t\t\tExécution updateInternalBlock: "<<block->test_block_<<endl;
+	cout<<"\t\t\tExécution updateInternalBlock: "<<endl;
 
 	/*
 	int nb_cells=block->n_cells_in_block_;
@@ -79,8 +78,7 @@ void Updater::updateInternalBlock(Block* block)
 
 void Updater::updateBoundary(Block* block)
 {
-	block->test_block_+=20;
-	cout<<"\t\t\tExécution updateBoundary: "<<block->test_block_<<endl;
+	cout<<"\t\t\tExécution updateBoundary: "<<endl;
 	/*
 	// WALL !!!ATTENTION!!! VÉRIFIER SENS DES NORMALES
 

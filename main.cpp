@@ -24,71 +24,38 @@ int main()
 
 	cout << "This is the main" << endl;
 
-	int test_block=69;
-	Block* block= new Block(test_block);
+  Block* new_block = new Block(0);
+  string block_file ="../UnstructuredMesh5x5.su2";
+  // string block_file ="../TestMesh2x1.su2";
+
+  ConcreteBlockBuilder concrete_block_builder = ConcreteBlockBuilder(block_file);
+  concrete_block_builder.preReadMyBlock(new_block);
+  concrete_block_builder.readMyBlock(new_block);
+
+  concrete_block_builder.createMyFaces(new_block);
+
+  concrete_block_builder.setConnectivity(new_block);
+
+  MetricsInitializer metricsInit(new_block);
+  metricsInit.doInit();
+
 	CompleteMesh* complete_mesh;
-  	complete_mesh= new CompleteMesh();
+  complete_mesh= new CompleteMesh();
 	Initializer* initializer= new Initializer();
 	Interface* interface= new Interface();
 
 	Solver *solver=initializer->initializeSolver(interface);
 	solver->solve(block, complete_mesh);
 
-
-	// Initialize the MPI environment
-
-
 	// Finalize the MPI environment.
 	MPI_Finalize();
-
-
-	/*
-	double gamma=1.5;
-	double cfl=1.0;
-	int stage_number=5;
-	double alpha_rk[5]={420,420,420,420,420};
-	double beta_rk[5]={1337,1337,1337,1337,1337};
-	string interpolation_choice = "Second";
-	string gradient_choice = "Least Squares";
-	string limiter_choice = "Venkatakrishnan";
-	string flux_scheme_choice = "Roe";
-	string residual_smoother_choice = "Central IRS";
-
-
-
-	Solver *solver= new Solver(gamma, cfl, stage_number, alpha_rk, beta_rk, interpolation_choice, gradient_choice, limiter_choice, flux_scheme_choice, residual_smoother_choice);
-
-	cout<<"Salut"<<endl;
-	cout<<solver->gamma_<<endl;
-	cout<<solver->runge_kutta_->alpha_rk_[1]<<endl;
-	cout<<solver->runge_kutta_->beta_rk_[1]<<endl;
-	cout<<block->test_block_<<endl;
-
-
-	solver->solve(block);
-
-	cout<<block->test_block_<<endl;
-	*/
 
     cout << "This is the main" << endl;
 
     // Finalize the MPI environment.
     MPI_Finalize();
 
-    Block* new_block = new Block(0);
-    string block_file ="../UnstructuredMesh5x5.su2";
-    // string block_file ="../TestMesh2x1.su2";
 
-    ConcreteBlockBuilder concrete_block_builder = ConcreteBlockBuilder(block_file);
-    concrete_block_builder.preReadMyBlock(new_block);
-    concrete_block_builder.readMyBlock(new_block);
-
-    concrete_block_builder.createMyFaces(new_block);
-
-    concrete_block_builder.setConnectivity(new_block);
-
-    MetricsInitializer metricsInit(new_block);
-    metricsInit.doInit();
 /*
     cout<<"Cellules\n";
     Cell* test_cell;
@@ -139,8 +106,6 @@ int main()
 
 */
 
-        cout<<"HAAAAAAAAAAAAAAAAAAAAAAAA Si tu m'entends crier c'est que le code a roulé au complet, en parlant de rouler, connais-tu le concours déroule le rebors, Tim Hortons offre un service et des produits de qualité à un prix qui fait envier"<<endl;
-
     // for (int i=0; i<new_block->n_real_boundaries_in_block_;i++)
     // {
     //     std::cout << "test de boundary: "<< ((new_block->block_boundary_cell_ids_[i])->n_cell_in_boundary_) <<std::endl;
@@ -148,7 +113,7 @@ int main()
     // }
     // std::cout << "test de boundary deep: "<< new_block->n_real_boundaries_in_block_ <<std::endl;
 
-
+    cout << "END OF PROGRAM" << endl;
 }
 
 

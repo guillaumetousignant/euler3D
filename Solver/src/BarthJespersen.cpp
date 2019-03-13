@@ -11,8 +11,8 @@ using namespace std;
 
 void BarthJespersen::computeLimiters(Block* block)
 {
-	block->test_block_+=5;
-	cout<<"\t\t\t\t\tExécution computeLimiters: BarthJespersen: "<<block->test_block_<<endl;
+
+	cout<<"\t\t\t\t\tExécution computeLimiters: BarthJespersen: "<<endl;
 }
 
 

@@ -14,7 +14,7 @@ RungeKutta::RungeKutta(double gamma, int stage_number, int interpolation_choice,
 
 {
 	stage_number_=stage_number;
-	
+
 
 	double alpha_rk[5];
 	double beta_rk[5];
@@ -79,7 +79,7 @@ RungeKutta::~RungeKutta()
 
 void RungeKutta::computeRungeKutta(Block* block)
 {
-	cout<<"\t\tExécution computeRungeKutta: "<<block->test_block_<<endl;
+	cout<<"\t\tExécution computeRungeKutta: "<<endl;
 	cout<<endl<<"\t\tDans ResidualCalculator"<<endl;
 	residual_calculator_->computeResidual(block);
 	cout<<"\t\tFin ResidualCalculator"<<endl;
@@ -89,7 +89,7 @@ void RungeKutta::computeRungeKutta(Block* block)
 	cout<<"\t\tFin Updater"<<endl;
 
 	/*
-	
+
 	int stage_idx;
 
 	for (stage_idx=0;stage_idx<stage_number_;stage_idx++)

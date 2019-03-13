@@ -11,15 +11,14 @@ using namespace std;
 
 void GreenGauss::computeGradients(Block* block)
 {
-	block->test_block_+=4;
-	cout<<"\t\t\t\t\tExécution computeGradients: GreenGauss: "<<block->test_block_<<endl;
+	cout<<"\t\t\t\t\tExécution computeGradients: GreenGauss: "<<endl;
 }
 
 
 
 GreenGauss::GreenGauss()
 {
-	
+
 }
 
 GreenGauss::~GreenGauss()

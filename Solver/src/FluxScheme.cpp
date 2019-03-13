@@ -15,8 +15,7 @@ void FluxScheme::computeFluxDiss(Block* block)
 
 void FluxScheme::computeFluxConv(Block* block)
 {
-	block->test_block_+=3;
-	cout<<"\t\t\t\tExécution computeFluxConv: "<<block->test_block_<<endl;
+	cout<<"\t\t\t\tExécution computeFluxConv: "<<endl;
 
 	/*
 	//Set variables
@@ -136,7 +135,7 @@ void FluxScheme::computeFluxConv(Block* block)
 
 FluxScheme::FluxScheme()
 {
-	
+
 }
 
 FluxScheme::~FluxScheme()

@@ -18,12 +18,13 @@ class Block
 public:
 	int block_id_;
 
-	int n_real_cells_in_block_; 
+	int n_real_cells_in_block_;
 	int n_ghost_cells_in_block_;
 	int n_all_cells_in_block_;
 	int n_nodes_in_block_;
 	int n_faces_in_block_;
 	int n_real_boundaries_in_block_;
+	int nb_face_in_wall_;
 	Cell** block_cells_;
 	Node** block_nodes_;
 	Face** block_faces_;

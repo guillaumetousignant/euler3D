@@ -11,8 +11,7 @@ using namespace std;
 
 void RoeScheme::computeFluxDiss(Block* block)
 {
-	block->test_block_++;
-	cout<<"\t\t\t\tExécution computeFluxDiss: Roe: "<<block->test_block_<<endl;
+	cout<<"\t\t\t\tExécution computeFluxDiss: Roe: "<<endl;
 	/*
 	//Set variables
 	double rho_L,u_L,v_L,w_L,p_L,H_L,qq_L,V_L,rho_R,u_R,v_R,w_R,p_R,H_R,qq_R,V_R;
@@ -37,13 +36,13 @@ void RoeScheme::computeFluxDiss(Block* block)
 	my_pp_array = my_primitive_variables -> pp_;
 
 	double* my_diss_res_ro,my_diss_res_uu,my_diss_res_vv,my_diss_res_ww,my_diss_res_pp;
-	
+
 	my_diss_res_ro = my_primitive_variables -> diss_res_ro_;
 	my_diss_res_uu = my_primitive_variables -> diss_res_uu_;
 	my_diss_res_vv = my_primitive_variables -> diss_res_vv_;
 	my_diss_res_ww = my_primitive_variables -> diss_res_ww_;
 	my_diss_res_pp = my_primitive_variables -> diss_res_pp_;
-	
+
 	Cell* my_cells;
 	my_cells = block -> block_cells_;
 	int ncell, my_cell;

@@ -36,7 +36,7 @@ void Solver::solve(Block* block, CompleteMesh* complete_mesh)
 {
 	while (true)
 	{
-	cout<<"Exécution solve: "<<block->test_block_<<endl;
+	cout<<"Exécution solve: "<<endl;
 	this->saveW0(block);
 	cout<<endl<<"\tDans Timestep"<<endl;
 	timestep_->computeSpectralRadius(block);
@@ -63,13 +63,13 @@ void Solver::solve(Block* block, CompleteMesh* complete_mesh)
 
 	// AJOUTER INITIALISATION
 
-	while (true) 
+	while (true)
 	{
 		///INSÉRER LES TRUCS DE MPI ICI JE CROIS
-		updater_->synchroniseUpdate(complete_mesh??); // SYNCHRONISE LES VARIABLES PRIMITIVES DES CELLULES PHANTOMES
-		timestep_->synchroniseGradient(complete_mesh??); //SYNCHRONISE LES GRADIENTS DES CELLULES PHANTOMES (peut-être déplacer la fonction autre que dans timestep_??)
-		timestep_->synchroniseLimiter(complete_mesh??); //SYNCHRONISE LES LIMITERS DES CELLULES PHANTOMES (peut-être déplacer la fonction autre que dans timestep_??)
-		post_processing_->decision(complete_mesh??); //PARTIE QUI CALCULE LES SOMMES, PRENDS LES DÉCISIONS ET PUBLISH
+		//updater_->synchroniseUpdate(complete_mesh??); // SYNCHRONISE LES VARIABLES PRIMITIVES DES CELLULES PHANTOMES
+		//timestep_->synchroniseGradient(complete_mesh??); //SYNCHRONISE LES GRADIENTS DES CELLULES PHANTOMES (peut-être déplacer la fonction autre que dans timestep_??)
+		//timestep_->synchroniseLimiter(complete_mesh??); //SYNCHRONISE LES LIMITERS DES CELLULES PHANTOMES (peut-être déplacer la fonction autre que dans timestep_??)
+		//post_processing_->decision(complete_mesh??); //PARTIE QUI CALCULE LES SOMMES, PRENDS LES DÉCISIONS ET PUBLISH
 		/// FIN DES TRUCS MPI
 
 		for	(i=0;i<n_blocks_in_process;i++)
@@ -80,8 +80,8 @@ void Solver::solve(Block* block, CompleteMesh* complete_mesh)
 			this->saveW0(current_block);
 			runge_kutta_->computeRungeKutta(current_block);
 			post_processing_->process(current_block, complete_mesh); //PARTIE QUI FAIT JUSTE CALCULER LES CL ET CONVERGENCE PARTIELLE
-		}	
-		
+		}
+
 	}
 
 	// REMPLACER EXIT
@@ -92,7 +92,7 @@ void Solver::solve(Block* block, CompleteMesh* complete_mesh)
 
 void Solver::saveW0(Block* block)
 {
-	cout<<"\tExécution w0: "<<block->test_block_<<endl;
+	cout<<"\tExécution w0: "<<endl;
 
 	/*
 	int nb_cells=block->n_cells_in_block_;

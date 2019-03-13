@@ -12,7 +12,7 @@ using namespace std;
 void Interface::readInputFile(string input_file_name)
 {
 	string line_in_file;
-	std::cout << std::boolalpha; 
+	std::cout << std::boolalpha;
 
 	ifstream input_file;
 	cout << "Reading Input File..."<<endl;
@@ -33,7 +33,7 @@ void Interface::readInputFile(string input_file_name)
 
 	// Skipping "INPUT" Line
 	input_file.ignore(256, '\n');
-	
+
 	// Skipping "cfl gamma angleattackdeg" Line
 	input_file.ignore(256, '\n');
 
@@ -205,7 +205,7 @@ void Interface::readInputFile(string input_file_name)
 	// Skipping "axis xcoord ycoord zcoord" Line
 	input_file.ignore(256, '\n');
 
-	// Slice Axis Choice 
+	// Slice Axis Choice
 	getline(input_file, line_in_file);
 	input_file >> slice_axis_choice_interface_;
 	cout << "Slice Axis Choice is: " <<slice_axis_choice_interface_ << endl;
@@ -238,7 +238,7 @@ Interface::Interface()
 
 
 	// À RÉGLER
-	n_blocks_interface_=5;
+	n_blocks_interface_=1;
 
 
 }
