@@ -50,12 +50,6 @@ int main()
 	// Finalize the MPI environment.
 	MPI_Finalize();
 
-    cout << "This is the main" << endl;
-
-    // Finalize the MPI environment.
-    MPI_Finalize();
-
-
 /*
     cout<<"Cellules\n";
     Cell* test_cell;

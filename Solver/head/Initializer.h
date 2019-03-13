@@ -8,19 +8,19 @@
 #include <string>
 using namespace std;
 
-//class Interface;
-//class Solver;
+class Interface;
+class Solver;
 
 class Initializer
 {
 	public:
-		
+
 
 		Solver* initializeSolver(Interface* interface);
 
 
 		Initializer();
-		
+
 		~Initializer();
 
 
