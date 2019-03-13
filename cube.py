@@ -56,7 +56,7 @@ for k in range(nk+1):
 
 fid.write("NMARK= %d\n" % (2))
 fid.write("MARKER_TAG= AIRFOIL\n")
-fid.write("MARKER_ELEMS= %d\n" % (ni * nj * nk))
+fid.write("MARKER_ELEMS= %d\n" % (ni * nj))
 
 j = 0
 for k in range(nk):
@@ -68,7 +68,7 @@ for k in range(nk):
         fid.write("4 %d %d %d %d\n" % (n1,n2,n3,n4))
 
 fid.write("MARKER_TAG=WALL\n")
-fid.write("MARKER_ELEMS= %d\n" % (ni * nj * nk))
+fid.write("MARKER_ELEMS= %d\n" % (ni * nj))
 j = nj
 for k in range(nk):
     for i in range(ni):
