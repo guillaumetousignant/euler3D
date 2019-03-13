@@ -90,9 +90,14 @@ class Output():
         self.z_coord_entry.grid(row=8, column=2, padx=2, pady=2)
 
         # GENERAL BUTTONS
-        ttk.Button(master, text="Clear all").grid(row=1, column=0, padx=2, pady=2)
-        ttk.Button(master, text="Clear this page").grid(row=1, column=1, padx=2, pady=2)
-        ttk.Button(master, text="Solve").grid(row=1, column=2, padx=2, pady=2)
+        clear_all_button = ttk.Button(master, text="Clear all")
+        clear_all_button.grid(row=1, column=0, padx=2, pady=2)
+
+        clear_button = ttk.Button(master, text="Clear this page")
+        clear_button.grid(row=1, column=1, padx=2, pady=2)
+
+        solve_button = ttk.Button(master, text="Solve")
+        solve_button.grid(row=1, column=2, padx=2, pady=2)
 
     # METHODS
     def activateAxisOfCut(self):

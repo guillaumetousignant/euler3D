@@ -19,10 +19,11 @@ class Solver():
 
         ttk.Label(title_section_2_1, text="", width=5).grid(row=1, column=0)
 
-        self.rk_entry = IntVar()
-        self.rk_label = ttk.Label(title_section_2_1, text="Max number of itterations", borderwidth=2, relief="groove", anchor=CENTER, width=22)
-        self.rk_label.grid(row=1, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
-        self.max_iter_entry = ttk.Entry(title_section_2_1, textvariable=self.rk_entry, width=15)
+        self.max_iter = IntVar()
+        self.max_iter.set(300)
+        self.max_iter_label = ttk.Label(title_section_2_1, text="Max number of itterations", borderwidth=2, relief="groove", anchor=CENTER, width=22)
+        self.max_iter_label.grid(row=1, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
+        self.max_iter_entry = ttk.Entry(title_section_2_1, textvariable=self.max_iter, width=15)
         self.max_iter_entry.grid(row=1, column=3, columnspan=2, padx=2, pady=2)
 
         ttk.Label(title_section_2_1, text="", width=4).grid(row=1, column=5)
@@ -43,8 +44,8 @@ class Solver():
 
         ttk.Label(title_section_2_2, text="", width=12).grid(row=1, column=0)
 
-        flux_scheme = ttk.Button(title_section_2_2, text="Select flux scheme", command=self.selectFluxScheme, width=23)
-        flux_scheme.grid(row=1, column=1, sticky=NSEW)
+        flux_scheme_button = ttk.Button(title_section_2_2, text="Select flux scheme", command=self.selectFluxScheme, width=23)
+        flux_scheme_button.grid(row=1, column=1, sticky=NSEW)
 
         ttk.Label(title_section_2_2, text="", width=4).grid(row=1, column=2)
 
@@ -77,9 +78,14 @@ class Solver():
         self.solver_option_build_execute.grid(row=4, column=1, columnspan=4, padx=2, pady=2)
 
         # GENERAL BUTTONS
-        ttk.Button(master, text="Clear all").grid(row=3, column=0, padx=2, pady=2)
-        ttk.Button(master, text="Clear this page").grid(row=3, column=1, padx=2, pady=2)
-        ttk.Button(master, text="Solve").grid(row=3, column=2, padx=2, pady=2)
+        clear_all_button = ttk.Button(master, text="Clear all")
+        clear_all_button.grid(row=3, column=0, padx=2, pady=2)
+
+        clear_button = ttk.Button(master, text="Clear this page")
+        clear_button.grid(row=3, column=1, padx=2, pady=2)
+
+        solve_button = ttk.Button(master, text="Solve")
+        solve_button.grid(row=3, column=2, padx=2, pady=2)
 
     # METHODS
     def selectFluxScheme(self):
@@ -88,7 +94,7 @@ class Solver():
 
     def writePartialOutput(self):
                
-        nbnitermax_str = str(self.rk_entry.get())
+        nbnitermax_str = str(self.max_iter.get())
         convcriterion_str = str(self.convergence_crit.get())
         
         solveroption = self.solver_option.get()
@@ -153,7 +159,8 @@ class SelectFluxScheme():
         self.k_entry = ttk.Entry(self.master, textvariable=self.k, width=10, state="disabled")
         self.k_entry.grid(row=9, column=3, padx=2, pady=10)
 
-        ttk.Label(self.master, text="Residual smoothing?", anchor=CENTER).grid(row=10, column=1, columnspan=2, padx=2)
+        self.smoothing_label = ttk.Label(self.master, text="Residual smoothing?", anchor=CENTER)
+        self.smoothing_label.grid(row=10, column=1, columnspan=2, padx=2)
         
         self.smoothing = IntVar()
         self.smoothing_yes = Radiobutton(self.master, text="Yes", value=1, variable=self.smoothing, relief="groove", borderwidth=2, width=8, anchor=W)
@@ -162,8 +169,10 @@ class SelectFluxScheme():
         self.smoothing_no = Radiobutton(self.master, text="No", value=0, variable=self.smoothing, relief="groove", borderwidth=2, width=8, anchor=W)
         self.smoothing_no.grid(row=12, column=1, columnspan=2, padx=2, pady=2)
 
-        ttk.Button(self.master, text="Ok", command=self.saveAndDestroyWindow).grid(row=13, column=1, pady=10)
-        ttk.Button(self.master, text="Cancel", command=self.master.destroy).grid(row=13, column=2, pady=10)
+        ok_button = ttk.Button(self.master, text="Ok", command=self.saveAndDestroyWindow)
+        ok_button.grid(row=13, column=1, pady=10)
+        cancel_button = ttk.Button(self.master, text="Cancel", command=self.master.destroy)
+        cancel_button.grid(row=13, column=2, pady=10)
     
     def activateGradientAndLimiter(self, event):
         scheme_order_result = self.scheme_order_entry.get()

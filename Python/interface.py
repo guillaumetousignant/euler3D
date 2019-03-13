@@ -38,9 +38,9 @@ class Interface(Input, Solver, Output):
         
     def save_entry(self):
 
-        input = self.input.writePartialOutput()
-        solver = self.solver.writePartialOutput()
-        output = self.output.writePartialOutput()
+        # input = self.input.writePartialOutput()
+        # solver = self.solver.writePartialOutput()
+        # output = self.output.writePartialOutput()
 
         file_path = '/home/etudiant/Documents/'
         file_name = "output_interface.txt"
@@ -49,8 +49,8 @@ class Interface(Input, Solver, Output):
 
         file = open(complete_file_name,"w")
 
-        file.write(input+solver+output)
-
+        # file.write(input+solver+output)
+        file.write("Hey, keep up the good work!")
         file.close()        
 
 

@@ -79,9 +79,14 @@ class Input():
         self.rk_entry.grid(row=3, column=3, padx=2, pady=2)
 
         # GENERAL BUTTONS
-        ttk.Button(master, text="Clear all").grid(row=2, column=0, padx=2, pady=2)
-        ttk.Button(master, text="Clear this page").grid(row=2, column=1, padx=2, pady=2)
-        ttk.Button(master, text="Solve").grid(row=2, column=2, padx=2, pady=2)
+        clear_all_button = ttk.Button(master, text="Clear all")
+        clear_all_button.grid(row=2, column=0, padx=2, pady=2)
+
+        clear_button = ttk.Button(master, text="Clear this page")
+        clear_button.grid(row=2, column=1, padx=2, pady=2)
+
+        solve_button = ttk.Button(master, text="Solve")
+        solve_button.grid(row=2, column=2, padx=2, pady=2)
 
     # METHODS
     def importMesh(self):
