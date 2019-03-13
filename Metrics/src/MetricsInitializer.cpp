@@ -417,7 +417,7 @@ void MetricsInitializer::computeVolumeCells(uint iNCells, uint iNCellsTot, Cell*
             
         }   
 
-        iCells[i]->cell_volume_ = std::fabs(volume);
+        iCells[i]->cell_volume_ = fabs(volume);
     }
 
     const uint LEFT = 0;
@@ -429,7 +429,7 @@ void MetricsInitializer::computeVolumeCells(uint iNCells, uint iNCellsTot, Cell*
         double volume = 0.0;
         volume = iCells[leftCellID]->cell_volume_;
 
-        iCells[i]->cell_volume_ = std::fabs(volume);
+        iCells[i]->cell_volume_ = fabs(volume);
     }
 
 }
