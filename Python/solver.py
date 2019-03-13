@@ -19,17 +19,19 @@ class Solver():
 
         ttk.Label(title_section_2_1, text="", width=5).grid(row=1, column=0)
 
-        self.max_iter_entry = IntVar()
-        max_iter_label = ttk.Label(title_section_2_1, text="Max number of itterations", borderwidth=2, relief="groove", anchor=CENTER, width=22)
-        max_iter_label.grid(row=1, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
-        ttk.Entry(title_section_2_1, textvariable=self.max_iter_entry, width=15).grid(row=1, column=3, columnspan=2, padx=2, pady=2)
+        self.rk_entry = IntVar()
+        self.rk_label = ttk.Label(title_section_2_1, text="Max number of itterations", borderwidth=2, relief="groove", anchor=CENTER, width=22)
+        self.rk_label.grid(row=1, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
+        self.max_iter_entry = ttk.Entry(title_section_2_1, textvariable=self.rk_entry, width=15)
+        self.max_iter_entry.grid(row=1, column=3, columnspan=2, padx=2, pady=2)
 
         ttk.Label(title_section_2_1, text="", width=4).grid(row=1, column=5)
 
-        self.convergence_crit_entry = DoubleVar()
-        convergence_crit_label = ttk.Label(title_section_2_1, text="Convergence criterion", borderwidth=2, relief="groove", anchor=CENTER, width=22)
-        convergence_crit_label.grid(row=2, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
-        ttk.Entry(title_section_2_1, textvariable=self.convergence_crit_entry, width=15).grid(row=2, column=3, columnspan=2, padx=2, pady=2)
+        self.convergence_crit = DoubleVar()
+        self.convergence_crit_label = ttk.Label(title_section_2_1, text="Convergence criterion", borderwidth=2, relief="groove", anchor=CENTER, width=22)
+        self.convergence_crit_label.grid(row=2, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
+        self.convergence_crit_entry = ttk.Entry(title_section_2_1, textvariable=self.convergence_crit, width=15)
+        self.convergence_crit_entry.grid(row=2, column=3, columnspan=2, padx=2, pady=2)
 
         # SECTION 2.2: SCHEME SELECTION
         title_section_2_2 = ttk.LabelFrame(master, text="2.2 Scheme Selection", labelanchor=N, height=110, width=396)
@@ -56,20 +58,23 @@ class Solver():
         
         ttk.Label(title_section_2_3, text="", width=5).grid(row=1, column=0)
         
-        ttk.Label(title_section_2_3, text="Number of process", relief="groove", borderwidth=2, anchor=CENTER, width=22).grid(row=1, column=1, columnspan=2, sticky=NSEW, padx=2, pady=2)
-        ttk.Entry(title_section_2_3, width=15).grid(row=1, column=3, columnspan=2, padx=2, pady=2)
+        self.nb_process = IntVar()
+        self.nb_process_label = ttk.Label(title_section_2_3, text="Number of process", relief="groove", borderwidth=2, anchor=CENTER, width=22)
+        self.nb_process_label.grid(row=1, column=1, columnspan=2, sticky=NSEW, padx=2, pady=2)
+        self.nb_process_entry = ttk.Entry(title_section_2_3, textvariable=self.nb_process, width=15)
+        self.nb_process_entry.grid(row=1, column=3, columnspan=2, padx=2, pady=2)
 
         ttk.Label(title_section_2_3, text="", width=4).grid(row=1, column=5)
         
         self.solver_option = IntVar()
-        solver_option_build = Radiobutton(title_section_2_3, text="Build the code", value=1, variable=self.solver_option, relief="groove", borderwidth=2, width=23, anchor=W)
-        solver_option_build.grid(row=2, column=1, columnspan=4, padx=2, pady=2)
+        self.solver_option_build = Radiobutton(title_section_2_3, text="Build the code", value=1, variable=self.solver_option, relief="groove", borderwidth=2, width=23, anchor=W)
+        self.solver_option_build.grid(row=2, column=1, columnspan=4, padx=2, pady=2)
 
-        solver_option_execute = Radiobutton(title_section_2_3, text="Execute the code", value=2, variable=self.solver_option, relief="groove", borderwidth=2, width=23, anchor=W)
-        solver_option_execute.grid(row=3, column=1, columnspan=4, padx=2, pady=2)
+        self.solver_option_execute = Radiobutton(title_section_2_3, text="Execute the code", value=2, variable=self.solver_option, relief="groove", borderwidth=2, width=23, anchor=W)
+        self.solver_option_execute.grid(row=3, column=1, columnspan=4, padx=2, pady=2)
 
-        solver_option_build_execute = Radiobutton(title_section_2_3, text="Build and execute the code", value=3, variable=self.solver_option, relief="groove", borderwidth=2, width=23, anchor=W)
-        solver_option_build_execute.grid(row=4, column=1, columnspan=4, padx=2, pady=2)
+        self.solver_option_build_execute = Radiobutton(title_section_2_3, text="Build and execute the code", value=3, variable=self.solver_option, relief="groove", borderwidth=2, width=23, anchor=W)
+        self.solver_option_build_execute.grid(row=4, column=1, columnspan=4, padx=2, pady=2)
 
         # GENERAL BUTTONS
         ttk.Button(master, text="Clear all").grid(row=3, column=0, padx=2, pady=2)
@@ -83,8 +88,8 @@ class Solver():
 
     def writePartialOutput(self):
                
-        nbnitermax_str = str(self.max_iter_entry.get())
-        convcriterion_str = str(self.convergence_crit_entry.get())
+        nbnitermax_str = str(self.rk_entry.get())
+        convcriterion_str = str(self.convergence_crit.get())
         
         solveroption = self.solver_option.get()
         if solveroption == 1:
