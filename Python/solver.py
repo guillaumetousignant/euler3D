@@ -61,13 +61,14 @@ class Solver():
 
         ttk.Label(title_section_2_3, text="", width=4).grid(row=1, column=5)
         
-        solver_option_build = Radiobutton(title_section_2_3, text="Build the code", value=1, relief="groove", borderwidth=2, width=23, anchor=W)
+        self.solver_option = IntVar()
+        solver_option_build = Radiobutton(title_section_2_3, text="Build the code", value=1, variable=self.solver_option, relief="groove", borderwidth=2, width=23, anchor=W)
         solver_option_build.grid(row=2, column=1, columnspan=4, padx=2, pady=2)
 
-        solver_option_execute = Radiobutton(title_section_2_3, text="Execute the code", value=2, relief="groove", borderwidth=2, width=23, anchor=W)
+        solver_option_execute = Radiobutton(title_section_2_3, text="Execute the code", value=2, variable=self.solver_option, relief="groove", borderwidth=2, width=23, anchor=W)
         solver_option_execute.grid(row=3, column=1, columnspan=4, padx=2, pady=2)
 
-        solver_option_build_execute = Radiobutton(title_section_2_3, text="Build and execute the code", value=3, relief="groove", borderwidth=2, width=23, anchor=W)
+        solver_option_build_execute = Radiobutton(title_section_2_3, text="Build and execute the code", value=3, variable=self.solver_option, relief="groove", borderwidth=2, width=23, anchor=W)
         solver_option_build_execute.grid(row=4, column=1, columnspan=4, padx=2, pady=2)
 
         # GENERAL BUTTONS
@@ -84,9 +85,21 @@ class Solver():
                
         nbnitermax_str = str(self.max_iter_entry.get())
         convcriterion_str = str(self.convergence_crit_entry.get())
-        # smoothing_str = str(self.flux_Scheme.smoothing.get())
+        
+        solveroption = self.solver_option.get()
+        if solveroption == 1:
+            build_str = "1"
+            execute_str = "0"
+        
+        elif solveroption == 2:
+            build_str = "0"
+            execute_str = "1"
+        
+        elif solveroption == 3:
+            build_str = "1"
+            execute_str = "1"
 
-        partial_output = "\nnbitermax convcriterion\n"+nbnitermax_str+" "+convcriterion_str+self.flux_Scheme.writePartialOutput()
+        partial_output = "\nnbitermax convcriterion\n"+nbnitermax_str+" "+convcriterion_str+self.flux_Scheme.writePartialOutput()+"\nEXECUTABLE (0-no 1-yes)\nbuild execute\n"+build_str+" "+execute_str
         return partial_output
 
 
@@ -123,10 +136,10 @@ class SelectFluxScheme():
         self.limiter_entry.grid(row=8, column=1, columnspan=2, pady=2)
         self.limiter_entry.bind('<<ComboboxSelected>>', self.activateOmegaOrK)
 
-        # self.omega = 
-        self.omega_label = ttk.Label(self.master, text="Omega", width=10, anchor=CENTER, borderwidth=2, relief="groove", state="disabled")
+        self.omega = IntVar()
+        self.omega_label = ttk.Label(self.master, text="Omega power (1.0eX)", width=10, anchor=CENTER, borderwidth=2, relief="groove", state="disabled")
         self.omega_label.grid(row=9, column=0, padx=2, pady=7)
-        self.omega_entry = ttk.Entry(self.master, width=10, state="disabled")
+        self.omega_entry = ttk.Entry(self.master, textvariable=self.omega, width=10, state="disabled")
         self.omega_entry.grid(row=9, column=1, padx=2, pady=10)
 
         self.k = DoubleVar()
@@ -144,7 +157,7 @@ class SelectFluxScheme():
         self.smoothing_no = Radiobutton(self.master, text="No", value=0, variable=self.smoothing, relief="groove", borderwidth=2, width=8, anchor=W)
         self.smoothing_no.grid(row=12, column=1, columnspan=2, padx=2, pady=2)
 
-        ttk.Button(self.master, text="Ok", command=self.writePartialOutput).grid(row=13, column=1, pady=10)
+        ttk.Button(self.master, text="Ok", command=self.saveAndDestroyWindow).grid(row=13, column=1, pady=10)
         ttk.Button(self.master, text="Cancel", command=self.master.destroy).grid(row=13, column=2, pady=10)
     
     def activateGradientAndLimiter(self, event):
@@ -187,13 +200,38 @@ class SelectFluxScheme():
             self.omega_label.configure(state="disabled")
             self.omega_entry.configure(state="disabled")
     
+    def saveAndDestroyWindow(self):
+        self.writePartialOutput()
+        self.master.destroy()
+
     def writePartialOutput(self):
         smoothing_str = str(self.smoothing.get())
-        fluxscheme_str = self.flux_scheme.get()
-
-        partial_output = "\nresidual smoothing (0-no 1-yes)\n"+smoothing_str+"\nfluxscheme schemeorder\n"+fluxscheme_str
+        fluxscheme_str = self.flux_scheme.get().lower()
+        schemeorder_str = self.scheme_order.get()
         
-        self.master.destroy()
+        gradient_str = self.gradient.get()
+        if gradient_str == "Green Gauss":
+            gradient_str = "greengauss"
+        
+        elif gradient_str == "Least Squares":
+            gradient_str = "leastsquares"
+        
+        limiter_str = self.limiter.get()
+        if limiter_str == "Barth Jespersen":
+            limiter_str = "barthjespersen"
+        
+        elif limiter_str == "Venkatakrishnan":
+            limiter_str = "venkatakrishnan"
+        
+        omega_str = str(self.omega.get())
+        omega_str = "1.0e"+omega_str
+        k_str = str(self.k.get()) 
+
+        partial_output ="\nresidual smoothing (0-no 1-yes)\n" + smoothing_str + (
+                        "\nfluxscheme schemeorder\n" + fluxscheme_str + " " + schemeorder_str) + (
+                        "\ngradient limiter\n" + gradient_str + " " + limiter_str) + (
+                        "\nomega k\n" + omega_str + " " + k_str)
+        
         return partial_output
         
         
