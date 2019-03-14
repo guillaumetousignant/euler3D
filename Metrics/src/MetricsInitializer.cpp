@@ -266,6 +266,8 @@ void MetricsInitializer::computeNormalFaces(uint iNFaces, Face** iFaces, Node** 
             s_z = 0.0; 
         }
 
+        
+
         iFaces[i]->face_normals_[0] = s_x;
         iFaces[i]->face_normals_[1] = s_y;
         iFaces[i]->face_normals_[2] = s_z;
@@ -444,7 +446,7 @@ void MetricsInitializer::computeVolumeCells(uint iNCells, uint iNCellsTot, Cell*
             
         }   
 
-        iCells[i]->cell_volume_ = fabs(volume);
+        iCells[i]->cell_volume_ = volume;
         volume = 0.0;
     }
 
@@ -457,7 +459,7 @@ void MetricsInitializer::computeVolumeCells(uint iNCells, uint iNCellsTot, Cell*
         double volume = 0.0;
         volume = iCells[leftCellID]->cell_volume_;
 
-        iCells[i]->cell_volume_ = fabs(volume);
+        iCells[i]->cell_volume_ = volume;
     }
 
 }

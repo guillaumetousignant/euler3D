@@ -121,7 +121,7 @@ TEST_CASE("Compute Normales")
 
 
                 //Same orientation definition
-                //REQUIRE(prodScalaire < 0.0);
+                REQUIRE(prodScalaire < 0.0);
             }
             
         }
@@ -162,9 +162,8 @@ TEST_CASE("Compute Volume", "")
 
     for(uint i(0);i < nbCells;i++)
     {
-        uint result = blockData->block_cells_[i]->cell_volume_;
-        cout << result << endl;
-        //REQUIRE(volume == result);
+        double result = blockData->block_cells_[i]->cell_volume_;
+        REQUIRE(volume == result);
     }
 
 
