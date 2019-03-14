@@ -86,112 +86,90 @@ class Solver():
         self.solver_option_build_execute = Radiobutton(title_section_2_3, text="Build and execute the code", value=3, variable=self.solver_option, relief="groove", borderwidth=2, width=23, anchor=W)
         self.solver_option_build_execute.grid(row=4, column=1, columnspan=4, padx=2, pady=2)
 
+        # INITIALIZATION OF FLUX SCHEME VARIABLES: 
+        # those variables have to be initialized before the method is called, beaucoup otherwise A LOT of problems will be encountered...
+        self.flux_scheme_choice = StringVar()
+        self.flux_scheme_choice.set("Roe")
 
-    # METHODS
-    def selectFluxScheme(self):
-        newWindow = Toplevel(self.master)
-        self.flux_Scheme = SelectFluxScheme(newWindow)
-
-    def clearPage(self):
-        self.max_iter.set(0)
-        self.convergence_crit.set(0)
-        self.nb_process.set(0)
-        self.solver_option.set(3)
-        self.flux_Scheme.clearPage()
-
-    def writePartialOutput(self):
-        nb_niter_max_str = str(self.max_iter.get())
-        conv_criterion_str = str(self.convergence_crit.get())
-        
-        solver_option = self.solver_option.get()
-        if solver_option == 1:
-            build_str = "1"
-            execute_str = "0"
-        
-        elif solver_option == 2:
-            build_str = "0"
-            execute_str = "1"
-        
-        elif solver_option == 3:
-            build_str = "1"
-            execute_str = "1"
-
-        partial_output = "\nnbitermax convcriterion\n"+nb_niter_max_str+" "+conv_criterion_str+self.flux_Scheme.writePartialOutput()+(
-                         "\nEXECUTABLE (0-no 1-yes)\nbuild execute\n"+build_str+" "+execute_str)
-                            
-        return partial_output
-
-
-class SelectFluxScheme():
-    def __init__(self, master):
-        self.master = master
-
-        self.master.title("Scheme selection")
-        text_flux_scheme_window = ttk.Label(self.master, text="\nPlease configure the following parameters:\n", anchor=W)
-        text_flux_scheme_window.grid(row=0, column=0, columnspan=4, padx=2, sticky=W)
-        
-        self.flux_scheme = StringVar()
-        self.flux_scheme.set("Roe")
-        self.flux_scheme_label = ttk.Label(self.master, text="Flux scheme:", anchor=CENTER)
-        self.flux_scheme_label.grid(row=1, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
-        self.flux_scheme_entry = ttk.Combobox(self.master, values=("Roe", "Ausm"), textvariable=self.flux_scheme, width=15)
-        self.flux_scheme_entry.grid(row=2, column=1, columnspan=2, pady=2)
-        
         self.scheme_order = StringVar()
         self.scheme_order.set("1")
-        self.scheme_order_label = ttk.Label(self.master, text="Scheme order:", anchor=CENTER)
-        self.scheme_order_label.grid(row=3, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
-        self.scheme_order_entry = ttk.Combobox(self.master, values=("1", "2"), textvariable=self.scheme_order, width=15)
-        self.scheme_order_entry.grid(row=4, column=1, columnspan=2, pady=2)
-        self.scheme_order_entry.bind('<<ComboboxSelected>>', self.activateGradientAndLimiter)
-        
+
         self.gradient = StringVar()
         self.gradient.set("Green Gauss")
-        self.gradient_label = ttk.Label(self.master, text="Gradient:", anchor=CENTER, state="disabled")
-        self.gradient_label.grid(row=5, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
-        self.gradient_entry = ttk.Combobox(self.master, values=("Green Gauss", "Least Squares"), textvariable = self.gradient, width=15, state="disabled")
-        self.gradient_entry.grid(row=6, column=1, columnspan=2, pady=2)
 
         self.limiter = StringVar()
         self.limiter.set("Barth Jespersen")
-        self.limiter_label = ttk.Label(self.master, text="Limiter:", anchor=CENTER, state="disabled")
-        self.limiter_label.grid(row=7, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
-        self.limiter_entry = ttk.Combobox(self.master, values=("Barth Jespersen", "Venkatakrishnan"), textvariable=self.limiter, width=15, state="disabled")
-        self.limiter_entry.grid(row=8, column=1, columnspan=2, pady=2)
-        self.limiter_entry.bind('<<ComboboxSelected>>', self.activateOmegaOrK)
 
         self.omega = IntVar()
         self.omega.set(6)
-        self.omega_label = ttk.Label(self.master, text="Omega power (1.0eX)", width=10, anchor=CENTER, borderwidth=2, relief="groove", state="disabled")
-        self.omega_label.grid(row=9, column=0, padx=2, pady=7)
-        self.omega_entry = ttk.Entry(self.master, textvariable=self.omega, width=10, state="disabled")
-        self.omega_entry.grid(row=9, column=1, padx=2, pady=10)
 
         self.k = DoubleVar()
         self.k.set(5.0)
-        self.k_label = ttk.Label(self.master, text="k", width=10, anchor=CENTER, borderwidth=2, relief="groove", state="disabled")
-        self.k_label.grid(row=9, column=2, padx=2, pady=7)
-        self.k_entry = ttk.Entry(self.master, textvariable=self.k, width=10, state="disabled")
-        self.k_entry.grid(row=9, column=3, padx=2, pady=10)
 
-        self.smoothing_label = ttk.Label(self.master, text="Residual smoothing?", anchor=CENTER)
-        self.smoothing_label.grid(row=10, column=1, columnspan=2, padx=2)
-        
         self.smoothing = IntVar()
         self.smoothing.set(1)
-        self.smoothing_yes = Radiobutton(self.master, text="Yes", value=1, variable=self.smoothing, relief="groove", borderwidth=2, width=8, anchor=W)
+
+    # METHODS
+    def selectFluxScheme(self):
+        flux_scheme_window = Tk()
+        flux_scheme_window.title("Scheme selection")
+        text_flux_scheme_window = ttk.Label(flux_scheme_window, text="\nPlease configure the following parameters:\n", anchor=W)
+        text_flux_scheme_window.grid(row=0, column=0, columnspan=4, padx=2, sticky=W)
+        
+        self.flux_scheme_choice.set("Roe")
+        self.flux_scheme_label = ttk.Label(flux_scheme_window, text="Flux scheme:", anchor=CENTER)
+        self.flux_scheme_label.grid(row=1, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
+        self.flux_scheme_entry = ttk.Combobox(flux_scheme_window, values=("Roe", "Ausm"), textvariable=self.flux_scheme_choice, width=15)
+        self.flux_scheme_entry.grid(row=2, column=1, columnspan=2, pady=2)
+        
+        self.scheme_order.set("1")
+        self.scheme_order_label = ttk.Label(flux_scheme_window, text="Scheme order:", anchor=CENTER)
+        self.scheme_order_label.grid(row=3, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
+        self.scheme_order_entry = ttk.Combobox(flux_scheme_window, values=("1", "2"), textvariable=self.scheme_order, width=15)
+        self.scheme_order_entry.grid(row=4, column=1, columnspan=2, pady=2)
+        self.scheme_order_entry.bind('<<ComboboxSelected>>', self.activateGradientAndLimiter)
+        
+        self.gradient.set("Green Gauss")
+        self.gradient_label = ttk.Label(flux_scheme_window, text="Gradient:", anchor=CENTER, state="disabled")
+        self.gradient_label.grid(row=5, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
+        self.gradient_entry = ttk.Combobox(flux_scheme_window, values=("Green Gauss", "Least Squares"), textvariable = self.gradient, width=15, state="disabled")
+        self.gradient_entry.grid(row=6, column=1, columnspan=2, pady=2)
+
+        self.limiter.set("Barth Jespersen")
+        self.limiter_label = ttk.Label(flux_scheme_window, text="Limiter:", anchor=CENTER, state="disabled")
+        self.limiter_label.grid(row=7, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
+        self.limiter_entry = ttk.Combobox(flux_scheme_window, values=("Barth Jespersen", "Venkatakrishnan"), textvariable=self.limiter, width=15, state="disabled")
+        self.limiter_entry.grid(row=8, column=1, columnspan=2, pady=2)
+        self.limiter_entry.bind('<<ComboboxSelected>>', self.activateOmegaOrK)
+
+        self.omega.set(6)
+        self.omega_label = ttk.Label(flux_scheme_window, text="Omega power (1.0eX)", width=10, anchor=CENTER, borderwidth=2, relief="groove", state="disabled")
+        self.omega_label.grid(row=9, column=0, padx=2, pady=7)
+        self.omega_entry = ttk.Entry(flux_scheme_window, textvariable=self.omega, width=10, state="disabled")
+        self.omega_entry.grid(row=9, column=1, padx=2, pady=10)
+
+        self.k.set(5.0)
+        self.k_label = ttk.Label(flux_scheme_window, text="k", width=10, anchor=CENTER, borderwidth=2, relief="groove", state="disabled")
+        self.k_label.grid(row=9, column=2, padx=2, pady=7)
+        self.k_entry = ttk.Entry(flux_scheme_window, textvariable=self.k, width=10, state="disabled")
+        self.k_entry.grid(row=9, column=3, padx=2, pady=10)
+
+        self.smoothing.set(1)
+        self.smoothing_label = ttk.Label(flux_scheme_window, text="Residual smoothing?", anchor=CENTER)
+        self.smoothing_label.grid(row=10, column=1, columnspan=2, padx=2)
+        
+        self.smoothing_yes = Radiobutton(flux_scheme_window, text="Yes", value=1, variable=self.smoothing, relief="groove", borderwidth=2, width=8, anchor=W)
         self.smoothing_yes.grid(row=11, column=1, columnspan=2, padx=2, pady=2)
 
-        self.smoothing_no = Radiobutton(self.master, text="No", value=0, variable=self.smoothing, relief="groove", borderwidth=2, width=8, anchor=W)
+        self.smoothing_no = Radiobutton(flux_scheme_window, text="No", value=0, variable=self.smoothing, relief="groove", borderwidth=2, width=8, anchor=W)
         self.smoothing_no.grid(row=12, column=1, columnspan=2, padx=2, pady=2)
 
-        ok_button = ttk.Button(self.master, text="Ok", command=self.saveAndDestroyWindow)
+        ok_button = ttk.Button(flux_scheme_window, text="Ok", command=self.saveAndDestroyWindow)
         ok_button.grid(row=13, column=1, pady=10)
 
-        cancel_button = ttk.Button(self.master, text="Cancel", command=self.master.destroy)
+        cancel_button = ttk.Button(flux_scheme_window, text="Cancel", command=flux_scheme_window.destroy)
         cancel_button.grid(row=13, column=2, pady=10)
-    
-    # METHODS
+
     def activateGradientAndLimiter(self, event):
         scheme_order_result = self.scheme_order_entry.get()
 
@@ -236,8 +214,13 @@ class SelectFluxScheme():
         self.writePartialOutput()
         self.master.destroy()
 
-    def clearPage(self): # Inutile pour l'instant puisque les reponses du flux scheme selection ne sont pas reafichees quand on a ferme la fenetre...
-        self.flux_scheme.set("Roe")
+    def clearPage(self):
+        self.max_iter.set(0)
+        self.convergence_crit.set(0)
+        self.nb_process.set(0)
+        self.solver_option.set(3)
+
+        self.flux_scheme_choice.set("Roe")
         self.scheme_order.set("1")
         self.gradient.set("Green Gauss")
         self.limiter.set("Barth Jespersen")
@@ -254,9 +237,13 @@ class SelectFluxScheme():
         # self.k_label.configure(state="disabled")
         # self.k_entry.configure(state="disabled")
 
+
     def writePartialOutput(self):
+        nb_niter_max_str = str(self.max_iter.get())
+        conv_criterion_str = str(self.convergence_crit.get())
+        
         smoothing_str = str(self.smoothing.get())
-        flux_scheme_str = self.flux_scheme.get().lower()
+        flux_scheme_str = self.flux_scheme_choice.get().lower()
         scheme_order_str = self.scheme_order.get()
         
         gradient_str = self.gradient.get()
@@ -275,14 +262,26 @@ class SelectFluxScheme():
         
         omega_str = str(self.omega.get())
         omega_str = "1.0e"+omega_str
-        k_str = str(self.k.get()) 
+        k_str = str(self.k.get())
 
-        partial_output = "\nresidual smoothing (0-no 1-yes)\n" + smoothing_str + (
+        solver_option = self.solver_option.get()
+        if solver_option == 1:
+            build_str = "1"
+            execute_str = "0"
+        
+        elif solver_option == 2:
+            build_str = "0"
+            execute_str = "1"
+        
+        elif solver_option == 3:
+            build_str = "1"
+            execute_str = "1"
+        
+        partial_output = "\nnbitermax convcriterion\n" + nb_niter_max_str + " " + conv_criterion_str + (
+                         "\nresidual smoothing (0-no 1-yes)\n" + smoothing_str) + (
                          "\nfluxscheme schemeorder\n" + flux_scheme_str + " " + scheme_order_str) + (
                          "\ngradient limiter\n" + gradient_str + " " + limiter_str) + (
-                         "\nomega k\n" + omega_str + " " + k_str)
-        
+                         "\nomega k\n" + omega_str + " " + k_str) + (
+                         "\nEXECUTABLE (0-no 1-yes)\nbuild execute\n" + build_str + " " + execute_str)
+                            
         return partial_output
-        
-        
-        

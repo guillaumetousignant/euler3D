@@ -15,7 +15,7 @@ class Interface(Input, Solver, Output):
         master.geometry("397x485")
         master.resizable(0,0)
         
-        # TABS CREATION FOR THE MAIN WINDOW
+        # TABS OF THE MAIN WINDOW
         tabControl = ttk.Notebook(master)
         tabControl.grid(row=0, column=0, columnspan=10, sticky='NESW')
 
@@ -56,9 +56,14 @@ class Interface(Input, Solver, Output):
         clear_button_output = ttk.Button(tab3, text="Clear this page", command=self.output.clearPage)
         clear_button_output.grid(row=2, column=1, padx=2, pady=2)
 
-        # solve_button = ttk.Button(master, text="Solve")
-        # solve_button.grid(row=3, column=2, padx=2, pady=2)
+        # solve_button_input = ttk.Button(tab1, text="Solve", command=self.solve)
+        # solve_button_input.grid(row=3, column=2, padx=2, pady=2)
 
+        # solve_button_solver = ttk.Button(tab1, text="Solve", command=self.solve)
+        # solve_button_solver.grid(row=3, column=2, padx=2, pady=2)
+
+        # solve_button_output = ttk.Button(tab1, text="Solve", command=self.solve)
+        # solve_button_output.grid(row=3, column=2, padx=2, pady=2)
 
     def clearAllPages(self):
         self.input.clearPage()
