@@ -392,11 +392,14 @@ void MetricsInitializer::computeVolumeCells(uint iNCells, uint iNCellsTot, Cell*
     const int X = 0;
     const int Y = 1;
     const int Z = 2;
+
+    double volume = 0.0;
+    const uint vector3DSize = 3;
+    std::vector<double > connectVector(vector3DSize); // Vector from center of cell to center of face.
     
     for(uint i(0); i < iNCells; i++)
     {
         int nbFaceOfCell = iCells[i]->n_faces_per_cell_;
-        double volume = 0.0;
 
         for(int j(0); j < nbFaceOfCell;j++)
         {
@@ -413,11 +416,36 @@ void MetricsInitializer::computeVolumeCells(uint iNCells, uint iNCellsTot, Cell*
             s_y = iFaces[faceID]->face_normals_[Y];
             s_z = iFaces[faceID]->face_normals_[Z];
 
+
+            //Make sure that normal vector is pointing outward of the cell.
+            double centerFaceCoord = 0.0;
+            double centerCell = 0.0;
+
+            for(int k(0);k < vector3DSize;k++)
+            {
+                centerFaceCoord = blockData_->block_faces_[faceID]->face_center_[k];
+                centerCell = blockData_->block_cells_[i]->cell_coordinates_[k];
+                connectVector[k] = centerFaceCoord - centerCell;
+            }
+
+            //Dot product
+            double dotProduct = 0.0;
+
+            dotProduct = connectVector[0]*s_x + connectVector[1]*s_y + connectVector[2]*s_z;
+            
+            if(dotProduct < 0)
+            {
+                s_x *= -1.0;
+                s_y *= -1.0;
+                s_z *= -1.0;
+            }
+
             volume += (cellCenter[X]*s_x + cellCenter[Y]*s_y + cellCenter[Z]*s_z)/3;
             
         }   
 
         iCells[i]->cell_volume_ = fabs(volume);
+        volume = 0.0;
     }
 
     const uint LEFT = 0;

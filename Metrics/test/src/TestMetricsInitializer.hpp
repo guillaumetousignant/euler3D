@@ -1,4 +1,4 @@
-
+/*
 #define CATCH_CONFIG_MAIN
 
 #include <catch.hpp>
@@ -210,7 +210,7 @@ void tearDown(Block *iBlock)
     delete [] iBlock->block_cells_;
     delete [] iBlock->block_faces_;
     delete [] iBlock->block_nodes_;
-    */
+    
     
 }
 
@@ -486,7 +486,7 @@ TEST_CASE("Test interpolation vector")
 }
 
 
-
+*/
 
 
 
