@@ -78,70 +78,74 @@ class Input():
         self.rk_entry = ttk.Entry(title_section_1_2, textvariable=self.rk, width=10)
         self.rk_entry.grid(row=3, column=3, padx=2, pady=2)
 
-        # GENERAL BUTTONS
-        clear_all_button = ttk.Button(master, text="Clear all", command=self.clearAllPages)
-        clear_all_button.grid(row=2, column=0, padx=2, pady=2)
-
-        clear_button = ttk.Button(master, text="Clear this page", command=self.clearPage)
-        clear_button.grid(row=2, column=1, padx=2, pady=2)
-
-        solve_button = ttk.Button(master, text="Solve")
-        solve_button.grid(row=2, column=2, padx=2, pady=2)
-
+ 
     # METHODS
     def importMesh(self):
-        self.mesh_window = Tk()
-        self.mesh_window.title("Mesh importation")
-        ttk.Label(self.mesh_window, text="\nImport the desired mesh:\n").grid(row=0, column=0, columnspan=4, sticky=W, padx=2)
+        mesh_window = Tk()
+        mesh_window.title("Mesh importation")
+
+        text_mesh_importation = ttk.Label(mesh_window, text="\nImport the desired mesh:\n")
+        text_mesh_importation.grid(row=0, column=0, columnspan=4, sticky=W, padx=2)
         
-        ttk.Button(self.mesh_window, text="Select a file", command=self.meshFileDialog).grid(row=1, column=0, padx=2)
+        select_file_button = ttk.Button(mesh_window, text="Select a file", command=self.meshFileDialog)
+        select_file_button.grid(row=1, column=0, padx=2)
         
-        self.label = ttk.Label(self.mesh_window, text="", relief="solid", width=40)
-        self.label.grid(row=1, column=1, columnspan=3, padx=2)
+        self.filename_label_mesh = ttk.Label(mesh_window, text="", relief="solid", width=40)
+        self.filename_label_mesh.grid(row=1, column=1, columnspan=3, padx=2)
         
-        ttk.Button(self.mesh_window, text="Ok", command=self.mesh_window.destroy).grid(row=2, column=1, pady=5)
-        ttk.Button(self.mesh_window, text="Cancel", command=self.mesh_window.destroy).grid(row=2, column=2, pady=5)
+        ok_button = ttk.Button(mesh_window, text="Ok", command=mesh_window.destroy)
+        ok_button.grid(row=2, column=1, pady=5)
+
+        cancel_button = ttk.Button(mesh_window, text="Cancel", command=mesh_window.destroy)
+        cancel_button.grid(row=2, column=2, pady=5)
 
     def meshFileDialog(self):
-        self.filename = filedialog.askopenfilename(initialdir="/home/etudiant/", title="Select a file", filetypes=(("SU2", "*.su2"),("All Files", "*.*")))
+        self.filename_mesh = filedialog.askopenfilename(initialdir="/home/etudiant/", title="Select a file", filetypes=(("SU2", "*.su2"),("All Files", "*.*")))
 
-        if self.filename=="":
-            self.label.configure(text="")
+        if self.filename_mesh=="":
+            self.filename_label_mesh.configure(text="")
         
-        elif self.filename.endswith('.su2'):
-            self.label.configure(text=self.filename)
+        elif self.filename_mesh.endswith('.su2'):
+            self.filename_label_mesh.configure(text=self.filename_mesh)
         else:
             messagebox.showwarning("Warning", "Chosen mesh file must be a SU2 file!")
-            self.label.configure(text=self.filename)
+            self.filename_label_mesh.configure(text=self.filename_mesh)
         
     def importGeometry(self):
-        self.geometry_window = Tk()
-        self.geometry_window.title("Geometry importation")
-        ttk.Label(self.geometry_window, text="\nImport the desired geometry:\n").grid(row=0, column=0, columnspan=4, sticky=W, padx=2)
-        
-        ttk.Button(self.geometry_window, text="Select a file", command=self.geometryFileDialog).grid(row=1, column=0, padx=2)
-        
-        self.label = ttk.Label(self.geometry_window, text="", relief="solid", width=40)
-        self.label.grid(row=1, column=1, columnspan=3, padx=2)
+        geometry_window = Tk()
+        geometry_window.title("Geometry importation")
 
-        ttk.Label(self.geometry_window, text="Number of blocks", borderwidth=2, relief="groove", anchor=CENTER).grid(row=2, column=1, sticky=NSEW, pady=5)
-        ttk.Entry(self.geometry_window, width=15).grid(row=2, column=2, pady=5)
+        text_geometry_importation = ttk.Label(geometry_window, text="\nImport the desired geometry:\n")
+        text_geometry_importation.grid(row=0, column=0, columnspan=4, sticky=W, padx=2)
+        
+        select_file_button = ttk.Button(geometry_window, text="Select a file", command=self.geometryFileDialog)
+        select_file_button.grid(row=1, column=0, padx=2)
+        
+        self.filename_label_geometry = ttk.Label(geometry_window, text="", relief="solid", width=40)
+        self.filename_label_geometry.grid(row=1, column=1, columnspan=3, padx=2)
 
-        ttk.Button(self.geometry_window, text="Ok", command=self.geometry_window.destroy).grid(row=3, column=1, pady=5)
-        ttk.Button(self.geometry_window, text="Cancel", command=self.geometry_window.destroy).grid(row=3, column=2, pady=5)
+        self.number_blocks_label = ttk.Label(geometry_window, text="Number of blocks", borderwidth=2, relief="groove", anchor=CENTER)
+        self.number_blocks_label.grid(row=2, column=1, sticky=NSEW, pady=5)
+        self.number_blocks_entry = ttk.Entry(geometry_window, width=15)
+        self.number_blocks_entry.grid(row=2, column=2, pady=5)
+
+        ok_button = ttk.Button(geometry_window, text="Ok", command=geometry_window.destroy)
+        ok_button.grid(row=3, column=1, pady=5)
+        cancel_button = ttk.Button(geometry_window, text="Cancel", command=geometry_window.destroy)
+        cancel_button.grid(row=3, column=2, pady=5)
 
     def geometryFileDialog(self):
-        self.filename = filedialog.askopenfilename(initialdir="/home/etudiant/", title="Select a file", filetypes=(("csm", "*.csm"),("All Files", "*.*")))
+        self.filename_geometry = filedialog.askopenfilename(initialdir="/home/etudiant/", title="Select a file", filetypes=(("csm", "*.csm"),("All Files", "*.*")))
         
-        if self.filename=="":
-            self.label.configure(text="")
+        if self.filename_geometry=="":
+            self.filename_label_geometry.configure(text="")
         
-        elif self.filename.endswith('.csm'):
-            self.label.configure(text=self.filename)
+        elif self.filename_geometry.endswith('.csm'):
+            self.filename_label_geometry.configure(text=self.filename_geometry)
         
         else:
             messagebox.showwarning("Warning", "Chosen geometry file must be a csm file!")
-            self.label.configure(text=self.filename)
+            self.filename_label_geometry.configure(text=self.filename_geometry)
 
     def generateGeometry(self):
         messagebox.askokcancel('Geometry Generation', 'Specify the needed information for geometry generation:')
@@ -168,14 +172,14 @@ class Input():
     def writePartialOutput(self):
         cfl_str = str(self.cfl.get())
         gamma_str = str(self.gamma.get())
-        angleattackdeg_str = str(self.angle_attack.get())
+        angle_attack_str = str(self.angle_attack.get())
         rk_str = str(self.rk.get())
         mach_str = str(self.mach.get())
         cmac_str = str(self.cmac.get())
 
         partial_output = "INPUT\ncfl gamma angleattackdeg\n"+(
-                        cfl_str+" "+gamma_str+" "+angleattackdeg_str)+(
-                        "\nrkstage mach cmac\n")+(
-                        rk_str+" "+mach_str+" "+cmac_str)                        
+                         cfl_str+" "+gamma_str+" "+angle_attack_str)+(
+                         "\nrkstage mach cmac\n")+(
+                         rk_str+" "+mach_str+" "+cmac_str)                        
         
         return partial_output

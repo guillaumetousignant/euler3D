@@ -37,7 +37,34 @@ class Interface(Input, Solver, Output):
         # SECTION 3: OUTPUT
         self.output = Output(tab3)
 
-        
+        # GENERAL BUTTONS
+        clear_all_button_intput = ttk.Button(tab1, text="Clear All", command=self.clearAllPages)
+        clear_all_button_intput.grid(row=2, column=0, padx=2, pady=2)
+
+        clear_all_button_solver = ttk.Button(tab2, text="Clear All", command=self.clearAllPages)
+        clear_all_button_solver.grid(row=3, column=0, padx=2, pady=2)
+
+        clear_all_button_output = ttk.Button(tab3, text="Clear All", command=self.clearAllPages)
+        clear_all_button_output.grid(row=2, column=0, padx=2, pady=2)
+
+        clear_button_input = ttk.Button(tab1, text="Clear this page", command=self.input.clearPage)
+        clear_button_input.grid(row=2, column=1, padx=2, pady=2)
+
+        clear_button_solver = ttk.Button(tab2, text="Clear this page", command=self.solver.clearPage)
+        clear_button_solver.grid(row=3, column=1, padx=2, pady=2)
+
+        clear_button_output = ttk.Button(tab3, text="Clear this page", command=self.output.clearPage)
+        clear_button_output.grid(row=2, column=1, padx=2, pady=2)
+
+        # solve_button = ttk.Button(master, text="Solve")
+        # solve_button.grid(row=3, column=2, padx=2, pady=2)
+
+
+    def clearAllPages(self):
+        self.input.clearPage()
+        self.solver.clearPage()
+        self.output.clearPage()
+
     def save_entry(self):
 
         # input = self.input.writePartialOutput()

@@ -19,51 +19,53 @@ class Output():
 
         self.cl_alpha = IntVar()
         self.cl_alpha.set(0)
-        Checkbutton(title_section_3, text="Cl vs alpha", variable=self.cl_alpha, relief="groove", width=20, anchor=W, borderwidth=2).grid(row=1, column=0, padx=2, pady=2)
+        cl_alpha_button = Checkbutton(title_section_3, text="Cl vs alpha", variable=self.cl_alpha, relief="groove", width=20, anchor=W, borderwidth=2)
+        cl_alpha_button.grid(row=1, column=0, padx=2, pady=2)
             
         self.cd_alpha = IntVar()
         self.cd_alpha.set(0)
-        Checkbutton(title_section_3, text="Cd vs alpha", variable=self.cd_alpha, relief="groove", width=20, anchor=W, borderwidth=2).grid(row=2, column=0, padx=2, pady=2)
+        cd_alpha_button = Checkbutton(title_section_3, text="Cd vs alpha", variable=self.cd_alpha, relief="groove", width=20, anchor=W, borderwidth=2)
+        cd_alpha_button.grid(row=2, column=0, padx=2, pady=2)
 
         self.cm_alpha = IntVar()
         self.cm_alpha.set(0)
-        Checkbutton(title_section_3, text="Cm vs alpha", variable=self.cm_alpha, relief="groove", width=20, anchor=W, borderwidth=2).grid(row=3, column=0, padx=2, pady=2)
+        cm_alpha_button = Checkbutton(title_section_3, text="Cm vs alpha", variable=self.cm_alpha, relief="groove", width=20, anchor=W, borderwidth=2)
+        cm_alpha_button.grid(row=3, column=0, padx=2, pady=2)
 
         self.coefficients_convergence = IntVar()
         self.coefficients_convergence.set(0)
-        Checkbutton(title_section_3, text="Cl, cd, cm convergence", variable=self.coefficients_convergence, relief="groove", width=20, anchor=W, borderwidth=2).grid(row=4, column=0, padx=2, pady=2)
-
-        # self.cd_convergence = IntVar()
-        # self.cd_convergence.set(0)
-        # Checkbutton(title_section_3, text="Cd convergence", variable=self.cd_convergence, relief="groove", width=20, anchor=W, borderwidth=2).grid(row=5, column=0, padx=2, pady=2)
-
-        # self.cm_convergence = IntVar()
-        # self.cm_convergence.set(0)
-        # Checkbutton(title_section_3, text="Cm convergence", variable=self.cm_convergence, relief="groove", width=20, anchor=W, borderwidth=2).grid(row=6, column=0, padx=2, pady=2)
+        coefficients_convergence_button = Checkbutton(title_section_3, text="Cl, cd, cm convergence", variable=self.coefficients_convergence, relief="groove", width=20, anchor=W, borderwidth=2)
+        coefficients_convergence_button.grid(row=4, column=0, padx=2, pady=2)
 
         self.residual_convergence = IntVar()
         self.residual_convergence.set(0)
-        Checkbutton(title_section_3, text="Residual convergence", variable=self.residual_convergence, relief="groove", width=20, anchor=W, borderwidth=2).grid(row=5, column=0, padx=2, pady=2)
+        residual_convergence_button = Checkbutton(title_section_3, text="Residual convergence", variable=self.residual_convergence, relief="groove", width=20, anchor=W, borderwidth=2)
+        residual_convergence_button.grid(row=5, column=0, padx=2, pady=2)
 
         self.cp_xc = IntVar()
         self.cp_xc.set(0)
-        Checkbutton(title_section_3, text="Cp vs Xc", variable=self.cp_xc, relief="groove", width=20, anchor=W, borderwidth=2).grid(row=6, column=0, padx=2, pady=2)
+        cp_xc_button = Checkbutton(title_section_3, text="Cp vs Xc", variable=self.cp_xc, relief="groove", width=20, anchor=W, borderwidth=2)
+        cp_xc_button.grid(row=6, column=0, padx=2, pady=2)
 
         self.mach_iso = IntVar()
         self.mach_iso.set(0)
-        Checkbutton(title_section_3, text="Mach isosurface", variable=self.mach_iso, relief="groove", width=20, anchor=W, borderwidth=2).grid(row=1, column=1, columnspan=2, padx=2, pady=2)
+        mach_iso_button = Checkbutton(title_section_3, text="Mach isosurface", variable=self.mach_iso, relief="groove", width=20, anchor=W, borderwidth=2)
+        mach_iso_button.grid(row=1, column=1, columnspan=2, padx=2, pady=2)
 
         self.mach_contour = IntVar()
         self.mach_contour.set(0)
-        Checkbutton(title_section_3, text="Mach contour", variable=self.mach_contour, relief="groove", width=20, anchor=W, borderwidth=2).grid(row=2, column=1, columnspan=2, padx=2, pady=2)
+        mahc_contour_button = Checkbutton(title_section_3, text="Mach contour", variable=self.mach_contour, relief="groove", width=20, anchor=W, borderwidth=2)
+        mahc_contour_button.grid(row=2, column=1, columnspan=2, padx=2, pady=2)
 
         self.cp_contour = IntVar()
         self.cp_contour.set(0)
-        Checkbutton(title_section_3, text="Cp contour", variable=self.cp_contour, relief="groove", width=20, anchor=W, borderwidth=2).grid(row=3, column=1, columnspan=2, padx=2, pady=2)
+        cp_contour_button = Checkbutton(title_section_3, text="Cp contour", variable=self.cp_contour, relief="groove", width=20, anchor=W, borderwidth=2)
+        cp_contour_button.grid(row=3, column=1, columnspan=2, padx=2, pady=2)
 
         self.slice_cp = IntVar()
         self.slice_cp.set(0)
-        Checkbutton(title_section_3, text="Slice Cp", variable=self.slice_cp, command=self.activateAxisOfCut, relief="groove", width=20, anchor=W, borderwidth=2).grid(row=4, column=1, columnspan=2, padx=2, pady=2)
+        slice_cp_button = Checkbutton(title_section_3, text="Slice Cp", variable=self.slice_cp, command=self.activateAxisOfCut, relief="groove", width=20, anchor=W, borderwidth=2)
+        slice_cp_button.grid(row=4, column=1, columnspan=2, padx=2, pady=2)
 
         self.axis_cut = StringVar()
         self.axis_cut.set("x")
@@ -93,15 +95,6 @@ class Output():
         self.z_coord_entry = ttk.Entry(title_section_3, textvariable=self.z_coord, width=11, state="disabled")
         self.z_coord_entry.grid(row=8, column=2, padx=2, pady=2)
 
-        # GENERAL BUTTONS
-        clear_all_button = ttk.Button(master, text="Clear all")
-        clear_all_button.grid(row=1, column=0, padx=2, pady=2)
-
-        clear_button = ttk.Button(master, text="Clear this page", command=self.clearPage)
-        clear_button.grid(row=1, column=1, padx=2, pady=2)
-
-        solve_button = ttk.Button(master, text="Solve")
-        solve_button.grid(row=1, column=2, padx=2, pady=2)
 
     # METHODS
     def activateAxisOfCut(self):
@@ -143,6 +136,15 @@ class Output():
         self.y_coord.set(0.0)
         self.z_coord.set(0.0)
 
+        self.axis_cut_label.configure(state="disabled")
+        self.axis_cut_entry.configure(state="disabled")
+        self.x_coord_label.configure(state="disabled")
+        self.x_coord_entry.configure(state="disabled")
+        self.y_coord_label.configure(state="disabled")
+        self.y_coord_entry.configure(state="disabled")
+        self.z_coord_label.configure(state="disabled")
+        self.z_coord_entry.configure(state="disabled")
+
     def writePartialOutput(self):
 
         cl_alpha_str = str(self.cl_alpha.get())
@@ -169,14 +171,14 @@ class Output():
             zcoord_str = "0.0"
 
         partial_output = "\nOUTPUT (0-no 1-yes)\nclalpha cdalpha cmalpha\n"+(
-                        cl_alpha_str+" "+cd_alpha_str+" "+cm_alpha_str)+(
-                        "\ncoefficientsconv residualconv\n")+(
-                        coeff_conv_str+" "+res_conv_str)+(
-                        "\ncpxc machcontour cpcontour machisosurface\n")+(
-                        cp_xc_str+" "+mach_cont_str+" "+cp_cont_str+" "+mach_iso_str)+(
-                        "\nslicecp\n")+(
-                        slice_cp_str)+(
-                        "\naxis xcoord ycoord zcoord\n")+(
-                        axis_str+" "+xcoord_str+" "+ycoord_str+" "+zcoord_str)
+                         cl_alpha_str+" "+cd_alpha_str+" "+cm_alpha_str)+(
+                         "\ncoefficientsconv residualconv\n")+(
+                         coeff_conv_str+" "+res_conv_str)+(
+                         "\ncpxc machcontour cpcontour machisosurface\n")+(
+                         cp_xc_str+" "+mach_cont_str+" "+cp_cont_str+" "+mach_iso_str)+(
+                         "\nslicecp\n")+(
+                         slice_cp_str)+(
+                         "\naxis xcoord ycoord zcoord\n")+(
+                         axis_str+" "+xcoord_str+" "+ycoord_str+" "+zcoord_str)
 
         return partial_output
