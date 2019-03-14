@@ -12,6 +12,8 @@ from output import Output
 class Interface(Input, Solver, Output):
     def __init__(self, master): # Initialize the class
         master.title("GRAPHICAL USER INTERFACE")
+        master.geometry("397x485")
+        master.resizable(0,0)
         
         # TABS CREATION FOR THE MAIN WINDOW
         tabControl = ttk.Notebook(master)
