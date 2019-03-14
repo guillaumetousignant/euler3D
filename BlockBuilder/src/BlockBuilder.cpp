@@ -272,6 +272,7 @@ std::cout<<"DÉBUT cell2facesconnectivity"<<std::endl;
 			idx_cell_2_cells[block->block_faces_[i]->face_2_cells_connectivity_[1]]+=1;
 
 		}
+
 	
 
 	//VÉRIFICATION

@@ -65,6 +65,8 @@ void CompleteMesh::InitializeMyBlocks()
 
 	    block_builder.createMyFaces(new_block);
 
+	    block_builder.setConnectivity(new_block);
+
 	    cout<<"Cellules\n";
 	    Cell* test_cell;
 	    for(int i=0;i<new_block->n_real_cells_in_block_;i++)
