@@ -2,8 +2,8 @@
 #define SOLVERSKELETON_SRC_INTERFACE_CPP
 
 #include "Interface.h"
-#inclue "Solver.h"
-#include "Initializer.h"
+#include "Solver.h"
+//#include "Initializer.h"
 
 #include <string>
 #include <iostream>

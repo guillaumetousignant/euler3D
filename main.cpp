@@ -24,6 +24,8 @@ int main()
 
 	cout << "This is the main" << endl;
 
+	MPI_Finalize();
+
   Block* new_block = new Block(0);
   string block_file ="../UnstructuredMesh5x5.su2";
   // string block_file ="../TestMesh2x1.su2";
@@ -39,16 +41,16 @@ int main()
   MetricsInitializer metricsInit(new_block);
   metricsInit.doInit();
 
-	CompleteMesh* complete_mesh;
-  complete_mesh= new CompleteMesh();
-	Initializer* initializer= new Initializer();
-	Interface* interface= new Interface();
-
-	Solver *solver=initializer->initializeSolver(interface);
-	solver->solve(block, complete_mesh);
+	// CompleteMesh* complete_mesh;
+  // complete_mesh= new CompleteMesh();
+	// Initializer* initializer= new Initializer();
+	// Interface* interface= new Interface();
+	//
+	// Solver *solver=initializer->initializeSolver(interface);
+	// solver->solve(block, complete_mesh);
 
 	// Finalize the MPI environment.
-	MPI_Finalize();
+
 
 /*
     cout<<"Cellules\n";

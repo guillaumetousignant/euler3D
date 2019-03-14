@@ -1,7 +1,8 @@
 #ifndef DATASTRUCTURE_HEAD_PRIMITIVEVARIABLES_H
 #define DATASTRUCTURE_HEAD_PRIMITIVEVARIABLES_H
 
-#include "Interface.h"
+// 	RÉFÉRENCE CIRCULAIRE ICI
+//#include "Interface.h"
 class PrimitiveVariables
 {
 public:
@@ -39,9 +40,10 @@ public:
 	double mach_;
 
 	PrimitiveVariables(int n_all_cells_in_blocks);
-	void calculateFreeVariables(Interface inter);
+	// 	RÉFÉRENCE CIRCULAIRE ICI
+	//void calculateFreeVariables(Interface inter);
 	~PrimitiveVariables();
-	
+
 };
 
 #endif

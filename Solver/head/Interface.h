@@ -4,8 +4,8 @@
 
 #include <string>
 #include <math.h>
-#inclue "Solver.h"
-#include "Initializer.h"
+#include "Solver.h"
+//#include "Initializer.h"
 using namespace std;
 
 
