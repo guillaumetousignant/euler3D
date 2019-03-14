@@ -52,5 +52,4 @@ void Block::addFaceIdInWall(int face_id, int face_count)
 	face_count += 1;
 
 }
-
 #endif
