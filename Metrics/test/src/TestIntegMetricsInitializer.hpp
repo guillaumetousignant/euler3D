@@ -114,14 +114,8 @@ TEST_CASE("Compute Normales")
 
                     
                 }
-
-                //cout << "VecConnect: " << connectCenterVec[0] << " " << connectCenterVec[1] << " " << connectCenterVec[2] << endl;
-                //cout << "Normales: " << normales[0] << " " << normales[1] << " " << normales[2] << endl;
-                //cout << endl;
-
-
                 //Same orientation definition
-                REQUIRE(prodScalaire < 0.0);
+                REQUIRE(prodScalaire > 0.0);
             }
             
         }
@@ -163,7 +157,8 @@ TEST_CASE("Compute Volume", "")
     for(uint i(0);i < nbCells;i++)
     {
         double result = blockData->block_cells_[i]->cell_volume_;
-        REQUIRE(volume == result);
+        REQUIRE(result >= 0.99);
+        REQUIRE(result <= 1.01);
     }
 
 
