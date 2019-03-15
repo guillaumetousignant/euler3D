@@ -12,7 +12,7 @@ using namespace std;
 void RoeScheme::computeFluxDiss(Block* block)
 {
 	cout<<"\t\t\t\tExécution computeFluxDiss: Roe: "<<endl;
-	/*
+
 	//Set variables
 	double rho_L,u_L,v_L,w_L,p_L,H_L,qq_L,V_L,rho_R,u_R,v_R,w_R,p_R,H_R,qq_R,V_R;
 	double delta_p,delta_V,delta_rho,delta_u,delta_v,delta_w;
@@ -28,14 +28,22 @@ void RoeScheme::computeFluxDiss(Block* block)
 	PrimitiveVariables* my_primitive_variables;
 	my_primitive_variables = block -> block_primitive_variables_;
 
-	double* my_ro_array,my_uu_array,my_vv_array,my_ww_array,my_pp_array;
+	double* my_ro_array;
+	double* my_uu_array;
+	double* my_vv_array;
+	double* my_ww_array;
+	double* my_pp_array;
 	my_ro_array = my_primitive_variables -> ro_;
 	my_uu_array = my_primitive_variables -> uu_;
 	my_vv_array = my_primitive_variables -> vv_;
 	my_ww_array = my_primitive_variables -> ww_;
 	my_pp_array = my_primitive_variables -> pp_;
 
-	double* my_diss_res_ro,my_diss_res_uu,my_diss_res_vv,my_diss_res_ww,my_diss_res_pp;
+	double* my_diss_res_ro;
+	double* my_diss_res_uu;
+	double* my_diss_res_vv;
+	double* my_diss_res_ww;
+	double* my_diss_res_pp;
 
 	my_diss_res_ro = my_primitive_variables -> diss_res_ro_;
 	my_diss_res_uu = my_primitive_variables -> diss_res_uu_;
@@ -43,39 +51,39 @@ void RoeScheme::computeFluxDiss(Block* block)
 	my_diss_res_ww = my_primitive_variables -> diss_res_ww_;
 	my_diss_res_pp = my_primitive_variables -> diss_res_pp_;
 
-	Cell* my_cells;
-	my_cells = block -> block_cells_;
-	int ncell, my_cell;
+	Cell* my_cell;
+	// my_cells = block -> block_cells_;
+	int ncell; // my_cell;
 	ncell = block -> n_real_cells_in_block_;
 	double cell_volume;
 
 	for (int cell_idx=0; cell_idx<ncell; cell_idx++)
 	{
-		my_cell = my_cells[cell_idx];
+		my_cell = block -> block_cells_[cell_idx];
 		cell_volume  = my_cell -> cell_volume_;
 
-		my_diss_res_ro[cell_idx] *=(1-current_beta_)*cell_volume[cell_idx];
-		my_diss_res_uu[cell_idx] *=(1-current_beta_)*cell_volume[cell_idx];
-		my_diss_res_vv[cell_idx] *=(1-current_beta_)*cell_volume[cell_idx];
-		my_diss_res_ww[cell_idx] *=(1-current_beta_)*cell_volume[cell_idx];
-		my_diss_res_pp[cell_idx] *=(1-current_beta_)*cell_volume[cell_idx];
+		my_diss_res_ro[cell_idx] *=(1-current_beta_)*cell_volume;
+		my_diss_res_uu[cell_idx] *=(1-current_beta_)*cell_volume;
+		my_diss_res_vv[cell_idx] *=(1-current_beta_)*cell_volume;
+		my_diss_res_ww[cell_idx] *=(1-current_beta_)*cell_volume;
+		my_diss_res_pp[cell_idx] *=(1-current_beta_)*cell_volume;
 
 	}
 
-	int nface, my_face, left_cell, right_cell;
+	int nface, left_cell, right_cell; // my_face,
 	int* neighboor_cells;
-	Face* my_faces;
-	my_faces = block -> block_faces_;
+	Face* my_face;
+	// my_faces = block -> block_faces_;
 	nface = block -> n_faces_in_block_;
 
 	for (int face_idx = 0; face_idx < nface; face_idx++)
 	{
 
-		my_face = my_faces[face_idx];
+		my_face = block -> block_faces_[face_idx];
 
-		normalized_x = block -> block_faces_[my_face] -> face_normals_[0];
-		normalized_y = block -> block_faces_[my_face] -> face_normals_[1];
-		normalized_z = block -> block_faces_[my_face] -> face_normals_[2];
+		normalized_x = block -> block_faces_[face_idx] -> face_normals_[0];
+		normalized_y = block -> block_faces_[face_idx] -> face_normals_[1];
+		normalized_z = block -> block_faces_[face_idx] -> face_normals_[2];
 		normal_norm=sqrt(normalized_x*normalized_x+normalized_y*normalized_y+normalized_z*normalized_z);
 
 		neighboor_cells = my_face -> face_2_cells_connectivity_;
@@ -200,17 +208,17 @@ void RoeScheme::computeFluxDiss(Block* block)
 
 	for (int cell_idx=0; cell_idx<ncell; cell_idx++)
 	{
-		my_cell = my_cells[cell_idx];
+		my_cell = block -> block_cells_[cell_idx];
 		cell_volume  = my_cell -> cell_volume_;
 
-		my_diss_res_ro[cell_idx] /= cell_volume[cell_idx];
-		my_diss_res_uu[cell_idx] /= cell_volume[cell_idx];
-		my_diss_res_vv[cell_idx] /= cell_volume[cell_idx];
-		my_diss_res_ww[cell_idx] /= cell_volume[cell_idx];
-		my_diss_res_pp[cell_idx] /= cell_volume[cell_idx];
+		my_diss_res_ro[cell_idx] /= cell_volume;
+		my_diss_res_uu[cell_idx] /= cell_volume;
+		my_diss_res_ww[cell_idx] /= cell_volume;
+		my_diss_res_vv[cell_idx] /= cell_volume;
+		my_diss_res_pp[cell_idx] /= cell_volume;
 
 	}
-	*/
+
 }
 
 
