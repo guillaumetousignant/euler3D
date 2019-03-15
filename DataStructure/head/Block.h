@@ -34,12 +34,13 @@ public:
 
 	BoundaryCellIds** block_boundary_cell_ids_;
 	int* block_wall_face_ids_;
+	int n_wall_faces_;
 
 	void addCell(Cell* new_cell);
 	void addNode(Node* new_node);
 	void addFace(Face* new_face);
 	void addCellIdInBoundary(int cell_id, BoundaryCellIds* some_boundary);
-	void addFaceIdInWall(int face_id,int face_count);
+	void addFaceIdInWall(int face_id,int* face_count);
 
 	Block(int block_id);
 	~Block();

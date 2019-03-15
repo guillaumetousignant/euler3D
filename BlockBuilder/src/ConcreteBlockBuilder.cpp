@@ -43,6 +43,7 @@ void ConcreteBlockBuilder::preReadMyBlock(Block* block)
 
 	int n_boundaries=0;
 	int n_elements_in_boundary=0;
+	int n_faces_in_wall=0;
 	char boundary_type_temp[200];
 	std::string boundary_type;
 
@@ -119,6 +120,7 @@ void ConcreteBlockBuilder::preReadMyBlock(Block* block)
 			{
 				//std::cout<<"on a une boundary wall"<<std::endl;
 				faces_sum_in_boundaries+=n_elements_in_boundary;
+				n_faces_in_wall+=n_elements_in_boundary;
 			}
 
 
@@ -138,6 +140,9 @@ void ConcreteBlockBuilder::preReadMyBlock(Block* block)
 		}
 		n_boundaries=block->n_real_boundaries_in_block_;
 		block ->block_boundary_cell_ids_ = new BoundaryCellIds* [n_boundaries];
+		std::cout << "*********************ALLOCATION: "<< n_faces_in_wall<<std::endl;
+		block ->block_wall_face_ids_ = new int [n_faces_in_wall];
+		block->n_wall_faces_=n_faces_in_wall;
 
 		n_all_cells = n_real_cells + n_ghost_cells;
 		block->block_cells_ = new Cell*[n_all_cells];
@@ -210,6 +215,9 @@ void ConcreteBlockBuilder::readMyBlock(Block* block)
 	std::string cell_2_nodes_connectivity_temp;
 	std::string ghost_cell_2_nodes_connectivity_temp;
 	char boundary_type_temp[50];
+	int temp_wall_face_count=0;
+	int* wall_face_count;
+	wall_face_count=&temp_wall_face_count;
 
 	//WallCellIds *wall_boundary_temp;
 	//FarfieldCellIds *farfield_boundary_temp;
@@ -350,7 +358,8 @@ void ConcreteBlockBuilder::readMyBlock(Block* block)
 				{
 					//std::cout<<"on a un wall"<< std::endl;
 					block ->addCellIdInBoundary(cell_id,block->block_boundary_cell_ids_[real_boundary_id-1]);
-					//block ->addFaceIdInWall(int face_id, int face_count)
+					block ->addFaceIdInWall(cell_id,wall_face_count); 
+					// note: cell_id is actually added here instead of face_id. this is normal and the corresponding face_id will replace cell_id during the run of connectivity
 
 				}
 				else if (boundary_type_temp_str == "FARFIELD") //farfield
