@@ -35,7 +35,7 @@ void buildConnectivityInteg(Block *new_block)
 
 }
 
-TEST_CASE("Test computation of center cell (ID = 0)", "")
+TEST_CASE("Test computation of center cell", "")
 {
     Block *blockData = new Block(0);
     buildConnectivityInteg(blockData);
@@ -48,10 +48,35 @@ TEST_CASE("Test computation of center cell (ID = 0)", "")
     centerCell[1] = 0.5;
     centerCell[2] = 0.5;
 
+    //Check center cell of cellID
     for(int i(0);i < dimension;i++)
     {
         double resultCoord = blockData->block_cells_[cellID]->cell_coordinates_[i];
         REQUIRE(centerCell[i] == resultCoord);
+    }
+
+    //Verify center cells of all ghost
+    uint nbCellsTot = blockData->n_all_cells_in_block_;
+    uint nbCells = blockData->n_real_cells_in_block_;
+
+    const uint vector3DSize = 3;
+
+    for(uint i(nbCells);i < nbCellsTot;i++)
+    {
+        uint leftCellID = blockData->block_cells_[i]->cell_2_cells_connectivity_[0];
+        
+
+        std::vector<double> centerCellLeft(vector3DSize);
+        std::vector<double> centerGhost(vector3DSize);
+
+        for(uint k(0);k < vector3DSize;k++)
+        {
+            centerCellLeft[k] = blockData->block_cells_[leftCellID]->cell_coordinates_[k];
+            centerGhost[k] = blockData->block_cells_[i]->cell_coordinates_[k];
+        }
+        
+        REQUIRE(centerCellLeft == centerGhost);
+
     }
 
 
@@ -66,7 +91,6 @@ TEST_CASE("Compute Normales")
     Block *blockData = new Block(0);
     buildConnectivityInteg(blockData);
 
-    uint cellNeighborID;
 
     const uint nbCoordVec3D = 3;
 
@@ -103,10 +127,10 @@ TEST_CASE("Compute Normales")
             {
                 for(uint k(0); k < nbCoordVec3D;k++)
                 {
-                    //Obtaining a vector from left to right
+                    //Obtaining a vector from left to right cell convention
                     connectCenterVec[k] = centerCellRight[k] - centerCellLeft[k];
 
-                    //Initialize vector of normales in std::vector
+                    //Initialize vector of normales
                     normales[k] =  blockData->block_faces_[faceID]->face_normals_[k];
 
                     //Compute dot product
@@ -150,8 +174,6 @@ TEST_CASE("Compute Volume", "")
     Block *blockData = new Block(0);
     buildConnectivityInteg(blockData);
 
-    double volume = 1.0;
-
     uint nbCells = blockData->n_real_cells_in_block_;
 
     for(uint i(0);i < nbCells;i++)
@@ -161,8 +183,17 @@ TEST_CASE("Compute Volume", "")
         REQUIRE(result <= 1.01);
     }
 
+    uint nbCellsTot = blockData->n_all_cells_in_block_;
 
-    
+    for(uint i(nbCells);i < nbCellsTot;i++)
+    {
+
+        double volumeGhost = blockData->block_cells_[i]->cell_volume_;
+
+        REQUIRE(volumeGhost >= 0.99);
+        REQUIRE(volumeGhost <= 1.01);
+    }
+
    
 
 }
