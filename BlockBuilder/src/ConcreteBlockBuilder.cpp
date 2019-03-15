@@ -172,6 +172,9 @@ void ConcreteBlockBuilder::preReadMyBlock(Block* block)
 
 
 
+	} else{
+		//warning that file was not opened!
+		std::cout<<"WARNING! BLOCK FILE WAS NOT CORRECTLY OPENED IN PRE-READ FUNCTION. ERRATIC BEHAVIOR MAY APPEAR!"<<std::endl;
 	}
 	myfile.close();
 }
@@ -377,6 +380,9 @@ void ConcreteBlockBuilder::readMyBlock(Block* block)
 			}
 
 		}
+	} else{
+		//warning that file was not opened!
+		std::cout<<"WARNING! BLOCK FILE WAS NOT CORRECTLY OPENED IN READ FUNCTION. ERRATIC BEHAVIOR MAY APPEAR!"<<std::endl;
 	}
 	myfile.close();
 	delete node_creator; 
