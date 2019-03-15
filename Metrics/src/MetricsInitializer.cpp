@@ -558,7 +558,7 @@ void MetricsInitializer::computeWLS(uint iNCells, Cell** iCells)
 
             double beta = (r12*r23 - r13*r22)/(r11*r22);
 
-            //double **weights = new double*[nbCellsNeighbor];
+
             std::vector<std::vector<double>> weightLeastSquared(nbCellsNeighbor);
             const uint vector3DSize = 3;
 
