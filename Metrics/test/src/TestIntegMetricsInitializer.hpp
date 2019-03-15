@@ -91,7 +91,6 @@ TEST_CASE("Compute Normales")
     Block *blockData = new Block(0);
     buildConnectivityInteg(blockData);
 
-    uint cellNeighborID;
 
     const uint nbCoordVec3D = 3;
 
@@ -175,8 +174,6 @@ TEST_CASE("Compute Volume", "")
     Block *blockData = new Block(0);
     buildConnectivityInteg(blockData);
 
-    double volume = 1.0;
-
     uint nbCells = blockData->n_real_cells_in_block_;
 
     for(uint i(0);i < nbCells;i++)
@@ -185,6 +182,18 @@ TEST_CASE("Compute Volume", "")
         REQUIRE(result >= 0.99);
         REQUIRE(result <= 1.01);
     }
+
+    uint nbCellsTot = blockData->n_all_cells_in_block_;
+
+    for(uint i(nbCells);i < nbCellsTot;i++)
+    {
+
+        double volumeGhost = blockData->block_cells_[i]->cell_volume_;
+
+        REQUIRE(volumeGhost >= 0.99);
+        REQUIRE(volumeGhost <= 1.01);
+    }
+
    
 
 }
