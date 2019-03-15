@@ -47,18 +47,7 @@ void MetricsInitializer::doInit()
 
     computeInterpVect(iNCells, iNCellsTot,iNFaces, iCells, iFaces);
     
-    //Compute Weight Least-Squared metrics;
-
-
-   /**iCells = nullptr;
-   *iFaces = nullptr;
-   *iNodes = nullptr;
-
-    iCells = nullptr;
-    iFaces = nullptr;
-    iNodes = nullptr;
-    */
-
+    computeWLS(iNCells, iCells);
 
 }
 
@@ -497,7 +486,6 @@ void MetricsInitializer::computeWLS(uint iNCells, Cell** iCells)
 {
     if( iNCells > 1)
     {
-
         const uint X = 0;
         const uint Y = 1;
         const uint Z = 2;
@@ -570,11 +558,12 @@ void MetricsInitializer::computeWLS(uint iNCells, Cell** iCells)
 
             double beta = (r12*r23 - r13*r22)/(r11*r22);
 
-            double **weights = new double*[nbCellsNeighbor];;
+            //double **weights = new double*[nbCellsNeighbor];
+            std::vector<std::vector<double>> weightLeastSquared(nbCellsNeighbor);
+            const uint vector3DSize = 3;
 
             for(uint j(0);j < nbCellsNeighbor;j++)
             {
-                weights[j] = new double[3];
 
                 double alpha3 = (1/(r33*r33))*(dzij[j] - (r33/r22)*dyij[j] + beta*dxij[j]);
 
@@ -586,19 +575,13 @@ void MetricsInitializer::computeWLS(uint iNCells, Cell** iCells)
                 double weight2 = alpha2 - (r23/r22)*alpha3;
                 double weight3 = alpha3;
 
-                weights[j][0] = weight1;
-                weights[j][1] = weight2;
-                weights[j][2] = weight3;
+                weightLeastSquared[j].resize(vector3DSize);
+
+                weightLeastSquared[j][0] = weight1;
+                weightLeastSquared[j][1] = weight2;
+                weightLeastSquared[j][2] = weight3;
 
             }
-
-            //Deallocation
-            for(uint j(0);j < nbCellsNeighbor;j++)
-            {
-                delete [] weights[j];
-            }
-            delete [] weights;
-            weights = nullptr;
 
         }
 
