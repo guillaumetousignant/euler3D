@@ -35,7 +35,7 @@ void buildConnectivityInteg(Block *new_block)
 
 }
 
-TEST_CASE("Test computation of center cell (ID = 0)", "")
+TEST_CASE("Test computation of center cell", "")
 {
     Block *blockData = new Block(0);
     buildConnectivityInteg(blockData);
@@ -160,9 +160,6 @@ TEST_CASE("Compute Volume", "")
         REQUIRE(result >= 0.99);
         REQUIRE(result <= 1.01);
     }
-
-
-    
    
 
 }
