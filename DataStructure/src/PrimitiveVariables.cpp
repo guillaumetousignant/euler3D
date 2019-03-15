@@ -38,20 +38,20 @@ PrimitiveVariables::~PrimitiveVariables()
 }
 
 // 	RÉFÉRENCE CIRCULAIRE ICI
-// void PrimitiveVariables::calculateFreeVariables(Interface inter)
-// {
-// 	double pi, c, s;
-// 	pi=atan(1.0)*4.0;
-// 	gamma_= inter.gamma_interface_;
-// 	alpha_rad_=inter.angle_of_attack_rad_interface_;
-// 	mach_=inter.mach_interface_;
-// 	c=cos(alpha_rad_);
-// 	s=sin(alpha_rad_);
-// 	ro_free_=1.0;//densite normalise
-// 	uu_free_=mach_*sqrt(gamma_)*c;
-// 	vv_free_=mach_*sqrt(gamma_)*s;
-// 	ww_free_=0.0;// hypothese de cas de vol sans vent de travers, vitesse laterale nulle
-// 	pp_free_=1.0;//pression normalise
-// }
+void PrimitiveVariables::calculateFreeVariables(double gamma_interface, double angle_of_attack_rad_interface, double mach_interface)
+{
+	double pi, c, s;
+	pi=atan(1.0)*4.0;
+	gamma_= gamma_interface;
+	alpha_rad_=angle_of_attack_rad_interface;
+	mach_=mach_interface;
+	c=cos(alpha_rad_);
+	s=sin(alpha_rad_);
+	ro_free_=1.0;//densite normalise
+	uu_free_=mach_*sqrt(gamma_)*c;
+	vv_free_=mach_*sqrt(gamma_)*s;
+	ww_free_=0.0;// hypothese de cas de vol sans vent de travers, vitesse laterale nulle
+	pp_free_=1.0;//pression normalise
+}
 
 #endif

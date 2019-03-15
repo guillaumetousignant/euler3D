@@ -41,7 +41,7 @@ public:
 
 	PrimitiveVariables(int n_all_cells_in_blocks);
 	// 	RÉFÉRENCE CIRCULAIRE ICI
-	//void calculateFreeVariables(Interface inter);
+	void calculateFreeVariables(double gamma_interface, double angle_of_attack_rad_interface, double mach_interface);
 	~PrimitiveVariables();
 
 };
