@@ -127,10 +127,10 @@ TEST_CASE("Compute Normales")
             {
                 for(uint k(0); k < nbCoordVec3D;k++)
                 {
-                    //Obtaining a vector from left to right
+                    //Obtaining a vector from left to right cell convention
                     connectCenterVec[k] = centerCellRight[k] - centerCellLeft[k];
 
-                    //Initialize vector of normales in std::vector
+                    //Initialize vector of normales
                     normales[k] =  blockData->block_faces_[faceID]->face_normals_[k];
 
                     //Compute dot product
