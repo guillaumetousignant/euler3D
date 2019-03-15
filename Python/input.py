@@ -78,25 +78,27 @@ class Input():
         self.rk_entry = ttk.Entry(title_section_1_2, textvariable=self.rk, width=10)
         self.rk_entry.grid(row=3, column=3, padx=2, pady=2)
 
+        self.filename_mesh = "void"
  
     # METHODS
     def importMesh(self):
-        mesh_window = Tk()
-        mesh_window.title("Mesh importation")
+        self.mesh_window = Toplevel(self.master)
+        self.mesh_window.title("Mesh importation")
+        self.mesh_window.resizable(0,0)
 
-        text_mesh_importation = ttk.Label(mesh_window, text="\nImport the desired mesh:\n")
+        text_mesh_importation = ttk.Label(self.mesh_window, text="\nImport the desired mesh:\n")
         text_mesh_importation.grid(row=0, column=0, columnspan=4, sticky=W, padx=2)
         
-        select_file_button = ttk.Button(mesh_window, text="Select a file", command=self.meshFileDialog)
+        select_file_button = ttk.Button(self.mesh_window, text="Select a file", command=self.meshFileDialog)
         select_file_button.grid(row=1, column=0, padx=2)
         
-        self.filename_label_mesh = ttk.Label(mesh_window, text="", relief="solid", width=40)
+        self.filename_label_mesh = ttk.Label(self.mesh_window, text="", relief="solid", width=40)
         self.filename_label_mesh.grid(row=1, column=1, columnspan=3, padx=2)
         
-        ok_button = ttk.Button(mesh_window, text="Ok", command=mesh_window.destroy)
+        ok_button = ttk.Button(self.mesh_window, text="Ok", command=self.saveAndDestroyWindow)
         ok_button.grid(row=2, column=1, pady=5)
 
-        cancel_button = ttk.Button(mesh_window, text="Cancel", command=mesh_window.destroy)
+        cancel_button = ttk.Button(self.mesh_window, text="Cancel", command=self.mesh_window.destroy)
         cancel_button.grid(row=2, column=2, pady=5)
 
     def meshFileDialog(self):
@@ -112,8 +114,9 @@ class Input():
             self.filename_label_mesh.configure(text=self.filename_mesh)
         
     def importGeometry(self):
-        geometry_window = Tk()
+        geometry_window = Toplevel(self.master)
         geometry_window.title("Geometry importation")
+        geometry_window.resizable(0,0)
 
         text_geometry_importation = ttk.Label(geometry_window, text="\nImport the desired geometry:\n")
         text_geometry_importation.grid(row=0, column=0, columnspan=4, sticky=W, padx=2)
@@ -124,9 +127,11 @@ class Input():
         self.filename_label_geometry = ttk.Label(geometry_window, text="", relief="solid", width=40)
         self.filename_label_geometry.grid(row=1, column=1, columnspan=3, padx=2)
 
+        self.number_blocks = IntVar()
+        self.number_blocks.set(3)
         self.number_blocks_label = ttk.Label(geometry_window, text="Number of blocks", borderwidth=2, relief="groove", anchor=CENTER)
         self.number_blocks_label.grid(row=2, column=1, sticky=NSEW, pady=5)
-        self.number_blocks_entry = ttk.Entry(geometry_window, width=15)
+        self.number_blocks_entry = ttk.Entry(geometry_window, width=15, textvariable=self.number_blocks)
         self.number_blocks_entry.grid(row=2, column=2, pady=5)
 
         ok_button = ttk.Button(geometry_window, text="Ok", command=geometry_window.destroy)
@@ -153,6 +158,10 @@ class Input():
     def showResultingMesh(self):
         messagebox.showinfo('Resulting Mesh')
 
+    def saveAndDestroyWindow(self):
+        self.writePartialOutputMesh()
+        self.mesh_window.destroy()
+
     def clearAllPages(self):
         self.cfl.set(0.0)
         self.gamma.set(0.0)
@@ -169,6 +178,12 @@ class Input():
         self.angle_attack.set(0.0)
         self.rk.set(0)
 
+    def writePartialOutputMesh(self):
+        
+        self.partial_output_mesh = "MESH\ntopologyfilename\n" + self.filename_mesh
+
+        return self.partial_output_mesh
+
     def writePartialOutput(self):
         cfl_str = str(self.cfl.get())
         gamma_str = str(self.gamma.get())
@@ -177,9 +192,13 @@ class Input():
         mach_str = str(self.mach.get())
         cmac_str = str(self.cmac.get())
 
-        partial_output = "INPUT\ncfl gamma angleattackdeg\n"+(
-                         cfl_str+" "+gamma_str+" "+angle_attack_str)+(
-                         "\nrkstage mach cmac\n")+(
-                         rk_str+" "+mach_str+" "+cmac_str)                        
+        if 'self.partial_output_mesh' in globals():
+            partial_output = self.partial_output_mesh + (
+                            "\nINPUT\ncfl gamma angleattackdeg\n" + cfl_str + " " + gamma_str + " " + angle_attack_str) + (
+                            "\nrkstage mach cmac\n" + rk_str + " " + mach_str + " " + cmac_str)                        
+        else:
+            partial_output = "MESH\ntopologyfilename\n" + self.filename_mesh + (
+                            "\nINPUT\ncfl gamma angleattackdeg\n" + cfl_str + " " + gamma_str + " " + angle_attack_str) + (
+                            "\nrkstage mach cmac\n" + rk_str + " " + mach_str + " " + cmac_str)  
         
         return partial_output

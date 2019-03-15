@@ -32,7 +32,7 @@ class Solver():
 
         self.convergence_crit = IntVar()
         self.convergence_crit.set(-15)
-        self.convergence_crit_label = ttk.Label(title_section_2_1, text="Convergence criterion power (1.0eX)", borderwidth=2, relief="groove", anchor=CENTER, width=22)
+        self.convergence_crit_label = ttk.Label(title_section_2_1, text="Convergence criterion\npower (1.0eX)", borderwidth=2, relief="groove", anchor=CENTER, width=22)
         self.convergence_crit_label.grid(row=2, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
         self.convergence_crit_entry = ttk.Entry(title_section_2_1, textvariable=self.convergence_crit, width=15)
         self.convergence_crit_entry.grid(row=2, column=3, columnspan=2, padx=2, pady=2)
@@ -88,8 +88,8 @@ class Solver():
 
         # INITIALIZATION OF FLUX SCHEME VARIABLES: 
         # those variables have to be initialized before the method is called, beaucoup otherwise A LOT of problems will be encountered...
-        self.flux_scheme_choice = StringVar()
-        self.flux_scheme_choice.set("Roe")
+        self.flux_scheme = StringVar()
+        self.flux_scheme.set("Roe")
 
         self.scheme_order = StringVar()
         self.scheme_order.set("1")
@@ -111,51 +111,57 @@ class Solver():
 
     # METHODS
     def selectFluxScheme(self):
-        self.flux_scheme_window = Tk()
+        self.flux_scheme_window = Toplevel(self.master)
         self.flux_scheme_window.title("Scheme selection")
+        self.flux_scheme_window.resizable(0,0)
         text_flux_scheme_window = ttk.Label(self.flux_scheme_window, text="\nPlease configure the following parameters:\n", anchor=W)
         text_flux_scheme_window.grid(row=0, column=0, columnspan=4, padx=2, sticky=W)
         
-        self.flux_scheme_choice = StringVar()
-        self.flux_scheme_choice.set("Roe")
+        self.flux_scheme = StringVar()
+        self.flux_scheme.set("Roe")
         self.flux_scheme_label = ttk.Label(self.flux_scheme_window, text="Flux scheme:", anchor=CENTER)
         self.flux_scheme_label.grid(row=1, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
-        self.flux_scheme_entry = ttk.Combobox(self.flux_scheme_window, values=("Roe", "Ausm"), textvariable=self.flux_scheme_choice, width=15)
+        self.flux_scheme_entry = ttk.Combobox(self.flux_scheme_window, values=("Roe", "Ausm"), width=15, textvariable=self.flux_scheme)
         self.flux_scheme_entry.grid(row=2, column=1, columnspan=2, pady=2)
         
-        self. scheme_order = StringVar()
+        self.scheme_order = StringVar()
         self.scheme_order.set("1")
         self.scheme_order_label = ttk.Label(self.flux_scheme_window, text="Scheme order:", anchor=CENTER)
         self.scheme_order_label.grid(row=3, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
-        self.scheme_order_entry = ttk.Combobox(self.flux_scheme_window, values=("1", "2"), textvariable=self.scheme_order, width=15)
+        self.scheme_order_entry = ttk.Combobox(self.flux_scheme_window, values=("1", "2"), width=15, textvariable=self.scheme_order)
         self.scheme_order_entry.grid(row=4, column=1, columnspan=2, pady=2)
         self.scheme_order_entry.bind('<<ComboboxSelected>>', self.activateGradientAndLimiter)
-        
+
+        self.gradient = StringVar()
         self.gradient.set("Green Gauss")
         self.gradient_label = ttk.Label(self.flux_scheme_window, text="Gradient:", anchor=CENTER, state="disabled")
         self.gradient_label.grid(row=5, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
-        self.gradient_entry = ttk.Combobox(self.flux_scheme_window, values=("Green Gauss", "Least Squares"), textvariable = self.gradient, width=15, state="disabled")
+        self.gradient_entry = ttk.Combobox(self.flux_scheme_window, values=("Green Gauss", "Least Squares"), width=15, state="disabled", textvariable=self.gradient)
         self.gradient_entry.grid(row=6, column=1, columnspan=2, pady=2)
-
+        
+        self.limiter = StringVar()
         self.limiter.set("Barth Jespersen")
         self.limiter_label = ttk.Label(self.flux_scheme_window, text="Limiter:", anchor=CENTER, state="disabled")
         self.limiter_label.grid(row=7, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
-        self.limiter_entry = ttk.Combobox(self.flux_scheme_window, values=("Barth Jespersen", "Venkatakrishnan"), textvariable=self.limiter, width=15, state="disabled")
+        self.limiter_entry = ttk.Combobox(self.flux_scheme_window, values=("Barth Jespersen", "Venkatakrishnan"), width=15, state="disabled", textvariable=self.limiter)
         self.limiter_entry.grid(row=8, column=1, columnspan=2, pady=2)
         self.limiter_entry.bind('<<ComboboxSelected>>', self.activateOmegaOrK)
 
+        self.omega = IntVar()
         self.omega.set(6)
-        self.omega_label = ttk.Label(self.flux_scheme_window, text="Omega power (1.0eX)", width=10, anchor=CENTER, borderwidth=2, relief="groove", state="disabled")
+        self.omega_label = ttk.Label(self.flux_scheme_window, text="Omega power\n(1.0eX)", width=13, anchor=CENTER, borderwidth=2, relief="groove", state="disabled")
         self.omega_label.grid(row=9, column=0, padx=2, pady=7)
         self.omega_entry = ttk.Entry(self.flux_scheme_window, textvariable=self.omega, width=10, state="disabled")
         self.omega_entry.grid(row=9, column=1, padx=2, pady=10)
 
+        self.k = DoubleVar()
         self.k.set(5.0)
-        self.k_label = ttk.Label(self.flux_scheme_window, text="k", width=10, anchor=CENTER, borderwidth=2, relief="groove", state="disabled")
+        self.k_label = ttk.Label(self.flux_scheme_window, text="k", width=13, anchor=CENTER, borderwidth=2, relief="groove", state="disabled")
         self.k_label.grid(row=9, column=2, padx=2, pady=7)
         self.k_entry = ttk.Entry(self.flux_scheme_window, textvariable=self.k, width=10, state="disabled")
         self.k_entry.grid(row=9, column=3, padx=2, pady=10)
 
+        self.smoothing = IntVar()
         self.smoothing.set(1)
         self.smoothing_label = ttk.Label(self.flux_scheme_window, text="Residual smoothing?", anchor=CENTER)
         self.smoothing_label.grid(row=10, column=1, columnspan=2, padx=2)
@@ -213,7 +219,7 @@ class Solver():
             self.omega_entry.configure(state="disabled")
     
     def saveAndDestroyWindow(self):
-        # self.writePartialOutputFluxScheme()
+        self.writePartialOutputFluxScheme()
         self.flux_scheme_window.destroy()
 
     def clearPage(self):
@@ -239,12 +245,9 @@ class Solver():
         # self.k_label.configure(state="disabled")
         # self.k_entry.configure(state="disabled")
 
-    def writePartialOutput(self):
-        nb_niter_max_str = str(self.max_iter.get())
-        conv_criterion_str = str(self.convergence_crit.get())
-
+    def writePartialOutputFluxScheme(self):
         smoothing_str = str(self.smoothing.get())
-        flux_scheme_str = self.flux_scheme_choice.get().lower()
+        flux_scheme_str = self.flux_scheme.get().lower()
         scheme_order_str = self.scheme_order.get()
         
         gradient_str = self.gradient.get()
@@ -264,6 +267,18 @@ class Solver():
         omega_str = str(self.omega.get())
         omega_str = "1.0e"+omega_str
         k_str = str(self.k.get())
+        
+        self.partial_output_flux_scheme = "\nresidual smoothing (0-no 1-yes)\n" + smoothing_str + (
+                                          "\nfluxscheme schemeorder\n" + flux_scheme_str + " " + scheme_order_str) + (
+                                          "\ngradient limiter\n" + gradient_str + " " + limiter_str) + (
+                                          "\nomega k\n" + omega_str + " " + k_str)
+        
+        return self.partial_output_flux_scheme
+
+    def writePartialOutput(self):
+        nb_niter_max_str = str(self.max_iter.get())
+        conv_criterion_str = str(self.convergence_crit.get())
+        conv_criterion_str = "1.0e"+conv_criterion_str
 
         solver_option = self.solver_option.get()
         if solver_option == 1:
@@ -278,11 +293,38 @@ class Solver():
             build_str = "1"
             execute_str = "1"
         
-        partial_output = "\nnbitermax convcriterion\n" + nb_niter_max_str + " " + conv_criterion_str + (
-                         "\nresidual smoothing (0-no 1-yes)\n" + smoothing_str) + (
-                         "\nfluxscheme schemeorder\n" + flux_scheme_str + " " + scheme_order_str) + (
-                         "\ngradient limiter\n" + gradient_str + " " + limiter_str) + (
-                         "\nomega k\n" + omega_str + " " + k_str) + (
-                         "\nEXECUTABLE (0-no 1-yes)\nbuild execute\n" + build_str + " " + execute_str)
-                            
+        if 'self.partial_output_flux_scheme' in globals():
+            partial_output = "\nnbitermax convcriterion\n" + nb_niter_max_str + " " + conv_criterion_str + self.partial_output_flux_scheme + "\nEXECUTABLE (0-no 1-yes)\nbuild execute\n" + build_str + " " + execute_str
+        
+        else:
+            smoothing_str = str(self.smoothing.get())
+            flux_scheme_str = self.flux_scheme.get().lower()
+            scheme_order_str = self.scheme_order.get()
+        
+            gradient_str = self.gradient.get()
+            if gradient_str == "Green Gauss":
+                gradient_str = "greengauss"
+        
+            elif gradient_str == "Least Squares":
+                gradient_str = "leastsquares"
+        
+
+            limiter_str = self.limiter.get()
+            if limiter_str == "Barth Jespersen":
+                limiter_str = "barthjespersen"
+        
+            elif limiter_str == "Venkatakrishnan":
+                limiter_str = "venkatakrishnan"
+        
+            omega_str = str(self.omega.get())
+            omega_str = "1.0e"+omega_str
+            k_str = str(self.k.get())
+
+            self.partial_output_flux_scheme = "\nresidual smoothing (0-no 1-yes)\n" + smoothing_str + (
+                                          "\nfluxscheme schemeorder\n" + flux_scheme_str + " " + scheme_order_str) + (
+                                          "\ngradient limiter\n" + gradient_str + " " + limiter_str) + (
+                                          "\nomega k\n" + omega_str + " " + k_str)
+            
+            partial_output = "\nnbitermax convcriterion\n" + nb_niter_max_str + " " + conv_criterion_str + self.partial_output_flux_scheme + "\nEXECUTABLE (0-no 1-yes)\nbuild execute\n" + build_str + " " + execute_str                   
+        
         return partial_output

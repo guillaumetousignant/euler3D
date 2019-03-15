@@ -150,7 +150,7 @@ class Output():
         cl_alpha_str = str(self.cl_alpha.get())
         cd_alpha_str = str(self.cd_alpha.get())
         cm_alpha_str = str(self.cm_alpha.get())
-        coeff_conv_str = str(self.cl_convergence.get())
+        coeff_conv_str = str(self.coefficients_convergence.get())
         res_conv_str = str(self.residual_convergence.get())
         cp_xc_str = str(self.cp_xc.get())
         mach_iso_str = str(self.mach_iso.get())
