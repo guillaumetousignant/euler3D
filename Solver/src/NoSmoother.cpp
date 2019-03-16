@@ -11,15 +11,14 @@ using namespace std;
 
 void NoSmoother::smoothResidual(Block* block)
 {
-	block->test_block_-=2;
-	cout<<"\t\t\t\tExécution smoothResidual: No Smoother: "<<block->test_block_<<endl;
+	cout<<"\t\t\t\tExécution smoothResidual: No Smoother: "<<endl;
 }
 
 
 
 NoSmoother::NoSmoother()
 {
-	
+
 }
 
 NoSmoother::~NoSmoother()

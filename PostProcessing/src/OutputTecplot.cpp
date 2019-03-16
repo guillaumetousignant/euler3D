@@ -43,11 +43,11 @@ void OutputTecplot::printFlowData(Block* block)
 
   #if 0
   FlowData << "TTILE = \"Vizualisation of the volumetric solution\""
-  FlowData << "VARIABLES=\"X\",\"Y\",\"Z\",\"RO\",\"UU\",\"VV\",\"WW\",\"PP\",\"CP\",\"MACH\"" << endl;
+  FlowData << "VARIABLES=\"X\",\"Y\",\"Z\",\"RO\",\"UU\",\"VV\",\"WW\",\"PP\"" << endl;
   FlowData << "ZONE T=\"FLOW_FIELD\"" << endl;
   FlowData << "Nodes=" << block->n_nodes_in_block_ << ", " << "Elements=" << block->n_cells_in_block_ << ", " << "ZONETYPE=FEPOLYHEDRAL" << endl;
   FlowData << "DATAPACKING=BLOCK" << endl;
-  FlowData << "VARLOCATION=([4,5,6,7,8,9,10]=CELLCENTERED)" << endl;
+  FlowData << "VARLOCATION=([4,5,6,7,8]=CELLCENTERED)" << endl;
 
   double x_node;
   // Print X coordinate for each node
@@ -141,7 +141,7 @@ void OutputTecplot::printFlowData(Block* block)
   double mach_cell
   // Print Mach number for each cell
   for(i=0; i < block->n_cells_in_block_; i++)
-  { 
+  {
     // Primitve variables
     pp_cell = block->block_primitive_variables_->pp_[i];
     ro_cell = block->block_primitive_variables_->ro_[i];
@@ -225,7 +225,7 @@ void OutputTecplot::printConvergence(int iter, double cl, double cd, double cmx,
   cout << "Starting printConvergence............................................" << endl;
 
   int i;
-  
+
   //Convergence.open("Convergence.plt", ios::binary);
   Convergence.open("Convergence.dat", std::ios_base::app);
 
@@ -242,13 +242,13 @@ void OutputTecplot::printConvergence(int iter, double cl, double cd, double cmx,
   {
     Convergence << "Iteration" << " " << "Cl" << " " << "Cd" << " " << "Cmx" << " " << "Cmy" << " " << "Cmz" << " " << "Density convergence" << " " << "Uu convergence" << " " << "Vv convergence" << " " << "Ww convergence" << " " << "Pressure convergence" << " " << endl;
   }
-  
+
   Convergence << iter << " " << cl << " " << cd << " " << cmx << " " << cmy << " " << cmz << " " << ro_convergence << " " << uu_convergence << " " << vv_convergence << " " << ww_convergence << " " << pp_convergence << endl;
-  
+
   #endif
   Convergence.close();
 
-  
+
   cout << "Ending printConvergence.............................................." << endl;
 }
 
@@ -274,7 +274,7 @@ void OutputTecplot::printAerodynamicCoefficients(double cl, double cd, double cm
 
   #endif
   AerodynamicCoefficients.close();
-  
+
   cout << "Ending printAerodynamicCoefficients.................................." << endl;
 }
 

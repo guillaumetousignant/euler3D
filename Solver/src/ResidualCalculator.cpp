@@ -23,7 +23,7 @@ using namespace std;
 
 void ResidualCalculator::computeResidual(Block* block)
 {
-	cout<<"\t\t\tExécution computeResidual: "<<block->test_block_<<endl;
+	cout<<"\t\t\tExécution computeResidual: "<<endl;
 	cout<<endl<<"\t\t\tDans Interpolation"<<endl;
 	interpolation_->computeInterpolation(block);
 	cout<<"\t\t\tFin Interpolation"<<endl;
@@ -32,7 +32,7 @@ void ResidualCalculator::computeResidual(Block* block)
 	flux_scheme_->current_beta_=beta_rk_[current_stage_];
 	if (beta_rk_[current_stage_]>(10^-16))
 	{
-		flux_scheme_->computeFluxDiss(block);	
+		flux_scheme_->computeFluxDiss(block);
 	}
 	cout<<"\t\t\tFin FluxScheme"<<endl;
 	cout<<endl<<"\t\t\tDans ResidualSmoother"<<endl;

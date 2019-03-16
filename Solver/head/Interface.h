@@ -4,6 +4,8 @@
 
 #include <string>
 #include <math.h>
+#include "Solver.h"
+//#include "Initializer.h"
 using namespace std;
 
 
@@ -35,7 +37,7 @@ class Interface
 
 		string gradient_choice_interface_;
 		string limiter_choice_interface_;
-		
+
 		double omega_interface_;
 		double k_interface_;
 
@@ -71,7 +73,7 @@ class Interface
 
 
 		int n_blocks_interface_; // RÉGLER CE PROBLÈME LÀ
-		
+
 
 		Interface();
 		~Interface();

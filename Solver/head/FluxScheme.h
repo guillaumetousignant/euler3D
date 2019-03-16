@@ -2,6 +2,7 @@
 #define SOLVERSKELETON_HEAD_FLUXSCHEME_H
 
 #include "Block.h"
+#include <math.h>
 
 class Block;
 

@@ -3,7 +3,8 @@
 
 
 #include "Interface.h"
-#include "Solver.h"
+// #include "Solver.h"
+#include "CompleteMesh.h"
 
 #include <string>
 using namespace std;
@@ -14,13 +15,11 @@ using namespace std;
 class Initializer
 {
 	public:
-		
+
 
 		Solver* initializeSolver(Interface* interface);
-
-
+		CompleteMesh* InitializeMesh(Interface* interface);
 		Initializer();
-		
 		~Initializer();
 
 

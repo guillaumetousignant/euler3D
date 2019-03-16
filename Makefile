@@ -105,6 +105,13 @@ CXXFLAGS += -std=c++11 -Wall -Wno-unused-function -Wno-strict-overflow
 
 DEBUGFLAGS += -Og -g -pg
 RELEASEFLAGS += -O3 -fopenmp
+
+# Include search paths
+METIS_INCLUDE_PATH = $(METISROOT)/include
+
+# Included Libraries
+METISLIBS += -L$(METISROOT)/lib -lmetis
+
 #--------------------------------------------------------------------------------------------------------------------------------------+
 #---------------------------------------------------------------------------------------------------+
 # Targets
@@ -113,51 +120,51 @@ all : mpirelease $(MPIReleaseObjectFiles)
 
 debug : .debug  begun $(DebugObjectFiles) $(ExecutableDebugObjectFile)
 	@printf '   Linking Debug...'
-	@$(CXX) $(CXXFLAGS) $(DEBUGFLAGS) $(DebugObjectFiles) $(ExecutableDebugObjectFile) -o $(addprefix bin/,$(Executable))
+	@$(CXX) $(CXXFLAGS) $(DEBUGFLAGS) $(DebugObjectFiles) $(ExecutableDebugObjectFile) -o $(addprefix bin/,$(Executable)) $(METISLIBS)
 	@printf 'Done'
 	@printf '\n'
 
 release : .release begun $(ReleaseObjectFiles) $(ExecutableReleaseObjectFile)
 	@printf '   Linking Release...'
-	@$(CXX) $(CXXFLAGS) $(RELEASEFLAGS) $(ReleaseObjectFiles) $(ExecutableReleaseObjectFile) -o $(addprefix bin/,$(Executable))
+	@$(CXX) $(CXXFLAGS) $(RELEASEFLAGS) $(ReleaseObjectFiles) $(ExecutableReleaseObjectFile) -o $(addprefix bin/,$(Executable)) $(METISLIBS)
 	@printf 'Done'
 	@printf '\n'
 
 mpidebug : .mpidebug  begun $(MPIDebugObjectFiles) $(ExecutableMPIDebugObjectFile)
 	@printf '   Linking MpiDebug...'
-	@$(MPICXX) $(CXXFLAGS) $(DEBUGFLAGS) $(MPIDebugObjectFiles) $(ExecutableMPIDebugObjectFile) -o $(addprefix bin/,$(Executable))
+	@$(MPICXX) $(CXXFLAGS) $(DEBUGFLAGS) $(MPIDebugObjectFiles) $(ExecutableMPIDebugObjectFile) -o $(addprefix bin/,$(Executable)) $(METISLIBS)
 	@printf 'Done'
 	@printf '\n'
 
-mpirelease : .mpirelease begun $(MPIReleaseObjectFiles) $(ExecutableMPIReleaseObjectFile)	
+mpirelease : .mpirelease begun $(MPIReleaseObjectFiles) $(ExecutableMPIReleaseObjectFile)
 	@printf '   Linking MpiRelease...'
-	@$(MPICXX) $(CXXFLAGS) $(RELEASEFLAGS) $(MPIReleaseObjectFiles) $(ExecutableMPIReleaseObjectFile) -o $(addprefix bin/,$(Executable))
+	@$(MPICXX) $(CXXFLAGS) $(RELEASEFLAGS) $(MPIReleaseObjectFiles) $(ExecutableMPIReleaseObjectFile) -o $(addprefix bin/,$(Executable)) $(METISLIBS)
 	@printf 'Done'
 	@printf '\n'
 
 reset : clean
 	@$(shell reset)
 
-verify : mpirelease $(MPIReleaseObjectFiles)
+verify : mpidebug $(MPIDebugObjectFiles)
 
 #---------------------------------------------------------------------------------------------------+
 #---------------------------------------------------------------------------------------+
 # Pattern Rules
 
 .debug/%.o : %.cpp
-	@$(CXX) -c $(CXXFLAGS) $(DEBUGFLAGS)  -I$(subst $(space), -I,$(AllDirs)) $< -o $@
+	@$(CXX) -c $(CXXFLAGS) $(DEBUGFLAGS)  -I$(subst $(space), -I,$(AllDirs)) -I$(METIS_INCLUDE_PATH) $< -o $@
 	@echo '   Pattern Rule | Compiling | '$(CXXFLAGS) $(DEBUGFLAGS) ' | ' $<' ... Done'
 
 .release/%.o : %.cpp
-	@$(CXX) -c $(CXXFLAGS) $(RELEASEFLAGS)  -I$(subst $(space), -I,$(AllDirs)) $< -o $@
+	@$(CXX) -c $(CXXFLAGS) $(RELEASEFLAGS)  -I$(subst $(space), -I,$(AllDirs)) -I$(METIS_INCLUDE_PATH) $< -o $@
 	@echo '   Pattern Rule | Compiling | '$(CXXFLAGS) $(RELEASEFLAGS) ' | ' $<' ... Done '
 
 .mpidebug/%.o : %.cpp
-	@$(MPICXX) -c $(CXXFLAGS) $(DEBUGFLAGS)  -I$(subst $(space), -I,$(AllDirs)) $< -o $@
+	@$(MPICXX) -c $(CXXFLAGS) $(DEBUGFLAGS)  -I$(subst $(space), -I,$(AllDirs)) -I$(METIS_INCLUDE_PATH) $< -o $@
 	@echo '   Pattern Rule | Compiling | '$(CXXFLAGS) $(DEBUGFLAGS) ' | ' $<' ... Done'
 
 .mpirelease/%.o : %.cpp
-	@$(MPICXX) -c $(CXXFLAGS) $(RELEASEFLAGS)  -I$(subst $(space), -I,$(AllDirs)) $< -o $@
+	@$(MPICXX) -c $(CXXFLAGS) $(RELEASEFLAGS)  -I$(subst $(space), -I,$(AllDirs)) -I$(METIS_INCLUDE_PATH) $< -o $@
 	@echo '   Pattern Rule | Compiling | '$(CXXFLAGS) $(RELEASEFLAGS) ' | ' $<' ... Done '
 
 #---------------------------------------------------------------------------------------+

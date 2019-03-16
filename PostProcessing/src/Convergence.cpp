@@ -20,7 +20,7 @@ Convergence::Convergence()
 
 Convergence::~Convergence()
 {
- 
+
 }
 
 void Convergence::calculateRoRms(Block* block)

@@ -20,7 +20,7 @@ AerodynamicParameters::AerodynamicParameters(double cmac, double mach_aircraft, 
   cmac_=cmac;
   mach_aircraft_=mach_aircraft;
   aoa_rad_=aoa_deg*atan(1)*4/180;
-  
+
   stop_solver_flag_=false;
 
 
@@ -124,7 +124,7 @@ void AerodynamicParameters::calculateGlobalCl()
   #if 0
   // Calculate clwind
   cl_global_ = cl_*cos(aoa_rad_) - cd*sin(aoa_rad_);
-  
+
   #endif
 
   cout << "Ending calculateGlobalCl............................................." << endl;
@@ -149,7 +149,7 @@ void AerodynamicParameters::checkClDriver()
 {
   cout << "Starting checkClDriver..............................................." << endl;
 
-  
+
   #if 0
   if(clglobal_ < cldriver_)
   {
@@ -255,7 +255,7 @@ void AerodynamicParameters::computeAerodynamic(Block* block)
   calculateGlobalCd();
 
   // NON checkClDriver();
-  
+
 }
 
 #endif

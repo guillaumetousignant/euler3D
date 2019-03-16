@@ -19,8 +19,7 @@ using namespace std;
 
 void SecondOrder::computeInterpolation(Block* block)
 {
-	block->test_block_-=3;
-	cout<<"\t\t\t\tExécution computeInterpolation: SecondOrder: "<<block->test_block_<<endl;
+	cout<<"\t\t\t\tExécution computeInterpolation: SecondOrder: "<<endl;
 
 	cout<<endl<<"\t\t\t\tDans Gradient"<<endl;
 	gradient_->computeGradients(block);

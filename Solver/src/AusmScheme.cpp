@@ -11,15 +11,14 @@ using namespace std;
 
 void AusmScheme::computeFluxDiss(Block* block)
 {
-	block->test_block_--;
-	cout<<"\t\t\t\tExécution computeFluxDiss: AUSM: "<<block->test_block_<<endl;
+	cout<<"\t\t\t\tExécution computeFluxDiss: AUSM: "<<endl;
 }
 
 
 
 AusmScheme::AusmScheme()
 {
-	
+
 }
 
 AusmScheme::~AusmScheme()
