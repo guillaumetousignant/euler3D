@@ -55,11 +55,11 @@ int main()
 
 	// CompleteMesh* complete_mesh;
   // complete_mesh= new CompleteMesh();
-	// Initializer* initializer= new Initializer();
-	// Interface* interface= new Interface();
+	 Initializer* initializer= new Initializer();
+	 Interface* interface= new Interface();
 	//
-	// Solver *solver=initializer->initializeSolver(interface);
-	// solver->solve(block, complete_mesh);
+	Solver *solver=initializer->initializeSolver(interface);
+	solver->solve(new_block, complete_mesh);
 
     cout << "END OF PROGRAM" << endl;
 }
