@@ -9,7 +9,7 @@ rkstage mach cmac
 nbitermax convcriterion
 300 1e-15
 residual smoothing (0-no 1-yes)
-1
+0
 fluxscheme schemeorder
 roe 1
 gradient limiter

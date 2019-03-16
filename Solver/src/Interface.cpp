@@ -235,7 +235,7 @@ void Interface::readInputFile(string input_file_name)
 Interface::Interface()
 {
 	string input_file_name;
-	input_file_name="input";
+	input_file_name="input_test1";
 	readInputFile(input_file_name);
 
 
