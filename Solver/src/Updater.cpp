@@ -12,8 +12,8 @@ void Updater::updateInternalBlock(Block* block)
 {
 	cout<<"\t\t\tExécution updateInternalBlock: "<<endl;
 
-	/*
-	int nb_cells=block->n_cells_in_block_;
+
+	int nb_cells=block->n_real_cells_in_block_; // real cells or all cells ?????????
 	int cell_idx;
 	double ro_0,ru_0,rv_0,rw_0,re_0;
 	double dt;
@@ -24,29 +24,37 @@ void Updater::updateInternalBlock(Block* block)
 	double ro_new,ru_new,rv_new,rw_new,re_new;
 	double ro, uu, vv, ww, pp;
 
+	PrimitiveVariables* my_primitive_variables;
+	my_primitive_variables = block -> block_primitive_variables_;
+
+	// double* ro_0;
+	// double* ru_0;
+	// double* rv_0;
+	// double* rw_0;
+	// double* re_0;
 
 	for (cell_idx=0;cell_idx<nb_cells;cell_idx++) //BOUCLER SUR LES CELLULES INTÉRIEURS PLUTÔT? VA DÉPENDRE DE updateSolution
 	{
-		ro_0=block->block_primitive_variables_->ro_0_[cell_idx];
-		ru_0=block->block_primitive_variables_->ru_0_[cell_idx];
-		rv_0=block->block_primitive_variables_->rv_0_[cell_idx];
-		rw_0=block->block_primitive_variables_->rw_0_[cell_idx];
-		re_0=block->block_primitive_variables_->re_0_[cell_idx];
+		ro_0= my_primitive_variables->ro_0_[cell_idx];
+		ru_0= my_primitive_variables->ru_0_[cell_idx];
+		rv_0= my_primitive_variables->rv_0_[cell_idx];
+		rw_0= my_primitive_variables->rw_0_[cell_idx];
+		re_0= my_primitive_variables->re_0_[cell_idx];
 
 		dt=block->block_time_variables_->dt_[cell_idx];
 		cell_volume=block->block_cells_[cell_idx]->cell_volume_;
 
-		res_ro_conv=block->block_primitive_variables_->res_ro_conv_[cell_idx];
-		res_uu_conv=block->block_primitive_variables_->res_uu_conv_[cell_idx];
-		res_vv_conv=block->block_primitive_variables_->res_vv_conv_[cell_idx];
-		res_ww_conv=block->block_primitive_variables_->res_ww_conv_[cell_idx];
-		res_pp_conv=block->block_primitive_variables_->res_pp_conv_[cell_idx];
+		res_ro_conv = my_primitive_variables->conv_res_ro_[cell_idx];
+		res_uu_conv = my_primitive_variables->conv_res_uu_[cell_idx];
+		res_vv_conv = my_primitive_variables->conv_res_vv_[cell_idx];
+		res_ww_conv = my_primitive_variables->conv_res_ww_[cell_idx];
+		res_pp_conv = my_primitive_variables->conv_res_pp_[cell_idx];
 
-		res_ro_diss=block->block_primitive_variables_->res_ro_diss_[cell_idx];
-		res_uu_diss=block->block_primitive_variables_->res_uu_diss_[cell_idx];
-		res_vv_diss=block->block_primitive_variables_->res_vv_diss_[cell_idx];
-		res_ww_diss=block->block_primitive_variables_->res_ww_diss_[cell_idx];
-		res_pp_diss=block->block_primitive_variables_->res_pp_diss_[cell_idx];
+		res_ro_diss = my_primitive_variables->conv_res_ro_[cell_idx];
+		res_uu_diss = my_primitive_variables->conv_res_uu_[cell_idx];
+		res_vv_diss = my_primitive_variables->conv_res_vv_[cell_idx];
+		res_ww_diss = my_primitive_variables->conv_res_ww_[cell_idx];
+		res_pp_diss = my_primitive_variables->conv_res_pp_[cell_idx];
 
 		ro_new=ro_0-(alpha_rk_[current_stage_]*dt/cell_volume)*(res_ro_conv-res_ro_diss);
 		ru_new=ru_0-(alpha_rk_[current_stage_]*dt/cell_volume)*(res_uu_conv-res_uu_diss);
@@ -60,19 +68,13 @@ void Updater::updateInternalBlock(Block* block)
 		ww= rw_new/ro_new;
 		pp=(gamma_-1.0)*(re_new-0.5*(ru_new*ru_new+rv_new*rv_new+rw_new*rw_new)/ro_new);
 
-		block->primitive_variables_->ro_[cell_idx]=ro;
-		block->primitive_variables_->uu_[cell_idx]=uu;
-		block->primitive_variables_->vv_[cell_idx]=vv;
-		block->primitive_variables_->ww_[cell_idx]=ww;
-		block->primitive_variables_->pp_[cell_idx]=pp;
-
+		my_primitive_variables->ro_[cell_idx]=ro;
+		my_primitive_variables->uu_[cell_idx]=uu;
+		my_primitive_variables->vv_[cell_idx]=vv;
+		my_primitive_variables->ww_[cell_idx]=ww;
+		my_primitive_variables->pp_[cell_idx]=pp;
 
 	}
-
-
-
-	*/
-
 
 }
 
