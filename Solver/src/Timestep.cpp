@@ -27,10 +27,14 @@ void Timestep::computeSpectralRadius(Block* block)
 {
 	cout<<"\t\tExécution computeSpectralRadius: "<<endl;
 	// P.211 Blazek !!!	watch out pour delta_s s'il doit multiplier juste c ou non (dépend de comment n définit face_normals_y)
-	/*
+
 	PrimitiveVariables* my_primitive_variables;
 	my_primitive_variables = block -> block_primitive_variables_;
-	double* my_ro_array,my_uu_array,my_vv_array,my_ww_array,my_pp_array;
+	double* my_ro_array;
+	double* my_uu_array;
+	double* my_vv_array;
+	double* my_ww_array;
+	double* my_pp_array;
 	my_ro_array = my_primitive_variables -> ro_;
 	my_uu_array = my_primitive_variables -> uu_;
 	my_vv_array = my_primitive_variables -> vv_;
@@ -39,13 +43,13 @@ void Timestep::computeSpectralRadius(Block* block)
 
 	double c;
 
-	Cell* my_cells;
-	my_cells = block -> block_cells_;
+	Cell* my_cell;
+	// my_cells = block -> block_cells_;
 	int ncell;
 	ncell = block -> n_real_cells_in_block_;
 
-	Face* my_faces;
-	my_faces = block -> bloc_faces_;
+	Face* my_face;
+	// my_faces = block -> block_faces_;
 	int nface;
 	nface = block -> n_faces_in_block_;
 
@@ -56,34 +60,37 @@ void Timestep::computeSpectralRadius(Block* block)
 
 	int face_id;
 
+	int n_faces_per_cell;
+
 	double normalized_x,normalized_y,normalized_z,delta_s;
 
 	for(int cell_idx = 0; cell_idx < ncell; cell_idx++)
 	{
 		c = sqrt(gamma_*my_pp_array[cell_idx]/my_ro_array[cell_idx]);
+		n_faces_per_cell = my_cell -> n_faces_per_cell_;
 
-		// (Je peux faire un sizeof de cell2face, mais on perdrait de la performance, Laurent va pt le faire dans la connectivité, à suivre....)
-		for(int face_idx = 0; face_idx < face_in_cell; face_idx++)// HOW DO I ACCCES face_in_cell?????
+		
+		for(int face_idx = 0; face_idx < n_faces_per_cell; face_idx++)
 		{
-			face_id = my_cell -> cell_2_faces_[face_idx];
+			face_id = my_cell -> cell_2_faces_connectivity_[face_idx];
 
 			normalized_x = block -> block_faces_[face_id] -> face_normals_[0];
 			normalized_y = block -> block_faces_[face_id] -> face_normals_[1];
 			normalized_z = block -> block_faces_[face_id] -> face_normals_[2];
 
-			delta_s = sqrt(normalized_x[face_idx]*normalized_x[face_idx]+normalized_y[face_idx]*normalized_y[face_idx]+normalized_z[face_idx]*normalized_z[face_idx]) //!!!!!!!!!!!!!! DELTA_S ATTENTION SCALAIRE/VOLUME - à valider
+			delta_s = sqrt(normalized_x*normalized_x+normalized_y*normalized_y+normalized_z*normalized_z); //!!!!!!!!!!!!!! DELTA_S ATTENTION SCALAIRE/VOLUME - à valider
 			spectral_radius[cell_idx] += fabs(my_uu_array[cell_idx]*normalized_x+my_vv_array[cell_idx]*normalized_y+my_ww_array[cell_idx]*normalized_z) + c*delta_s;
 		}
 	}
-	*/
+
 }
 
 void Timestep::computeTimestep(Block* block)
 {
 	cout<<"\t\tExécution computeTimestep: "<<endl;
-	/*
-	Cell* my_cells;
-	my_cells = block -> block_cells_;
+
+	Cell* my_cell;
+	// my_cell = block -> block_cells_;
 	int ncell;
 	ncell = block -> n_real_cells_in_block_;
 	double cell_volume;
@@ -97,12 +104,12 @@ void Timestep::computeTimestep(Block* block)
 
 	for(int cell_idx = 0; cell_idx < ncell; cell_idx++)
 	{
-		my_cell = my_cells[cell_idx];
+		my_cell = block -> block_cells_[cell_idx];
 		cell_volume  = my_cell -> cell_volume_;
 
-		dt[cell_idx] = cfl_*cell_volume[cell_idx]/spectral_radius[cell_idx];
+		dt[cell_idx] = cfl_*cell_volume/spectral_radius[cell_idx];
 	}
-	*/
+
 }
 
 
