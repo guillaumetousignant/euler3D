@@ -46,10 +46,12 @@ void Block::addCellIdInBoundary(int cell_id,BoundaryCellIds* some_boundary)
 	//std::cout<<"cell count: "<<*cell_count<<std::endl;
 }
 
-void Block::addFaceIdInWall(int face_id, int face_count)
+void Block::addFaceIdInWall(int face_id, int* face_count)
 {
-	block_wall_face_ids_[face_count] = face_id;
-	face_count += 1;
+	//std::cout<<"numero de facecount:"<< *face_count <<std::endl;
+	//std::cout<<"numero de faceid:"<< face_id <<std::endl;
+	block_wall_face_ids_[*face_count] = face_id;
+	*face_count += 1;
 
 }
 #endif

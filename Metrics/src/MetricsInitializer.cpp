@@ -150,6 +150,12 @@ void MetricsInitializer::computeCenterFaces(uint iNFaces, Face** iFaces, Node** 
 
 void MetricsInitializer::computeNormalFaces(uint iNFaces, Face** iFaces, Node** iNodes)
 {
+
+    const uint vec3DSize = 3;
+    std::vector<double> centerLeftCell(vec3DSize);
+    std::vector<double> centerRightCell(vec3DSize);
+    std::vector<double> centerConnecVec(vec3DSize);
+
     for(uint i = 0; i < iNFaces;i++)
     {
         vector<vector<double>> nodeCoord(iFaces[i]->n_nodes_per_face_);
@@ -264,6 +270,31 @@ void MetricsInitializer::computeNormalFaces(uint iNFaces, Face** iFaces, Node** 
             s_x = 0.0;
             s_y = 0.0;
             s_z = 0.0; 
+        }
+
+        //Adjust orientation of vector to obey left to right rule for cells
+        uint leftCellID = blockData_->block_faces_[i]->face_2_cells_connectivity_[0];
+        uint rightCellID = blockData_->block_faces_[i]->face_2_cells_connectivity_[1];
+
+        centerLeftCell[X] = blockData_->block_cells_[leftCellID]->cell_coordinates_[X];
+        centerLeftCell[Y] = blockData_->block_cells_[leftCellID]->cell_coordinates_[Y];
+        centerLeftCell[Z] = blockData_->block_cells_[leftCellID]->cell_coordinates_[Z];
+
+        centerRightCell[X] = blockData_->block_cells_[rightCellID]->cell_coordinates_[X];
+        centerRightCell[Y] = blockData_->block_cells_[rightCellID]->cell_coordinates_[Y];
+        centerRightCell[Z] = blockData_->block_cells_[rightCellID]->cell_coordinates_[Z];
+
+        centerConnecVec[X] = centerRightCell[X] - centerLeftCell[X];
+        centerConnecVec[Y] = centerRightCell[Y] - centerLeftCell[Y];
+        centerConnecVec[Z] = centerRightCell[Z] - centerLeftCell[Z];
+
+        double dotProduct = centerConnecVec[X]*s_x + centerConnecVec[Y]*s_y + centerConnecVec[Z]*s_z;
+
+        if(dotProduct < 0)
+        {
+            s_x *= -1.0;
+            s_y *= -1.0;
+            s_z *= -1.0;
         }
 
         iFaces[i]->face_normals_[0] = s_x;
@@ -392,11 +423,14 @@ void MetricsInitializer::computeVolumeCells(uint iNCells, uint iNCellsTot, Cell*
     const int X = 0;
     const int Y = 1;
     const int Z = 2;
+
+    double volume = 0.0;
+    const uint vector3DSize = 3;
+    std::vector<double > connectVector(vector3DSize); // Vector from center of cell to center of face.
     
     for(uint i(0); i < iNCells; i++)
     {
         int nbFaceOfCell = iCells[i]->n_faces_per_cell_;
-        double volume = 0.0;
 
         for(int j(0); j < nbFaceOfCell;j++)
         {
@@ -413,11 +447,36 @@ void MetricsInitializer::computeVolumeCells(uint iNCells, uint iNCellsTot, Cell*
             s_y = iFaces[faceID]->face_normals_[Y];
             s_z = iFaces[faceID]->face_normals_[Z];
 
+
+            //Make sure that normal vector is pointing outward of the cell.
+            double centerFaceCoord = 0.0;
+            double centerCell = 0.0;
+
+            for(int k(0);k < vector3DSize;k++)
+            {
+                centerFaceCoord = blockData_->block_faces_[faceID]->face_center_[k];
+                centerCell = blockData_->block_cells_[i]->cell_coordinates_[k];
+                connectVector[k] = centerFaceCoord - centerCell;
+            }
+
+            //Dot product
+            double dotProduct = 0.0;
+
+            dotProduct = connectVector[0]*s_x + connectVector[1]*s_y + connectVector[2]*s_z;
+            
+            if(dotProduct < 0)
+            {
+                s_x *= -1.0;
+                s_y *= -1.0;
+                s_z *= -1.0;
+            }
+
             volume += (cellCenter[X]*s_x + cellCenter[Y]*s_y + cellCenter[Z]*s_z)/3;
             
         }   
 
-        iCells[i]->cell_volume_ = fabs(volume);
+        iCells[i]->cell_volume_ = volume;
+        volume = 0.0;
     }
 
     const uint LEFT = 0;
@@ -429,7 +488,7 @@ void MetricsInitializer::computeVolumeCells(uint iNCells, uint iNCellsTot, Cell*
         double volume = 0.0;
         volume = iCells[leftCellID]->cell_volume_;
 
-        iCells[i]->cell_volume_ = fabs(volume);
+        iCells[i]->cell_volume_ = volume;
     }
 
 }
