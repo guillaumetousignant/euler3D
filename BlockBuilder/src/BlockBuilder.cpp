@@ -233,8 +233,9 @@ std::cout<<"DÉBUT face_2_cells"<<std::endl;
 		}
 
 		//VÉRIFICATION
-		/*
-		for(i=0;i <= block->n_faces_in_block_-1 ;i++)
+		std::cout<<"Nombre de faces "<<block->n_faces_in_block_<< std::endl;
+		std::cout<<"Nombre de cell "<<block->n_all_cells_in_block_<< std::endl;
+		/*for(i=0;i <= block->n_faces_in_block_-1 ;i++)
 		{
 			std::cout <<i <<" FACE2CELLS "<< block->block_faces_[i]->face_2_cells_connectivity_[0]<<" "<<block->block_faces_[i]->face_2_cells_connectivity_[1] <<std::endl;
 		}
@@ -275,14 +276,14 @@ std::cout<<"DÉBUT cell2facesconnectivity"<<std::endl;
 
 
 	//VÉRIFICATION
-	/*	
+	
 	for(i=0;i <= block->n_all_cells_in_block_-1 ;i++)
 	{
-		std::cout << i <<" Nb faces "<< block->block_cells_[i]->n_faces_per_cell_<<" CELL2FACES "<< block->block_cells_[i]->cell_2_faces_connectivity_[0] <<" " << block->block_cells_[i]->cell_2_faces_connectivity_[1] <<" " << block->block_cells_[i]->cell_2_faces_connectivity_[2] <<" " << block->block_cells_[i]->cell_2_faces_connectivity_[3] <<" " << block->block_cells_[i]->cell_2_faces_connectivity_[4] <<" " << block->block_cells_[i]->cell_2_faces_connectivity_[5]  <<std::endl;
-		//std::cout << i <<" Nb faces "<< block->block_cells_[i]->n_faces_per_cell_<<" CELL2CELLS "<< block->block_cells_[i]->cell_2_cells_connectivity_[0] <<" " << block->block_cells_[i]->cell_2_cells_connectivity_[1] <<" " << block->block_cells_[i]->cell_2_cells_connectivity_[2] <<" " << block->block_cells_[i]->cell_2_cells_connectivity_[3] <<" " << block->block_cells_[i]->cell_2_cells_connectivity_[4] <<" " << block->block_cells_[i]->cell_2_faces_connectivity_[5]  <<std::endl;
+		//std::cout << i <<" Nb faces "<< block->block_cells_[i]->n_faces_per_cell_<<" CELL2FACES "<< block->block_cells_[i]->cell_2_faces_connectivity_[0] <<" " << block->block_cells_[i]->cell_2_faces_connectivity_[1] <<" " << block->block_cells_[i]->cell_2_faces_connectivity_[2] <<" " << block->block_cells_[i]->cell_2_faces_connectivity_[3] <<" " << block->block_cells_[i]->cell_2_faces_connectivity_[4] <<" " << block->block_cells_[i]->cell_2_faces_connectivity_[5]  <<std::endl;
+		std::cout << i <<" Nb faces "<< block->block_cells_[i]->n_faces_per_cell_<<" CELL2CELLS "<< block->block_cells_[i]->cell_2_cells_connectivity_[0] <<" " << block->block_cells_[i]->cell_2_cells_connectivity_[1] <<" " << block->block_cells_[i]->cell_2_cells_connectivity_[2] <<" " << block->block_cells_[i]->cell_2_cells_connectivity_[3] <<" " << block->block_cells_[i]->cell_2_cells_connectivity_[4] <<" " << block->block_cells_[i]->cell_2_faces_connectivity_[5]  <<std::endl;
 
 	}
-	*/
+	
 
 		
 std::cout<<"DÉBUT CENTRE CELLS"<<std::endl;

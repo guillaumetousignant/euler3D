@@ -150,7 +150,7 @@ void ConcreteBlockBuilder::preReadMyBlock(Block* block)
 		block->n_faces_in_block_ = n_faces;
 		// block->n_faces_in_block_ = 750;
 
-		std::cout<<"---------------------------------  "<< block->n_faces_in_block_<<std::endl;
+		//std::cout<<"---------------------------------  "<< block->n_faces_in_block_<<std::endl;
 
 		std::cout<<n_faces<<std::endl;
 		
@@ -416,7 +416,7 @@ void ConcreteBlockBuilder::createMyFaces(Block* block)
 	
 	
 
-	std::cout<< "================================ "<< block->n_real_cells_in_block_<<std::endl;
+	//std::cout<< "================================ "<< block->n_real_cells_in_block_<<std::endl;
 	for(int i=0; i<block->n_real_cells_in_block_;i++)
 	{
 		Face** temp_face_array;
@@ -535,7 +535,7 @@ void ConcreteBlockBuilder::createMyFaces(Block* block)
 
 						if(node_count==face->n_nodes_per_face_)
 						{
-							std::cout<<"===================================Yeeeeeee\n";
+							//std::cout<<"===================================Yeeeeeee\n";
 
 							flag = false;
 							break ;
