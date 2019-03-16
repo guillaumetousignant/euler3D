@@ -16,8 +16,9 @@
 
 // } 
 TempPrismFaceCreator::TempPrismFaceCreator()
+	/*: TempFaceCreator()*/
 {
-
+	n_faces_=6;
 	int face_2_nodes_connectivity_local_temp[6][4] = {{1,0,3,2},{1,2,6,5},{2,3,7,6},{3,0,4,7},{0,1,5,4},{4,5,6,7}};
 	int n_nodes_per_face_temp[6] = {4,4,4,4,4,4};
 
@@ -34,7 +35,21 @@ TempPrismFaceCreator::TempPrismFaceCreator()
 		}
 	}
 
+	// for(int i=0;i<6;i++)
+	// {
+	// 	delete [] face_2_nodes_connectivity_local_[i];
+	// }
+
+	// delete [] face_2_nodes_connectivity_local_;
+	// delete [] n_nodes_per_face_;
+
 }
+
+// TempPrismFaceCreator::~TempPrismFaceCreator()
+// 	: ~TempFaceCreator()
+// {
+	
+// }
 
 
 // int* TempPrismFaceCreator::createFace(Cell* cell)
