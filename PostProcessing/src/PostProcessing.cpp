@@ -179,11 +179,11 @@ void PostProcessing::saveCoefficients(Block* block)
 
   block_id = block-> block_id_;
 
-  cl_geometry_blocks_[block_id][0] = aerodynamic_parameters_->cl_global_;
-  cd_geometry_blocks_[block_id][0] = aerodynamic_parameters_->cd_global_;
-  cmx_geometry_blocks_[block_id][0] = aerodynamic_parameters_->cmx_;
-  cmy_geometry_blocks_[block_id][0] = aerodynamic_parameters_->cmy_;
-  cmz_geometry_blocks_[block_id][0] = aerodynamic_parameters_->cmz_;
+  cl_geometry_blocks_[block_id] = aerodynamic_parameters_->cl_global_;
+  cd_geometry_blocks_[block_id] = aerodynamic_parameters_->cd_global_;
+  cmx_geometry_blocks_[block_id] = aerodynamic_parameters_->cmx_;
+  cmy_geometry_blocks_[block_id] = aerodynamic_parameters_->cmy_;
+  cmz_geometry_blocks_[block_id] = aerodynamic_parameters_->cmz_;
 
 #endif
   cout << "Ending saveCoefficients.............................................." << endl;
