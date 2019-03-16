@@ -47,18 +47,7 @@ void MetricsInitializer::doInit()
 
     computeInterpVect(iNCells, iNCellsTot,iNFaces, iCells, iFaces);
     
-    //Compute Weight Least-Squared metrics;
-
-
-   /**iCells = nullptr;
-   *iFaces = nullptr;
-   *iNodes = nullptr;
-
-    iCells = nullptr;
-    iFaces = nullptr;
-    iNodes = nullptr;
-    */
-
+    computeWLS(iNCells, iCells);
 
 }
 
@@ -452,7 +441,7 @@ void MetricsInitializer::computeVolumeCells(uint iNCells, uint iNCellsTot, Cell*
             double centerFaceCoord = 0.0;
             double centerCell = 0.0;
 
-            for(int k(0);k < vector3DSize;k++)
+            for(uint k(0);k < vector3DSize;k++)
             {
                 centerFaceCoord = blockData_->block_faces_[faceID]->face_center_[k];
                 centerCell = blockData_->block_cells_[i]->cell_coordinates_[k];
@@ -495,109 +484,107 @@ void MetricsInitializer::computeVolumeCells(uint iNCells, uint iNCellsTot, Cell*
     
 void MetricsInitializer::computeWLS(uint iNCells, Cell** iCells)
 {
-
-    const uint X = 0;
-    const uint Y = 1;
-    const uint Z = 2;
-
-    for(uint i(0);i < iNCells;i++)
+    if( iNCells > 1)
     {
-        const uint nbCellsNeighbor = iCells[i]->n_faces_per_cell_;
+        const uint X = 0;
+        const uint Y = 1;
+        const uint Z = 2;
 
-        double dxij[nbCellsNeighbor];
-        double dyij[nbCellsNeighbor];
-        double dzij[nbCellsNeighbor];
-
-        for(uint j(0);j < nbCellsNeighbor;j++)
+        for(uint i(0);i < iNCells;i++)
         {
-            double centerCell[3] =  {0.0, 0.0,0.0};
+            const uint nbCellsNeighbor = iCells[i]->n_faces_per_cell_;
 
-            centerCell[X] = iCells[i]->cell_coordinates_[X];
-            centerCell[Y] = iCells[i]->cell_coordinates_[Y];
-            centerCell[Z] = iCells[i]->cell_coordinates_[Z];
+            double dxij[nbCellsNeighbor];
+            double dyij[nbCellsNeighbor];
+            double dzij[nbCellsNeighbor];
 
-            uint cellNeighborID = iCells[i]->cell_2_cells_connectivity_[j];
-            double centerNeighborCell[3] = {0.0, 0.0,0.0};
+            for(uint j(0);j < nbCellsNeighbor;j++)
+            {
+                double centerCell[3] =  {0.0, 0.0,0.0};
 
-            centerNeighborCell[X] = iCells[cellNeighborID]->cell_coordinates_[X];
-            centerNeighborCell[Y] = iCells[cellNeighborID]->cell_coordinates_[Y];
-            centerNeighborCell[Z] = iCells[cellNeighborID]->cell_coordinates_[Z];
+                centerCell[X] = iCells[i]->cell_coordinates_[X];
+                centerCell[Y] = iCells[i]->cell_coordinates_[Y];
+                centerCell[Z] = iCells[i]->cell_coordinates_[Z];
 
-            dxij[j] = centerNeighborCell[X] - centerCell[X];
-            dyij[j] = centerNeighborCell[Y] - centerCell[Y];
-            dzij[j] = centerNeighborCell[Z] - centerCell[Z];
+                uint cellNeighborID = iCells[i]->cell_2_cells_connectivity_[j];
+                double centerNeighborCell[3] = {0.0, 0.0,0.0};
+
+                centerNeighborCell[X] = iCells[cellNeighborID]->cell_coordinates_[X];
+                centerNeighborCell[Y] = iCells[cellNeighborID]->cell_coordinates_[Y];
+                centerNeighborCell[Z] = iCells[cellNeighborID]->cell_coordinates_[Z];
+
+                dxij[j] = centerNeighborCell[X] - centerCell[X];
+                dyij[j] = centerNeighborCell[Y] - centerCell[Y];
+                dzij[j] = centerNeighborCell[Z] - centerCell[Z];
+
+            }
+
+            double sumdxij2 = 0.0;
+            double sumdxij_dot_dyij = 0.0;
+            double sumdxij_dot_dzij = 0.0;
+            double sumdyijSquare_minus_r12Square = 0.0;
+            double sumdyijdzij_minus_r12r13 = 0.0;
+            double sumdzijSquare_minus_r13Square_minusr23Square = 0.0;
+
+            for(uint j(0);j < nbCellsNeighbor;j++)
+            {
+                sumdxij2 += dxij[j]*dxij[j];
+                sumdxij_dot_dyij += dxij[j]*dyij[j];
+                sumdxij_dot_dzij += dxij[j]*dzij[j];
+            }
+
+            double r11 = sqrt(sumdxij2);
+
+            double r12 = (1/r11)*sumdxij_dot_dyij;
+
+            double r13 = (1/r11)*sumdxij_dot_dzij;
+
+            for(uint j(0);j < nbCellsNeighbor;j++)
+            {
+                sumdyijSquare_minus_r12Square += dyij[j]*dyij[j] - r12*r12;
+                sumdyijdzij_minus_r12r13 += dyij[j]*dzij[j] - r12*r13;
+            }
+
+            double r22 = sqrt(sumdyijSquare_minus_r12Square);
+
+            double r23 = (1/r22)*sumdyijdzij_minus_r12r13;
+
+            for(uint j(0);j < nbCellsNeighbor;j++)
+            {
+                sumdzijSquare_minus_r13Square_minusr23Square += dzij[j]*dzij[j] - (r13*r13 + r23*r23);
+            }
+
+            double r33 = sqrt(sumdzijSquare_minus_r13Square_minusr23Square);    
+
+            double beta = (r12*r23 - r13*r22)/(r11*r22);
+
+
+            std::vector<std::vector<double>> weightLeastSquared(nbCellsNeighbor);
+            const uint vector3DSize = 3;
+
+            for(uint j(0);j < nbCellsNeighbor;j++)
+            {
+
+                double alpha3 = (1/(r33*r33))*(dzij[j] - (r33/r22)*dyij[j] + beta*dxij[j]);
+
+                double alpha2 = (1/(r22*r22))*(dyij[j] - (r12/r11)*dxij[j]);
+
+                double alpha1 = dxij[j] / (r11*r11);
+
+                double weight1 = alpha1 - (r12/r11)*alpha2 + beta*alpha3;
+                double weight2 = alpha2 - (r23/r22)*alpha3;
+                double weight3 = alpha3;
+
+                weightLeastSquared[j].resize(vector3DSize);
+
+                weightLeastSquared[j][0] = weight1;
+                weightLeastSquared[j][1] = weight2;
+                weightLeastSquared[j][2] = weight3;
+
+            }
 
         }
 
-        double sumdxij2 = 0.0;
-        double sumdxij_dot_dyij = 0.0;
-        double sumdxij_dot_dzij = 0.0;
-        double sumdyijSquare_minus_r12Square = 0.0;
-        double sumdyijdzij_minus_r12r13 = 0.0;
-        double sumdzijSquare_minus_r13Square_minusr23Square = 0.0;
-
-        for(uint j(0);j < nbCellsNeighbor;j++)
-        {
-            sumdxij2 += dxij[j]*dxij[j];
-            sumdxij_dot_dyij += dxij[j]*dyij[j];
-            sumdxij_dot_dzij += dxij[j]*dzij[j];
-        }
-
-        double r11 = sqrt(sumdxij2);
-
-        double r12 = (1/r11)*sumdxij_dot_dyij;
-
-        double r13 = (1/r11)*sumdxij_dot_dzij;
-
-        for(uint j(0);j < nbCellsNeighbor;j++)
-        {
-            sumdyijSquare_minus_r12Square += dyij[j]*dyij[j] - r12*r12;
-            sumdyijdzij_minus_r12r13 += dyij[j]*dzij[j] - r12*r13;
-        }
-
-        double r22 = sqrt(sumdyijSquare_minus_r12Square);
-
-        double r23 = (1/r22)*sumdyijdzij_minus_r12r13;
-
-        for(uint j(0);j < nbCellsNeighbor;j++)
-        {
-            sumdzijSquare_minus_r13Square_minusr23Square += dzij[j]*dzij[j] - (r13*r13 + r23*r23);
-        }
-        
-        double r33 = sqrt(sumdzijSquare_minus_r13Square_minusr23Square);    
-
-        double beta = (r12*r23 - r13*r22)/(r11*r22);
-
-        double **weights = new double*[nbCellsNeighbor];;
-        
-        for(uint j(0);j < nbCellsNeighbor;j++)
-        {
-            weights[j] = new double[3];
-
-            double alpha3 = (1/(r33*r33))*(dzij[j] - (r33/r22)*dyij[j] + beta*dxij[j]);
-
-            double alpha2 = (1/(r22*r22))*(dyij[j] - (r12/r11)*dxij[j]);
-
-            double alpha1 = dxij[j] / (r11*r11);
-
-            double weight1 = alpha1 - (r12/r11)*alpha2 + beta*alpha3;
-            double weight2 = alpha2 - (r23/r22)*alpha3;
-            double weight3 = alpha3;
-
-            weights[j][0] = weight1;
-            weights[j][1] = weight2;
-            weights[j][2] = weight3;
-
-        }
-
-        //Deallocation
-        for(uint j(0);j < nbCellsNeighbor;j++)
-        {
-            delete [] weights[j];
-        }
-        delete [] weights;
-        weights = nullptr;
-        
     }
 
 

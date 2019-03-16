@@ -186,7 +186,7 @@ void buildConnectivity(Block *iBlock)
 
 void tearDown(Block *iBlock)
 {
-    /*   
+ 
     uint nbCellsTot = 6;
     uint nbFacesTot = 5;
 
@@ -210,7 +210,6 @@ void tearDown(Block *iBlock)
     delete [] iBlock->block_faces_;
     delete [] iBlock->block_nodes_;
     
-    */
 }
 
 TEST_CASE( "TestComputeCenterCells", "Prove that center cells are well defined" )
