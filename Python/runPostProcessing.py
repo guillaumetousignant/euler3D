@@ -8,9 +8,9 @@ from tecplot.constant import *
 
 #Files
 myInterfaceFile_ = "Interface_output.txt";
-myFlowFile_ = "flow_solution.plt";
-mySurfaceFlowFile_ = "surface_flow_solution.plt";
-myConvergenceFile_ = "convergence_file.plt";
+myFlowFile_ = "flow.dat";
+mySurfaceFlowFile_ = "surface_flow.dat";
+myConvergenceFile_ = "history.dat";
 myAerodynamicFile_ = "aerodynamic_file.dat";
 
 #Instantiate GraphicsGenerator class
