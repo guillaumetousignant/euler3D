@@ -77,7 +77,7 @@ void PostProcessing::convergenceSum0(CompleteMesh* complete_mesh)
 
   cout << "Starting convergenceSum.............................................." << endl;
 #if 0
-    // MPI 
+    // MPI
     ro_rms0_mesh_=0.0;
     uu_rms0_mesh_=0.0;
     vv_rms0_mesh_=0.0;
@@ -103,7 +103,7 @@ void PostProcessing::convergenceSum(CompleteMesh* complete_mesh)
 
   cout << "Starting convergenceSum.............................................." << endl;
 #if 0
-    // MPI 
+    // MPI
     ro_rms_mesh_=0.0;
     uu_rms_mesh_=0.0;
     vv_rms_mesh_=0.0;
@@ -129,7 +129,7 @@ void PostProcessing::coefficientsSum(CompleteMesh* complete_mesh)
 
   cout << "Starting coefficientsSum............................................." << endl;
 #if 0
-    // MPI 
+    // MPI
     cl_geometry_mesh_=0.0;
     cd_geometry_mesh_=0.0;
     cmx_geometry_mesh_=0.0;
@@ -217,7 +217,7 @@ void PostProcessing::computeFlowData(Block* block, CompleteMesh* complete_mesh)
     convergenceSum0(complete_mesh);
   }
 
-  
+
   ro_convergence_=log10(ro_rms_mesh_)-log10(ro_rms0_mesh_);
   uu_convergence_=log10(uu_rms_mesh_)-log10(uu_rms0_mesh_);
   vv_convergence_=log10(vv_rms_mesh_)-log10(vv_rms0_mesh_);
@@ -226,7 +226,7 @@ void PostProcessing::computeFlowData(Block* block, CompleteMesh* complete_mesh)
 
 
   // FIN SYNCHRONISATION
-  
+
 
 
   cout << "Ending computeFlowData..............................................." << endl;
@@ -248,11 +248,11 @@ void PostProcessing::process(Block* block, CompleteMesh* complete_mesh)
     {
       cout<<"STOP ACTIVATED"<<endl;
     }
-   
+
 
     // Save and print flow data into binary files
     output_tecplot_->printConvergence(current_iter_, cl_geometry_mesh_, cd_geometry_mesh_, cmx_geometry_mesh_, cmy_geometry_mesh_, cmz_geometry_mesh_, ro_convergence_, uu_convergence_, vv_convergence_, ww_convergence_, pp_convergence_);
-  
+
     if (stop_solver_==true)
     {
       cout << "Writing Solution......................................................" << endl;
@@ -264,7 +264,7 @@ void PostProcessing::process(Block* block, CompleteMesh* complete_mesh)
       exit(0);
     }
 
-   
+
   }
 
   current_iter_++;

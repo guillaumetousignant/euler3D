@@ -66,17 +66,17 @@ void Timestep::computeSpectralRadius(Block* block)
 
 	for(int cell_idx = 0; cell_idx < ncell; cell_idx++)
 	{
+		cout << "======================================================================" << endl;
+		cout << "cellule id =" << cell_idx << "           n_faces_per_cell = "<< n_face_per_cell << endl;
 		c = sqrt(gamma_*my_pp_array[cell_idx]/my_ro_array[cell_idx]);
 		cout << "vitesse du son c =" << c << endl;
 		cout << "pp cell =" << my_pp_array[cell_idx] << endl;
 		cout << "ro cell =" << my_ro_array[cell_idx] << endl;
 		n_face_per_cell = block -> block_cells_[cell_idx] -> n_faces_per_cell_;
-		cout << "cellule id =" << cell_idx << "           n_faces_per_cell = "<< n_face_per_cell << endl;
 		spectral_radius[cell_idx] =0.0;
-		for(int face_idx = 0; face_idx < n_face_per_cell; face_idx++) //n_face_per_cell-1???
+		for(int face_idx = 0; face_idx < n_face_per_cell; face_idx++)
 		{
 			cout << "face num = " << face_idx << endl;
-			//face_id = my_cell -> cell_2_faces_connectivity_[face_idx];
 			face_id = block -> block_cells_[cell_idx] -> cell_2_faces_connectivity_[face_idx];
 			cout << "face id = " << face_id << endl;
 			normalized_x = block -> block_faces_[face_id] -> face_normals_[0];
@@ -100,7 +100,6 @@ void Timestep::computeTimestep(Block* block)
 	cout<<"\t\tExécution computeTimestep: "<<endl;
 
 	Cell* my_cell;
-	// my_cell = block -> block_cells_;
 	int ncell;
 	ncell = block -> n_real_cells_in_block_;
 	double cell_volume;
@@ -118,6 +117,7 @@ void Timestep::computeTimestep(Block* block)
 		cell_volume  = my_cell -> cell_volume_;
 
 		dt[cell_idx] = cfl_*cell_volume/spectral_radius[cell_idx];
+		// cout << "dt = " << dt[cell_idx] << endl;
 	}
 
 }

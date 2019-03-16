@@ -17,8 +17,6 @@ void FluxScheme::computeFluxConv(Block* block)
 {
 	cout<<"\t\t\t\tExécution computeFluxConv: "<<endl;
 
-
-	//Set variables
 	double rho_L,u_L,v_L,w_L,p_L,H_L,qq_L,V_L,rho_R,u_R,v_R,w_R,p_R,H_R,qq_R,V_R;
 	double Fc_L_1,Fc_L_2,Fc_L_3,Fc_L_4,Fc_L_5,Fc_R_1,Fc_R_2,Fc_R_3,Fc_R_4,Fc_R_5;
 	double flux_1_convective,flux_2_convective,flux_3_convective,flux_4_convective,flux_5_convective;
@@ -49,10 +47,9 @@ void FluxScheme::computeFluxConv(Block* block)
 	my_conv_res_ww = my_primitive_variables -> conv_res_ww_;
 	my_conv_res_pp = my_primitive_variables -> conv_res_pp_;
 
-	int nface, left_cell, right_cell; // my_face,
+	int nface, left_cell, right_cell;
 	int* neighboor_cells;
 	Face* my_face;
-	// my_faces = block -> block_faces_;
 	nface = block -> n_faces_in_block_;
 
 	for (int face_idx = 0; face_idx < nface; face_idx++)
@@ -106,6 +103,11 @@ void FluxScheme::computeFluxConv(Block* block)
 		flux_4_convective = 0.5*(Fc_L_4+Fc_R_4)*normal_norm;
 		flux_5_convective = 0.5*(Fc_L_5+Fc_R_5)*normal_norm;
 
+		// cout << "conv_res_ro= " << my_conv_res_ro[left_cell] << endl;
+		// cout << "conv_res_uu= " << my_conv_res_uu[left_cell] << endl;
+		// cout << "conv_res_vv= " << my_conv_res_vv[left_cell] << endl;
+		// cout << "conv_res_ww= " << my_conv_res_ww[left_cell] << endl;
+		// cout << "conv_res_pp= " << my_conv_res_pp[left_cell] << endl;
 		my_conv_res_ro[left_cell] += flux_1_convective;
 		my_conv_res_uu[left_cell] += flux_2_convective;
 		my_conv_res_vv[left_cell] += flux_3_convective;
@@ -120,13 +122,14 @@ void FluxScheme::computeFluxConv(Block* block)
 	}
 
 	Cell* my_cell;
-	// my_cells = block -> block_cells_;
-	int ncell;//, my_cell;
+	int ncell;
 	ncell = block -> n_real_cells_in_block_;
 	double cell_volume;
 
 	for (int cell_idx=0; cell_idx<ncell; cell_idx++)
 	{
+		cout << "=================================================" << endl;
+		cout << "Cellule id=" << cell_idx << endl;
 		my_cell = block -> block_cells_[cell_idx];
 		cell_volume  = my_cell -> cell_volume_;
 
@@ -135,6 +138,11 @@ void FluxScheme::computeFluxConv(Block* block)
 		my_conv_res_vv[cell_idx] /= cell_volume;
 		my_conv_res_ww[cell_idx] /= cell_volume;
 		my_conv_res_pp[cell_idx] /= cell_volume;
+		cout << "conv_res_ro= " << my_conv_res_ro[cell_idx] << endl;
+		cout << "conv_res_uu= " << my_conv_res_uu[cell_idx] << endl;
+		cout << "conv_res_vv= " << my_conv_res_vv[cell_idx] << endl;
+		cout << "conv_res_ww= " << my_conv_res_ww[cell_idx] << endl;
+		cout << "conv_res_pp= " << my_conv_res_pp[cell_idx] << endl;
 	}
 
 
