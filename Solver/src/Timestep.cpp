@@ -67,10 +67,12 @@ void Timestep::computeSpectralRadius(Block* block)
 	for(int cell_idx = 0; cell_idx < ncell; cell_idx++)
 	{
 		c = sqrt(gamma_*my_pp_array[cell_idx]/my_ro_array[cell_idx]);
-
+		cout << "vitesse du son c =" << c << endl;
+		cout << "pp cell =" << my_pp_array[cell_idx] << endl;
+		cout << "ro cell =" << my_ro_array[cell_idx] << endl;
 		n_face_per_cell = block -> block_cells_[cell_idx] -> n_faces_per_cell_;
 		cout << "cellule id =" << cell_idx << "           n_faces_per_cell = "<< n_face_per_cell << endl;
-
+		spectral_radius[cell_idx] =0.0;
 		for(int face_idx = 0; face_idx < n_face_per_cell; face_idx++) //n_face_per_cell-1???
 		{
 			cout << "face num = " << face_idx << endl;
@@ -82,6 +84,9 @@ void Timestep::computeSpectralRadius(Block* block)
 			normalized_z = block -> block_faces_[face_id] -> face_normals_[2];
 			cout << "normalized x = " << normalized_x << "       normalized y = " << normalized_y << "        normalized z = " << normalized_z << endl;
 			delta_s = sqrt(normalized_x*normalized_x+normalized_y*normalized_y+normalized_z*normalized_z);
+			cout << "uu = " << my_uu_array[cell_idx] << endl;
+			cout << "vv = " << my_vv_array[cell_idx] << endl;
+			cout << "ww = " << my_ww_array[cell_idx] << endl;
 			cout << "delta_s = " << delta_s << endl;
 			spectral_radius[cell_idx] += fabs(my_uu_array[cell_idx]*normalized_x+my_vv_array[cell_idx]*normalized_y+my_ww_array[cell_idx]*normalized_z) + c*delta_s;
 			cout << "spectral_radius cell = " << spectral_radius[cell_idx] << endl;

@@ -31,37 +31,26 @@ int main()
   // string block_file ="../UnstructuredMesh5x5.su2";
   // // string block_file ="../TestMesh2x1.su2";
 
-
 	int* my_blocks = new int[1];
 	my_blocks[0] = 0;
 	CompleteMesh* complete_mesh = new CompleteMesh(1,1,my_blocks);
 	complete_mesh->InitializeMyBlocks();
 
 	Block* new_block = complete_mesh->all_blocks_[0]; // hard coded right now
-	//concrete_block_builder.setConnectivity(new_block);
 	MetricsInitializer metricsInit(new_block);
 	metricsInit.doInit();
 
-  // ConcreteBlockBuilder concrete_block_builder = ConcreteBlockBuilder(block_file);
-  // concrete_block_builder.preReadMyBlock(new_block);
-  // concrete_block_builder.readMyBlock(new_block);
-	//
-  // concrete_block_builder.createMyFaces(new_block);
-	//
-  // concrete_block_builder.setConnectivity(new_block);
-	//
-  // MetricsInitializer metricsInit(new_block);
-  // metricsInit.doInit();
-
 	// CompleteMesh* complete_mesh;
   // complete_mesh= new CompleteMesh();
-	 Initializer* initializer= new Initializer();
-	 Interface* interface= new Interface();
-	//
+	Interface* interface= new Interface();
+
+	Initializer* initializer= new Initializer();
+	new_block->block_primitive_variables_->calculateFreeVariables(interface->gamma_interface_, interface->aoa_deg_interface_, interface->mach_aircraft_interface_);
+	new_block->block_primitive_variables_->initializeFlowField(new_block->n_all_cells_in_block_);
 	Solver *solver=initializer->initializeSolver(interface);
 	solver->solve(new_block, complete_mesh);
 
-    cout << "END OF PROGRAM" << endl;
+  cout << "END OF PROGRAM" << endl;
 }
 
 

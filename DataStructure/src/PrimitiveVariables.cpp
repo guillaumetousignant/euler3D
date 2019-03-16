@@ -37,13 +37,14 @@ PrimitiveVariables::~PrimitiveVariables()
 
 }
 
-// 	RÉFÉRENCE CIRCULAIRE ICI
-void PrimitiveVariables::calculateFreeVariables(double gamma_interface, double angle_of_attack_rad_interface, double mach_interface)
+
+void PrimitiveVariables::calculateFreeVariables(double gamma_interface, double angle_of_attack_deg_interface, double mach_interface)
 {
 	double pi, c, s;
 	pi=atan(1.0)*4.0;
 	gamma_= gamma_interface;
-	alpha_rad_=angle_of_attack_rad_interface;
+	alpha_deg_=angle_of_attack_deg_interface;
+	alpha_rad_=angle_of_attack_deg_interface*pi/180.0;
 	mach_=mach_interface;
 	c=cos(alpha_rad_);
 	s=sin(alpha_rad_);
@@ -52,6 +53,19 @@ void PrimitiveVariables::calculateFreeVariables(double gamma_interface, double a
 	vv_free_=mach_*sqrt(gamma_)*s;
 	ww_free_=0.0;// hypothese de cas de vol sans vent de travers, vitesse laterale nulle
 	pp_free_=1.0;//pression normalise
+}
+
+void PrimitiveVariables::initializeFlowField(int n_all_cells_in_blocks)
+{
+	for(int i=0; i<n_all_cells_in_blocks;i++)
+	{
+		ro_[i]=ro_free_;
+		uu_[i]=uu_free_;
+		vv_[i]=vv_free_;
+		ww_[i]=ww_free_;
+		pp_[i]=pp_free_;
+	}
+
 }
 
 #endif
