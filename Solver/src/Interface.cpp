@@ -225,7 +225,7 @@ void Interface::readInputFile(string input_file_name)
 	cout << "Slice Z Coordinate is: " <<slice_z_coord_interface_ << endl;
 
 
-
+	input_file.close();
 
 
 }

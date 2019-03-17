@@ -81,10 +81,16 @@ void RoeScheme::computeFluxDiss(Block* block)
 
 		my_face = block -> block_faces_[face_idx];
 
+		// Get S vector
 		normalized_x = block -> block_faces_[face_idx] -> face_normals_[0];
 		normalized_y = block -> block_faces_[face_idx] -> face_normals_[1];
 		normalized_z = block -> block_faces_[face_idx] -> face_normals_[2];
 		normal_norm=sqrt(normalized_x*normalized_x+normalized_y*normalized_y+normalized_z*normalized_z);
+		// Normalize S vector to n
+		normalized_x/=normal_norm;
+		normalized_y/=normal_norm;
+		normalized_z/=normal_norm;
+
 
 		neighboor_cells = my_face -> face_2_cells_connectivity_;
 		left_cell = neighboor_cells[0];

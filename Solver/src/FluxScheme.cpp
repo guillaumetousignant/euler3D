@@ -47,6 +47,7 @@ void FluxScheme::computeFluxConv(Block* block)
 	my_conv_res_ww = my_primitive_variables -> conv_res_ww_;
 	my_conv_res_pp = my_primitive_variables -> conv_res_pp_;
 
+
 	int nface, left_cell, right_cell;
 	int* neighboor_cells;
 	Face* my_face;
@@ -56,11 +57,15 @@ void FluxScheme::computeFluxConv(Block* block)
 	{
 
 		my_face = block -> block_faces_[face_idx];
-
+		// Get S vector
 		normalized_x = block -> block_faces_[face_idx] -> face_normals_[0];
 		normalized_y = block -> block_faces_[face_idx] -> face_normals_[1];
 		normalized_z = block -> block_faces_[face_idx] -> face_normals_[2];
 		normal_norm=sqrt(normalized_x*normalized_x+normalized_y*normalized_y+normalized_z*normalized_z);
+		// Normalize S vector to n
+		normalized_x/=normal_norm;
+		normalized_y/=normal_norm;
+		normalized_z/=normal_norm;
 
 		neighboor_cells = my_face -> face_2_cells_connectivity_;
 		left_cell = neighboor_cells[0];
@@ -97,12 +102,16 @@ void FluxScheme::computeFluxConv(Block* block)
 		Fc_L_5 = rho_L*H_L*V_L;
 		Fc_R_5 = rho_R*H_R*V_R;
 
+
+		// NORMALIZED NORM?? AREA??
 		flux_1_convective = 0.5*(Fc_L_1+Fc_R_1)*normal_norm;
 		flux_2_convective = 0.5*(Fc_L_2+Fc_R_2)*normal_norm;
 		flux_3_convective = 0.5*(Fc_L_3+Fc_R_3)*normal_norm;
 		flux_4_convective = 0.5*(Fc_L_4+Fc_R_4)*normal_norm;
 		flux_5_convective = 0.5*(Fc_L_5+Fc_R_5)*normal_norm;
 
+		cout<<"right_cell: "<<right_cell<<" left_cell: "<<left_cell<<" face_idx: "<<face_idx<<endl;
+		cout<<"Fc_L_2 :"<<Fc_L_2<<" Fc_R_2 :"<<Fc_R_2<<" flux_2_convective: "<<flux_2_convective<<endl<<endl;
 		// cout << "conv_res_ro= " << my_conv_res_ro[left_cell] << endl;
 		// cout << "conv_res_uu= " << my_conv_res_uu[left_cell] << endl;
 		// cout << "conv_res_vv= " << my_conv_res_vv[left_cell] << endl;
@@ -120,6 +129,8 @@ void FluxScheme::computeFluxConv(Block* block)
 		my_conv_res_ww[right_cell] -= flux_4_convective;
 		my_conv_res_pp[right_cell] -= flux_5_convective;
 	}
+
+
 
 	Cell* my_cell;
 	int ncell;

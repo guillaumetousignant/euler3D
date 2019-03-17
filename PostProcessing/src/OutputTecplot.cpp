@@ -41,13 +41,13 @@ void OutputTecplot::printFlowData(Block* block)
       //return;
     }
 
-  #if 0
-  FlowData << "TTILE = \"Vizualisation of the volumetric solution\""
-  FlowData << "VARIABLES=\"X\",\"Y\",\"Z\",\"RO\",\"UU\",\"VV\",\"WW\",\"PP\"" << endl;
+  
+  FlowData << "TTILE = \"Vizualisation of the volumetric solution\""<<endl;
+  FlowData << "VARIABLES=\"X\",\"Y\",\"Z\",\"RO\",\"UU\",\"VV\",\"WW\",\"PP\",\"CP\",\"MACH\"" << endl;
   FlowData << "ZONE T=\"FLOW_FIELD\"" << endl;
-  FlowData << "Nodes=" << block->n_nodes_in_block_ << ", " << "Elements=" << block->n_cells_in_block_ << ", " << "ZONETYPE=FEPOLYHEDRAL" << endl;
+  FlowData << "Nodes=" << block->n_nodes_in_block_ << ", " << "Elements=" << block->n_real_cells_in_block_ << ", " << "ZONETYPE=FEBRICK" << endl;
   FlowData << "DATAPACKING=BLOCK" << endl;
-  FlowData << "VARLOCATION=([4,5,6,7,8]=CELLCENTERED)" << endl;
+  FlowData << "VARLOCATION=([4,5,6,7,8,9,10]=CELLCENTERED)" << endl;
 
   double x_node;
   // Print X coordinate for each node
@@ -78,54 +78,55 @@ void OutputTecplot::printFlowData(Block* block)
 
   double ro_cell;
   // Print density for each cell
-  for(i=0; i < block->n_cells_in_block_; i++)
+  for(i=0; i < block->n_real_cells_in_block_; i++)
   {
-    ro_cell = block->block_primitive_variables_[i]->ro_[i];
+    ro_cell = block->block_primitive_variables_->ro_[i];
 
     FlowData << ro_cell << endl;
   }
 
   double uu_cell;
   // Print UU velocity for each cell
-  for(i=0; i < block->n_cells_in_block_; i++)
+  for(i=0; i < block->n_real_cells_in_block_; i++)
   {
-    uu_cell = block->block_primitive_variables_[i]->uu_[i];
+    uu_cell = block->block_primitive_variables_->uu_[i];
 
     FlowData << uu_cell << endl;
   }
 
   double vv_cell;
   // Print VV velocity for each cell
-  for(i=0; i < block->n_cells_in_block_; i++)
+  for(i=0; i < block->n_real_cells_in_block_; i++)
   {
-    vv_cell = block->block_primitive_variables_[i]->vv_[i];
+    vv_cell = block->block_primitive_variables_->vv_[i];
 
     FlowData << vv_cell << endl;
   }
 
   double ww_cell;
   // Print WW velocity for each cell
-  for(i=0; i < block->n_cells_in_block_; i++)
+  for(i=0; i < block->n_real_cells_in_block_; i++)
   {
-    ww_cell = block->block_primitive_variables_[i]->ww_[i];
+    ww_cell = block->block_primitive_variables_->ww_[i];
 
     FlowData << ww_cell << endl;
   }
 
   double pp_cell;
   // Print pressure for each cell
-  for(i=0; i < block->n_cells_in_block_; i++)
+  for(i=0; i < block->n_real_cells_in_block_; i++)
   {
-    pp_cell = block->block_primitive_variables_[i]->pp_[i];
+    pp_cell = block->block_primitive_variables_->pp_[i];
 
     FlowData << pp_cell << endl;
   }
 
+  
   double dyn_head;
   double cp_cell;
   // Print pressure coefficient for each cell
   dyn_head = 0.5*gamma_*mach_aircraft_*mach_aircraft_;
-  for(i=0; i < block->n_cells_in_block_; i++)
+  for(i=0; i < block->n_real_cells_in_block_; i++)
   {
     // Pressure value from cell i
     pp_cell = block->block_primitive_variables_->pp_[i];
@@ -138,9 +139,9 @@ void OutputTecplot::printFlowData(Block* block)
 
   double a_cell;
   double velocity_cell;
-  double mach_cell
+  double mach_cell;
   // Print Mach number for each cell
-  for(i=0; i < block->n_cells_in_block_; i++)
+  for(i=0; i < block->n_real_cells_in_block_; i++)
   {
     // Primitve variables
     pp_cell = block->block_primitive_variables_->pp_[i];
@@ -159,42 +160,26 @@ void OutputTecplot::printFlowData(Block* block)
 
     FlowData << mach_cell << endl;
   }
+  
 
-  for(i=0;i < block->n_cells_in_block_; i++)
+  int j;
+  for(i=0;i < block->n_real_cells_in_block_; i++)
   {
-    switch(block->block_cells_[i]->cell_type_)
+    for(j=0;j<block->block_cells_[i]->n_nodes_per_cell_;j++)
     {
-      // Quadrilateral cell
-      case 9:
-
-        FlowData << block->block_cells_[i]->cell_2_nodes_connectivity_[0]+1 << " " << block->block_cells_[i]->cell_2_nodes_connectivity_[1]+1 << " " << block->block_cells_[i]->cell_2_nodes_connectivity_[2]+1 << " " << block->block_cells_[i]->cell_2_nodes_connectivity_[3]+1 << endl;
-
-      break;
-
-      // Tetrahedral cell
-      case 10:
-
-        FlowData << block->block_cells_[i]->cell_2_nodes_connectivity_[0]+1 << " " << block->block_cells_[i]->cell_2_nodes_connectivity_[1]+1 << " " << block->block_cells_[i]->cell_2_nodes_connectivity_[2]+1 << " " << block->block_cells_[i]->cell_2_nodes_connectivity_[3]+1 << endl;
-
-      break;
-
-      // Hexahedral cell
-      case 12:
-
-      break;
-
-      // Prism cell
-      case 13:
-
-      break;
-
-      // Pyramid cell
-      case 14:
-
-      break;
+      FlowData << block->block_cells_[i]->cell_2_nodes_connectivity_[j]+1 << " ";
     }
+    FlowData<<endl;
+    /*
+
+        FlowData << block->block_cells_[i]->cell_2_nodes_connectivity_[0]+1 << " " << block->block_cells_[i]->cell_2_nodes_connectivity_[1]+1 << " " << block->block_cells_[i]->cell_2_nodes_connectivity_[2]+1 << " " << block->block_cells_[i]->cell_2_nodes_connectivity_[3]+1 << endl;
+
+     
+
+        FlowData << block->block_cells_[i]->cell_2_nodes_connectivity_[0]+1 << " " << block->block_cells_[i]->cell_2_nodes_connectivity_[1]+1 << " " << block->block_cells_[i]->cell_2_nodes_connectivity_[2]+1 << " " << block->block_cells_[i]->cell_2_nodes_connectivity_[3]+1 << endl;
+    */
   }
-  #endif
+  
   FlowData.close();
 
   cout << "Ending printFlowData..............................................." << endl;

@@ -69,7 +69,7 @@ void ResidualCalculator::setResidualSmoother(bool residual_smoother_choice)
 }
 
 
-ResidualCalculator::ResidualCalculator(double gamma, double *beta_rk, int interpolation_choice, string gradient_choice, string limiter_choice, string flux_scheme_choice, bool residual_smoother_choice, double omega, double k)
+ResidualCalculator::ResidualCalculator(double gamma, std::vector<double> beta_rk, int interpolation_choice, string gradient_choice, string limiter_choice, string flux_scheme_choice, bool residual_smoother_choice, double omega, double k)
 
 {
 	current_stage_=0;

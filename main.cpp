@@ -43,13 +43,13 @@ int main()
 	// CompleteMesh* complete_mesh;
   // complete_mesh= new CompleteMesh();
 	Interface* interface= new Interface();
-
+	
 	Initializer* initializer= new Initializer();
 	new_block->block_primitive_variables_->calculateFreeVariables(interface->gamma_interface_, interface->aoa_deg_interface_, interface->mach_aircraft_interface_);
 	new_block->block_primitive_variables_->initializeFlowField(new_block->n_all_cells_in_block_);
 	Solver *solver=initializer->initializeSolver(interface);
 	solver->solve(new_block, complete_mesh);
-
+	
   cout << "END OF PROGRAM" << endl;
 }
 

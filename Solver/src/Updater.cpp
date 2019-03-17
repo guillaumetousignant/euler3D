@@ -12,7 +12,6 @@ void Updater::updateInternalBlock(Block* block)
 {
 	cout<<"\t\t\tExécution updateInternalBlock: "<<endl;
 
-
 	int nb_cells=block->n_real_cells_in_block_; // real cells or all cells ?????????
 	int cell_idx;
 	double ro_0,ru_0,rv_0,rw_0,re_0;
@@ -27,13 +26,8 @@ void Updater::updateInternalBlock(Block* block)
 	PrimitiveVariables* my_primitive_variables;
 	my_primitive_variables = block -> block_primitive_variables_;
 
-	// double* ro_0;
-	// double* ru_0;
-	// double* rv_0;
-	// double* rw_0;
-	// double* re_0;
 
-	for (cell_idx=0;cell_idx<nb_cells;cell_idx++) //BOUCLER SUR LES CELLULES INTÉRIEURS PLUTÔT? VA DÉPENDRE DE updateSolution
+	for (cell_idx=0;cell_idx<nb_cells;cell_idx++) 
 	{
 		ro_0= my_primitive_variables->ro_0_[cell_idx];
 		ru_0= my_primitive_variables->ru_0_[cell_idx];
@@ -50,11 +44,11 @@ void Updater::updateInternalBlock(Block* block)
 		res_ww_conv = my_primitive_variables->conv_res_ww_[cell_idx];
 		res_pp_conv = my_primitive_variables->conv_res_pp_[cell_idx];
 
-		res_ro_diss = my_primitive_variables->conv_res_ro_[cell_idx];
-		res_uu_diss = my_primitive_variables->conv_res_uu_[cell_idx];
-		res_vv_diss = my_primitive_variables->conv_res_vv_[cell_idx];
-		res_ww_diss = my_primitive_variables->conv_res_ww_[cell_idx];
-		res_pp_diss = my_primitive_variables->conv_res_pp_[cell_idx];
+		res_ro_diss = my_primitive_variables->diss_res_ro_[cell_idx];
+		res_uu_diss = my_primitive_variables->diss_res_uu_[cell_idx];
+		res_vv_diss = my_primitive_variables->diss_res_vv_[cell_idx];
+		res_ww_diss = my_primitive_variables->diss_res_ww_[cell_idx];
+		res_pp_diss = my_primitive_variables->diss_res_pp_[cell_idx];
 
 		ro_new=ro_0-(alpha_rk_[current_stage_]*dt/cell_volume)*(res_ro_conv-res_ro_diss);
 		ru_new=ru_0-(alpha_rk_[current_stage_]*dt/cell_volume)*(res_uu_conv-res_uu_diss);
@@ -67,6 +61,9 @@ void Updater::updateInternalBlock(Block* block)
 		vv= rv_new/ro_new;
 		ww= rw_new/ro_new;
 		pp=(gamma_-1.0)*(re_new-0.5*(ru_new*ru_new+rv_new*rv_new+rw_new*rw_new)/ro_new);
+
+		cout<<"cell_idx: "<<cell_idx<<" ro_0: "<<ro_0<<" ro_new: "<<ro_new<<endl;
+		cout<<"dt: "<<dt<<" cell_volume: "<<cell_volume<<" res_ro_conv-res_ro_diss: "<<res_ro_conv-res_ro_diss<<" alpha_rk_[current_stage_]: "<<alpha_rk_[current_stage_]<<endl;
 
 		my_primitive_variables->ro_[cell_idx]=ro;
 		my_primitive_variables->uu_[cell_idx]=uu;
@@ -81,42 +78,54 @@ void Updater::updateInternalBlock(Block* block)
 void Updater::updateBoundary(Block* block)
 {
 	cout<<"\t\t\tExécution updateBoundary: "<<endl;
-	/*
+	
 	// WALL !!!ATTENTION!!! VÉRIFIER SENS DES NORMALES
 
-	int* wall_faces_ids=block->block_wall_face_ids_;
-	int nb_wall_faces=sizeof(wall_faces_ids)/sizeof(wall_faces_ids[0]);
+	
+	int nb_wall_faces=block->n_wall_faces_;
+	cout<<"Nb wall faces: "<<nb_wall_faces<<endl;
 
+	int i;
 	int wall_face_idx;
 
-	for(wall_face_idx=0;wall_face_idx<nb_wall_faces;wall_face_idx++)
+	for(i=0;i<nb_wall_faces;i++)
 	{
-		int int_cell_idx=block->block_faces_[wall_face_idx]->face_2_cells_[0];
-		int ext_cell_idx=block->block_faces_[wall_face_idx]->face_2_cells_[1];
+		wall_face_idx=block -> block_wall_face_ids_[i];
+		cout<<"Face numéro: "<<i<<" Id: "<<wall_face_idx<<endl;
+
+		int int_cell_idx=block->block_faces_[wall_face_idx]->face_2_cells_connectivity_[0];
+		int ext_cell_idx=block->block_faces_[wall_face_idx]->face_2_cells_connectivity_[1];
 
 		double normalized_x=block->block_faces_[wall_face_idx]->face_normals_[0];
 		double normalized_y=block->block_faces_[wall_face_idx]->face_normals_[1];
 		double normalized_z=block->block_faces_[wall_face_idx]->face_normals_[2];
+		double face_area=block->block_faces_[wall_face_idx]->face_area_;
+		normalized_x/=face_area;
+		normalized_y/=face_area;
+		normalized_z/=face_area;
 
-		double ro_int=block->block_primitive_variables->ro_[int_cell_idx];
-		double uu_int=block->block_primitive_variables->uu_[int_cell_idx];
-		double vv_int=block->block_primitive_variables->vv_[int_cell_idx];
-		double ww_int=block->block_primitive_variables->ww_[int_cell_idx];
-		double pp_int=block->block_primitive_variables->pp_[int_cell_idx];
+		double ro_int=block->block_primitive_variables_->ro_[int_cell_idx];
+		double uu_int=block->block_primitive_variables_->uu_[int_cell_idx];
+		double vv_int=block->block_primitive_variables_->vv_[int_cell_idx];
+		double ww_int=block->block_primitive_variables_->ww_[int_cell_idx];
+		double pp_int=block->block_primitive_variables_->pp_[int_cell_idx];
 
 		double un1=uu_int*normalized_x+vv_int*normalized_y+ww_int*normalized_z;
 		double uu_bc=uu_int-un1*normalized_x;
-		double vv_bc=uu_int-un1*normalized_y;
-		double ww_bc=uu_int-un1*normalized_z;
+		double vv_bc=vv_int-un1*normalized_y;
+		double ww_bc=ww_int-un1*normalized_z;
 
-		block->block_primitive_variables->ro_[ext_cell_idx]=ro_int;
-		block->block_primitive_variables->uu_[ext_cell_idx]=2.0*uu_bc-uu_int;
-		block->block_primitive_variables->vv_[ext_cell_idx]=2.0*vv_bc-vv_int;
-		block->block_primitive_variables->ww_[ext_cell_idx]=2.0*ww_bc-ww_int;
-		block->block_primitive_variables->pp_[ext_cell_idx]=pp_int;
+		block->block_primitive_variables_->ro_[ext_cell_idx]=ro_int;
+		block->block_primitive_variables_->uu_[ext_cell_idx]=2.0*uu_bc-uu_int;
+		block->block_primitive_variables_->vv_[ext_cell_idx]=2.0*vv_bc-vv_int;
+		block->block_primitive_variables_->ww_[ext_cell_idx]=2.0*ww_bc-ww_int;
+		block->block_primitive_variables_->pp_[ext_cell_idx]=pp_int;
 
+		cout<<"Int cell Id: "<<int_cell_idx<<" uu_int: "<<uu_int<<" nx: "<<normalized_x<<endl;
+		cout<<"Ext cell Id: "<<ext_cell_idx<<" uu_ext: "<<2.0*uu_bc-uu_int<<" uu_bc: "<<uu_bc<<endl;
 	}
 
+	/*
 	// FARFIELD  !!!ATTENTION!!! VÉRIFIER SENS DES NORMALES
 
 	int* farfield_faces_ids=block->block_farfield_face_ids_;
@@ -143,7 +152,7 @@ void Updater::updateBoundary(Block* block)
 		double un1=uu_int*normalized_x+vv_int*normalized_y+ww_int*normalized_z;
 
 		// SUPERSONIC INFLOW & OUTFLOW
-		if(abs(un1/cc_int)>1.0)
+		if(fabs(un1/cc_int)>1.0)
 		{
 			// SUPERSONIC INFLOW
 			if (un1<0)
@@ -200,10 +209,10 @@ void Updater::updateBoundary(Block* block)
 
 	}
 
-
-
-
 	*/
+
+
+	
 }
 void Updater::synchroniseUpdate(Block* block)
 {
@@ -212,11 +221,12 @@ void Updater::synchroniseUpdate(Block* block)
 
 
 
-Updater::Updater(double gamma, double *alpha_rk)
+Updater::Updater(double gamma, std::vector<double> alpha_rk)
 {
 	current_stage_=0;
 	gamma_=gamma;
 	alpha_rk_=alpha_rk;
+
 }
 
 Updater::~Updater()
