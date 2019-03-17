@@ -9,16 +9,16 @@ private:
     int* nElements_;
     int* nNodes_;
     int** elementType_;
+    int** local2GlobalElements_;
     int nTotalNode_;
-    int* nBoundaries_;
     int nBlock_;
     
     double** x_;
     double** y_;
     double** z_;
-
-    std::vector<int>** connectivity_;
     
+    std::vector<int>** connectivity_;
+    // std::vector<int>* global2LocalElements_;
     // std::vector<int>** connectivity_boundary;
 
 public:
