@@ -1,4 +1,4 @@
-#include "metisMesh.h"
+#include "MetisMesh.h"
 #include <iostream>
 #include <mpi.h>
 #include <metis.h>
@@ -18,11 +18,11 @@ int main(int argc, char *argv[])
     MPI_Finalize();
 	
 
-    /*if (argc != 4)
+    if (argc != 4)
 	{
 		std::cout << "Usage: ./metis <single block mesh file> <Number of partitions> <Output mesh file name>\n";
 		return 0;
-	}*/
+	}
 
     //Metis' routine
 
@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
 	std::string meshFile = argv[1];
 	int nPart = atoi(argv[2]);
 	std::string outputMeshFile = argv[3]; 
-
+	cout <<"input arguments ok" << endl;
 
 	MetisMesh reader;
 	reader.ReadSingleBlockMesh(meshFile);
