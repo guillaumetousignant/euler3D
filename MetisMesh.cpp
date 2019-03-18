@@ -24,8 +24,10 @@ int findNodeIndex(std::vector<int> &list, int node2find)
 }
 
 MetisMesh::MetisMesh()
-    : nElements_(nullptr), nNodes_(nullptr), elementType_(nullptr), local2GlobalElements_(nullptr), nTotalNode_(0), nBlock_(0), x_(nullptr), y_(nullptr), z_(nullptr), connectivity_(nullptr)
+    : nElements_(nullptr), nNodes_(nullptr), nPhysicalBoundaries_(nullptr), elementType_(nullptr), local2GlobalElements_(nullptr),
+     nTotalNode_(0), nBlock_(0), x_(nullptr), y_(nullptr), z_(nullptr), connectivity_(nullptr)
    
+
 {
     cout << "constructing MetisMesh..." << endl;
 }
