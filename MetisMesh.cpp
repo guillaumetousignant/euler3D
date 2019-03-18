@@ -498,6 +498,8 @@ MetisMesh *MetisMesh::Partition(int nPart)
 
     cout << "newMesh returned" << endl;
 
+    // TODO: Check if newMesh should (like in this case), have a pointer to local2global or create its on structure.
+    newMesh->local2GlobalElements_ = local2GlobalElements_;
     return newMesh;
 
 }
