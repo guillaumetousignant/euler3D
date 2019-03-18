@@ -9,9 +9,9 @@
 #include <iostream>
 using namespace std;
 
-CompleteMesh::CompleteMesh(int n_blocks, int n_blocks_in_process, int* my_blocks) : n_blocks_(0), n_blocks_in_process_(0), my_blocks_(nullptr), all_blocks_(nullptr) 
+CompleteMesh::CompleteMesh(int n_blocks, int n_blocks_in_process, int* my_blocks) : n_blocks_(0), n_blocks_in_process_(0), my_blocks_(nullptr), all_blocks_(nullptr)
 
-{	
+{
 	n_blocks_=n_blocks;
 	n_blocks_in_process_=n_blocks_in_process;
 
@@ -54,7 +54,7 @@ void CompleteMesh::InitializeMyBlocks()
 		std::cout<<block_id<<std::endl;
 
 		block_id_string = std::to_string(block_id);
-		block_file = "../UnstructuredMesh5x5.su2" /*+ block_id_string + ".su2"*/;
+		block_file = "../NACA0012.su2" /*+ block_id_string + ".su2"*/;
 		ConcreteBlockBuilder block_builder=ConcreteBlockBuilder(block_file);
 		new_block = all_blocks_[i];
 

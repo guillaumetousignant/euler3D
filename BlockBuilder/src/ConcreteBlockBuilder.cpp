@@ -550,7 +550,7 @@ void ConcreteBlockBuilder::createMyFaces(Block* block)
 
 						if(node_count==face->n_nodes_per_face_)
 						{
-							
+
 							flag = false;
 							break ;
 
@@ -576,7 +576,7 @@ void ConcreteBlockBuilder::createMyFaces(Block* block)
 				new_face = buildFace(face_count_, face->n_nodes_per_face_,real_face_creator);
 				new_face -> block_id_ = block->block_id_;
 				// std::cout<<"====================================== facecount"<< face_count_<<std::endl;
-
+				cout << new_face->face_id_ << endl;
 
 				for(int node_in_face=0;node_in_face<face->n_nodes_per_face_;node_in_face++)
 				{
