@@ -185,6 +185,20 @@ void MetisMesh::ReadSingleBlockMesh(std::string fileName)
         sscanf(line.c_str(), "NMARK=%d", &nBoundaries);
         cout << "Nb de conditions frontieres = " << nBoundaries << endl;
 
+        int nBoundaryElements[nBoundaries];
+
+        for (int i = 0; i < nBoundaries; i++) {
+            getline(myfile, line);
+            getline(myfile, line);
+
+            sscanf(line.c_str(), "MARKER_ELEMS=%d", &nBoundaryElements[i]);
+            cout << "boundary element = " << i << " " << nBoundaryElements[i] << endl;
+
+            for (int j = 0; j < nBoundaryElements[i]; j++) {
+                getline(myfile, line);
+                
+            }
+        }
         // Fonction d'initialisation :
         Init(nBlock, &nElements, &nNodes);
 
