@@ -48,6 +48,21 @@ void FluxScheme::computeFluxConv(Block* block)
 	my_conv_res_pp = my_primitive_variables -> conv_res_pp_;
 
 
+	int ncell;
+	ncell = block -> n_real_cells_in_block_;
+
+	for (int cell_idx=0; cell_idx<ncell; cell_idx++)
+	{
+		my_conv_res_ro[cell_idx] =0.0;
+		my_conv_res_uu[cell_idx] =0.0;
+		my_conv_res_vv[cell_idx] =0.0;
+		my_conv_res_ww[cell_idx] =0.0;
+		my_conv_res_pp[cell_idx] =0.0;
+
+	}
+	
+
+
 	int nface, left_cell, right_cell;
 	int* neighboor_cells;
 	Face* my_face;
@@ -128,17 +143,19 @@ void FluxScheme::computeFluxConv(Block* block)
 		my_conv_res_vv[right_cell] -= flux_3_convective;
 		my_conv_res_ww[right_cell] -= flux_4_convective;
 		my_conv_res_pp[right_cell] -= flux_5_convective;
+
+
 	}
 
 
 
-	Cell* my_cell;
-	int ncell;
+	
+	
 	ncell = block -> n_real_cells_in_block_;
 	double cell_volume;
 	
 	// EST-CE QU'ON DIVISE DEUX FOIS??
-	
+	Cell* my_cell;
 	for (int cell_idx=0; cell_idx<ncell; cell_idx++)
 	{
 		//cout << "=================================================" << endl;
@@ -161,6 +178,7 @@ void FluxScheme::computeFluxConv(Block* block)
 		cout << "conv_res_ww= " << my_conv_res_ww[cell_idx] << endl;
 		cout << "conv_res_pp= " << my_conv_res_pp[cell_idx] << endl;
 		*/
+		
 	}
 	
 

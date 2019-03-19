@@ -66,17 +66,21 @@ void Solver::solve(Block* block, CompleteMesh* complete_mesh)
 	Face* test_face;
     cout<<"Faces\n";
     std::cout<<"Test face---------------------------------  "<< block->n_faces_in_block_<<std::endl;
-	    
+	  
+	 /*   
 	for(int i=0;i<block->n_faces_in_block_;i++)
     {
     	cout<<"numero_id_\t"<<i<<endl;
     	test_face = block ->block_faces_[i];
 
     	cout<<"face_id_: "<<test_face->face_id_<<endl;
-	    cout<<"face_2_cells_connectivity_: "<<test_face->face_2_cells_connectivity_[0]<<" "<<test_face->face_2_nodes_connectivity_[1]<<endl;
+	    cout<<"face_2_cells_connectivity_: "<<test_face->face_2_cells_connectivity_[0]<<" "<<test_face->face_2_cells_connectivity_[1]<<endl;
 	    cout<<"face_coords: "<<test_face->face_center_[0]<<" "<<test_face->face_center_[1]<<" "<<test_face->face_center_[2]<<endl;
 	    cout<<"face normals "<<test_face->face_normals_[0]<<" "<<test_face->face_normals_[1]<<" "<<test_face->face_normals_[2]<<" "<<test_face->face_area_<<endl;
+    	cout<<"face_2_nodes_connectivity_: "<<test_face->face_2_nodes_connectivity_[0]<<" "<<test_face->face_2_nodes_connectivity_[1]<<" "<<test_face->face_2_nodes_connectivity_[2]<<" "<<test_face->face_2_nodes_connectivity_[3]<<endl;
     }
+    */
+    
 	/*
 
 	int i;

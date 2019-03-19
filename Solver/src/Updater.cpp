@@ -64,7 +64,7 @@ void Updater::updateInternalBlock(Block* block)
 
 		//cout<<"cell_idx: "<<cell_idx<<" ro_0: "<<ro_0<<" ro_new: "<<ro_new<<endl;
 		//cout<<"dt: "<<dt<<" cell_volume: "<<cell_volume<<" res_ro_conv-res_ro_diss: "<<res_ro_conv-res_ro_diss<<" alpha_rk_[current_stage_]: "<<alpha_rk_[current_stage_]<<endl;
-
+		cout<<"cell_idx: "<<cell_idx<<" ri_1: "<<(res_ro_conv-res_ro_diss)<<" ri_2: "<<(res_uu_conv-res_uu_diss)<<" ri_3: "<<(res_vv_conv-res_vv_diss)<<" ri_5: "<<(res_pp_conv-res_pp_diss)<<endl;
 		my_primitive_variables->ro_[cell_idx]=ro;
 		my_primitive_variables->uu_[cell_idx]=uu;
 		my_primitive_variables->vv_[cell_idx]=vv;
@@ -126,8 +126,8 @@ void Updater::updateBoundary(Block* block)
 		block->block_primitive_variables_->ww_[ext_cell_idx]=2.0*ww_bc-ww_int;
 		block->block_primitive_variables_->pp_[ext_cell_idx]=pp_int;
 
-		cout<<"Int cell Id: "<<int_cell_idx<<" uu_int: "<<uu_int<<" nx: "<<normalized_x<<endl;
-		cout<<"Ext cell Id: "<<ext_cell_idx<<" uu_ext: "<<2.0*uu_bc-uu_int<<" uu_bc: "<<uu_bc<<endl;
+		//cout<<"Int cell Id: "<<int_cell_idx<<" uu_int: "<<uu_int<<" nx: "<<normalized_x<<endl;
+		//cout<<"Ext cell Id: "<<ext_cell_idx<<" uu_ext: "<<2.0*uu_bc-uu_int<<" uu_bc: "<<uu_bc<<endl;
 	}
 
 	/*

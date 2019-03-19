@@ -75,9 +75,7 @@ void RoeScheme::computeFluxDiss(Block* block)
 
 	for (int cell_idx=0; cell_idx<ncell; cell_idx++)
 	{
-		my_cell = block -> block_cells_[cell_idx];
-		cell_volume  = my_cell -> cell_volume_;
-
+		
 		my_diss_res_ro[cell_idx] *=(1.0-current_beta_);
 		my_diss_res_uu[cell_idx] *=(1.0-current_beta_);
 		my_diss_res_vv[cell_idx] *=(1.0-current_beta_);
@@ -215,18 +213,31 @@ void RoeScheme::computeFluxDiss(Block* block)
 		flux_3_dissipative = 0.5*(A_roe_v)*normal_norm;
 		flux_4_dissipative = 0.5*(A_roe_w)*normal_norm;
 		flux_5_dissipative = 0.5*(A_roe_energy)*normal_norm;
+		
 
-		my_diss_res_ro[left_cell] += flux_1_dissipative*current_beta_;
-		my_diss_res_uu[left_cell] += flux_2_dissipative*current_beta_;
-		my_diss_res_vv[left_cell] += flux_3_dissipative*current_beta_;
-		my_diss_res_ww[left_cell] += flux_4_dissipative*current_beta_;
-		my_diss_res_pp[left_cell] += flux_5_dissipative*current_beta_;
+		if (fabs(normalized_z)<0.5)
+		{
+			cout<<"fluxes: "<<face_idx<<" "<<normalized_x<<" "<<normalized_y<<" "<<normal_norm<<endl;
+			cout<<flux_1_dissipative<<" "<<flux_2_dissipative<<" "<<flux_3_dissipative<<" "<<flux_5_dissipative<<endl;
+			cout<<F_1_u<<" "<<F_234_u<<" "<<F_5_u<<endl<<endl;
+			cout<<my_diss_res_uu[left_cell]<<" "<<my_diss_res_uu[right_cell]<<endl;
+			cout<<current_beta_<<endl<<endl;
 
-		my_diss_res_ro[right_cell] -= flux_1_dissipative*current_beta_;
-		my_diss_res_uu[right_cell] -= flux_2_dissipative*current_beta_;
-		my_diss_res_vv[right_cell] -= flux_3_dissipative*current_beta_;
-		my_diss_res_ww[right_cell] -= flux_4_dissipative*current_beta_;
-		my_diss_res_pp[right_cell] -= flux_5_dissipative*current_beta_;
+
+			my_diss_res_ro[left_cell] += flux_1_dissipative*current_beta_;
+			my_diss_res_uu[left_cell] += flux_2_dissipative*current_beta_;
+			my_diss_res_vv[left_cell] += flux_3_dissipative*current_beta_;
+			my_diss_res_ww[left_cell] += flux_4_dissipative*current_beta_;
+			my_diss_res_pp[left_cell] += flux_5_dissipative*current_beta_;
+
+			my_diss_res_ro[right_cell] -= flux_1_dissipative*current_beta_;
+			my_diss_res_uu[right_cell] -= flux_2_dissipative*current_beta_;
+			my_diss_res_vv[right_cell] -= flux_3_dissipative*current_beta_;
+			my_diss_res_ww[right_cell] -= flux_4_dissipative*current_beta_;
+			my_diss_res_pp[right_cell] -= flux_5_dissipative*current_beta_;
+		}
+		
+		
 	}
 
 	// EST-CE QU'ON DIVISE 2 FOIS??
