@@ -14,23 +14,24 @@ class plotSurfaceMachContour(object):
         plot = frame.plot(PlotType.Cartesian3D)
         plot.activate()
         plot.show_contour = True;
-        plot.contour(0).variable = dataset.variable(12);
-        plot.view.width = 70.6166;
-        plot.view.alpha = -10;
-        plot.view.theta = 169.95;
-        plot.view.psi = 33.34;
-        plot.view.position = (1.06189, 170.465, 259.896);
+        plot.contour(0).variable = dataset.variable(11);
+        plot.view.width = 1.62571;
+        plot.view.alpha = 0;
+        plot.view.theta = 240;
+        plot.view.psi = 60;
+        plot.view.position = (6.9746, 4.3061, 4.26909);
 
         # export image of full body
         print("Print MachContour_fullbody.png..................................");
         tecplot.export.save_png('MachContour_fullbody.png', 2000, supersample=3);
         print("Print MachContour_fullbody.png..............................DONE");
 
-        plot.view.width = 42.3549;
-        plot.view.alpha = -10;
-        plot.view.theta = 169.95;
-        plot.view.psi = 33.34;
-        plot.view.position = (6.8157, 175.436, 257.337);
+        plot = frame.plot(PlotType.Cartesian2D)
+        plot.activate()
+        plot.show_contour = True;
+        plot.contour(0).variable = dataset.variable(11);
+        plot.axes.x_axis.show = False;
+        plot.axes.y_axis.show = False;
 
         # export image of wing
         print("Print MachContour_wing.png......................................");

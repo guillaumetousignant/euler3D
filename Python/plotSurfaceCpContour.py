@@ -14,23 +14,25 @@ class plotSurfaceCpContour(object):
         plot = frame.plot(PlotType.Cartesian3D)
         plot.activate()
         plot.show_contour = True;
-        plot.contour(0).variable = dataset.variable(11);
-        plot.view.width = 68.1536;
-        plot.view.alpha = -0.19;
-        plot.view.theta = 143.99;
-        plot.view.psi = 59.88;
-        plot.view.position = (-168.527, 271.68, 195.667);
+        plot.contour(0).variable = dataset.variable(10);
+        plot.view.width = 1.62571;
+        plot.view.alpha = 0;
+        plot.view.theta = 240;
+        plot.view.psi = 60;
+        plot.view.position = (6.9746, 4.3061, 4.26909);
 
         # export image of full body
         print("Print CpContour_fullbody.png....................................");
         tecplot.export.save_png('CpContour_fullbody.png', 2000, supersample=3);
         print("Print CpContour_fullbody.png................................DONE");
 
-        plot.view.width = 31.9838;
-        plot.view.alpha = 0;
-        plot.view.theta = 0;
-        plot.view.psi = 0;
-        plot.view.position = (39.1623, 16.5128, 383.577);
+        plot = frame.plot(PlotType.Cartesian2D)
+        plot.activate()
+        plot.show_contour = True;
+        plot.contour(0).variable = dataset.variable(10);
+        plot.axes.x_axis.show = False;
+        plot.axes.y_axis.show = False;
+
 
         # export image of wing
         print("Print CpContour_wing.png........................................");

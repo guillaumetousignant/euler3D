@@ -21,12 +21,12 @@ build execute
 1 1
 OUTPUT (0-no 1-yes)
 clalpha cdalpha cmalpha
-1 0 0
+0 0 0
 coefficientsconvergence residualconv
-0 0
+1 1
 cpxc machcontour cpcontour machisosurface
-1 0 1 0
+1 1 1 0
 slicecp
 0
 axis xcoord ycoord zcoord
-y 0.00 25.00 0.00
+y 0.00 0.25 0.00

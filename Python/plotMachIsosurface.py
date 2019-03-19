@@ -13,31 +13,35 @@ class plotMachIsosurface(object):
         plot = frame.plot();
 
         # Set Isosurface to match Contour Levels of the first group.
-        iso = plot.isosurface(0)
-        iso.isosurface_selection = IsoSurfaceSelection.AllContourLevels
-        cont = plot.contour(0)
-        iso.definition_contour_group = cont
-        cont.colormap_name = 'Magma'
+        iso = plot.isosurface(0);
+
+        # Turn on Shade
+        iso.shade.show = True
+        
+        iso.isosurface_selection = IsoSurfaceSelection.AllContourLevels;
+        cont = plot.contour(0);
+        iso.definition_contour_group = cont;
+        cont.colormap_name = 'Magma';
 
         # Setup definition Isosurface layers
-        cont.variable = dataset.variable(12)
+        cont.variable = dataset.variable(11)
         cont.levels.reset_levels( [0.95,1.,1.1,1.4]);
 
         # Turn on Translucency
-        iso.effects.use_translucency = True
-        iso.effects.surface_translucency = 80
+        iso.effects.use_translucency = True;
+        iso.effects.surface_translucency = 80;
 
         # Turn on Isosurfaces
-        plot.show_isosurfaces = True
-        iso.show = True
+        plot.show_isosurfaces = True;
+        iso.show = True;
 
         cont.legend.show = False
 
-        plot.view.width = 42.3549
-        plot.view.alpha = -10
-        plot.view.theta = 169.95
-        plot.view.psi = 33.34
-        plot.view.position = (6.8157, 175.436, 257.337)
+        plot.view.width = 2.058;
+        plot.view.alpha = 0;
+        plot.view.theta = 159.61;
+        plot.view.psi = 52.79;
+        plot.view.position = (-1.91333,6.93022,5.17559);
 
         # export image of wing
         print("Print MachIsosurface_wing.png...................................");

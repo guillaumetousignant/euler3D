@@ -15,7 +15,7 @@ class plotResidualsConvergence(object):
         self.WwResiduals_ = npWwResiduals;
         self.PpResiduals_ = npPpResiduals;
         plt.figure()
-        fig = plt.plot(self.Iterations_, self.RoResiduals, label = 'Density Residuals');
+        fig = plt.plot(self.Iterations_, self.RoResiduals_, label = 'Density Residuals');
         fig = plt.plot(self.Iterations_, self.UuResiduals_, label = 'Uu Residuals');
         fig = plt.plot(self.Iterations_, self.VvResiduals_, label = 'Vv Residuals');
         fig = plt.plot(self.Iterations_, self.WwResiduals_, label = 'Ww Residuals');
@@ -23,6 +23,7 @@ class plotResidualsConvergence(object):
         plt.title('Residuals Convergence')
         plt.xlabel('Iterations');
         plt.ylabel('Residuals');
+        plt.xlim(0);
         plt.legend();
         print("Print ResidualsConvergence.png..................................");
         plt.savefig('ResidualsConvergence.png');

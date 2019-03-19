@@ -58,13 +58,15 @@ class plotCpXc(object):
         cp_linemap = plot.add_linemap(
             zone=extracted_slice,
             x=dataset.variable(0),
-            y=dataset.variable(11))
+            y=dataset.variable(10))
 
         # Set graph parameters
-        cp_linemap.line.color = tecplot.constant.Color.Blue
-        cp_linemap.line.line_thickness = 0.8
-        cp_linemap.y_axis.reverse = True
-        plot.view.fit()
+        cp_linemap.line.color = tecplot.constant.Color.Blue;
+        cp_linemap.line.line_thickness = 0.8;
+        cp_linemap.y_axis.reverse = True;
+        plot.axes.x_axis(0).title.title_mode = AxisTitleMode.UseText;
+        plot.axes.x_axis(0).title.text = 'x/c';
+        plot.view.fit();
 
         # export image of pressure coefficient as a function of x
         print("Print CpXc_wing.png.............................................");

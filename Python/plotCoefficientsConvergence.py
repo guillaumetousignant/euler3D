@@ -17,6 +17,7 @@ class plotCoefficientsConvergence(object):
         plt.title('Coefficients Convergence')
         plt.xlabel('Iterations');
         plt.ylabel('Coefficients');
+        plt.xlim(0);
         plt.legend();
         print("Print CoefficientsConvergence.png...............................");
         plt.savefig('CoefficientsConvergence.png');
