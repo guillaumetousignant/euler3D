@@ -103,7 +103,6 @@ void FluxScheme::computeFluxConv(Block* block)
 		Fc_R_5 = rho_R*H_R*V_R;
 
 
-		// NORMALIZED NORM?? AREA??
 		flux_1_convective = 0.5*(Fc_L_1+Fc_R_1)*normal_norm;
 		flux_2_convective = 0.5*(Fc_L_2+Fc_R_2)*normal_norm;
 		flux_3_convective = 0.5*(Fc_L_3+Fc_R_3)*normal_norm;
@@ -111,7 +110,8 @@ void FluxScheme::computeFluxConv(Block* block)
 		flux_5_convective = 0.5*(Fc_L_5+Fc_R_5)*normal_norm;
 
 		cout<<"right_cell: "<<right_cell<<" left_cell: "<<left_cell<<" face_idx: "<<face_idx<<endl;
-		cout<<"Fc_L_2 :"<<Fc_L_2<<" Fc_R_2 :"<<Fc_R_2<<" flux_2_convective: "<<flux_2_convective<<endl<<endl;
+		cout<<"Fc_L_2 :"<<Fc_L_2<<" Fc_R_2 :"<<Fc_R_2<<" flux_2_convective: "<<flux_2_convective<<endl;
+		cout<<"normalized_x :"<<normalized_x<<" normalized_y :"<<normalized_y<<" normalized_z: "<<normalized_z<<" normal_norm: "<<normal_norm<<endl<<endl;
 		// cout << "conv_res_ro= " << my_conv_res_ro[left_cell] << endl;
 		// cout << "conv_res_uu= " << my_conv_res_uu[left_cell] << endl;
 		// cout << "conv_res_vv= " << my_conv_res_vv[left_cell] << endl;
@@ -136,25 +136,30 @@ void FluxScheme::computeFluxConv(Block* block)
 	int ncell;
 	ncell = block -> n_real_cells_in_block_;
 	double cell_volume;
-
+	
+	// EST-CE QU'ON DIVISE DEUX FOIS??
+	
 	for (int cell_idx=0; cell_idx<ncell; cell_idx++)
 	{
 		cout << "=================================================" << endl;
 		cout << "Cellule id=" << cell_idx << endl;
+		/*
 		my_cell = block -> block_cells_[cell_idx];
 		cell_volume  = my_cell -> cell_volume_;
-
+		
 		my_conv_res_ro[cell_idx] /= cell_volume;
 		my_conv_res_uu[cell_idx] /= cell_volume;
 		my_conv_res_vv[cell_idx] /= cell_volume;
 		my_conv_res_ww[cell_idx] /= cell_volume;
 		my_conv_res_pp[cell_idx] /= cell_volume;
+		*/
 		cout << "conv_res_ro= " << my_conv_res_ro[cell_idx] << endl;
 		cout << "conv_res_uu= " << my_conv_res_uu[cell_idx] << endl;
 		cout << "conv_res_vv= " << my_conv_res_vv[cell_idx] << endl;
 		cout << "conv_res_ww= " << my_conv_res_ww[cell_idx] << endl;
 		cout << "conv_res_pp= " << my_conv_res_pp[cell_idx] << endl;
 	}
+	
 
 
 }

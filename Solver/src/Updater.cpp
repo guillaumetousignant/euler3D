@@ -100,6 +100,7 @@ void Updater::updateBoundary(Block* block)
 		double normalized_y=block->block_faces_[wall_face_idx]->face_normals_[1];
 		double normalized_z=block->block_faces_[wall_face_idx]->face_normals_[2];
 		double face_area=block->block_faces_[wall_face_idx]->face_area_;
+		
 		normalized_x/=face_area;
 		normalized_y/=face_area;
 		normalized_z/=face_area;

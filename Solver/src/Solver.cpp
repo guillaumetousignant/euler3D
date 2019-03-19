@@ -51,19 +51,17 @@ void Solver::solve(Block* block, CompleteMesh* complete_mesh)
 	}
 	*/
 	// PROVISOIRE!!!!
-	for(int i=0;i<2;i++)
+	for(int i=0;i<10;i++)
 	{
 		this->saveW0(block);
 		timestep_->computeSpectralRadius(block);
 		timestep_->computeTimestep(block);
 		runge_kutta_->computeRungeKutta(block);
-
-		cout << "Writing Solution......................................................" << endl;
-		post_processing_->output_tecplot_->printFlowData(block);
-		cout << "Exiting program......................................................" << endl;
-		
 	}
-	
+
+	cout << "Writing Solution......................................................" << endl;
+	post_processing_->output_tecplot_->printFlowData(block);
+	cout << "Exiting program......................................................" << endl;
 
 	/*
 
@@ -128,7 +126,7 @@ void Solver::saveW0(Block* block)
 		ru_0= ro*uu;
 		rv_0= ro*vv;
 		rw_0= ro*ww;
-		re_0= 0.5*ro*(uu*uu+vv*vv)+1./(gamma_-1.0)*pp;
+		re_0= 0.5*ro*(uu*uu+vv*vv+ww*ww)+1./(gamma_-1.0)*pp;
 
 
 		block->block_primitive_variables_->ro_0_[cell_idx]=ro_0;
