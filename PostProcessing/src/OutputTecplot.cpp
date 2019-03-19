@@ -157,6 +157,7 @@ void OutputTecplot::printFlowData(Block* block)
 
     // Claculate local mach number for each cell
     mach_cell = velocity_cell/a_cell;
+    mach_cell= block->block_cells_[i]->cell_volume_;
 
     FlowData << mach_cell << endl;
   }

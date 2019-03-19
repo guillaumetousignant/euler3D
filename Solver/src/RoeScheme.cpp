@@ -73,6 +73,21 @@ void RoeScheme::computeFluxDiss(Block* block)
 	}
 	*/
 
+	for (int cell_idx=0; cell_idx<ncell; cell_idx++)
+	{
+		my_cell = block -> block_cells_[cell_idx];
+		cell_volume  = my_cell -> cell_volume_;
+
+		my_diss_res_ro[cell_idx] *=(1.0-current_beta_);
+		my_diss_res_uu[cell_idx] *=(1.0-current_beta_);
+		my_diss_res_vv[cell_idx] *=(1.0-current_beta_);
+		my_diss_res_ww[cell_idx] *=(1.0-current_beta_);
+		my_diss_res_pp[cell_idx] *=(1.0-current_beta_);
+
+	}
+	
+	
+
 	int nface, left_cell, right_cell; // my_face,
 	int* neighboor_cells;
 	Face* my_face;
@@ -218,8 +233,8 @@ void RoeScheme::computeFluxDiss(Block* block)
 	
 	for (int cell_idx=0; cell_idx<ncell; cell_idx++)
 	{
-		cout << "=================================================" << endl;
-		cout << "Cellule id=" << cell_idx << endl;
+		//cout << "=================================================" << endl;
+		//cout << "Cellule id=" << cell_idx << endl;
 		/*
 		my_cell = block -> block_cells_[cell_idx];
 		cell_volume  = my_cell -> cell_volume_;
@@ -230,11 +245,14 @@ void RoeScheme::computeFluxDiss(Block* block)
 		my_diss_res_vv[cell_idx] /= cell_volume;
 		my_diss_res_pp[cell_idx] /= cell_volume;
 		*/
+
+		/*
 		cout << "diss_res_ro= " << my_diss_res_ro[cell_idx] << endl;
 		cout << "diss_res_uu= " << my_diss_res_uu[cell_idx] << endl;
 		cout << "diss_res_vv= " << my_diss_res_vv[cell_idx] << endl;
 		cout << "diss_res_ww= " << my_diss_res_ww[cell_idx] << endl;
 		cout << "diss_res_pp= " << my_diss_res_pp[cell_idx] << endl;
+		*/
 
 	}
 	 
