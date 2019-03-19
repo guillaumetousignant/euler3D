@@ -247,7 +247,7 @@ void ConcreteBlockBuilder::readMyBlock(Block* block)
 
 			node_coordinates_temp[0]=x_temp;
 			node_coordinates_temp[1]=y_temp;
-			node_coordinates_temp[2]=z_temp;
+			node_coordinates_temp[2]=z_temp; //ATTENTION PROVISOIRE
 
 			new_node = buildNode(node_id,node_coordinates_temp, node_creator);
 

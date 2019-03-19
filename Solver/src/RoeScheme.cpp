@@ -57,6 +57,8 @@ void RoeScheme::computeFluxDiss(Block* block)
 	ncell = block -> n_real_cells_in_block_;
 	double cell_volume;
 
+	// EST-CE QU'ON DIVISE 2 FOIS?
+	/*
 	for (int cell_idx=0; cell_idx<ncell; cell_idx++)
 	{
 		my_cell = block -> block_cells_[cell_idx];
@@ -69,6 +71,7 @@ void RoeScheme::computeFluxDiss(Block* block)
 		my_diss_res_pp[cell_idx] *=(1-current_beta_)*cell_volume;
 
 	}
+	*/
 
 	int nface, left_cell, right_cell; // my_face,
 	int* neighboor_cells;
@@ -192,11 +195,11 @@ void RoeScheme::computeFluxDiss(Block* block)
 		A_roe_w = F_1_w + F_234_w + F_5_w;
 		A_roe_energy = F_1_energy + F_234_energy + F_5_energy;
 
-		flux_1_dissipative = 0.5*(-A_roe_mass)*normal_norm;
-		flux_2_dissipative = 0.5*(-A_roe_u)*normal_norm;
-		flux_3_dissipative = 0.5*(-A_roe_v)*normal_norm;
-		flux_4_dissipative = 0.5*(-A_roe_w)*normal_norm;
-		flux_5_dissipative = 0.5*(-A_roe_energy)*normal_norm;
+		flux_1_dissipative = 0.5*(A_roe_mass)*normal_norm;
+		flux_2_dissipative = 0.5*(A_roe_u)*normal_norm;
+		flux_3_dissipative = 0.5*(A_roe_v)*normal_norm;
+		flux_4_dissipative = 0.5*(A_roe_w)*normal_norm;
+		flux_5_dissipative = 0.5*(A_roe_energy)*normal_norm;
 
 		my_diss_res_ro[left_cell] += flux_1_dissipative*current_beta_;
 		my_diss_res_uu[left_cell] += flux_2_dissipative*current_beta_;
@@ -211,11 +214,13 @@ void RoeScheme::computeFluxDiss(Block* block)
 		my_diss_res_pp[right_cell] -= flux_5_dissipative*current_beta_;
 	}
 
-
+	// EST-CE QU'ON DIVISE 2 FOIS??
+	
 	for (int cell_idx=0; cell_idx<ncell; cell_idx++)
 	{
 		cout << "=================================================" << endl;
 		cout << "Cellule id=" << cell_idx << endl;
+		/*
 		my_cell = block -> block_cells_[cell_idx];
 		cell_volume  = my_cell -> cell_volume_;
 
@@ -224,6 +229,7 @@ void RoeScheme::computeFluxDiss(Block* block)
 		my_diss_res_ww[cell_idx] /= cell_volume;
 		my_diss_res_vv[cell_idx] /= cell_volume;
 		my_diss_res_pp[cell_idx] /= cell_volume;
+		*/
 		cout << "diss_res_ro= " << my_diss_res_ro[cell_idx] << endl;
 		cout << "diss_res_uu= " << my_diss_res_uu[cell_idx] << endl;
 		cout << "diss_res_vv= " << my_diss_res_vv[cell_idx] << endl;
@@ -231,6 +237,7 @@ void RoeScheme::computeFluxDiss(Block* block)
 		cout << "diss_res_pp= " << my_diss_res_pp[cell_idx] << endl;
 
 	}
+	 
 
 }
 
