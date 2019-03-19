@@ -62,8 +62,8 @@ void Updater::updateInternalBlock(Block* block)
 		ww= rw_new/ro_new;
 		pp=(gamma_-1.0)*(re_new-0.5*(ru_new*ru_new+rv_new*rv_new+rw_new*rw_new)/ro_new);
 
-		cout<<"cell_idx: "<<cell_idx<<" ro_0: "<<ro_0<<" ro_new: "<<ro_new<<endl;
-		cout<<"dt: "<<dt<<" cell_volume: "<<cell_volume<<" res_ro_conv-res_ro_diss: "<<res_ro_conv-res_ro_diss<<" alpha_rk_[current_stage_]: "<<alpha_rk_[current_stage_]<<endl;
+		//cout<<"cell_idx: "<<cell_idx<<" ro_0: "<<ro_0<<" ro_new: "<<ro_new<<endl;
+		//cout<<"dt: "<<dt<<" cell_volume: "<<cell_volume<<" res_ro_conv-res_ro_diss: "<<res_ro_conv-res_ro_diss<<" alpha_rk_[current_stage_]: "<<alpha_rk_[current_stage_]<<endl;
 
 		my_primitive_variables->ro_[cell_idx]=ro;
 		my_primitive_variables->uu_[cell_idx]=uu;
@@ -101,10 +101,14 @@ void Updater::updateBoundary(Block* block)
 		double normalized_z=block->block_faces_[wall_face_idx]->face_normals_[2];
 		double face_area=block->block_faces_[wall_face_idx]->face_area_;
 		
+
+
 		normalized_x/=face_area;
 		normalized_y/=face_area;
 		normalized_z/=face_area;
 
+		cout<<"nx: "<<normalized_x<<" ny: "<<normalized_y<<" nz: "<<normalized_z<<" ss: "<<face_area<<endl;
+		
 		double ro_int=block->block_primitive_variables_->ro_[int_cell_idx];
 		double uu_int=block->block_primitive_variables_->uu_[int_cell_idx];
 		double vv_int=block->block_primitive_variables_->vv_[int_cell_idx];

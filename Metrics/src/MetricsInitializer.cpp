@@ -467,7 +467,7 @@ void MetricsInitializer::computeVolumeCells(uint iNCells, uint iNCellsTot, Cell*
             
         }   
 
-        iCells[i]->cell_volume_ = volume;
+        iCells[i]->cell_volume_ = volume; 
         volume = 0.0;
     }
 

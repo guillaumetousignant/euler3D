@@ -55,7 +55,7 @@ void CompleteMesh::InitializeMyBlocks()
 
 		block_id_string = std::to_string(block_id);
 		//block_file = "../UnstructuredMesh5x5.su2" /*+ block_id_string + ".su2"*/;
-		block_file = "../naca0012_coarse_nosidewall.su2" /*+ block_id_string + ".su2"*/;
+		block_file = "../naca0012_coarse.su2" /*+ block_id_string + ".su2"*/;
 		ConcreteBlockBuilder block_builder=ConcreteBlockBuilder(block_file);
 		new_block = all_blocks_[i];
 
@@ -104,19 +104,7 @@ void CompleteMesh::InitializeMyBlocks()
 	    // test_node = new_block ->block_nodes_[12];
 	    // cout<<test_node->node_coordinates_[1]<<endl;
 	    // cout<<test_node->node_coordinates_[2]<<endl;
-	    Face* test_face;
-	    cout<<"Faces\n";
-	    std::cout<<"TEEEEEEEEEEEEST!!!!---------------------------------  "<< new_block->n_faces_in_block_<<std::endl;
-	    for(int i=0;i<new_block->n_faces_in_block_;i++)
-	    {
-	    	cout<<"numero_id_\t"<<i<<endl;
-	    	test_face = new_block ->block_faces_[i];
-
-	    	cout<<"face_id_\t"<<test_face->face_id_<<endl;
-		    cout<<"face_2_nodes_connectivity_\t"<<test_face->face_2_nodes_connectivity_[0]<<"\t"<<test_face->face_2_nodes_connectivity_[1]<<"\t"<<test_face->face_2_nodes_connectivity_[2]<<"\t"<<test_face->face_2_nodes_connectivity_[3]<<endl;
-		    cout<<"n_nodes_per_face_\t"<<test_face->n_nodes_per_face_<<endl;
-		    cout<<"block_id_\t"<<test_face->block_id_<<endl;
-	    }
+	    
 
 
 	}
