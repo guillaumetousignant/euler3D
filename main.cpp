@@ -23,13 +23,9 @@ int main()
 {
 	MPI_Init(NULL, NULL);
 
-	cout << "This is the main" << endl;
+	cout << "========================STARTING PROGRAM========================" << endl;
 
 	MPI_Finalize();
-
-  // Block* new_block = new Block(0);
-  // string block_file ="../UnstructuredMesh5x5.su2";
-  // // string block_file ="../TestMesh2x1.su2";
 
 	int* my_blocks = new int[1];
 	my_blocks[0] = 0;
@@ -40,17 +36,15 @@ int main()
 	MetricsInitializer metricsInit(new_block);
 	metricsInit.doInit();
 
-	// CompleteMesh* complete_mesh;
-  // complete_mesh= new CompleteMesh();
 	Interface* interface= new Interface();
-	
+
 	Initializer* initializer= new Initializer();
 	new_block->block_primitive_variables_->calculateFreeVariables(interface->gamma_interface_, interface->aoa_deg_interface_, interface->mach_aircraft_interface_);
 	new_block->block_primitive_variables_->initializeFlowField(new_block->n_all_cells_in_block_);
 	Solver *solver=initializer->initializeSolver(interface);
 	solver->solve(new_block, complete_mesh);
-	
-  cout << "END OF PROGRAM" << endl;
+
+  cout << "========================END OF PROGRAM========================" << endl;
 }
 
 

@@ -67,16 +67,16 @@ void CompleteMesh::InitializeMyBlocks()
 
 	    block_builder.setConnectivity(new_block);
 
-	    cout<<"Cellules\n";
+	    // cout<<"Cellules\n";
 	    Cell* test_cell;
 	    for(int i=0;i<new_block->n_real_cells_in_block_;i++)
 	    {
 	    	test_cell = new_block ->block_cells_[i];
-	    	cout<<"cell_id_\t"<<test_cell->cell_id_<<endl;
-		    cout<<"cell_2_nodes_connectivity_\t"<<test_cell->cell_2_nodes_connectivity_[0]<<"\t"<<test_cell->cell_2_nodes_connectivity_[1]<<"\t"<<test_cell->cell_2_nodes_connectivity_[2]<<"\t"<<test_cell->cell_2_nodes_connectivity_[3]<<"\t"<<test_cell->cell_2_nodes_connectivity_[4]<<"\t"<<test_cell->cell_2_nodes_connectivity_[5]<<"\t"<<test_cell->cell_2_nodes_connectivity_[6]<<"\t"<<test_cell->cell_2_nodes_connectivity_[7]<<endl;
-		    cout<<"n_nodes_per_cell_\t"<<test_cell->n_nodes_per_cell_<<endl;
-		    cout<<"n_faces_per_cell_\t"<<test_cell->n_faces_per_cell_<<endl;
-		    cout<<"block_id_\t"<<test_cell->block_id_<<endl;
+	    	// cout<<"cell_id_\t"<<test_cell->cell_id_<<endl;
+		    // cout<<"cell_2_nodes_connectivity_\t"<<test_cell->cell_2_nodes_connectivity_[0]<<"\t"<<test_cell->cell_2_nodes_connectivity_[1]<<"\t"<<test_cell->cell_2_nodes_connectivity_[2]<<"\t"<<test_cell->cell_2_nodes_connectivity_[3]<<"\t"<<test_cell->cell_2_nodes_connectivity_[4]<<"\t"<<test_cell->cell_2_nodes_connectivity_[5]<<"\t"<<test_cell->cell_2_nodes_connectivity_[6]<<"\t"<<test_cell->cell_2_nodes_connectivity_[7]<<endl;
+		    // cout<<"n_nodes_per_cell_\t"<<test_cell->n_nodes_per_cell_<<endl;
+		    // cout<<"n_faces_per_cell_\t"<<test_cell->n_faces_per_cell_<<endl;
+		    // cout<<"block_id_\t"<<test_cell->block_id_<<endl;
 	    }
 
 	    for(int i=new_block->n_real_cells_in_block_;i<new_block->n_all_cells_in_block_;i++)

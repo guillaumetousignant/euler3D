@@ -142,11 +142,11 @@ void ConcreteBlockBuilder::preReadMyBlock(Block* block)
 		}
 		n_boundaries=block->n_real_boundaries_in_block_;
 		block ->block_boundary_cell_ids_ = new BoundaryCellIds* [n_boundaries];
-		std::cout << "*********************ALLOCATION: "<< n_faces_in_wall<<std::endl;
+		// std::cout << "*********************ALLOCATION: "<< n_faces_in_wall<<std::endl;
 		block ->block_wall_face_ids_ = new int [n_faces_in_wall];
 		block->n_wall_faces_=n_faces_in_wall;
 
-		std::cout << "*********************ALLOCATION: "<< n_faces_in_farfield<<std::endl;
+		// std::cout << "*********************ALLOCATION: "<< n_faces_in_farfield<<std::endl;
 		block ->block_farfield_face_ids_ = new int [n_faces_in_farfield];
 		block->n_farfield_faces_=n_faces_in_farfield;
 
@@ -163,7 +163,7 @@ void ConcreteBlockBuilder::preReadMyBlock(Block* block)
 
 		std::cout<<"---------------------------------  "<< block->n_faces_in_block_<<std::endl;
 
-		std::cout<<n_faces<<std::endl;
+		// std::cout<<n_faces<<std::endl;
 
 		PrimitiveVariables* prim= new PrimitiveVariables(block->n_all_cells_in_block_);
 		block->block_primitive_variables_=prim;
@@ -229,7 +229,7 @@ void ConcreteBlockBuilder::readMyBlock(Block* block)
 	int temp_farfield_face_count=0;
 	int* farfield_face_count;
 	farfield_face_count=&temp_farfield_face_count;
-	
+
 	int temp_wall_face_count=0;
 	int* wall_face_count;
 	wall_face_count=&temp_wall_face_count;
@@ -562,7 +562,7 @@ void ConcreteBlockBuilder::createMyFaces(Block* block)
 
 						if(node_count==face->n_nodes_per_face_)
 						{
-							
+
 							flag = false;
 							break ;
 
