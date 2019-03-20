@@ -5,7 +5,6 @@
 #include <string>
 #include <math.h>
 #include "Solver.h"
-//#include "Initializer.h"
 using namespace std;
 
 

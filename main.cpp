@@ -21,15 +21,11 @@ using namespace std;
 
 int main(int argc, char* argv[])
 {
-	MPI_Init(NULL, NULL);
-
 	cout << "========================STARTING PROGRAM========================" << endl;
-
-	MPI_Finalize();
 
 	if (argc > 1)
 	{
-    cout << "Input file is : " << argv[1] << endl;
+		cout << "Input file is : " << argv[1] << endl;
 	}
 	else
 	{
@@ -37,11 +33,18 @@ int main(int argc, char* argv[])
 		exit(0);
 	}
 
+	MPI_Init(NULL, NULL);
+
+	MPI_Finalize();
+
+	Interface* interface= new Interface(argv[1]);
+	Initializer* initializer= new Initializer();
+
 	int* my_blocks = new int[1];
 	my_blocks[0] = 0;
 
 	cout << "In CompleteMesh........." << endl;
-	CompleteMesh* complete_mesh = new CompleteMesh(1,1,my_blocks);
+	CompleteMesh* complete_mesh = new CompleteMesh(1,1,my_blocks, interface->topology_file_name_interface_);
 	complete_mesh->InitializeMyBlocks();
 	Block* new_block = complete_mesh->all_blocks_[0];
 
@@ -49,8 +52,7 @@ int main(int argc, char* argv[])
 	MetricsInitializer metricsInit(new_block);
 	metricsInit.doInit();
 
-	Interface* interface= new Interface(argv[1]);
-	Initializer* initializer= new Initializer();
+
 
 	cout << "In calculateFreeVariables........." << endl;
 	new_block->block_primitive_variables_->calculateFreeVariables(interface->gamma_interface_, interface->aoa_deg_interface_, interface->mach_aircraft_interface_);

@@ -178,7 +178,9 @@ void ConcreteBlockBuilder::preReadMyBlock(Block* block)
 
 
 
-	} else{
+	}
+	else
+	{
 		//warning that file was not opened!
 		std::cout<<"WARNING! BLOCK FILE WAS NOT CORRECTLY OPENED IN PRE-READ FUNCTION. ERRATIC BEHAVIOR MAY APPEAR!"<<std::endl;
 	}

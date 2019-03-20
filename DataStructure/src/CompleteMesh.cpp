@@ -9,7 +9,7 @@
 #include <iostream>
 using namespace std;
 
-CompleteMesh::CompleteMesh(int n_blocks, int n_blocks_in_process, int* my_blocks) : n_blocks_(0), n_blocks_in_process_(0), my_blocks_(nullptr), all_blocks_(nullptr)
+CompleteMesh::CompleteMesh(int n_blocks, int n_blocks_in_process, int* my_blocks, string topology_file_name) : n_blocks_(0), n_blocks_in_process_(0), my_blocks_(nullptr), all_blocks_(nullptr)
 
 {
 	n_blocks_=n_blocks;
@@ -30,6 +30,7 @@ CompleteMesh::CompleteMesh(int n_blocks, int n_blocks_in_process, int* my_blocks
 
 		all_blocks_[j] = new Block(j);
 	}
+	topology_file_name_ = topology_file_name;
 }
 
 
@@ -51,10 +52,11 @@ void CompleteMesh::InitializeMyBlocks()
 	{
 		block_id = my_blocks_[i];
 
-		std::cout<<block_id<<std::endl;
+		// std::cout<<block_id<<std::endl;
 
 		block_id_string = std::to_string(block_id);
-		block_file = "../naca0012_coarse_nosidewall.su2";
+		// block_file = "../naca0012_coarse_nosidewall.su2";
+		block_file = topology_file_name_;
 		ConcreteBlockBuilder block_builder=ConcreteBlockBuilder(block_file);
 		new_block = all_blocks_[i];
 
