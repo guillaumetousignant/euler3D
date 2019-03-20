@@ -46,9 +46,9 @@ double fz_;
 void calculateCl();
 void calculateCd();
 
-void calculateCmx(double cell_y_coordinate, double cell_z_coordinate);
-void calculateCmy(double cell_x_coordinate, double cell_z_coordinate);
-void calculateCmz(double cell_x_coordinate, double cell_y_coordinate);
+void calculateCmx(double face_y_coordinate, double face_z_coordinate);
+void calculateCmy(double face_x_coordinate, double face_z_coordinate);
+void calculateCmz(double face_x_coordinate, double face_y_coordinate);
 void calculateForce(double cpbc, double area, double nx, double ny, double nz);
 void calculateGlobalCl();
 void calculateGlobalCd();

@@ -224,7 +224,7 @@ void OutputTecplot::printConvergence(int iter, double cl, double cd, double cmx,
 
   if (iter==0)
   {
-    Convergence << "Iteration" << " " << "Cl" << " " << "Cd" << " " << "Cmx" << " " << "Cmy" << " " << "Cmz" << " " << "Density convergence" << " " << "Uu convergence" << " " << "Vv convergence" << " " << "Ww convergence" << " " << "Pressure convergence" << " " << endl;
+    Convergence << "Iteration" << " " << "Cl" << " " << "Cd" << " " << "Cmx" << " " << "Cmy" << " " << "Cmz" << " " << "Density_Convergence" << " " << "Uu_Convergence" << " " << "Vv_Convergence" << " " << "Ww_Convergence" << " " << "Pressure_Convergence" << " " << endl;
   }
 
   Convergence << iter << " " << cl << " " << cd << " " << cmx << " " << cmy << " " << cmz << " " << ro_convergence << " " << uu_convergence << " " << vv_convergence << " " << ww_convergence << " " << pp_convergence << endl;
