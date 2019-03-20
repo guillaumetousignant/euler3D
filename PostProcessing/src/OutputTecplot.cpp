@@ -203,7 +203,7 @@ void OutputTecplot::printSurfaceFlowData(Block* block)
     SurfaceFlowData << "TTILE = \"Vizualisation of the surface solution\""<<endl;
     SurfaceFlowData << "VARIABLES=\"X\",\"Y\",\"Z\",\"RO\",\"UU\",\"VV\",\"WW\",\"PP\",\"CP\",\"MACH\"" << endl;
     SurfaceFlowData << "ZONE T=\"FLOW_FIELD\"" << endl;
-    SurfaceFlowData << "Nodes=" << block->n_wall_faces_*4 << ", " << "Elements=" << block->n_wall_faces_<< ", " << "ZONETYPE=FEBRICK" << endl;
+    SurfaceFlowData << "Nodes=" << block->n_wall_faces_*4 << ", " << "Elements=" << block->n_wall_faces_<< ", " << "ZONETYPE=FEQUADRILATERAL" << endl;
     SurfaceFlowData << "DATAPACKING=BLOCK" << endl;
     SurfaceFlowData << "VARLOCATION=([4,5,6,7,8,9,10]=CELLCENTERED)" << endl;
 
