@@ -73,6 +73,7 @@ void RoeScheme::computeFluxDiss(Block* block)
 	}
 	*/
 
+
 	for (int cell_idx=0; cell_idx<ncell; cell_idx++)
 	{
 		
@@ -215,8 +216,8 @@ void RoeScheme::computeFluxDiss(Block* block)
 		flux_5_dissipative = 0.5*(A_roe_energy)*normal_norm;
 		
 
-		if (fabs(normalized_z)<0.5)
-		{
+		//if (fabs(normalized_z)<0.5)
+		//{
 			//cout<<"fluxes: "<<face_idx<<" "<<normalized_x<<" "<<normalized_y<<" "<<normal_norm<<endl;
 			//cout<<flux_1_dissipative<<" "<<flux_2_dissipative<<" "<<flux_3_dissipative<<" "<<flux_5_dissipative<<endl;
 			//cout<<F_1_u<<" "<<F_234_u<<" "<<F_5_u<<endl<<endl;
@@ -235,7 +236,7 @@ void RoeScheme::computeFluxDiss(Block* block)
 			my_diss_res_vv[right_cell] -= flux_3_dissipative*current_beta_;
 			my_diss_res_ww[right_cell] -= flux_4_dissipative*current_beta_;
 			my_diss_res_pp[right_cell] -= flux_5_dissipative*current_beta_;
-		}
+		//}
 		
 		
 	}

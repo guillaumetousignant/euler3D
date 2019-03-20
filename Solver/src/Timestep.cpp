@@ -106,11 +106,11 @@ void Timestep::computeSpectralRadius(Block* block)
 			//spectral_radius[cell_idx] += (fabs(0.5*((my_uu_array[cell_idx]+my_uu_array[cell_in_cell_id])*normalized_x+(my_vv_array[cell_idx]+my_vv_array[cell_in_cell_id])*normalized_y+(my_ww_array[cell_idx]+my_ww_array[cell_in_cell_id])*normalized_z)) + 0.5*(c_center+c_in_cell))*delta_s;
 			
 			// CONDITION IF À SUPPRIMER (MAIS PAS L'INTÉRIEUR), MAIS POUR LES BESOINS DE DEBUGGAGE EN 2.5D
-			if (fabs(normalized_z)<0.5)
-			{
-				spectral_radius[cell_idx] += (fabs((my_uu_array[cell_idx])*normalized_x+(my_vv_array[cell_idx])*normalized_y+(my_ww_array[cell_idx])*normalized_z) + (c_center))*delta_s;
+			//if (fabs(normalized_z)<0.5)
+			//{
+			spectral_radius[cell_idx] += (fabs((my_uu_array[cell_idx])*normalized_x+(my_vv_array[cell_idx])*normalized_y+(my_ww_array[cell_idx])*normalized_z) + (c_center))*delta_s;
 				//cout << "Cell idx: "<<cell_idx<<" part spectral_radius cell = " << (fabs((my_uu_array[cell_idx])*normalized_x+(my_vv_array[cell_idx])*normalized_y+(my_ww_array[cell_idx])*normalized_z) + (c_center))*delta_s << endl;
-			}
+			//}
 
 			
 		}

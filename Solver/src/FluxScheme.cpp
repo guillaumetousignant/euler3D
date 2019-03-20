@@ -132,6 +132,8 @@ void FluxScheme::computeFluxConv(Block* block)
 		// cout << "conv_res_vv= " << my_conv_res_vv[left_cell] << endl;
 		// cout << "conv_res_ww= " << my_conv_res_ww[left_cell] << endl;
 		// cout << "conv_res_pp= " << my_conv_res_pp[left_cell] << endl;
+		
+
 		my_conv_res_ro[left_cell] += flux_1_convective;
 		my_conv_res_uu[left_cell] += flux_2_convective;
 		my_conv_res_vv[left_cell] += flux_3_convective;
