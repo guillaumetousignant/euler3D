@@ -23,6 +23,18 @@ int main(int argc, char* argv[])
 {
 	cout << "========================STARTING PROGRAM========================" << endl;
 
+	cout << R"(
+		           (        (
+		           )\ )     )\ )
+		 (      ( (()/( (  (()/(
+		 )\     )\ /(_)))\  /(_))
+		((_) _ ((_|_)) ((_)(_))
+		| __| | | | |  | __| _ \
+		| _|| |_| | |__| _||   /
+		|___|\___/|____|___|_|_\
+
+	)" << endl;
+
 	if (argc > 1)
 	{
 		cout << "Input file is : " << argv[1] << endl;
@@ -51,8 +63,6 @@ int main(int argc, char* argv[])
 	cout << "In MetricsInitializer........." << endl;
 	MetricsInitializer metricsInit(new_block);
 	metricsInit.doInit();
-
-
 
 	cout << "In calculateFreeVariables........." << endl;
 	new_block->block_primitive_variables_->calculateFreeVariables(interface->gamma_interface_, interface->aoa_deg_interface_, interface->mach_aircraft_interface_);
