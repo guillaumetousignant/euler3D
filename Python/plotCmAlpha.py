@@ -20,7 +20,7 @@ class plotCmAlpha(object):
         plt.xlabel('Angle of Attack (deg)');
         plt.ylabel('Moment Coefficients (Cm)');
         plt.legend();
-        print("Print CmvsAlpha.png.............................................");
+        print("Save CmvsAlpha.png..............................................");
         plt.savefig('CmvsAlpha.png');
-        print("Print CmvsAlpha.png.........................................DONE");
+        print("Save CmvsAlpha.png..........................................DONE");
         print("plotCmAlpha.................................................DONE");

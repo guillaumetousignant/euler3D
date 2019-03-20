@@ -12,10 +12,13 @@ class plotCdAlpha(object):
         self.AerodynamicCd_ = npAerodynamicCd;
         plt.figure()
         fig = plt.plot(self.AngleOfAttack_, self.AerodynamicCd_);
+
+        # Plot parameters
         plt.title('Drag Coefficient vs Angle of Attack')
         plt.xlabel('Angle of Attack (deg)');
         plt.ylabel('Drag Coefficient (Cd)');
-        print("Print CdvsAlpha.png.............................................");
+
+        print("Save CdvsAlpha.png..............................................");
         plt.savefig('CdvsAlpha.png');
-        print("Print CdvsAlpha.png.........................................DONE");
+        print("Save CdvsAlpha.png..........................................DONE");
         print("plotCdAlpha.................................................DONE");

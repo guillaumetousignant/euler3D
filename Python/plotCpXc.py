@@ -23,9 +23,9 @@ class plotCpXc(object):
             self.normal_z_ = 1;
 
         #Coordinates
-        origin_x = XCoordinate;
-        origin_y = YCoordinate;
-        origin_z = ZCoordinate;
+        self.origin_x = XCoordinate;
+        self.origin_y = YCoordinate;
+        self.origin_z = ZCoordinate;
 
         #Processing
         # Graphic
@@ -36,7 +36,7 @@ class plotCpXc(object):
 
         # Extract slice using user commands
         extracted_slice = tecplot.data.extract.extract_slice(
-            origin=(origin_x, origin_y, origin_z),
+            origin=(self.origin_x, self.origin_y, self.origin_z),
             normal=(self.normal_x_, self.normal_y_, self.normal_z_),
             source=SliceSource.SurfaceZones,
             dataset=dataset)
@@ -69,7 +69,8 @@ class plotCpXc(object):
         plot.view.fit();
 
         # export image of pressure coefficient as a function of x
-        print("Print CpXc_wing.png.............................................");
-        tecplot.export.save_png('CpXc_wing.png', 2000, supersample=3)
-        print("Print CpXc_wing.png.........................................DONE");
+        graphName = "CpXc_{:.2f}_{:.2f}_{:.2f}.png".format(self.origin_x, self.origin_y, self.origin_z);
+        print("Save {}....................................".format(graphName));
+        tecplot.export.save_png(graphName, 2000, supersample=3)
+        print("Save {}................................DONE".format(graphName));
         print("plotCpXc....................................................DONE");

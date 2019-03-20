@@ -35,8 +35,8 @@ class plotSurfaceCpContour(object):
 
 
         # export image of wing
-        print("Print CpContour_wing.png........................................");
+        print("Save CpContour_wing.png.........................................");
         tecplot.export.save_png('CpContour_wing.png', 2000, supersample=3);
-        print("Print CpContour_wing.png....................................DONE");
+        print("Save CpContour_wing.png.....................................DONE");
 
         print("plotCpContour...............................................DONE");

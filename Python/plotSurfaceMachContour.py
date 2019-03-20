@@ -34,8 +34,8 @@ class plotSurfaceMachContour(object):
         plot.axes.y_axis.show = False;
 
         # export image of wing
-        print("Print MachContour_wing.png......................................");
+        print("Save MachContour_wing.png.......................................");
         tecplot.export.save_png('MachContour_wing.png', 2000, supersample=3);
-        print("Print MachContour_wing.png..................................DONE");
+        print("Save MachContour_wing.png...................................DONE");
 
         print("plotMachContour.............................................DONE");

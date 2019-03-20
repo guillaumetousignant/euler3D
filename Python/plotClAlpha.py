@@ -4,7 +4,6 @@ import string
 import matplotlib
 import matplotlib.pyplot as plt
 
-
 class plotClAlpha(object):
     #Plot Cl vs Alpha graph
     def __init__(self, npAngleOfAttack, npAerodynamicCl):
@@ -16,7 +15,7 @@ class plotClAlpha(object):
         plt.title('Lift Coefficient vs Angle of Attack')
         plt.xlabel('Angle of Attack (deg)');
         plt.ylabel('Lift Coefficient (Cl)');
-        print("Print ClvsAlpha.png.............................................");
+        print("Save ClvsAlpha.png..............................................");
         plt.savefig('ClvsAlpha.png');
-        print("Print ClvsAlpha.png.........................................DONE");
+        print("Save ClvsAlpha.png..........................................DONE");
         print("plotClAlpha.................................................DONE");

@@ -19,7 +19,7 @@ class plotCoefficientsConvergence(object):
         plt.ylabel('Coefficients');
         plt.xlim(0);
         plt.legend();
-        print("Print CoefficientsConvergence.png...............................");
+        print("Save CoefficientsConvergence.png................................");
         plt.savefig('CoefficientsConvergence.png');
-        print("Print CoefficientsConvergence.png...........................DONE");
+        print("Save CoefficientsConvergence.png............................DONE");
         print("plotCoefficientsConvergence.................................DONE");

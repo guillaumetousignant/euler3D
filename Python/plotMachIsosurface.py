@@ -17,7 +17,7 @@ class plotMachIsosurface(object):
 
         # Turn on Shade
         iso.shade.show = True
-        
+
         iso.isosurface_selection = IsoSurfaceSelection.AllContourLevels;
         cont = plot.contour(0);
         iso.definition_contour_group = cont;
@@ -44,7 +44,7 @@ class plotMachIsosurface(object):
         plot.view.position = (-1.91333,6.93022,5.17559);
 
         # export image of wing
-        print("Print MachIsosurface_wing.png...................................");
+        print("Save MachIsosurface_wing.png....................................");
         tecplot.export.save_png('MachIsosurface_wing.png', 2000, supersample=3)
-        print("Print MachIsosurface_wing.png...............................DONE");
+        print("Save MachIsosurface_wing.png................................DONE");
         print("plotMachIsosurface..........................................DONE");

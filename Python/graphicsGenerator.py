@@ -8,6 +8,7 @@ from plotCmAlpha import plotCmAlpha
 from plotCoefficientsConvergence import plotCoefficientsConvergence
 from plotResidualsConvergence import plotResidualsConvergence
 from plotCpXc import plotCpXc
+from plotSlicesCp import plotSlicesCp
 from plotSurfaceCpContour import plotSurfaceCpContour
 from plotSurfaceMachContour import plotSurfaceMachContour
 from plotMachIsosurface import plotMachIsosurface
@@ -18,6 +19,7 @@ class graphicsGenerator(object):
     #Initialize booleans
     def __init__(self, myInterfaceFile, myFlowFile, mySurfaceFlowFile, myConvergenceFile, myAerodynamicFile):
         print("Initialize graphicsGenerator....................................")
+
         #Indicators
         self.ClAlpha_Indicator_ = False;
         self.CdAlpha_Indicator_ = False;
@@ -29,17 +31,23 @@ class graphicsGenerator(object):
         self.SurfaceCpContour_Indicator_ = False;
         self.SurfaceMachContour_Indicator_ = False;
         self.MachIsosurface_Indicator_ = False ;
+
         #Files
         self.myInterfaceFile_ = myInterfaceFile;
         self.myFlowFile_ = myFlowFile;
         self.mySurfaceFlowFile_ = mySurfaceFlowFile;
         self.myConvergenceFile_ = myConvergenceFile;
         self.myAerodynamicFile_ = myAerodynamicFile;
+
         #Attributes
         self.Axis_ = "x";
         self.XCoordinate_ = 0.;
         self.YCoordinate_ = 0.;
         self.ZCoordinate_ = 0.;
+        self.firstCoordinate_ = 0.;
+        self.lastCoordinate_ = 0.;
+        self.numberOfSlices_ = 0;
+
         print("Initialize graphicsGenerator................................DONE")
 
     #Read interface file to execute user commands
@@ -60,31 +68,41 @@ class graphicsGenerator(object):
 
     #Initialize user command's booleans
     def Interface2Booleans(self, userCommands):
-        findLine = userCommands.index("OUTPUT (0-no 1-yes)\n");
+        findLine = len(userCommands);
+        startReading = findLine-11;
+
         #Remove \n from strings
-        string = userCommands[findLine+2].rstrip();
-        string1 = userCommands[findLine+4].rstrip();
-        string2 = userCommands[findLine+6].rstrip();
-        string3 = userCommands[findLine+8].rstrip();
-        string4 = userCommands[findLine+10].rstrip();
+        string = userCommands[startReading].rstrip();
+        string1 = userCommands[startReading+2].rstrip();
+        string2 = userCommands[startReading+4].rstrip();
+        string3 = userCommands[startReading+6].rstrip();
+        string4 = userCommands[startReading+8].rstrip();
+        string5 = userCommands[startReading+10].rstrip();
+
         #Put values into attributes
         ClAlpha, CdAlpha, CmAlpha = string.split(" ");
         CoefficientsConvergence, ResidualsConvergence = string1.split(" ");
         CpXc, SurfaceMachContour, SurfaceCpContour, MachIsosurface = string2.split(" ");
-        SliceCp = string3.split(" ");
+        SlicesCp = string3;
         Axis, XCoordinate, YCoordinate, ZCoordinate = string4.split(" ");
+        firstCoordinate, lastCoordinate, numberOfSlices = string5.split(" ");
 
         if Axis == "x":
             self.Axis_ = 1;
         elif Axis == "y":
             self.Axis_ = 2;
-        elif Axis == "y":
+        elif Axis == "z":
             self.Axis_ = 3;
 
         # String to float
         self.XCoordinate_ = float(XCoordinate);
         self.YCoordinate_ = float(YCoordinate);
         self.ZCoordinate_ = float(ZCoordinate);
+        self.firstCoordinate_ = float(firstCoordinate);
+        self.lastCoordinate_ = float(lastCoordinate);
+
+        # String to integer
+        self.numberOfSlices_ = int(numberOfSlices);
 
         #String to Boolean
         self.ClAlpha_Indicator_ = self.str2bool(ClAlpha);
@@ -92,7 +110,7 @@ class graphicsGenerator(object):
         self.CmAlpha_Indicator_ = self.str2bool(CmAlpha);
         self.CoefficientsConvergence_Indicator_ = self.str2bool(CoefficientsConvergence);
         self.ResidualsConvergence_Indicator_ = self.str2bool(ResidualsConvergence);
-        self.SlicesCp_Indicator_ = self.str2bool(SliceCp);
+        self.SlicesCp_Indicator_ = self.str2bool(SlicesCp);
         self.CpXc_Indicator_ = self.str2bool(CpXc);
         self.SurfaceCpContour_Indicator_ = self.str2bool(SurfaceCpContour);
         self.SurfaceMachContour_Indicator_ = self.str2bool(SurfaceMachContour);
@@ -195,11 +213,10 @@ class graphicsGenerator(object):
             plotresidualsconvergence_ = plotResidualsConvergence(npIterations_, npRoResiduals_, npUuResiduals_, npVvResiduals_, npWwResiduals_, npPpResiduals_);
 
         if self.SlicesCp_Indicator_:
-            #plotslicescp_ = plotSlicesCp();
-            print()
+            plotslicescp_ = plotSlicesCp(self.mySurfaceFlowFile_, self.Axis_, self.firstCoordinate_, self.lastCoordinate_, self.numberOfSlices_);
 
         if self.CpXc_Indicator_:
-            plotcpxc_ = plotCpXc(self.mySurfaceFlowFile_, self.Axis_, float(self.XCoordinate_), float(self.YCoordinate_), float(self.ZCoordinate_));
+            plotcpxc_ = plotCpXc(self.mySurfaceFlowFile_, self.Axis_, self.XCoordinate_, self.YCoordinate_, self.ZCoordinate_);
 
         if self.SurfaceCpContour_Indicator_:
             plotsurfacecpcontour_ = plotSurfaceCpContour(self.mySurfaceFlowFile_);

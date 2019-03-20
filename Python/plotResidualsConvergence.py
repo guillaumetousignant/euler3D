@@ -25,7 +25,7 @@ class plotResidualsConvergence(object):
         plt.ylabel('Residuals');
         plt.xlim(0);
         plt.legend();
-        print("Print ResidualsConvergence.png..................................");
+        print("Save ResidualsConvergence.png...................................");
         plt.savefig('ResidualsConvergence.png');
-        print("Print ResidualsConvergence.png..............................DONE");
+        print("Save ResidualsConvergence.png...............................DONE");
         print("plotResidualsConvergence....................................DONE");
