@@ -23,21 +23,21 @@ using namespace std;
 
 void ResidualCalculator::computeResidual(Block* block)
 {
-	cout<<"\t\t\tExécution computeResidual: "<<endl;
-	cout<<endl<<"\t\t\tDans Interpolation"<<endl;
+	//cout<<"\t\t\tExécution computeResidual: "<<endl;
+	//cout<<endl<<"\t\t\tDans Interpolation"<<endl;
 	interpolation_->computeInterpolation(block);
-	cout<<"\t\t\tFin Interpolation"<<endl;
-	cout<<endl<<"\t\t\tDans FluxScheme"<<endl;
+	//cout<<"\t\t\tFin Interpolation"<<endl;
+	//cout<<endl<<"\t\t\tDans FluxScheme"<<endl;
 	flux_scheme_->computeFluxConv(block);
 	flux_scheme_->current_beta_=beta_rk_[current_stage_];
 	if (beta_rk_[current_stage_]>(10^-16))
 	{
 		flux_scheme_->computeFluxDiss(block);
 	}
-	cout<<"\t\t\tFin FluxScheme"<<endl;
-	cout<<endl<<"\t\t\tDans ResidualSmoother"<<endl;
+	//cout<<"\t\t\tFin FluxScheme"<<endl;
+	//cout<<endl<<"\t\t\tDans ResidualSmoother"<<endl;
 	residual_smoother_->smoothResidual(block);
-	cout<<"\t\t\tFin ResidualSmoother"<<endl;
+	//cout<<"\t\t\tFin ResidualSmoother"<<endl;
 }
 
 

@@ -15,7 +15,7 @@ void FluxScheme::computeFluxDiss(Block* block)
 
 void FluxScheme::computeFluxConv(Block* block)
 {
-	cout<<"\t\t\t\tExécution computeFluxConv: "<<endl;
+	//cout<<"\t\t\t\tExécution computeFluxConv: "<<endl;
 
 	double rho_L,u_L,v_L,w_L,p_L,H_L,qq_L,V_L,rho_R,u_R,v_R,w_R,p_R,H_R,qq_R,V_R;
 	double Fc_L_1,Fc_L_2,Fc_L_3,Fc_L_4,Fc_L_5,Fc_R_1,Fc_R_2,Fc_R_3,Fc_R_4,Fc_R_5;

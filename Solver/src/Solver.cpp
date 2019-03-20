@@ -51,12 +51,13 @@ void Solver::solve(Block* block, CompleteMesh* complete_mesh)
 	}
 	*/
 	// PROVISOIRE!!!!
-	for(int i=0;i<2;i++)
+	for(int i=0;i<500;i++)
 	{
 		this->saveW0(block);
 		timestep_->computeSpectralRadius(block);
 		timestep_->computeTimestep(block);
 		runge_kutta_->computeRungeKutta(block);
+		cout<<"Iter: "<<i<<endl;
 	}
 
 	cout << "Writing Solution......................................................" << endl;
@@ -101,7 +102,7 @@ void Solver::solve(Block* block, CompleteMesh* complete_mesh)
 		//updater_->synchroniseUpdate(complete_mesh??); // SYNCHRONISE LES VARIABLES PRIMITIVES DES CELLULES PHANTOMES
 		//timestep_->synchroniseGradient(complete_mesh??); //SYNCHRONISE LES GRADIENTS DES CELLULES PHANTOMES (peut-être déplacer la fonction autre que dans timestep_??)
 		//timestep_->synchroniseLimiter(complete_mesh??); //SYNCHRONISE LES LIMITERS DES CELLULES PHANTOMES (peut-être déplacer la fonction autre que dans timestep_??)
-		//post_processing_->decision(complete_mesh??); //PARTIE QUI CALCULE LES SOMMES, PRENDS LES DÉCISIONS ET PUBLISH
+		//post_processing_->process(block, complete_mesh); //PARTIE QUI CALCULE LES SOMMES, PRENDS LES DÉCISIONS ET PUBLISH
 		/// FIN DES TRUCS MPI
 
 		for	(i=0;i<n_blocks_in_process;i++)
@@ -111,7 +112,7 @@ void Solver::solve(Block* block, CompleteMesh* complete_mesh)
 			timestep_->computeTimestep(current_block);
 			this->saveW0(current_block);
 			runge_kutta_->computeRungeKutta(current_block);
-			post_processing_->process(current_block, complete_mesh); //PARTIE QUI FAIT JUSTE CALCULER LES CL ET CONVERGENCE PARTIELLE
+			post_processing_->computeFlowData(current_block); //PARTIE QUI FAIT JUSTE CALCULER LES CL ET CONVERGENCE PARTIELLE
 		}
 
 	}
@@ -124,7 +125,7 @@ void Solver::solve(Block* block, CompleteMesh* complete_mesh)
 
 void Solver::saveW0(Block* block)
 {
-	cout<<"\tExécution w0: "<<endl;
+	//cout<<"\tExécution w0: "<<endl;
 
 	
 	int nb_real_cells=block->n_real_cells_in_block_;

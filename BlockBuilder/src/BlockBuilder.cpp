@@ -388,6 +388,19 @@ for(i=0;i < block->n_wall_faces_ ;i++)
 	//std::cout<<"TEST WALL cell ID 2: "<< (block->block_faces_[(block->block_wall_face_ids_[i])])->face_2_cells_connectivity_[1]<<std::endl;
 }
 
+
+std::cout<<"Remplissage de l'array face_ids_in_farfield"<<std::endl;
+int temp_farfield_face_count=0;
+int* farfield_face_count;
+farfield_face_count=&temp_farfield_face_count;
+int farfield_face_id, farfield_cell_id;
+for(i=0;i < block->n_farfield_faces_ ;i++)
+{
+	farfield_cell_id=(block->block_farfield_face_ids_[i]);
+	farfield_face_id=(block->block_cells_[farfield_cell_id])->cell_2_faces_connectivity_[0];
+	block ->addFaceIdInFarfield(farfield_face_id,farfield_face_count);
+	
+}
 //std::cout<<"TEEEEEEEST WALLLLLL FAAAAAAACE IIIIIIIIDS FIIIIIIIIIIIIIIIIINAL: "<< *wall_face_count<<std::endl;
 
 

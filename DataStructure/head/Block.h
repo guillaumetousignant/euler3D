@@ -34,6 +34,8 @@ public:
 	InterpolationVariables* block_interpolation_variables_;
 
 	BoundaryCellIds** block_boundary_cell_ids_;
+	int* block_farfield_face_ids_;
+	int n_farfield_faces_;
 	int* block_wall_face_ids_;
 	int n_wall_faces_;
 
@@ -42,6 +44,7 @@ public:
 	void addFace(Face* new_face);
 	void addCellIdInBoundary(int cell_id, BoundaryCellIds* some_boundary);
 	void addFaceIdInWall(int face_id,int* face_count);
+	void addFaceIdInFarfield(int face_id,int* face_count);
 
 	Block(int block_id);
 	~Block();

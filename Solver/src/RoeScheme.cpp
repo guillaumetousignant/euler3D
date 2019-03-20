@@ -11,7 +11,7 @@ using namespace std;
 
 void RoeScheme::computeFluxDiss(Block* block)
 {
-	cout<<"\t\t\t\tExécution computeFluxDiss: Roe: "<<endl;
+	//cout<<"\t\t\t\tExécution computeFluxDiss: Roe: "<<endl;
 
 	//Set variables
 	double rho_L,u_L,v_L,w_L,p_L,H_L,qq_L,V_L,rho_R,u_R,v_R,w_R,p_R,H_R,qq_R,V_R;
@@ -217,11 +217,11 @@ void RoeScheme::computeFluxDiss(Block* block)
 
 		if (fabs(normalized_z)<0.5)
 		{
-			cout<<"fluxes: "<<face_idx<<" "<<normalized_x<<" "<<normalized_y<<" "<<normal_norm<<endl;
-			cout<<flux_1_dissipative<<" "<<flux_2_dissipative<<" "<<flux_3_dissipative<<" "<<flux_5_dissipative<<endl;
-			cout<<F_1_u<<" "<<F_234_u<<" "<<F_5_u<<endl<<endl;
-			cout<<my_diss_res_uu[left_cell]<<" "<<my_diss_res_uu[right_cell]<<endl;
-			cout<<current_beta_<<endl<<endl;
+			//cout<<"fluxes: "<<face_idx<<" "<<normalized_x<<" "<<normalized_y<<" "<<normal_norm<<endl;
+			//cout<<flux_1_dissipative<<" "<<flux_2_dissipative<<" "<<flux_3_dissipative<<" "<<flux_5_dissipative<<endl;
+			//cout<<F_1_u<<" "<<F_234_u<<" "<<F_5_u<<endl<<endl;
+			//cout<<my_diss_res_uu[left_cell]<<" "<<my_diss_res_uu[right_cell]<<endl;
+			//cout<<current_beta_<<endl<<endl;
 
 
 			my_diss_res_ro[left_cell] += flux_1_dissipative*current_beta_;
@@ -266,7 +266,7 @@ void RoeScheme::computeFluxDiss(Block* block)
 		*/
 
 	}
-	 
+	
 
 }
 
