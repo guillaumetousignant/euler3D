@@ -21,11 +21,6 @@ AerodynamicParameters::AerodynamicParameters(double cmac, double mach_aircraft, 
   mach_aircraft_=mach_aircraft;
   aoa_rad_=aoa_deg*atan(1)*4/180;
 
-
-
-
-
-
   cout << "Initialize AerodynamicParameters.................................DONE" << endl;
 }
 
@@ -39,7 +34,6 @@ AerodynamicParameters::~AerodynamicParameters()
 void AerodynamicParameters::calculateForce(double cpbc, double area, double nx, double ny, double nz)
 {
   //cout << "Starting calculateForce.............................................." << endl;
-
 
   force_ = cpbc;
   fx_ = force_*nx;
@@ -173,7 +167,6 @@ void AerodynamicParameters::computeAerodynamic(Block* block)
   dyn_head = 0.5*gamma_*mach_aircraft_*mach_aircraft_;
 
 
-
   int i, cell_0, cell_1, wall_face_id;
   double face_x_coordinate, face_y_coordinate, face_z_coordinate;
   double pp0, pp1, ppbc, cpbc;
@@ -241,6 +234,9 @@ void AerodynamicParameters::computeAerodynamic(Block* block)
 
   cl_ = cl_/(dyn_head*cmac_);
   cd_ = cd_/(dyn_head*cmac_);
+  //cmx_ = cmx_/(dyn_head*cmac_);
+  //cmy_ = cmy_/(dyn_head*cmac_);
+  //cmz_ = cmz_/(dyn_head*cmac_);
 
 
   calculateGlobalCl();
