@@ -15,9 +15,9 @@ using namespace std;
 class Initializer
 {
 	public:
-		
 
-		// Solver* initializeSolver(Interface* interface);
+
+		Solver* initializeSolver(Interface* interface);
 		CompleteMesh* InitializeMesh(Interface* interface);
 		Initializer();
 		~Initializer();

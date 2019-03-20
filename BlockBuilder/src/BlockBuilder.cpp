@@ -11,6 +11,7 @@
 #include "Block.h"
 #include <iostream>
 #include <string>
+#include <vector>
 
 BlockBuilder::BlockBuilder(std::string block_file)
 {
@@ -195,6 +196,8 @@ void BlockBuilder::setConnectivity(Block* block)
 
 		
 std::cout<<"DÉBUT face_2_cells"<<std::endl;
+	
+	/*
 	//face_2_cells_connectivity_
 		for(i=0;i <= block->n_faces_in_block_-1 ;i++)
 		{
@@ -229,6 +232,102 @@ std::cout<<"DÉBUT face_2_cells"<<std::endl;
 					}
 				}
 			}
+		}
+		*/
+
+
+		// METHODE CHARLES
+		int* node_0_node_2_cell_connectivity;
+		int* node_1_node_2_cell_connectivity;
+		int* node_2_node_2_cell_connectivity;
+		int node_0_n_cells_per_node,node_1_n_cells_per_node,node_2_n_cells_per_node;
+
+		for(i=0;i < block->n_faces_in_block_ ;i++)
+		{
+			
+			node_0=block->block_faces_[i]->face_2_nodes_connectivity_[0];
+			node_1=block->block_faces_[i]->face_2_nodes_connectivity_[1];
+			node_2=block->block_faces_[i]->face_2_nodes_connectivity_[2];
+
+			node_0_node_2_cell_connectivity=block->block_nodes_[node_0]->node_2_cells_connectivity_;
+			node_0_n_cells_per_node=block->block_nodes_[node_0]->n_cells_per_node_;
+
+			node_1_node_2_cell_connectivity=block->block_nodes_[node_1]->node_2_cells_connectivity_;
+			node_1_n_cells_per_node=block->block_nodes_[node_1]->n_cells_per_node_;
+
+			node_2_node_2_cell_connectivity=block->block_nodes_[node_2]->node_2_cells_connectivity_;
+			node_2_n_cells_per_node=block->block_nodes_[node_2]->n_cells_per_node_;
+
+			// is member algorithm node_0-node_1
+			std::vector<int> common_cells_node_0_node_1;
+
+			//loop on node_0 cells
+			for (j=0;j<node_0_n_cells_per_node;j++)
+			{
+				//loop on node_1 cells
+				for(k=0;k<node_1_n_cells_per_node;k++)
+				{
+					if(node_0_node_2_cell_connectivity[j]==node_1_node_2_cell_connectivity[k])
+					{
+						common_cells_node_0_node_1.push_back(node_0_node_2_cell_connectivity[j]);
+					}
+				}
+			}
+
+			// is member algorithm node_0-node_2
+			std::vector<int> common_cells_node_0_node_2;
+
+			//loop on node_0 cells
+			for (j=0;j<node_0_n_cells_per_node;j++)
+			{
+				//loop on node_2 cells
+				for(k=0;k<node_2_n_cells_per_node;k++)
+				{
+					if(node_0_node_2_cell_connectivity[j]==node_2_node_2_cell_connectivity[k])
+					{
+						common_cells_node_0_node_2.push_back(node_0_node_2_cell_connectivity[j]);
+					}
+				}
+			}
+
+			//is member algorithm common_cells_node_0_node_1 & common_cells_node_0_node_2
+			int idx_face_2_cells=0;
+			std::vector<int> common_cells_node_0_node_1_node_2;
+			block->block_faces_[i]->face_2_cells_connectivity_=new int[2]();
+
+			//loop on node_0 cells
+			for (j=0;j<common_cells_node_0_node_1.size();j++)
+			{
+				//loop on node_2 cells
+				for(k=0;k<common_cells_node_0_node_2.size();k++)
+				{
+					if(common_cells_node_0_node_1[j]==common_cells_node_0_node_2[k])
+					{
+						block->block_faces_[i]->face_2_cells_connectivity_[idx_face_2_cells]=common_cells_node_0_node_1[j];
+						idx_face_2_cells++;
+						common_cells_node_0_node_1_node_2.push_back(common_cells_node_0_node_1[j]);
+					}
+				}
+			}
+
+
+
+			if (idx_face_2_cells>=3)
+			{
+				std::cout<<"ERREUR CONNECTIVITÉ FACE2CELLS: ";
+				for(k=0;k<common_cells_node_0_node_1_node_2.size();k++)
+				{
+					std::cout<<"cell :"<<common_cells_node_0_node_1_node_2[k]<<" ";
+				}
+
+				std::cout<<std::endl;
+				
+			}
+
+			common_cells_node_0_node_1.clear();
+			common_cells_node_0_node_2.clear();
+			common_cells_node_0_node_1_node_2.clear();
+			
 		}
 
 		//VÉRIFICATION
@@ -289,6 +388,19 @@ for(i=0;i < block->n_wall_faces_ ;i++)
 	//std::cout<<"TEST WALL cell ID 2: "<< (block->block_faces_[(block->block_wall_face_ids_[i])])->face_2_cells_connectivity_[1]<<std::endl;
 }
 
+
+std::cout<<"Remplissage de l'array face_ids_in_farfield"<<std::endl;
+int temp_farfield_face_count=0;
+int* farfield_face_count;
+farfield_face_count=&temp_farfield_face_count;
+int farfield_face_id, farfield_cell_id;
+for(i=0;i < block->n_farfield_faces_ ;i++)
+{
+	farfield_cell_id=(block->block_farfield_face_ids_[i]);
+	farfield_face_id=(block->block_cells_[farfield_cell_id])->cell_2_faces_connectivity_[0];
+	block ->addFaceIdInFarfield(farfield_face_id,farfield_face_count);
+	
+}
 //std::cout<<"TEEEEEEEST WALLLLLL FAAAAAAACE IIIIIIIIDS FIIIIIIIIIIIIIIIIINAL: "<< *wall_face_count<<std::endl;
 
 

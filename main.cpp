@@ -1,5 +1,15 @@
+#ifndef SOLVERSKELETON_SRC_TESTMAIN_CPP
+#define SOLVERSKELETON_SRC_TESTMAIN_CPP
+
+#include "Block.h"
+
+#include "Initializer.h"
+#include "Interface.h"
+#include "Solver.h"
+
 
 #include <iostream>
+#include <string>
 #include <mpi.h>
 #include "Block.h"
 #include "ConcreteBlockBuilder.h"
@@ -9,170 +19,61 @@
 
 using namespace std;
 
-int main()
+int main(int argc, char* argv[])
 {
-    // Initialize the MPI environment
-    MPI_Init(NULL, NULL);
+	cout << "========================STARTING PROGRAM========================" << endl;
 
-    cout << "This is the main 3" << endl;
-    
-    // Finalize the MPI environment.
-    MPI_Finalize();
+	cout << R"(
+		           (        (
+		           )\ )     )\ )
+		 (      ( (()/( (  (()/(
+		 )\     )\ /(_)))\  /(_))
+		((_) _ ((_|_)) ((_)(_))
+		| __| | | | |  | __| _ \
+		| _|| |_| | |__| _||   /
+		|___|\___/|____|___|_|_\
 
-    int* my_blocks = new int[1];
-    my_blocks[0] = 0;
-    CompleteMesh* complete_mesh = new CompleteMesh(1,1,my_blocks);
-    complete_mesh->InitializeMyBlocks();
+	)" << endl;
 
-    Block* new_block = complete_mesh->all_blocks_[0]; // hard coded right now
-    //concrete_block_builder.setConnectivity(new_block);
-    MetricsInitializer metricsInit(new_block);
-    metricsInit.doInit();
-    cout<<"HAAAAAAAAAAAAAAAAAAAAAAAA Si tu m'entends crier c'est que le code a roulé au complet, en parlant de rouler, connais-tu le concours déroule le rebors, Tim Hortons offre un service et des produits de qualité à un prix qui fait envier"<<endl;
+	if (argc > 1)
+	{
+		cout << "Input file is : " << argv[1] << endl;
+	}
+	else
+	{
+		cout << "ERROR: No input file" << endl;
+		exit(0);
+	}
 
+	MPI_Init(NULL, NULL);
 
-// // <<<<<<< HEAD
-// //     int* my_blocks = new int[1];
-// //     my_blocks[0] = 0;
-// // =======
-//     Block* new_block = new Block(0);
-//     string block_file ="../UnstructuredMesh5x5.su2";
-//     // string block_file ="../TestMesh2x1.su2";
+	MPI_Finalize();
 
-//     ConcreteBlockBuilder concrete_block_builder = ConcreteBlockBuilder(block_file);
-//     concrete_block_builder.preReadMyBlock(new_block);
-//     concrete_block_builder.readMyBlock(new_block);
+	Interface* interface= new Interface(argv[1]);
+	Initializer* initializer= new Initializer();
 
-//     concrete_block_builder.createMyFaces(new_block);
+	int* my_blocks = new int[1];
+	my_blocks[0] = 0;
 
-//     concrete_block_builder.setConnectivity(new_block);
+	cout << "In CompleteMesh........." << endl;
+	CompleteMesh* complete_mesh = new CompleteMesh(1,1,my_blocks, interface->topology_file_name_interface_);
+	complete_mesh->InitializeMyBlocks();
+	Block* new_block = complete_mesh->all_blocks_[0];
 
-//     MetricsInitializer metricsInit(new_block);
-//     metricsInit.doInit(); 
+	cout << "In MetricsInitializer........." << endl;
+	MetricsInitializer metricsInit(new_block);
+	metricsInit.doInit();
 
-// /*
-//     cout<<"Cellules\n";
-//     Cell* test_cell;
-//     for(int i=0;i<new_block->n_real_cells_in_block_;i++)
-//     {
-//     	test_cell = new_block ->block_cells_[i];
-//     	cout<<"cell_id_\t"<<test_cell->cell_id_<<endl;
-// 	    cout<<"cell_2_nodes_connectivity_\t"<<test_cell->cell_2_nodes_connectivity_[0]<<"\t"<<test_cell->cell_2_nodes_connectivity_[1]<<"\t"<<test_cell->cell_2_nodes_connectivity_[2]<<"\t"<<test_cell->cell_2_nodes_connectivity_[3]<<"\t"<<test_cell->cell_2_nodes_connectivity_[4]<<"\t"<<test_cell->cell_2_nodes_connectivity_[5]<<"\t"<<test_cell->cell_2_nodes_connectivity_[6]<<"\t"<<test_cell->cell_2_nodes_connectivity_[7]<<endl;
-// 	    cout<<"n_nodes_per_cell_\t"<<test_cell->n_nodes_per_cell_<<endl;
-// 	    cout<<"n_faces_per_cell_\t"<<test_cell->n_faces_per_cell_<<endl;
-// 	    cout<<"block_id_\t"<<test_cell->block_id_<<endl;
-//     }
+	cout << "In calculateFreeVariables........." << endl;
+	new_block->block_primitive_variables_->calculateFreeVariables(interface->gamma_interface_, interface->aoa_deg_interface_, interface->mach_aircraft_interface_);
 
-//     for(int i=new_block->n_real_cells_in_block_;i<new_block->n_all_cells_in_block_;i++)
-//     {
-//     	test_cell = new_block ->block_cells_[i];
-//     	cout<<"cell_id_\t"<<test_cell->cell_id_<<endl;
-// 	    cout<<"cell_2_nodes_connectivity_\t"<<test_cell->cell_2_nodes_connectivity_[0]<<"\t"<<test_cell->cell_2_nodes_connectivity_[1]<<"\t"<<test_cell->cell_2_nodes_connectivity_[2]<<"\t"<<test_cell->cell_2_nodes_connectivity_[3]<<endl;
-// 	    cout<<"n_nodes_per_cell_\t"<<test_cell->n_nodes_per_cell_<<endl;
-// 	    cout<<"n_faces_per_cell_\t"<<test_cell->n_faces_per_cell_<<endl;
-// 	    cout<<"block_id_\t"<<test_cell->block_id_<<endl;
-//     }
+	cout << "In initializeFlowField........." << endl;
+	new_block->block_primitive_variables_->initializeFlowField(new_block->n_all_cells_in_block_);
 
-//     // test_cell = new_block ->block_cells_[12];
-//     // cout<<test_cell->cell_2_nodes_connectivity_[1]<<endl;
-//     cout<<"Noeuds\n";
-//     Node* test_node;
-//     for(int i=0;i<new_block->n_nodes_in_block_;i++)
-//     {
-//     	test_node = new_block ->block_nodes_[i];
-//     	cout<<"node_id_\t"<<test_node->node_id_<<endl;
-// 	    cout<<"node_coordinates_\t"<<test_node->node_coordinates_[0]<<"\t"<<test_node->node_coordinates_[1]<<"\t"<<test_node->node_coordinates_[2]<<endl;
-// 	    cout<<"block_id_\t"<<test_node->block_id_<<endl;
-//     }
-//     // test_node = new_block ->block_nodes_[12];
-//     // cout<<test_node->node_coordinates_[1]<<endl;
-//     // cout<<test_node->node_coordinates_[2]<<endl;
-//     Face* test_face;
-//     cout<<"Faces\n";
-//     for(int i=0;i<new_block->n_faces_in_block_;i++)
-//     {
-//     	test_face = new_block ->block_faces_[i];
-//     	cout<<"face_id_\t"<<test_face->face_id_<<endl;
-// 	    cout<<"face_2_nodes_connectivity_\t"<<test_face->face_2_nodes_connectivity_[0]<<"\t"<<test_face->face_2_nodes_connectivity_[1]<<"\t"<<test_face->face_2_nodes_connectivity_[2]<<"\t"<<test_face->face_2_nodes_connectivity_[3]<<endl;
-// 	    cout<<"n_nodes_per_face_\t"<<test_face->n_nodes_per_face_<<endl;
-// 	    cout<<"block_id_\t"<<test_face->block_id_<<endl;
-//     }
-
-// */
-
-//         cout<<"HAAAAAAAAAAAAAAAAAAAAAAAA Si tu m'entends crier c'est que le code a roulé au complet, en parlant de rouler, connais-tu le concours déroule le rebors, Tim Hortons offre un service et des produits de qualité à un prix qui fait envier"<<endl;
-// //>>>>>>> origin/metrics
-//     // a decommenter
-//     // CompleteMesh* complete_mesh = new CompleteMesh(1,1,my_blocks);
-//     // complete_mesh->InitializeMyBlocks();
-
-
-//     // Block* new_block = new Block(0);
-//     // string block_file ="../UnstructuredMesh5x5.su2";
-
-
-//     // // string block_file ="../TestMesh2x1.su2";
-
-//     // ConcreteBlockBuilder concrete_block_builder = ConcreteBlockBuilder(block_file);
-//     // concrete_block_builder.preReadMyBlock(new_block);
-//     // concrete_block_builder.readMyBlock(new_block);
-
-//     // concrete_block_builder.createMyFaces(new_block);
-
-//     // cout<<"Cellules\n";
-//     // Cell* test_cell;
-//     // for(int i=0;i<new_block->n_real_cells_in_block_;i++)
-//     // {
-//     // 	test_cell = new_block ->block_cells_[i];
-//     // 	cout<<"cell_id_\t"<<test_cell->cell_id_<<endl;
-// 	   //  cout<<"cell_2_nodes_connectivity_\t"<<test_cell->cell_2_nodes_connectivity_[0]<<"\t"<<test_cell->cell_2_nodes_connectivity_[1]<<"\t"<<test_cell->cell_2_nodes_connectivity_[2]<<"\t"<<test_cell->cell_2_nodes_connectivity_[3]<<"\t"<<test_cell->cell_2_nodes_connectivity_[4]<<"\t"<<test_cell->cell_2_nodes_connectivity_[5]<<"\t"<<test_cell->cell_2_nodes_connectivity_[6]<<"\t"<<test_cell->cell_2_nodes_connectivity_[7]<<endl;
-// 	   //  cout<<"n_nodes_per_cell_\t"<<test_cell->n_nodes_per_cell_<<endl;
-// 	   //  cout<<"n_faces_per_cell_\t"<<test_cell->n_faces_per_cell_<<endl;
-// 	   //  cout<<"block_id_\t"<<test_cell->block_id_<<endl;
-//     // }
-
-//     // for(int i=new_block->n_real_cells_in_block_;i<new_block->n_all_cells_in_block_;i++)
-//     // {
-//     // 	test_cell = new_block ->block_cells_[i];
-//     // 	cout<<"cell_id_\t"<<test_cell->cell_id_<<endl;
-// 	   //  cout<<"cell_2_nodes_connectivity_\t"<<test_cell->cell_2_nodes_connectivity_[0]<<"\t"<<test_cell->cell_2_nodes_connectivity_[1]<<"\t"<<test_cell->cell_2_nodes_connectivity_[2]<<"\t"<<test_cell->cell_2_nodes_connectivity_[3]<<endl;
-// 	   //  cout<<"n_nodes_per_cell_\t"<<test_cell->n_nodes_per_cell_<<endl;
-// 	   //  cout<<"n_faces_per_cell_\t"<<test_cell->n_faces_per_cell_<<endl;
-// 	   //  cout<<"block_id_\t"<<test_cell->block_id_<<endl;
-//     // }
-
-//     // // test_cell = new_block ->block_cells_[12];
-//     // // cout<<test_cell->cell_2_nodes_connectivity_[1]<<endl;
-//     // cout<<"Noeuds\n";
-//     // Node* test_node;
-//     // for(int i=0;i<new_block->n_nodes_in_block_;i++)
-//     // {
-//     // 	test_node = new_block ->block_nodes_[i];
-//     // 	cout<<"node_id_\t"<<test_node->node_id_<<endl;
-// 	   //  cout<<"node_coordinates_\t"<<test_node->node_coordinates_[0]<<"\t"<<test_node->node_coordinates_[1]<<"\t"<<test_node->node_coordinates_[2]<<endl;
-// 	   //  cout<<"block_id_\t"<<test_node->block_id_<<endl;
-//     // }
-//     // // test_node = new_block ->block_nodes_[12];
-//     // // cout<<test_node->node_coordinates_[1]<<endl;
-//     // // cout<<test_node->node_coordinates_[2]<<endl;
-//     // Face* test_face;
-//     // cout<<"Faces\n";
-//     // for(int i=0;i<new_block->n_faces_in_block_;i++)
-//     // {
-//     // 	test_face = new_block ->block_faces_[i];
-//     // 	cout<<"face_id_\t"<<test_face->face_id_<<endl;
-// 	   //  cout<<"face_2_nodes_connectivity_\t"<<test_face->face_2_nodes_connectivity_[0]<<"\t"<<test_face->face_2_nodes_connectivity_[1]<<"\t"<<test_face->face_2_nodes_connectivity_[2]<<"\t"<<test_face->face_2_nodes_connectivity_[3]<<endl;
-// 	   //  cout<<"n_nodes_per_face_\t"<<test_face->n_nodes_per_face_<<endl;
-// 	   //  cout<<"block_id_\t"<<test_face->block_id_<<endl;
-//     // }
-
-//     // std::cout << "test de nombre de boundary: "<< new_block->n_real_boundaries_in_block_ <<std::endl;
-//     // for (int i=0; i<new_block->n_real_boundaries_in_block_;i++) 
-//     // {
-//     //     //std::cout << "test de type de boundary: "<< ((new_block->block_boundary_cell_ids_[i])->n_cell_in_boundary_) <<std::endl;
-//     //     //std::cout << "test de boundary: "<< ((new_block->block_boundary_cell_ids_[i])->n_cell_in_boundary_) <<std::endl;
-//     //     //(new_block->block_boundary_cell_ids_[i])->updateBoundary();
-//     // }
-//     // delete new_block;
-
+	cout << "In Solver........." << endl;
+	Solver *solver=initializer->initializeSolver(interface);
+	solver->solve(new_block, complete_mesh);
 }
+
+
+#endif

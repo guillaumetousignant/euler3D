@@ -29,8 +29,8 @@ void WallCellIds::updateBoundary()
 
 		double un1=uu_int*normalized_x+vv_int*normalized_y+ww_int*normalized_z;// s'assurer du bon sens de la normale!
 		double uu_bc=uu_int-un1*normalized_x;
-		double vv_bc=uu_int-un1*normalized_y;
-		double ww_bc=uu_int-un1*normalized_z;
+		double vv_bc=vv_int-un1*normalized_y;
+		double ww_bc=ww_int-un1*normalized_z;
 
 		block->block_primitive_variables_->ro_[ext_cell_idx]=ro_int;
 		block->block_primitive_variables_->uu_[ext_cell_idx]=2.0*uu_bc-uu_int;
