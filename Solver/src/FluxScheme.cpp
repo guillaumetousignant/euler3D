@@ -15,7 +15,7 @@ void FluxScheme::computeFluxDiss(Block* block)
 
 void FluxScheme::computeFluxConv(Block* block)
 {
-	cout<<"\t\t\t\tExécution computeFluxConv: "<<endl;
+	//cout<<"\t\t\t\tExécution computeFluxConv: "<<endl;
 
 	double rho_L,u_L,v_L,w_L,p_L,H_L,qq_L,V_L,rho_R,u_R,v_R,w_R,p_R,H_R,qq_R,V_R;
 	double Fc_L_1,Fc_L_2,Fc_L_3,Fc_L_4,Fc_L_5,Fc_R_1,Fc_R_2,Fc_R_3,Fc_R_4,Fc_R_5;
@@ -46,6 +46,21 @@ void FluxScheme::computeFluxConv(Block* block)
 	my_conv_res_vv = my_primitive_variables -> conv_res_vv_;
 	my_conv_res_ww = my_primitive_variables -> conv_res_ww_;
 	my_conv_res_pp = my_primitive_variables -> conv_res_pp_;
+
+
+	int ncell;
+	ncell = block -> n_real_cells_in_block_;
+
+	for (int cell_idx=0; cell_idx<ncell; cell_idx++)
+	{
+		my_conv_res_ro[cell_idx] =0.0;
+		my_conv_res_uu[cell_idx] =0.0;
+		my_conv_res_vv[cell_idx] =0.0;
+		my_conv_res_ww[cell_idx] =0.0;
+		my_conv_res_pp[cell_idx] =0.0;
+
+	}
+	
 
 
 	int nface, left_cell, right_cell;
@@ -117,6 +132,8 @@ void FluxScheme::computeFluxConv(Block* block)
 		// cout << "conv_res_vv= " << my_conv_res_vv[left_cell] << endl;
 		// cout << "conv_res_ww= " << my_conv_res_ww[left_cell] << endl;
 		// cout << "conv_res_pp= " << my_conv_res_pp[left_cell] << endl;
+		
+
 		my_conv_res_ro[left_cell] += flux_1_convective;
 		my_conv_res_uu[left_cell] += flux_2_convective;
 		my_conv_res_vv[left_cell] += flux_3_convective;
@@ -128,17 +145,19 @@ void FluxScheme::computeFluxConv(Block* block)
 		my_conv_res_vv[right_cell] -= flux_3_convective;
 		my_conv_res_ww[right_cell] -= flux_4_convective;
 		my_conv_res_pp[right_cell] -= flux_5_convective;
+
+
 	}
 
 
 
-	Cell* my_cell;
-	int ncell;
+	
+	
 	ncell = block -> n_real_cells_in_block_;
 	double cell_volume;
 	
 	// EST-CE QU'ON DIVISE DEUX FOIS??
-	
+	Cell* my_cell;
 	for (int cell_idx=0; cell_idx<ncell; cell_idx++)
 	{
 		//cout << "=================================================" << endl;
@@ -161,6 +180,7 @@ void FluxScheme::computeFluxConv(Block* block)
 		cout << "conv_res_ww= " << my_conv_res_ww[cell_idx] << endl;
 		cout << "conv_res_pp= " << my_conv_res_pp[cell_idx] << endl;
 		*/
+		
 	}
 	
 

@@ -59,7 +59,7 @@ RungeKutta::RungeKutta(double gamma, int stage_number, int interpolation_choice,
 		beta_rk.push_back(1.0);
 		beta_rk.push_back(0.0);
 		beta_rk.push_back(0.56);
-		beta_rk.push_back(1.0);
+		beta_rk.push_back(0.0);
 		beta_rk.push_back(0.44);
 
 		break;

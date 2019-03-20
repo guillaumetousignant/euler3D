@@ -43,6 +43,7 @@ void ConcreteBlockBuilder::preReadMyBlock(Block* block)
 
 	int n_boundaries=0;
 	int n_elements_in_boundary=0;
+	int n_faces_in_farfield=0;
 	int n_faces_in_wall=0;
 	char boundary_type_temp[200];
 	std::string boundary_type;
@@ -109,9 +110,10 @@ void ConcreteBlockBuilder::preReadMyBlock(Block* block)
 			getline(myfile, line);
 			sscanf (line.c_str(), "%s %d",str_temp,&n_elements_in_boundary);
 
-			if(boundary_type=="FARFIELD" /*|| boundary_type == "WALL" || boundary_type == "CONNEXION"*/)
+			if(boundary_type=="FARFIELD" /*|| boundary_type == "FARFIELD" || boundary_type == "CONNEXION"*/)
 			{
 				faces_sum_in_boundaries+=n_elements_in_boundary;
+				n_faces_in_farfield+=n_elements_in_boundary;
 				//std::cout<<"on a une boundary farfield"<<std::endl;
 			}
 
@@ -143,6 +145,10 @@ void ConcreteBlockBuilder::preReadMyBlock(Block* block)
 		std::cout << "*********************ALLOCATION: "<< n_faces_in_wall<<std::endl;
 		block ->block_wall_face_ids_ = new int [n_faces_in_wall];
 		block->n_wall_faces_=n_faces_in_wall;
+
+		std::cout << "*********************ALLOCATION: "<< n_faces_in_farfield<<std::endl;
+		block ->block_farfield_face_ids_ = new int [n_faces_in_farfield];
+		block->n_farfield_faces_=n_faces_in_farfield;
 
 		n_all_cells = n_real_cells + n_ghost_cells;
 		block->block_cells_ = new Cell*[n_all_cells];
@@ -217,7 +223,13 @@ void ConcreteBlockBuilder::readMyBlock(Block* block)
 	std::string ghost_cell_type_temp;
 	std::string cell_2_nodes_connectivity_temp;
 	std::string ghost_cell_2_nodes_connectivity_temp;
+
 	char boundary_type_temp[50];
+
+	int temp_farfield_face_count=0;
+	int* farfield_face_count;
+	farfield_face_count=&temp_farfield_face_count;
+	
 	int temp_wall_face_count=0;
 	int* wall_face_count;
 	wall_face_count=&temp_wall_face_count;
@@ -369,7 +381,7 @@ void ConcreteBlockBuilder::readMyBlock(Block* block)
 				{
 					//std::cout<<"on a un farfield"<< std::endl;
 					block ->addCellIdInBoundary(cell_id,block->block_boundary_cell_ids_[real_boundary_id-1]);
-
+					block ->addFaceIdInFarfield(cell_id,farfield_face_count);
 				}
 				else if (boundary_type_temp_str == "CONNECTION") //Connection inter-bloc
 				{

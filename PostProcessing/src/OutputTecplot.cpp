@@ -157,7 +157,6 @@ void OutputTecplot::printFlowData(Block* block)
 
     // Claculate local mach number for each cell
     mach_cell = velocity_cell/a_cell;
-    mach_cell= block->block_cells_[i]->cell_volume_;
 
     FlowData << mach_cell << endl;
   }
@@ -208,7 +207,7 @@ void OutputTecplot::printSurfaceFlowData(Block* block)
 
 void OutputTecplot::printConvergence(int iter, double cl, double cd, double cmx, double cmy, double cmz, double ro_convergence, double uu_convergence, double vv_convergence, double ww_convergence, double pp_convergence)
 {
-  cout << "Starting printConvergence............................................" << endl;
+  //cout << "Starting printConvergence............................................" << endl;
 
   int i;
 
@@ -235,7 +234,7 @@ void OutputTecplot::printConvergence(int iter, double cl, double cd, double cmx,
   Convergence.close();
 
 
-  cout << "Ending printConvergence.............................................." << endl;
+  //cout << "Ending printConvergence.............................................." << endl;
 }
 
 void OutputTecplot::printAerodynamicCoefficients(double cl, double cd, double cmx, double cmy, double cmz)

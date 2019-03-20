@@ -50,33 +50,23 @@ void Solver::solve(Block* block, CompleteMesh* complete_mesh)
 	cout<<"Fin de l'Exécution solve"<<endl;
 	}
 	*/
+
+
 	// PROVISOIRE!!!!
-	for(int i=0;i<2;i++)
+	while(true)
 	{
 		this->saveW0(block);
 		timestep_->computeSpectralRadius(block);
 		timestep_->computeTimestep(block);
 		runge_kutta_->computeRungeKutta(block);
+		post_processing_->computeFlowData(block);
+		post_processing_->process(block, complete_mesh);
+		//cout<<"Iter: "<<i<<endl;
 	}
 
-	cout << "Writing Solution......................................................" << endl;
-	post_processing_->output_tecplot_->printFlowData(block);
-	cout << "Exiting program......................................................" << endl;
-
-	Face* test_face;
-    cout<<"Faces\n";
-    std::cout<<"Test face---------------------------------  "<< block->n_faces_in_block_<<std::endl;
-	    
-	for(int i=0;i<block->n_faces_in_block_;i++)
-    {
-    	cout<<"numero_id_\t"<<i<<endl;
-    	test_face = block ->block_faces_[i];
-
-    	cout<<"face_id_: "<<test_face->face_id_<<endl;
-	    cout<<"face_2_cells_connectivity_: "<<test_face->face_2_cells_connectivity_[0]<<" "<<test_face->face_2_nodes_connectivity_[1]<<endl;
-	    cout<<"face_coords: "<<test_face->face_center_[0]<<" "<<test_face->face_center_[1]<<" "<<test_face->face_center_[2]<<endl;
-	    cout<<"face normals "<<test_face->face_normals_[0]<<" "<<test_face->face_normals_[1]<<" "<<test_face->face_normals_[2]<<" "<<test_face->face_area_<<endl;
-    }
+	
+	
+    
 	/*
 
 	int i;
@@ -97,7 +87,7 @@ void Solver::solve(Block* block, CompleteMesh* complete_mesh)
 		//updater_->synchroniseUpdate(complete_mesh??); // SYNCHRONISE LES VARIABLES PRIMITIVES DES CELLULES PHANTOMES
 		//timestep_->synchroniseGradient(complete_mesh??); //SYNCHRONISE LES GRADIENTS DES CELLULES PHANTOMES (peut-être déplacer la fonction autre que dans timestep_??)
 		//timestep_->synchroniseLimiter(complete_mesh??); //SYNCHRONISE LES LIMITERS DES CELLULES PHANTOMES (peut-être déplacer la fonction autre que dans timestep_??)
-		//post_processing_->decision(complete_mesh??); //PARTIE QUI CALCULE LES SOMMES, PRENDS LES DÉCISIONS ET PUBLISH
+		//post_processing_->process(block, complete_mesh); //PARTIE QUI CALCULE LES SOMMES, PRENDS LES DÉCISIONS ET PUBLISH
 		/// FIN DES TRUCS MPI
 
 		for	(i=0;i<n_blocks_in_process;i++)
@@ -107,7 +97,7 @@ void Solver::solve(Block* block, CompleteMesh* complete_mesh)
 			timestep_->computeTimestep(current_block);
 			this->saveW0(current_block);
 			runge_kutta_->computeRungeKutta(current_block);
-			post_processing_->process(current_block, complete_mesh); //PARTIE QUI FAIT JUSTE CALCULER LES CL ET CONVERGENCE PARTIELLE
+			post_processing_->computeFlowData(current_block); //PARTIE QUI FAIT JUSTE CALCULER LES CL ET CONVERGENCE PARTIELLE
 		}
 
 	}
@@ -120,7 +110,7 @@ void Solver::solve(Block* block, CompleteMesh* complete_mesh)
 
 void Solver::saveW0(Block* block)
 {
-	cout<<"\tExécution w0: "<<endl;
+	//cout<<"\tExécution w0: "<<endl;
 
 	
 	int nb_real_cells=block->n_real_cells_in_block_;

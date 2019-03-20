@@ -80,7 +80,7 @@ public:
 
   // Methods
 
-  void computeFlowData(Block* block, CompleteMesh* complete_mesh);
+  void computeFlowData(Block* block);
   void checkStopSolver();
   void convergenceSum(CompleteMesh* complete_mesh);
   void convergenceSum0(CompleteMesh* complete_mesh);
