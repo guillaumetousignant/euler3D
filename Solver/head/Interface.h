@@ -75,7 +75,7 @@ class Interface
 		int n_blocks_interface_; // RÉGLER CE PROBLÈME LÀ
 
 
-		Interface();
+		Interface(char* argv);
 		~Interface();
 
 

@@ -263,7 +263,7 @@ void PostProcessing::process(Block* block, CompleteMesh* complete_mesh)
       output_tecplot_->printSurfaceFlowData(block);
       output_tecplot_->printAerodynamicCoefficients(cl_geometry_mesh_, cd_geometry_mesh_, cmx_geometry_mesh_, cmy_geometry_mesh_, cmz_geometry_mesh_);
       output_tecplot_->printRestartFile(block);
-      cout << "Exiting program......................................................" << endl;
+      cout << "========================END OF PROGRAM========================" << endl;
       exit(0);
     }
 

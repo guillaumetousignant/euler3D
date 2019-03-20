@@ -232,10 +232,10 @@ void Interface::readInputFile(string input_file_name)
 
 
 
-Interface::Interface()
+Interface::Interface(char* argv)
 {
 	string input_file_name;
-	input_file_name="input_test1";
+	input_file_name=argv;
 	readInputFile(input_file_name);
 
 
