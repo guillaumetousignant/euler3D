@@ -23,9 +23,9 @@ OUTPUT (0-no 1-yes)
 clalpha cdalpha cmalpha
 0 0 0
 coefficientsconvergence residualconv
-0 0
+1 1
 cpxc machcontour cpcontour machisosurface
-1 0 0 0
+1 1 1 1
 slicescp
 1
 axis xcoord ycoord zcoord
