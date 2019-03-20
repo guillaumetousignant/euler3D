@@ -54,7 +54,7 @@ void CompleteMesh::InitializeMyBlocks()
 		std::cout<<block_id<<std::endl;
 
 		block_id_string = std::to_string(block_id);
-		block_file = "../naca0012_coarse_nosidewall.su2" /*+ block_id_string + ".su2"*/;
+		block_file = "../naca0012_coarse.su2" /*+ block_id_string + ".su2"*/;
 		ConcreteBlockBuilder block_builder=ConcreteBlockBuilder(block_file);
 		new_block = all_blocks_[i];
 

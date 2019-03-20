@@ -12,7 +12,7 @@ from tecplot.constant import *
 myInterfaceFile_ = "Interface_output.txt";
 myFlowFile_ = "flow_3.06.dat";
 mySurfaceFlowFile_ = "surface_flow_3.06.dat";
-myConvergenceFile_ = "history_3.06.dat";
+myConvergenceFile_ = "Convergence.dat";
 myAerodynamicFile_ = "aerodynamic_file.dat";
 
 #Instantiate graphicsGenerator class

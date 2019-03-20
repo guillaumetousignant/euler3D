@@ -19,7 +19,7 @@ AerodynamicParameters::AerodynamicParameters(double cmac, double mach_aircraft, 
   gamma_=gamma;
   cmac_=cmac;
   mach_aircraft_=mach_aircraft;
-  aoa_rad_=aoa_deg*atan(1)*4/180;
+  aoa_rad_=aoa_deg*4.*atan(1.)/180;
 
   cout << "Initialize AerodynamicParameters.................................DONE" << endl;
 }
@@ -209,7 +209,7 @@ void AerodynamicParameters::computeAerodynamic(Block* block)
     ppbc = 0.5*(pp0 + pp1);
 
     // Pressure coefficient for each wall cell
-    cpbc = (ppbc-1.)/dyn_head;
+    cpbc = (ppbc-1.)/(dyn_head*cmac_);
 
     // Face normals
     // non-normalized
@@ -230,14 +230,6 @@ void AerodynamicParameters::computeAerodynamic(Block* block)
     calculateCmy(face_x_coordinate, face_z_coordinate);
     calculateCmz(face_x_coordinate, face_y_coordinate);
   }
-
-
-  cl_ = cl_/(dyn_head*cmac_);
-  cd_ = cd_/(dyn_head*cmac_);
-  //cmx_ = cmx_/(dyn_head*cmac_);
-  //cmy_ = cmy_/(dyn_head*cmac_);
-  //cmz_ = cmz_/(dyn_head*cmac_);
-
 
   calculateGlobalCl();
   calculateGlobalCd();

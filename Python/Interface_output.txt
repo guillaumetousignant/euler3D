@@ -25,9 +25,9 @@ clalpha cdalpha cmalpha
 coefficientsconvergence residualconv
 1 1
 cpxc machcontour cpcontour machisosurface
-1 1 1 1
+0 0 0 0
 slicescp
-1
+0
 axis xcoord ycoord zcoord
 y 0.00 0.25 0.00
 fcoord lcoord numberofslices

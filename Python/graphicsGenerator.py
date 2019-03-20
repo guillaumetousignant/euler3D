@@ -149,11 +149,11 @@ class graphicsGenerator(object):
 
     #Save residuals into a numpy array
     def getResiduals(self, myDataset):
-        RoResiduals = myDataset.variable(13).values(0).as_numpy_array();
-        UuResiduals = myDataset.variable(14).values(0).as_numpy_array();
-        VvResiduals = myDataset.variable(15).values(0).as_numpy_array();
-        WwResiduals = myDataset.variable(16).values(0).as_numpy_array();
-        PpResiduals = myDataset.variable(17).values(0).as_numpy_array();
+        RoResiduals = myDataset.variable(6).values(0).as_numpy_array();
+        UuResiduals = myDataset.variable(7).values(0).as_numpy_array();
+        VvResiduals = myDataset.variable(8).values(0).as_numpy_array();
+        WwResiduals = myDataset.variable(9).values(0).as_numpy_array();
+        PpResiduals = myDataset.variable(10).values(0).as_numpy_array();
         return RoResiduals, UuResiduals, VvResiduals, WwResiduals, PpResiduals;
 
     #Convergence file processing
@@ -165,9 +165,10 @@ class graphicsGenerator(object):
         npIterations = self.getIterations(self.convergenceDataset);
         npConvergenceCl = self.getCl(self.convergenceDataset);
         npConvergenceCd = self.getCd(self.convergenceDataset);
+        npConverenceCmx,npConverenceCmy, npConverenceCmz = self.getCm(self.convergenceDataset);
         npRoResiduals, npUuResiduals, npVvResiduals, npWwResiduals, npPpResiduals = self.getResiduals(self.convergenceDataset);
         print("processingConvergenceFile...................................DONE")
-        return npIterations, npConvergenceCl, npConvergenceCd, npRoResiduals, npUuResiduals, npVvResiduals, npWwResiduals, npPpResiduals;
+        return npIterations, npConvergenceCl, npConvergenceCd, npConverenceCmx,npConverenceCmy, npConverenceCmz, npRoResiduals, npUuResiduals, npVvResiduals, npWwResiduals, npPpResiduals;
 
     #Aerodynamic file processing
     def processingAerodynamicFile(self, myAerodynamicFile):
@@ -191,7 +192,7 @@ class graphicsGenerator(object):
         # Processing files
         if self.CoefficientsConvergence_Indicator_ or self.ResidualsConvergence_Indicator_:
             print(self.myConvergenceFile_)
-            npIterations_, npConvergenceCl_, npConvergenceCd_, npRoResiduals_, npUuResiduals_, npVvResiduals_, npWwResiduals_, npPpResiduals_ = self.processingConvergenceFile(self.myConvergenceFile_);
+            npIterations_, npConvergenceCl_, npConvergenceCd_, npConverenceCmx_, npConverenceCmy_, npConverenceCmz_, npRoResiduals_, npUuResiduals_, npVvResiduals_, npWwResiduals_, npPpResiduals_ = self.processingConvergenceFile(self.myConvergenceFile_);
 
         if self.ClAlpha_Indicator_ or self.CdAlpha_Indicator_ or self.CmAlpha_Indicator_:
             npAngleOfAttack_, npAerodynamicCl_, npAerodynamicCd_, npAerodynamicCmx_, npAerodynamicCmy_, npAerodynamicCmz_ = self.processingAerodynamicFile(self.myAerodynamicFile_);
@@ -207,7 +208,7 @@ class graphicsGenerator(object):
             plotcmaplha_ = plotCmAlpha(npAngleOfAttack_, npAerodynamicCmx_, npAerodynamicCmy_, npAerodynamicCmz_);
 
         if self.CoefficientsConvergence_Indicator_:
-            plotcoefficientsconvergence_ = plotCoefficientsConvergence(npIterations_, npConvergenceCl_, npConvergenceCd_);
+            plotcoefficientsconvergence_ = plotCoefficientsConvergence(npIterations_, npConvergenceCl_, npConvergenceCd_, npConverenceCmx_, npConverenceCmy_, npConverenceCmz_);
 
         if self.ResidualsConvergence_Indicator_:
             plotresidualsconvergence_ = plotResidualsConvergence(npIterations_, npRoResiduals_, npUuResiduals_, npVvResiduals_, npWwResiduals_, npPpResiduals_);
