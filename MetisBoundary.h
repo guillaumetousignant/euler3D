@@ -14,12 +14,15 @@ enum BoundaryType {
 class MetisBoundary
 {
 
-    static MetisBoundary ComputeGlobalBoundaries(const string boundaryName, int *nElements, const vector<vector<int>> &globalNodes);
-    static MetisBoundary ComputeConnectBoundaries(const vector<vector<int>> &globalNodes);
+  static MetisBoundary ComputeGlobalBoundaries(const string boundaryName, int *nElements, const vector<vector<int>> &globalNodes);
+  static MetisBoundary ComputeConnectBoundaries(const vector<vector<int>> &globalNodes);
+  
 
   public:
     MetisBoundary();
     ~MetisBoundary();
+
+    void Init(int nElements, int* nNodes);
 
   private:
     string boundaryName_;
@@ -29,7 +32,7 @@ class MetisBoundary
     int blockID_;
     BoundaryType boundaryType_; 
 
-    vector<int> **connectivity_;
+    vector<int> **boundariesConnectivity_;
 };
 
 #endif
