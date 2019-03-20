@@ -17,22 +17,30 @@ class MetisBoundary
   static MetisBoundary ComputeGlobalBoundaries(const string boundaryName, int *nElements, const vector<vector<int>> &globalNodes);
   static MetisBoundary ComputeConnectBoundaries(const vector<vector<int>> &globalNodes);
   
+  static BoundaryType FindBoundaryTypeFromTagStr(string tag_str);
 
   public:
-    MetisBoundary();
+    MetisBoundary(int nElements, int* elementType, int* elementNbrNodes, int **boundaryElements);
     ~MetisBoundary();
+    //void Init(int nBlock, int nElements, int* nNodes);
 
-    void Init(int nElements, int* nNodes);
+  public:
+    vector<vector<int>> localNodes;
+    int **boundaryElements_;
 
   private:
     string boundaryName_;
-    int *nElements_;
-    int *nNodes_;
+    
+    //int *nNodes_;
+    
+    int nElements_;
     int *elementType_;
-    int blockID_;
-    BoundaryType boundaryType_; 
+    int *elementNbrNodes_;
 
-    vector<int> **boundariesConnectivity_;
+    //int blockID_;
+    //int** boundaryType_;
+
+    //vector<int> **boundariesConnectivity_;
 };
 
 #endif

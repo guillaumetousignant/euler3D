@@ -1,4 +1,5 @@
 #include "MetisMesh.h"
+
 #include <iostream>
 #include <fstream>
 #include <metis.h>
@@ -135,20 +136,15 @@ void MetisMesh::Init(int nBlock, int *nElements, int *nNodes)
         elementType_[i] = new int [nElements[i]];
         elementNbrNodes_[i] = new int [nElements[i]];
 
-
         connectivity_[i] = new std::vector<int>[nElements_[i]];
-   
     }
 
     // Only want to initialize after partitioning
     if (nBlock != 1) {
-        cout << "nblock init " << nBlock << endl;
         local2GlobalElements_ = new int *[nBlock];
         
         for (int i = 0; i < nBlock; i++) {
-            cout << "i: " << i << "  nElements[i]: " << nElements[i] << endl;
-            local2GlobalElements_[i] = new int [nElements[i]];
-            
+            local2GlobalElements_[i] = new int [nElements[i]];       
         }
         cout << "Initialisation done global" << endl;
     }
@@ -161,13 +157,11 @@ int MetisMesh::nDimensions_ = 0;
 
 void MetisMesh::ReadSingleBlockMesh(std::string fileName)
 {
-
     ifstream myfile(fileName);
     string line;
 
     if (myfile.is_open())
     {
-
         cout << "Reading : " << fileName << endl;
         int nNodes(0);
         int nElements(0);
@@ -200,40 +194,67 @@ void MetisMesh::ReadSingleBlockMesh(std::string fileName)
             getline(myfile, line);
         }
 
+        // Nombre de conditions frontiere = nombre dobjet Boundary
         sscanf(line.c_str(), "NMARK=%d", &nBoundaries);
         cout << "Nb de conditions frontieres = " << nBoundaries << endl;
 
-        int nBoundaryElements[nBoundaries];
-
+        // Stock le nombre delements par boundary
+        
+        this->metisBoundaries = vector<MetisBoundary*>(nBoundaries);
         for (int i = 0; i < nBoundaries; i++) {
             getline(myfile, line);
+            // Finding the first equal sign in the string
+            // This is because we want only its right side MARKER_TAG= AIRFOIL
+            size_t pos_equal_sign = line.find('=');
+            // The string tag is whatever is at the right of the equal sign.
+            string str_tag = line.substr(pos_equal_sign+1);
+            // The following is the equivalent to a left trim (strip) 
+            while (str_tag[0] == ' ')
+            {
+                str_tag = str_tag.substr(1);
+            }
+
             getline(myfile, line);
 
-            sscanf(line.c_str(), "MARKER_ELEMS=%d", &nBoundaryElements[i]);
-            cout << "boundary element = " << i << " " << nBoundaryElements[i] << endl;
+            int nElements;
+            // Nombre d'elements de la condition frontiere i
+            sscanf(line.c_str(), "MARKER_ELEMS=%d", &nElements);
 
-            for (int j = 0; j < nBoundaryElements[i]; j++) {
-                getline(myfile, line);
-                
+            int* elementType = new int[nElements];
+            int* elementNbrNodes = new int[nElements];
+            int** boundaryElements = new int *[nElements];
+
+            for (int j = 0; j < nElements; j++) {
+                myfile >> elementType[j];
+                elementNbrNodes[j] = NumberOfNodes(elementType[j]);
+                boundaryElements[j] = new int[elementNbrNodes[j]];
+                for (int k = 0; k < elementNbrNodes[j]; k++)
+                {
+                    myfile >> boundaryElements[j][k];
+                }
             }
+            
+            // creation d'un objet metisBoundary* x nb de boundary
+            this->metisBoundaries[i] = new MetisBoundary(nElements, elementType, elementNbrNodes, boundaryElements);
+            boundaryElements = nullptr;
+            getline(myfile, line);
         }
         // Fonction d'initialisation :
         Init(nBlock, &nElements, &nNodes);
 
-        // Prepass 2 :
+
+        // Prepass 2 : retour au debut du fichier
         myfile.seekg(0, myfile.beg);
         getline(myfile, line);
+        cout << "is file empty/destroyed? (should print NDIME=3: )" << line << endl;
         getline(myfile, line);
         getline(myfile, line);
-
         nTotalNode_ = 0;
 
         for (int i = 0; i < nElements; i++)
         {
-
             sscanf(line.c_str(), "%d %s", &elementType_[0][i], str_temp);
             elementNbrNodes_[0][i] = NumberOfNodes(elementType_[0][i]);
-            cout << elementNbrNodes_[0][i] << endl;
             nTotalNode_ += elementNbrNodes_[0][i];
             getline(myfile, line);
         }
@@ -255,7 +276,8 @@ void MetisMesh::ReadSingleBlockMesh(std::string fileName)
             }
         }
 
-        myfile.seekg(0, myfile.beg);
+        // getline and tokenize node in boundaries
+        myfile.seekg(0, myfile.beg); //debut du fichier
         getline(myfile, line);
         getline(myfile, line);
 
@@ -273,6 +295,8 @@ void MetisMesh::ReadSingleBlockMesh(std::string fileName)
                 connectivity_[0][i].push_back(node);
             }
         }
+
+
 
         myfile.close();
         cout << "closing... " << fileName << endl;
@@ -406,11 +430,8 @@ MetisMesh* MetisMesh::Partition(int nPart)
 
     for (int i = 0; i < nElements_[0]; i++)
     {
-        cout << "elementType_[0][i]" << elementType_[0][i] << endl;
-        cout << "elementNbrNodes_[0][i] " << elementNbrNodes_[0][i] << endl;
         for (int j = 0; j < elementNbrNodes_[0][i]; j++)
         {
-
             eind[count1] = connectivity_[0][i][j];
             count1++;
         }
@@ -421,8 +442,6 @@ MetisMesh* MetisMesh::Partition(int nPart)
 
     int ncommon(2);
     int objval;
-    cout << "nElements_[0] " << nElements_[0] << endl;
-    cout << "nNodes_[0] " << nNodes_[0] << endl;
     int epart[nElements_[0]];
     int npart[nNodes_[0]];
 
@@ -503,7 +522,6 @@ MetisMesh* MetisMesh::Partition(int nPart)
 
    
     for (int blockI = 0; blockI < nPart; blockI++) {
-        cout << blockI << endl;
         newNelements[blockI] = elementsPerBlock[blockI].size();
 
         for (int i = 0; i < newNelements[blockI]; i++) {

@@ -2,6 +2,7 @@
 #define MESHREADER_H_
 #include <vector>
 #include <string>
+#include "MetisBoundary.h"
 
 class MetisMesh
 {
@@ -18,6 +19,7 @@ private:
     double** y_;
     double** z_;
     
+    std::vector<MetisBoundary*> metisBoundaries;
     std::vector<int>** connectivity_;
     // std::vector<int>* global2LocalElements_;
     // std::vector<int>** connectivity_boundary;
