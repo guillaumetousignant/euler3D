@@ -11,15 +11,14 @@ using namespace std;
 
 void LeastSquares::computeGradients(Block* block)
 {
-	block->test_block_-=4;
-	cout<<"\t\t\t\t\tExécution computeGradients: LeastSquares: "<<block->test_block_<<endl;
+	cout<<"\t\t\t\t\tExécution computeGradients: LeastSquares: "<<endl;
 }
 
 
 
 LeastSquares::LeastSquares()
 {
-	
+
 }
 
 LeastSquares::~LeastSquares()

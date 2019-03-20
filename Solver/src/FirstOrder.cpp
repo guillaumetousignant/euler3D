@@ -11,15 +11,14 @@ using namespace std;
 
 void FirstOrder::computeInterpolation(Block* block)
 {
-	block->test_block_+=3;
-	cout<<"\t\t\t\tExécution computeInterpolation: FirstOrder: "<<block->test_block_<<endl;
+	//cout<<"\t\t\t\tExécution computeInterpolation: FirstOrder: "<<endl;
 }
 
 
 
 FirstOrder::FirstOrder()
 {
-	
+
 }
 
 FirstOrder::~FirstOrder()

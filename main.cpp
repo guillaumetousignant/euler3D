@@ -11,6 +11,12 @@
 #include <iostream>
 #include <string>
 #include <mpi.h>
+#include "Block.h"
+#include "ConcreteBlockBuilder.h"
+#include "CompleteMesh.h"
+#include "Metrics/src/MetricsInitializer.h"
+
+
 using namespace std;
 
 int main()
@@ -19,54 +25,33 @@ int main()
 
 	cout << "This is the main" << endl;
 
-	int test_block=69;
-	Block* block= new Block(test_block);
-	CompleteMesh* complete_mesh;
-  	complete_mesh= new CompleteMesh();
-	Initializer* initializer= new Initializer();
-	Interface* interface= new Interface();
-
-	Solver *solver=initializer->initializeSolver(interface);
-	solver->solve(block, complete_mesh);
-
-
-	// Initialize the MPI environment
-
-
-	// Finalize the MPI environment.
 	MPI_Finalize();
 
+  // Block* new_block = new Block(0);
+  // string block_file ="../UnstructuredMesh5x5.su2";
+  // // string block_file ="../TestMesh2x1.su2";
 
-	/*
-	double gamma=1.5;
-	double cfl=1.0;
-	int stage_number=5;
-	double alpha_rk[5]={420,420,420,420,420};
-	double beta_rk[5]={1337,1337,1337,1337,1337};
-	string interpolation_choice = "Second";
-	string gradient_choice = "Least Squares";
-	string limiter_choice = "Venkatakrishnan";
-	string flux_scheme_choice = "Roe";
-	string residual_smoother_choice = "Central IRS";
+	int* my_blocks = new int[1];
+	my_blocks[0] = 0;
+	CompleteMesh* complete_mesh = new CompleteMesh(1,1,my_blocks);
+	complete_mesh->InitializeMyBlocks();
 
+	Block* new_block = complete_mesh->all_blocks_[0]; // hard coded right now
+	MetricsInitializer metricsInit(new_block);
+	metricsInit.doInit();
 
-
-	Solver *solver= new Solver(gamma, cfl, stage_number, alpha_rk, beta_rk, interpolation_choice, gradient_choice, limiter_choice, flux_scheme_choice, residual_smoother_choice);
-
-	cout<<"Salut"<<endl;
-	cout<<solver->gamma_<<endl;
-	cout<<solver->runge_kutta_->alpha_rk_[1]<<endl;
-	cout<<solver->runge_kutta_->beta_rk_[1]<<endl;
-	cout<<block->test_block_<<endl;
-
-
-	solver->solve(block);
-
-	cout<<block->test_block_<<endl;
-	*/
-
+	// CompleteMesh* complete_mesh;
+  // complete_mesh= new CompleteMesh();
+	Interface* interface= new Interface();
+	
+	Initializer* initializer= new Initializer();
+	new_block->block_primitive_variables_->calculateFreeVariables(interface->gamma_interface_, interface->aoa_deg_interface_, interface->mach_aircraft_interface_);
+	new_block->block_primitive_variables_->initializeFlowField(new_block->n_all_cells_in_block_);
+	Solver *solver=initializer->initializeSolver(interface);
+	solver->solve(new_block, complete_mesh);
+	
+  cout << "END OF PROGRAM" << endl;
 }
 
 
 #endif
-

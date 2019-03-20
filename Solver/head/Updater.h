@@ -2,6 +2,7 @@
 #define SOLVERSKELETON_HEAD_UPDATER_H
 
 #include "Block.h"
+#include <vector>
 
 
 class Block;
@@ -12,14 +13,14 @@ class Updater
 
 		double gamma_;
 		int current_stage_;
-		double *alpha_rk_;
+		std::vector<double> alpha_rk_;
 		
 		void updateInternalBlock(Block* block);
 		void updateBoundary(Block* block);
 		void synchroniseUpdate(Block* block);
 
 
-		Updater(double gamma, double *alpha_rk);
+		Updater(double gamma, std::vector<double> alpha_rk);
 		~Updater();
 
 

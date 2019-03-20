@@ -11,15 +11,14 @@ using namespace std;
 
 void Venkatakrishnan::computeLimiters(Block* block)
 {
-	block->test_block_-=5;
-	cout<<"\t\t\t\t\tExécution computeLimiters: Venkatakrishnan: "<<block->test_block_<<endl;
+	cout<<"\t\t\t\t\tExécution computeLimiters: Venkatakrishnan: "<<endl;
 }
 
 
 
-Venkatakrishnan::Venkatakrishnan()
+Venkatakrishnan::Venkatakrishnan(double k)
 {
-	k_=5;
+	k_=k;
 }
 
 Venkatakrishnan::~Venkatakrishnan()

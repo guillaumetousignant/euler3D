@@ -11,15 +11,14 @@ using namespace std;
 
 void CentralIrsSmoother::smoothResidual(Block* block)
 {
-	block->test_block_+=2;
-	cout<<"\t\t\t\tExécution smoothResidual: Central IRS Smoother: "<<block->test_block_<<endl;
+	cout<<"\t\t\t\tExécution smoothResidual: Central IRS Smoother: "<<endl;
 }
 
 
 
 CentralIrsSmoother::CentralIrsSmoother()
 {
-	
+
 }
 
 CentralIrsSmoother::~CentralIrsSmoother()

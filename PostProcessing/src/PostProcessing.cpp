@@ -16,7 +16,7 @@ PostProcessing::PostProcessing(int n_blocks, int max_iter, double convergence_cr
 
   current_iter_=0;
   max_iter_=max_iter;
-  iteration_interval_=10;
+  iteration_interval_=1;
 
   convergence_criterion_=convergence_criterion;
   stop_solver_=false;
@@ -54,7 +54,7 @@ PostProcessing::~PostProcessing()
 // ENLEVER DÉPENDANCE SOLVER
 void PostProcessing::checkStopSolver()
 {
-  cout << "Starting checkStopSolver............................................." << endl;
+  //cout << "Starting checkStopSolver............................................." << endl;
 #if 0
   // Vefiry conditions and change the status of the simulation if one condition is true.
   if(current_iter_+1 == max_iter_ || ro_convergence_ <= convergence_criterion_ || uu_convergence_ <= convergence_criterion || vv_convergence_ <= convergence_criterion || ww_convergence_ <= convergence_criterion || pp_convergence_ <= convergence_criterion)
@@ -62,48 +62,54 @@ void PostProcessing::checkStopSolver()
     stop_solver_= true;
   }
 #endif
+
+
+
   // EN ATTENDANT
   if(current_iter_+1 == max_iter_)
   {
     stop_solver_= true;
   }
-  cout << "Ending checkStopSolver..............................................." << endl;
+  //cout << "Ending checkStopSolver..............................................." << endl;
 
 }
 
 void PostProcessing::convergenceSum0(CompleteMesh* complete_mesh)
 {
+
+  // EN ATTENDANT
+  //cout << "Starting convergenceSum.............................................." << endl;
+
   int i;
 
-  cout << "Starting convergenceSum.............................................." << endl;
-#if 0
-    // MPI 
-    ro_rms0_mesh_=0.0;
-    uu_rms0_mesh_=0.0;
-    vv_rms0_mesh_=0.0;
-    ww_rms0_mesh_=0.0;
-    pp_rms0_mesh_=0.0;
+  ro_rms0_mesh_=0.0;
+  uu_rms0_mesh_=0.0;
+  vv_rms0_mesh_=0.0;
+  ww_rms0_mesh_=0.0;
+  pp_rms0_mesh_=0.0;
 
-    for(i=0; i<complete_mesh->n_blocks_ ; i++) // For each block
-      {
-        // Convergence data
-        ro_rms0_mesh_ += ro_rms_blocks_[i];
-        uu_rms0_mesh_ += uu_rms_blocks_[i];
-        vv_rms0_mesh_ += vv_rms_blocks_[i];
-        ww_rms0_mesh_ += ww_rms_blocks_[i];
-        pp_rms0_mesh_ += pp_rms_blocks_[i];
-      }
-#endif
-  cout << "Ending convergenceSum................................................" << endl;
+  for(i=0;i<complete_mesh->n_blocks_;i++)
+  {
+    // Convergence data
+    ro_rms0_mesh_ += ro_rms_blocks_[i];
+    uu_rms0_mesh_ += uu_rms_blocks_[i];
+    vv_rms0_mesh_ += vv_rms_blocks_[i];
+    ww_rms0_mesh_ += ww_rms_blocks_[i];
+    pp_rms0_mesh_ += pp_rms_blocks_[i];
+  }
+
+  //cout << "Ending convergenceSum................................................" << endl;
 }
 
 void PostProcessing::convergenceSum(CompleteMesh* complete_mesh)
 {
+
+  // EN ATTENDANT
   int i;
 
-  cout << "Starting convergenceSum.............................................." << endl;
-#if 0
-    // MPI 
+  //cout << "Starting convergenceSum.............................................." << endl;
+
+    // MPI
     ro_rms_mesh_=0.0;
     uu_rms_mesh_=0.0;
     vv_rms_mesh_=0.0;
@@ -119,24 +125,25 @@ void PostProcessing::convergenceSum(CompleteMesh* complete_mesh)
         ww_rms_mesh_ += ww_rms_blocks_[i];
         pp_rms_mesh_ += pp_rms_blocks_[i];
       }
-#endif
-  cout << "Ending convergenceSum................................................" << endl;
+
+  //cout << "Ending convergenceSum................................................" << endl;
 }
 
 void PostProcessing::coefficientsSum(CompleteMesh* complete_mesh)
 {
+  // EN ATTENDANT
   int i;
 
-  cout << "Starting coefficientsSum............................................." << endl;
-#if 0
-    // MPI 
+  //cout << "Starting coefficientsSum............................................." << endl;
+
+    // MPI
     cl_geometry_mesh_=0.0;
     cd_geometry_mesh_=0.0;
     cmx_geometry_mesh_=0.0;
     cmy_geometry_mesh_=0.0;
     cmz_geometry_mesh_=0.0;
 
-    for(i=0; i<completemesh->n_blocks_ ; i++) // For each block
+    for(i=0; i<complete_mesh->n_blocks_ ; i++) // For each block
       {
         // Aerodynamic data
         cl_geometry_mesh_ += cl_geometry_blocks_[i];
@@ -145,16 +152,16 @@ void PostProcessing::coefficientsSum(CompleteMesh* complete_mesh)
         cmy_geometry_mesh_ += cmy_geometry_blocks_[i];
         cmz_geometry_mesh_ += cmz_geometry_blocks_[i];
       }
-#endif
-  cout << "Ending coefficientsSum..............................................." << endl;
+
+  //cout << "Ending coefficientsSum..............................................." << endl;
 }
 
 
 
 void PostProcessing::saveConvergence(Block* block)
 {
-  cout << "Starting saveConvergence............................................." << endl;
-#if 0
+  //cout << "Starting saveConvergence............................................." << endl;
+
   int block_id;
 
   block_id = block-> block_id_;
@@ -165,94 +172,90 @@ void PostProcessing::saveConvergence(Block* block)
   ww_rms_blocks_[block_id] = convergence_->rms_ww_block_;
   pp_rms_blocks_[block_id] = convergence_->rms_pp_block_;
 
-#endif
-  cout << "Ending saveConvergence..............................................." << endl;
+
+  //cout << "Ending saveConvergence..............................................." << endl;
 }
 
 
 
 void PostProcessing::saveCoefficients(Block* block)
 {
-  cout << "Starting saveCoefficients............................................" << endl;
-#if 0
+  //cout << "Starting saveCoefficients............................................" << endl;
+
   int block_id;
 
   block_id = block-> block_id_;
 
-  cl_geometry_blocks_[block_id][0] = aerodynamic_parameters_->cl_global_;
-  cd_geometry_blocks_[block_id][0] = aerodynamic_parameters_->cd_global_;
-  cmx_geometry_blocks_[block_id][0] = aerodynamic_parameters_->cmx_;
-  cmy_geometry_blocks_[block_id][0] = aerodynamic_parameters_->cmy_;
-  cmz_geometry_blocks_[block_id][0] = aerodynamic_parameters_->cmz_;
+  cl_geometry_blocks_[block_id] = aerodynamic_parameters_->cl_global_;
+  cd_geometry_blocks_[block_id] = aerodynamic_parameters_->cd_global_;
+  cmx_geometry_blocks_[block_id] = aerodynamic_parameters_->cmx_;
+  cmy_geometry_blocks_[block_id] = aerodynamic_parameters_->cmy_;
+  cmz_geometry_blocks_[block_id] = aerodynamic_parameters_->cmz_;
 
-#endif
-  cout << "Ending saveCoefficients.............................................." << endl;
+
+  //cout << "Ending saveCoefficients.............................................." << endl;
 }
 
 
 
 
-void PostProcessing::computeFlowData(Block* block, CompleteMesh* complete_mesh)
+void PostProcessing::computeFlowData(Block* block)
 {
-  cout << "Starting computeFlowData............................................." << endl;
+  //cout << "Starting computeFlowData............................................." << endl;
 
-  //Calculate convergence for each residual for each block
-  convergence_->computeConvergence(block);
-  // Save convergence into convergencedata_
-  saveConvergence(block);
-
-  //Calculate aerodynamic parameters for each block
-  aerodynamic_parameters_->computeAerodynamic(block);
-  // Save convergence into convergencedata_
-  saveCoefficients(block);
-
-
-  // MPI SYNCHRONISATION POINT
-  // Sum aerodynamic parameters and convergence for each block
-  coefficientsSum(complete_mesh);
-  // Sum convergence for each block
-  convergenceSum(complete_mesh);
-  if (current_iter_==0)
+  if (current_iter_%iteration_interval_==0||current_iter_+1==max_iter_)
   {
-    convergenceSum0(complete_mesh);
+    //Calculate convergence for each residual for each block
+    convergence_->computeConvergence(block);
+    // Save convergence into convergencedata_
+    saveConvergence(block);
+
+    //Calculate aerodynamic parameters for each block
+    aerodynamic_parameters_->computeAerodynamic(block);
+    // Save convergence into convergencedata_
+    saveCoefficients(block);
   }
 
-  
-  ro_convergence_=log10(ro_rms_mesh_)-log10(ro_rms0_mesh_);
-  uu_convergence_=log10(uu_rms_mesh_)-log10(uu_rms0_mesh_);
-  vv_convergence_=log10(vv_rms_mesh_)-log10(vv_rms0_mesh_);
-  ww_convergence_=log10(ww_rms_mesh_)-log10(ww_rms0_mesh_);
-  pp_convergence_=log10(pp_rms_mesh_)-log10(pp_rms0_mesh_);
-
-
-  // FIN SYNCHRONISATION
-  
-
-
-  cout << "Ending computeFlowData..............................................." << endl;
+  //cout << "Ending computeFlowData..............................................." << endl;
 
 }
 
 
 void PostProcessing::process(Block* block, CompleteMesh* complete_mesh)
 {
-  cout << "Starting process....................................................." << endl;
-
+  //cout << "Starting process....................................................." << endl;
   if (current_iter_%iteration_interval_==0||current_iter_+1==max_iter_)
   {
-    // Compute flow data
-    computeFlowData(block, complete_mesh);
-    // Check simulation status
+
+    // Sum aerodynamic parameters and convergence for each block
+    coefficientsSum(complete_mesh);
+    // Sum convergence for each block
+    convergenceSum(complete_mesh);
+    if (current_iter_==0)
+    {
+      convergenceSum0(complete_mesh);
+    }
+
+
+    ro_convergence_=log10(ro_rms_mesh_)-log10(ro_rms0_mesh_);
+    uu_convergence_=log10(uu_rms_mesh_)-log10(uu_rms0_mesh_);
+    vv_convergence_=log10(vv_rms_mesh_)-log10(vv_rms0_mesh_);
+    ww_convergence_=log10(ww_rms_mesh_)-log10(ww_rms0_mesh_);
+    pp_convergence_=log10(pp_rms_mesh_)-log10(pp_rms0_mesh_);
+
+
     checkStopSolver();
     if (stop_solver_==true)
     {
       cout<<"STOP ACTIVATED"<<endl;
     }
-   
+
+    // EN ATTENDANT
+    cout<<"Iter: "<<current_iter_<<" Convergence Ro: "<<ro_convergence_<<" cl: "<<cl_geometry_mesh_<<" cd: "<<cd_geometry_mesh_<<endl;
 
     // Save and print flow data into binary files
     output_tecplot_->printConvergence(current_iter_, cl_geometry_mesh_, cd_geometry_mesh_, cmx_geometry_mesh_, cmy_geometry_mesh_, cmz_geometry_mesh_, ro_convergence_, uu_convergence_, vv_convergence_, ww_convergence_, pp_convergence_);
-  
+
     if (stop_solver_==true)
     {
       cout << "Writing Solution......................................................" << endl;
@@ -264,12 +267,13 @@ void PostProcessing::process(Block* block, CompleteMesh* complete_mesh)
       exit(0);
     }
 
-   
   }
 
   current_iter_++;
 
-  cout << "Ending process......................................................" << endl;
+
+
+  //cout << "Ending process......................................................" << endl;
 }
 
 #endif
