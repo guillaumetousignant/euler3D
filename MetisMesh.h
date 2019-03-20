@@ -8,6 +8,7 @@ class MetisMesh
 private:
     int* nElements_;
     int* nNodes_;
+    int** elementNbrNodes_;
     int** elementType_;
     int** local2GlobalElements_;
     int nTotalNode_;
