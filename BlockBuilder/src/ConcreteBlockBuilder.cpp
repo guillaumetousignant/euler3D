@@ -142,11 +142,11 @@ void ConcreteBlockBuilder::preReadMyBlock(Block* block)
 		}
 		n_boundaries=block->n_real_boundaries_in_block_;
 		block ->block_boundary_cell_ids_ = new BoundaryCellIds* [n_boundaries];
-		std::cout << "*********************ALLOCATION: "<< n_faces_in_wall<<std::endl;
+		// std::cout << "*********************ALLOCATION: "<< n_faces_in_wall<<std::endl;
 		block ->block_wall_face_ids_ = new int [n_faces_in_wall];
 		block->n_wall_faces_=n_faces_in_wall;
 
-		std::cout << "*********************ALLOCATION: "<< n_faces_in_farfield<<std::endl;
+		// std::cout << "*********************ALLOCATION: "<< n_faces_in_farfield<<std::endl;
 		block ->block_farfield_face_ids_ = new int [n_faces_in_farfield];
 		block->n_farfield_faces_=n_faces_in_farfield;
 
@@ -161,9 +161,9 @@ void ConcreteBlockBuilder::preReadMyBlock(Block* block)
 		block->n_faces_in_block_ = n_faces;
 		// block->n_faces_in_block_ = 750;
 
-		std::cout<<"---------------------------------  "<< block->n_faces_in_block_<<std::endl;
+		std::cout<<"Pre-Reading block............  "<<std::endl;
 
-		std::cout<<n_faces<<std::endl;
+		// std::cout<<n_faces<<std::endl;
 
 		PrimitiveVariables* prim= new PrimitiveVariables(block->n_all_cells_in_block_);
 		block->block_primitive_variables_=prim;
@@ -174,11 +174,13 @@ void ConcreteBlockBuilder::preReadMyBlock(Block* block)
 		InterpolationVariables* inpvar= new InterpolationVariables(block->n_all_cells_in_block_);
 		block->block_interpolation_variables_=inpvar;
 
-		std::cout<<n_faces<<std::endl;
+		std::cout<<"Number of faces : "<<n_faces<<std::endl;
 
 
 
-	} else{
+	}
+	else
+	{
 		//warning that file was not opened!
 		std::cout<<"WARNING! BLOCK FILE WAS NOT CORRECTLY OPENED IN PRE-READ FUNCTION. ERRATIC BEHAVIOR MAY APPEAR!"<<std::endl;
 	}
@@ -229,7 +231,7 @@ void ConcreteBlockBuilder::readMyBlock(Block* block)
 	int temp_farfield_face_count=0;
 	int* farfield_face_count;
 	farfield_face_count=&temp_farfield_face_count;
-	
+
 	int temp_wall_face_count=0;
 	int* wall_face_count;
 	wall_face_count=&temp_wall_face_count;
@@ -443,7 +445,7 @@ void ConcreteBlockBuilder::createMyFaces(Block* block)
 
 
 
-	std::cout<< "================================ "<< block->n_real_cells_in_block_<<std::endl;
+	std::cout<< "Creating Faces............"<< std::endl;
 	for(int i=0; i<block->n_real_cells_in_block_;i++)
 	{
 		Face** temp_face_array;
@@ -562,7 +564,7 @@ void ConcreteBlockBuilder::createMyFaces(Block* block)
 
 						if(node_count==face->n_nodes_per_face_)
 						{
-							
+
 							flag = false;
 							break ;
 
@@ -599,7 +601,7 @@ void ConcreteBlockBuilder::createMyFaces(Block* block)
 
 				block->addFace(new_face);
 				face_count_+=1;
-
+				// cout << face_count_ << endl; ICI POUR VOIR LES FACES AUGMENTER
 			}
 
 			// if(temp_nodes)

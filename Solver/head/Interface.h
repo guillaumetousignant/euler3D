@@ -5,7 +5,6 @@
 #include <string>
 #include <math.h>
 #include "Solver.h"
-//#include "Initializer.h"
 using namespace std;
 
 
@@ -75,7 +74,7 @@ class Interface
 		int n_blocks_interface_; // RÉGLER CE PROBLÈME LÀ
 
 
-		Interface();
+		Interface(char* argv);
 		~Interface();
 
 

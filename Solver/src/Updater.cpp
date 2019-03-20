@@ -28,7 +28,7 @@ void Updater::updateInternalBlock(Block* block)
 	my_primitive_variables = block -> block_primitive_variables_;
 
 
-	for (cell_idx=0;cell_idx<nb_cells;cell_idx++) 
+	for (cell_idx=0;cell_idx<nb_cells;cell_idx++)
 	{
 		ro_0= my_primitive_variables->ro_0_[cell_idx];
 		ru_0= my_primitive_variables->ru_0_[cell_idx];
@@ -66,7 +66,7 @@ void Updater::updateInternalBlock(Block* block)
 		//cout<<"cell_idx: "<<cell_idx<<" ro_0: "<<ro_0<<" ro_new: "<<ro_new<<endl;
 		//cout<<"dt: "<<dt<<" cell_volume: "<<cell_volume<<" res_ro_conv-res_ro_diss: "<<res_ro_conv-res_ro_diss<<" alpha_rk_[current_stage_]: "<<alpha_rk_[current_stage_]<<endl;
 		//cout<<"cell_idx: "<<cell_idx<<" ri_1: "<<(res_ro_conv-res_ro_diss)<<" ri_2: "<<(res_uu_conv-res_uu_diss)<<" ri_3: "<<(res_vv_conv-res_vv_diss)<<" ri_5: "<<(res_pp_conv-res_pp_diss)<<endl;
-		
+
 		my_primitive_variables->ro_[cell_idx]=ro;
 		my_primitive_variables->uu_[cell_idx]=uu;
 		my_primitive_variables->vv_[cell_idx]=vv;
@@ -80,10 +80,7 @@ void Updater::updateInternalBlock(Block* block)
 void Updater::updateBoundary(Block* block)
 {
 	//cout<<"\t\t\tExécution updateBoundary: "<<endl;
-	
-	// WALL !!!ATTENTION!!! VÉRIFIER SENS DES NORMALES
 
-	
 	int nb_wall_faces=block->n_wall_faces_;
 	//cout<<"Nb wall faces: "<<nb_wall_faces<<endl;
 
@@ -102,7 +99,7 @@ void Updater::updateBoundary(Block* block)
 		double normalized_y=block->block_faces_[wall_face_idx]->face_normals_[1];
 		double normalized_z=block->block_faces_[wall_face_idx]->face_normals_[2];
 		double face_area=block->block_faces_[wall_face_idx]->face_area_;
-		
+
 
 
 		normalized_x/=face_area;
@@ -110,7 +107,7 @@ void Updater::updateBoundary(Block* block)
 		normalized_z/=face_area;
 
 		//cout<<"nx: "<<normalized_x<<" ny: "<<normalized_y<<" nz: "<<normalized_z<<" ss: "<<face_area<<endl;
-		
+
 		double ro_int=block->block_primitive_variables_->ro_[int_cell_idx];
 		double uu_int=block->block_primitive_variables_->uu_[int_cell_idx];
 		double vv_int=block->block_primitive_variables_->vv_[int_cell_idx];
@@ -131,7 +128,7 @@ void Updater::updateBoundary(Block* block)
 		//cout<<"Int cell Id: "<<int_cell_idx<<" uu_int: "<<uu_int<<" nx: "<<normalized_x<<endl;
 		//cout<<"Ext cell Id: "<<ext_cell_idx<<" uu_ext: "<<2.0*uu_bc-uu_int<<" uu_bc: "<<uu_bc<<endl;
 	}
-	
+
 	int nb_farfield_faces=block->n_farfield_faces_;
 	//cout<<"Nb farfield faces: "<<nb_farfield_faces<<endl;
 
@@ -229,11 +226,11 @@ void Updater::updateBoundary(Block* block)
 		}
 
 	}
-	
-	
 
 
-	
+
+
+
 }
 void Updater::synchroniseUpdate(Block* block)
 {
