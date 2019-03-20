@@ -41,7 +41,7 @@ void OutputTecplot::printFlowData(Block* block)
       //return;
     }
 
-  
+
   FlowData << "TTILE = \"Vizualisation of the volumetric solution\""<<endl;
   FlowData << "VARIABLES=\"X\",\"Y\",\"Z\",\"RO\",\"UU\",\"VV\",\"WW\",\"PP\",\"CP\",\"MACH\"" << endl;
   FlowData << "ZONE T=\"FLOW_FIELD\"" << endl;
@@ -121,7 +121,7 @@ void OutputTecplot::printFlowData(Block* block)
     FlowData << pp_cell << endl;
   }
 
-  
+
   double dyn_head;
   double cp_cell;
   // Print pressure coefficient for each cell
@@ -160,7 +160,7 @@ void OutputTecplot::printFlowData(Block* block)
 
     FlowData << mach_cell << endl;
   }
-  
+
 
   int j;
   for(i=0;i < block->n_real_cells_in_block_; i++)
@@ -174,12 +174,12 @@ void OutputTecplot::printFlowData(Block* block)
 
         FlowData << block->block_cells_[i]->cell_2_nodes_connectivity_[0]+1 << " " << block->block_cells_[i]->cell_2_nodes_connectivity_[1]+1 << " " << block->block_cells_[i]->cell_2_nodes_connectivity_[2]+1 << " " << block->block_cells_[i]->cell_2_nodes_connectivity_[3]+1 << endl;
 
-     
+
 
         FlowData << block->block_cells_[i]->cell_2_nodes_connectivity_[0]+1 << " " << block->block_cells_[i]->cell_2_nodes_connectivity_[1]+1 << " " << block->block_cells_[i]->cell_2_nodes_connectivity_[2]+1 << " " << block->block_cells_[i]->cell_2_nodes_connectivity_[3]+1 << endl;
     */
   }
-  
+
   FlowData.close();
 
   cout << "Ending printFlowData..............................................." << endl;
@@ -221,7 +221,6 @@ void OutputTecplot::printConvergence(int iter, double cl, double cd, double cmx,
       cerr << "Fail opening file Convergence.plt" << endl;
       //return;
     }
-  #if 0
 
   if (iter==0)
   {
@@ -230,7 +229,6 @@ void OutputTecplot::printConvergence(int iter, double cl, double cd, double cmx,
 
   Convergence << iter << " " << cl << " " << cd << " " << cmx << " " << cmy << " " << cmz << " " << ro_convergence << " " << uu_convergence << " " << vv_convergence << " " << ww_convergence << " " << pp_convergence << endl;
 
-  #endif
   Convergence.close();
 
 
@@ -247,17 +245,17 @@ void OutputTecplot::printAerodynamicCoefficients(double cl, double cd, double cm
     if (AerodynamicCoefficients.fail())
     {
       // TODO throw exception
-      cerr << "Fail opening file AerodynamicCoefficients.plt" << endl;
+      cerr << "Fail opening file AerodynamicCoefficients.dat" << endl;
       //return;
     }
-  #if 0
+
 
 
   AerodynamicCoefficients << "Angle of attack" << " " << "Cl" << " " << "Cd" << " " << "Cmx" << " " << "Cmy" << " " << "Cmz" << endl;
 
-  AerodynamicCoefficients << aoa_deg << " " << cl << " " << cd << " " << cmx << " " << cmy << " " << cmz << endl;
+  AerodynamicCoefficients << aoa_deg_ << " " << cl << " " << cd << " " << cmx << " " << cmy << " " << cmz << endl;
 
-  #endif
+
   AerodynamicCoefficients.close();
 
   cout << "Ending printAerodynamicCoefficients.................................." << endl;
