@@ -10,7 +10,7 @@ class ResidualSmoother
 	public:
 		
 		ResidualSmoother();
-		~ResidualSmoother();
+		virtual ~ResidualSmoother();
 
 		virtual void smoothResidual(Block* block)=0;
 
