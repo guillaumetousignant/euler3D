@@ -6,16 +6,14 @@
 class ConnexionCellIds : public BoundaryCellIds
 {
 public:
-	int owner_block_id_;
-	int connected_block_id_;
-	int* cell_count_connected_;
-	int n_cell_in_boundary_connected_;
-	int* cell_ids_in_boundary_connected_;
 	ConnexionCellIds();
 	~ConnexionCellIds();
 
+	int* cell_ids_in_boundary_other_block_;
+	int block_origin_;
+	int block_destination_;
+
 	void updateBoundary();
-	
 };
 
 #endif
