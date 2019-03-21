@@ -63,4 +63,13 @@ void Block::addFaceIdInFarfield(int face_id, int* face_count)
 	*face_count += 1;
 
 }
+
+void Block::addFaceIdInSymmetry(int face_id, int* face_count)
+{
+	//std::cout<<"numero de facecount:"<< *face_count <<std::endl;
+	//std::cout<<"numero de faceid:"<< face_id <<std::endl;
+	block_symmetry_face_ids_[*face_count] = face_id;
+	*face_count += 1;
+
+}
 #endif
