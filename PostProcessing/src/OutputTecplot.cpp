@@ -203,7 +203,7 @@ void OutputTecplot::printSurfaceFlowData(Block* block)
     SurfaceFlowData << "TTILE = \"Vizualisation of the surface solution\""<<endl;
     SurfaceFlowData << "VARIABLES=\"X\",\"Y\",\"Z\",\"RO\",\"UU\",\"VV\",\"WW\",\"PP\",\"CP\",\"MACH\"" << endl;
     SurfaceFlowData << "ZONE T=\"FLOW_FIELD\"" << endl;
-    SurfaceFlowData << "Nodes=" << block->n_wall_faces_*4 << ", " << "Elements=" << block->n_wall_faces_<< ", " << "ZONETYPE=FEQUADRILATERAL" << endl;
+    SurfaceFlowData << "Nodes=" << block->n_nodes_in_block_ << ", " << "Elements=" << block->n_wall_faces_<< ", " << "ZONETYPE=FEQUADRILATERAL" << endl;
     SurfaceFlowData << "DATAPACKING=BLOCK" << endl;
     SurfaceFlowData << "VARLOCATION=([4,5,6,7,8,9,10]=CELLCENTERED)" << endl;
 
@@ -214,53 +214,29 @@ void OutputTecplot::printSurfaceFlowData(Block* block)
     double x_node;
 
     // Print X coordinate for each node
-    for(i=0; i < block->n_wall_faces_; i++)
+    for(i=0; i < block->n_nodes_in_block_; i++)
     {
-      // Find wall face id
-      wall_face_id = block->block_wall_face_ids_[i];
+      x_node = block->block_nodes_[i]->node_coordinates_[0];
 
-      for(j=0; j < block->block_faces_[wall_face_id]->n_nodes_per_face_; j++)
-      {
-        node = block->block_faces_[wall_face_id]->face_2_nodes_connectivity_[j];
-
-        x_node = block->block_nodes_[node]->node_coordinates_[0];
-
-        SurfaceFlowData << x_node << endl;
-      }
+      SurfaceFlowData << x_node << endl;
     }
 
     double y_node;
     // Print Y coordinate for each node
-    for(i=0; i < block->n_wall_faces_; i++)
+    for(i=0; i < block->n_nodes_in_block_; i++)
     {
-      // Find wall face id
-      wall_face_id = block->block_wall_face_ids_[i];
+      y_node = block->block_nodes_[i]->node_coordinates_[1];
 
-      for(j=0; j < block->block_faces_[wall_face_id]->n_nodes_per_face_; j++)
-      {
-        node = block->block_faces_[wall_face_id]->face_2_nodes_connectivity_[j];
-
-        y_node = block->block_nodes_[node]->node_coordinates_[1];
-
-        SurfaceFlowData << y_node << endl;
-      }
+      SurfaceFlowData << y_node << endl;
     }
 
     double z_node;
     // Print Z coordinate for each node
-    for(i=0; i < block->n_wall_faces_; i++)
+    for(i=0; i < block->n_nodes_in_block_; i++)
     {
-      // Find wall face id
-      wall_face_id = block->block_wall_face_ids_[i];
+      z_node = block->block_nodes_[i]->node_coordinates_[2];
 
-      for(j=0; j <  block->block_faces_[wall_face_id]->n_nodes_per_face_; j++)
-      {
-        node = block->block_faces_[wall_face_id]->face_2_nodes_connectivity_[j];
-
-        z_node = block->block_nodes_[node]->node_coordinates_[2];
-
-        SurfaceFlowData << z_node << endl;
-      }
+      SurfaceFlowData << z_node << endl;
     }
 
     int cell;
@@ -401,23 +377,20 @@ void OutputTecplot::printSurfaceFlowData(Block* block)
       SurfaceFlowData << mach_face << endl;
     }
 
-    for(i=0;i < block->n_wall_faces_; i++)
+    for(i=0;i < block->n_faces_in_block_; i++)
     {
-      // Find wall face id
-      wall_face_id = block->block_wall_face_ids_[i];
-
-      for(j=0; j < block->block_faces_[wall_face_id]->n_nodes_per_face_; j++)
+      for(j=0; j < block->block_faces_[i]->n_nodes_per_face_; j++)
       {
-        node = block->block_faces_[wall_face_id]->face_2_nodes_connectivity_[j];
+         node = block->block_faces_[i]->face_2_nodes_connectivity_[j];
 
-        if(j == block->block_faces_[wall_face_id]->n_nodes_per_face_ -1)
-        {
+         if(j == block->block_faces_[i]->n_nodes_per_face_ -1)
+         {
           SurfaceFlowData << node + 1 << endl;
-        }
-        else
-        {
-          SurfaceFlowData << node + 1 << " ";
-        }
+         }
+         else
+         {
+           SurfaceFlowData << node + 1 << " ";
+         }
       }
     }
 

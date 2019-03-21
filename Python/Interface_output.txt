@@ -23,12 +23,12 @@ OUTPUT (0-no 1-yes)
 clalpha cdalpha cmalpha
 0 0 0
 coefficientsconvergence residualconv
-1 1
+0 0
 cpxc machcontour cpcontour machisosurface
 0 0 0 0
 slicescp
-0
+1
 axis xcoord ycoord zcoord
-y 0.00 0.25 0.00
+y 0.00 0.10 0.00
 fcoord lcoord numberofslices
 0.10 1.10 7
