@@ -1,6 +1,3 @@
-#ifndef SOLVERSKELETON_SRC_TESTMAIN_CPP
-#define SOLVERSKELETON_SRC_TESTMAIN_CPP
-
 #include "Block.h"
 
 #include "Initializer.h"
@@ -74,6 +71,3 @@ int main(int argc, char* argv[])
 
 	MPI_Finalize();
 }
-
-
-#endif
