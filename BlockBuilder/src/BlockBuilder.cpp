@@ -296,16 +296,16 @@ std::cout<<"DÉBUT face_2_cells"<<std::endl;
 			block->block_faces_[i]->face_2_cells_connectivity_=new int[2]();
 
 			//loop on node_0 cells
-			for (j=0;j<common_cells_node_0_node_1.size();j++)
+			for (size_t j2=0;j2<common_cells_node_0_node_1.size();j2++)
 			{
 				//loop on node_2 cells
-				for(k=0;k<common_cells_node_0_node_2.size();k++)
+				for(size_t k2=0;k2<common_cells_node_0_node_2.size();k2++)
 				{
-					if(common_cells_node_0_node_1[j]==common_cells_node_0_node_2[k])
+					if(common_cells_node_0_node_1[j2]==common_cells_node_0_node_2[k2])
 					{
-						block->block_faces_[i]->face_2_cells_connectivity_[idx_face_2_cells]=common_cells_node_0_node_1[j];
+						block->block_faces_[i]->face_2_cells_connectivity_[idx_face_2_cells]=common_cells_node_0_node_1[j2];
 						idx_face_2_cells++;
-						common_cells_node_0_node_1_node_2.push_back(common_cells_node_0_node_1[j]);
+						common_cells_node_0_node_1_node_2.push_back(common_cells_node_0_node_1[j2]);
 					}
 				}
 			}
@@ -315,9 +315,9 @@ std::cout<<"DÉBUT face_2_cells"<<std::endl;
 			if (idx_face_2_cells>=3)
 			{
 				std::cout<<"ERREUR CONNECTIVITÉ FACE2CELLS: ";
-				for(k=0;k<common_cells_node_0_node_1_node_2.size();k++)
+				for(size_t k2=0;k2<common_cells_node_0_node_1_node_2.size();k2++)
 				{
-					std::cout<<"cell :"<<common_cells_node_0_node_1_node_2[k]<<" ";
+					std::cout<<"cell :"<<common_cells_node_0_node_1_node_2[k2]<<" ";
 				}
 
 				std::cout<<std::endl;
