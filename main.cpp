@@ -62,6 +62,8 @@ int main(int argc, char* argv[])
 	BlockCommunicator* communicator = new BlockCommunicator(n_blocks);
     communicator->getMyBlocks(n_blocks_in_process, my_blocks);
 
+	cout << "I am process " << communicator->process_id_ << " and I have " << n_blocks_in_process << " blocks." << endl;
+
 	cout << "In CompleteMesh........." << endl;
 	CompleteMesh* complete_mesh = new CompleteMesh(n_blocks, n_blocks_in_process, my_blocks, interface->topology_file_name_interface_);
 	complete_mesh->InitializeMyBlocks();
