@@ -5,6 +5,10 @@
 #include <stdio.h>
 #include <string>
 #include <iostream>
+// REMOVE
+#ifdef HAVE_MPI
+#include <mpi.h>
+#endif
 
 #include "PostProcessing.h"
 
@@ -269,6 +273,8 @@ void PostProcessing::process(Block* block, CompleteMesh* complete_mesh)
       #ifdef HAVE_MPI
       MPI_Finalize();
       #endif
+      // REMOVE
+
       exit(0);
     }
 
