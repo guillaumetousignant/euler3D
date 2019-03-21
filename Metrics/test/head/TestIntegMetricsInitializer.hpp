@@ -12,7 +12,7 @@
 //STL
 #include <vector>
 
-using namespace std;
+//using namespace std;
 
 typedef unsigned int uint;
 

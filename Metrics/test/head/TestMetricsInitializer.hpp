@@ -6,7 +6,7 @@
 #include "Block.h"
 #include "MetricsInitializer.h"
 
-using namespace std;
+//using namespace std;
 
 
 void buildConnectivity(Block *iBlock)
