@@ -7,9 +7,12 @@
 
 #include <iostream>
 #include <string>
+#ifdef HAVE_MPI
 #include <mpi.h>
+#endif
 #include "Block.h"
 #include "ConcreteBlockBuilder.h"
+#include "BlockCommunicator.h"
 #include "CompleteMesh.h"
 #include "MetricsInitializer.h"
 
@@ -18,7 +21,9 @@ using namespace std;
 
 int main(int argc, char* argv[])
 {
+	#ifdef HAVE_MPI
 	MPI_Init(NULL, NULL);
+	#endif
 
 	cout << "========================STARTING PROGRAM========================" << endl;
 
@@ -47,11 +52,15 @@ int main(int argc, char* argv[])
 	Interface* interface= new Interface(argv[1]);
 	Initializer* initializer= new Initializer();
 
-	int* my_blocks = new int[1];
-	my_blocks[0] = 0;
+	int n_blocks_in_process;
+    int* my_blocks;
+    int n_blocks = 1;
+
+	BlockCommunicator* communicator = new BlockCommunicator(n_blocks);
+    communicator->getMyBlocks(n_blocks_in_process, my_blocks);
 
 	cout << "In CompleteMesh........." << endl;
-	CompleteMesh* complete_mesh = new CompleteMesh(1,1,my_blocks, interface->topology_file_name_interface_);
+	CompleteMesh* complete_mesh = new CompleteMesh(n_blocks, n_blocks_in_process, my_blocks, interface->topology_file_name_interface_);
 	complete_mesh->InitializeMyBlocks();
 	Block* new_block = complete_mesh->all_blocks_[0];
 
@@ -69,5 +78,7 @@ int main(int argc, char* argv[])
 	Solver *solver=initializer->initializeSolver(interface);
 	solver->solve(new_block, complete_mesh);
 
+	#ifdef HAVE_MPI
 	MPI_Finalize();
+	#endif
 }
