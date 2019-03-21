@@ -456,8 +456,7 @@ void ConcreteBlockBuilder::createMyFaces(Block* block)
 
 		// temp_face_array = new Face*[cell->n_faces_per_cell_];
 
-		temp_face_array = temp_face_creators[cell->creator_key_].createFace(cell);
-
+		temp_face_array = temp_face_creators[cell->creator_key_].createFace(cell); // segfault here with Onera M6
 		for(int j=0;j<cell->n_faces_per_cell_;j++)
 		{
 
@@ -601,7 +600,7 @@ void ConcreteBlockBuilder::createMyFaces(Block* block)
 
 				block->addFace(new_face);
 				face_count_+=1;
-				// cout << face_count_ << endl; ICI POUR VOIR LES FACES AUGMENTER
+				// cout << face_count_ << endl; //ICI POUR VOIR LES FACES AUGMENTER
 			}
 
 			// if(temp_nodes)
