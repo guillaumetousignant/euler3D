@@ -6,10 +6,11 @@ from tecplot.exception import *
 from tecplot.constant import *
 
 class plotSlicesCp(object):
-    def __init__(self, mySurfaceFlowFile, Axis, firstCoordinate, lastCoordinate, numberOfSlices):
+    def __init__(self, mySurfaceFlowFile, Type, Axis, firstCoordinate, lastCoordinate, numberOfSlices):
         print("plotSlicesCp....................................................");
         # Put input into attributes
         self.mySurfaceFlowFile_ = mySurfaceFlowFile;
+        self.type_ = Type;
         self.axis_ = Axis;
         self.firstCoordinate_ = firstCoordinate;
         self.lastCoordinate_ = lastCoordinate;
@@ -56,14 +57,14 @@ class plotSlicesCp(object):
 
                 self.slice_ += self.interval_;
 
-            elif self.axis_ == 2:
+            elif self.axis_ == 3:
 
                 self.originX_.append(0);
                 self.originY_.append(0);
                 self.originZ_.append(self.slice_);
 
                 self.slice_ += self.interval_;
-
+                
         #PROCESSING
         # Graphics
         dataset = tecplot.data.load_tecplot(self.mySurfaceFlowFile_, read_data_option=2);
@@ -93,10 +94,16 @@ class plotSlicesCp(object):
             plot.delete_linemaps()
 
             # Create Cp vs x/c 2D plot
-            cp_linemap = plot.add_linemap(
-                zone=extracted_slice,
-                x=dataset.variable(0),
-                y=dataset.variable(10))
+            if self.type_ == 0: #EULER
+                cp_linemap = plot.add_linemap(
+                    zone=extracted_slice,
+                    x=dataset.variable(0),
+                    y=dataset.variable(8))
+            elif self.type_ == 1: #SU2
+                cp_linemap = plot.add_linemap(
+                    zone=extracted_slice,
+                    x=dataset.variable(0),
+                    y=dataset.variable(10))
 
             # Set graph parameters
             cp_linemap.line.color = tecplot.constant.Color.Blue;

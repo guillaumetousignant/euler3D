@@ -6,7 +6,7 @@ from tecplot.exception import *
 from tecplot.constant import *
 
 class plotSurfaceCpContour(object):
-    def __init__(self, mySurfaceFlowFile):
+    def __init__(self, mySurfaceFlowFile, Type):
         print("plotCpContour...................................................");
         dataset = tecplot.data.load_tecplot(mySurfaceFlowFile, read_data_option=2);
 
@@ -14,7 +14,12 @@ class plotSurfaceCpContour(object):
         plot = frame.plot(PlotType.Cartesian3D)
         plot.activate()
         plot.show_contour = True;
-        plot.contour(0).variable = dataset.variable(10);
+
+        if Type == 0: #EULER
+            plot.contour(0).variable = dataset.variable(8);
+        elif Type == 1: #SU2
+            plot.contour(0).variable = dataset.variable(10);
+
         plot.view.width = 1.62571;
         plot.view.alpha = 0;
         plot.view.theta = 240;
@@ -29,7 +34,12 @@ class plotSurfaceCpContour(object):
         plot = frame.plot(PlotType.Cartesian2D)
         plot.activate()
         plot.show_contour = True;
-        plot.contour(0).variable = dataset.variable(10);
+
+        if Type == 0: #EULER
+            plot.contour(0).variable = dataset.variable(8);
+        elif Type == 1: #SU2
+            plot.contour(0).variable = dataset.variable(10);
+
         plot.axes.x_axis.show = False;
         plot.axes.y_axis.show = False;
 
