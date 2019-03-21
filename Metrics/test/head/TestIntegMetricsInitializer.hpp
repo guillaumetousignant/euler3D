@@ -19,7 +19,7 @@ typedef unsigned int uint;
 void buildConnectivityInteg(Block *new_block)
 {
     
-    string block_file ="UnstructuredMesh5x5.su2";
+    std::string block_file ="UnstructuredMesh5x5.su2";
 
     ConcreteBlockBuilder concrete_block_builder = ConcreteBlockBuilder(block_file);
     concrete_block_builder.preReadMyBlock(new_block);
