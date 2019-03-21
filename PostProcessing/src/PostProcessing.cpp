@@ -5,10 +5,6 @@
 #include <stdio.h>
 #include <string>
 #include <iostream>
-// REMOVE
-#ifdef HAVE_MPI
-#include <mpi.h>
-#endif
 
 #include "PostProcessing.h"
 
@@ -269,13 +265,7 @@ void PostProcessing::process(Block* block, CompleteMesh* complete_mesh)
       output_tecplot_->printRestartFile(block);
       cout << "========================END OF PROGRAM========================" << endl;
 
-      // This is sketchy, find a better solution
-      #ifdef HAVE_MPI
-      MPI_Finalize();
-      #endif
-      // REMOVE
-
-      exit(0);
+      //exit(0);
     }
 
   }

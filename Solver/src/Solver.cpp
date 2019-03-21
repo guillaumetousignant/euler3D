@@ -53,7 +53,7 @@ void Solver::solve(Block* block, CompleteMesh* complete_mesh)
 
 
 	// PROVISOIRE!!!!
-	while(true)
+	while(!post_processing_->stop_solver_)
 	{
 		this->saveW0(block);
 		timestep_->computeSpectralRadius(block);
