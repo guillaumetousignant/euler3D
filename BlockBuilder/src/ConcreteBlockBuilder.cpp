@@ -600,7 +600,7 @@ void ConcreteBlockBuilder::createMyFaces(Block* block)
 
 				block->addFace(new_face);
 				face_count_+=1;
-				// cout << face_count_ << endl; //ICI POUR VOIR LES FACES AUGMENTER
+				 cout << face_count_ << endl; //ICI POUR VOIR LES FACES AUGMENTER
 			}
 
 			// if(temp_nodes)
