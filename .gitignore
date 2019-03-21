@@ -11,3 +11,4 @@ output*.txt
 /Python/__pycache__/*
 *.pyc
 *.log
+*.m
