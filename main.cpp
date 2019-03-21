@@ -14,7 +14,7 @@
 #include "Block.h"
 #include "ConcreteBlockBuilder.h"
 #include "CompleteMesh.h"
-#include "Metrics/src/MetricsInitializer.h"
+#include "MetricsInitializer.h"
 
 
 using namespace std;
