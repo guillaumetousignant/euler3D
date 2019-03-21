@@ -200,6 +200,202 @@ void OutputTecplot::printSurfaceFlowData(Block* block)
       //return;
     }
 
+    SurfaceFlowData << "TTILE = \"Vizualisation of the surface solution\""<<endl;
+    SurfaceFlowData << "VARIABLES=\"X\",\"Y\",\"Z\",\"RO\",\"UU\",\"VV\",\"WW\",\"PP\",\"CP\",\"MACH\"" << endl;
+    SurfaceFlowData << "ZONE T=\"FLOW_FIELD\"" << endl;
+    SurfaceFlowData << "Nodes=" << block->n_nodes_in_block_ << ", " << "Elements=" << block->n_wall_faces_<< ", " << "ZONETYPE=FEQUADRILATERAL" << endl;
+    SurfaceFlowData << "DATAPACKING=BLOCK" << endl;
+    SurfaceFlowData << "VARLOCATION=([4,5,6,7,8,9,10]=CELLCENTERED)" << endl;
+
+    int i;
+    int j;
+    int node;
+    int wall_face_id;
+    double x_node;
+
+    // Print X coordinate for each node
+    for(i=0; i < block->n_nodes_in_block_; i++)
+    {
+      x_node = block->block_nodes_[i]->node_coordinates_[0];
+
+      SurfaceFlowData << x_node << endl;
+    }
+
+    double y_node;
+    // Print Y coordinate for each node
+    for(i=0; i < block->n_nodes_in_block_; i++)
+    {
+      y_node = block->block_nodes_[i]->node_coordinates_[1];
+
+      SurfaceFlowData << y_node << endl;
+    }
+
+    double z_node;
+    // Print Z coordinate for each node
+    for(i=0; i < block->n_nodes_in_block_; i++)
+    {
+      z_node = block->block_nodes_[i]->node_coordinates_[2];
+
+      SurfaceFlowData << z_node << endl;
+    }
+
+    int cell;
+    int cell1;
+    double ro_face;
+    // Print density for each face
+    for(i=0; i < block->n_wall_faces_; i++)
+    {
+      // Find wall face id
+      wall_face_id = block->block_wall_face_ids_[i];
+
+      // Find wall cells associate with the wall face i
+      cell = block->block_faces_[wall_face_id]->face_2_cells_connectivity_[0];
+      cell1 = block->block_faces_[wall_face_id]->face_2_cells_connectivity_[1];
+
+      ro_face = (block->block_primitive_variables_->ro_[cell] + block->block_primitive_variables_->ro_[cell1])*0.5;
+
+      SurfaceFlowData << ro_face << endl;
+    }
+
+    double uu_face;
+    // Print UU velocity for each face
+    for(i=0; i < block->n_wall_faces_; i++)
+    {
+      // Find wall face id
+      wall_face_id = block->block_wall_face_ids_[i];
+
+      // Find wall cells associate with the wall face i
+      cell = block->block_faces_[wall_face_id]->face_2_cells_connectivity_[0];
+      cell1 = block->block_faces_[wall_face_id]->face_2_cells_connectivity_[1];
+
+      uu_face = (block->block_primitive_variables_->uu_[cell] + block->block_primitive_variables_->uu_[cell1])*0.5;
+
+      SurfaceFlowData << uu_face << endl;
+    }
+
+    double vv_face;
+    // Print VV velocity for each face
+    for(i=0; i < block->n_wall_faces_; i++)
+    {
+      // Find wall face id
+      wall_face_id = block->block_wall_face_ids_[i];
+
+      // Find wall cells associate with the wall face i
+      cell = block->block_faces_[wall_face_id]->face_2_cells_connectivity_[0];
+      cell1 = block->block_faces_[wall_face_id]->face_2_cells_connectivity_[1];
+
+      vv_face = (block->block_primitive_variables_->vv_[cell] + block->block_primitive_variables_->vv_[cell1])*0.5;
+
+      SurfaceFlowData << vv_face << endl;
+    }
+
+    double ww_face;
+    // Print WW velocity for each face
+    for(i=0; i < block->n_wall_faces_; i++)
+    {
+      // Find wall face id
+      wall_face_id = block->block_wall_face_ids_[i];
+
+      // Find wall cells associate with the wall face i
+      cell = block->block_faces_[wall_face_id]->face_2_cells_connectivity_[0];
+      cell1 = block->block_faces_[wall_face_id]->face_2_cells_connectivity_[1];
+
+      ww_face = (block->block_primitive_variables_->ww_[cell] + block->block_primitive_variables_->ww_[cell1])*0.5;
+
+      SurfaceFlowData << ww_face << endl;
+    }
+
+    double pp_face;
+    // Print pressure for each face
+    for(i=0; i < block->n_wall_faces_; i++)
+    {
+      // Find wall face id
+      wall_face_id = block->block_wall_face_ids_[i];
+
+      // Find wall cells associate with the wall face i
+      cell = block->block_faces_[wall_face_id]->face_2_cells_connectivity_[0];
+      cell1 = block->block_faces_[wall_face_id]->face_2_cells_connectivity_[1];
+
+      pp_face = (block->block_primitive_variables_->pp_[cell] + block->block_primitive_variables_->pp_[cell1])*0.5;
+
+      SurfaceFlowData << pp_face << endl;
+    }
+
+
+    double dyn_head;
+    double cp_face;
+    double pp_face1;
+    // Print pressure coefficient for each face
+    dyn_head = 0.5*gamma_*mach_aircraft_*mach_aircraft_;
+    for(i=0; i < block->n_wall_faces_; i++)
+    {
+      // Find wall face id
+      wall_face_id = block->block_wall_face_ids_[i];
+
+      // Find wall cells associate with the wall face i
+      cell = block->block_faces_[wall_face_id]->face_2_cells_connectivity_[0];
+      cell1 = block->block_faces_[wall_face_id]->face_2_cells_connectivity_[1];
+
+      // Pressure value from cell i
+      pp_face = block->block_primitive_variables_->pp_[cell];
+      pp_face1 = block->block_primitive_variables_->pp_[cell1];
+
+
+      // Save pressure coefficient in cp_ array
+      cp_face = ((pp_face + pp_face1)*0.5-1.)/dyn_head;
+      SurfaceFlowData << cp_face << endl;
+    }
+
+    double a_face;
+    double velocity_face;
+    double mach_face;
+    // Print Mach number for each face
+    for(i=0; i < block->n_wall_faces_; i++)
+    {
+      // Find wall face id
+      wall_face_id = block->block_wall_face_ids_[i];
+
+      // Find wall cells associate with the wall face i
+      cell = block->block_faces_[wall_face_id]->face_2_cells_connectivity_[0];
+      cell1 = block->block_faces_[wall_face_id]->face_2_cells_connectivity_[1];
+
+      // Primitve variables
+      pp_face = (block->block_primitive_variables_->pp_[cell] + block->block_primitive_variables_->pp_[cell1])*0.5;
+      ro_face = (block->block_primitive_variables_->pp_[cell] + block->block_primitive_variables_->ro_[cell1])*0.5;
+      uu_face = (block->block_primitive_variables_->pp_[cell] + block->block_primitive_variables_->uu_[cell1])*0.5;
+      vv_face = (block->block_primitive_variables_->pp_[cell] + block->block_primitive_variables_->vv_[cell1])*0.5;
+      ww_face = (block->block_primitive_variables_->pp_[cell] + block->block_primitive_variables_->ww_[cell1])*0.5;
+
+      a_face = pow(gamma_*pp_face/ro_face, 0.5);
+
+      // Calculate local velocity for each face
+      velocity_face = pow(pow(uu_face,2)+pow(vv_face,2)+pow(ww_face,2), 0.5);
+
+      // Claculate local mach number for each cell
+      mach_face = velocity_face/a_face;
+
+      SurfaceFlowData << mach_face << endl;
+    }
+
+    for(i=0;i < block->n_wall_faces_; i++)
+    {
+      wall_face_id = block->block_wall_face_ids_[i];
+      
+      for(j=0; j < block->block_faces_[wall_face_id]->n_nodes_per_face_; j++)
+      {
+         node = block->block_faces_[wall_face_id]->face_2_nodes_connectivity_[j];
+
+         if(j == block->block_faces_[wall_face_id]->n_nodes_per_face_ -1)
+         {
+          SurfaceFlowData << node + 1 << endl;
+         }
+         else
+         {
+           SurfaceFlowData << node + 1 << " ";
+         }
+      }
+    }
+
   SurfaceFlowData.close();
 
   cout << "Ending printSurfaceFlowData.........................................." << endl;
@@ -209,10 +405,15 @@ void OutputTecplot::printConvergence(int iter, double cl, double cd, double cmx,
 {
   //cout << "Starting printConvergence............................................" << endl;
 
-  int i;
-
   //Convergence.open("Convergence.plt", ios::binary);
-  Convergence.open("Convergence.dat", std::ios_base::app);
+  if(iter == 0)
+  {
+    Convergence.open("Convergence.dat");
+  }
+  else
+  {
+    Convergence.open("Convergence.dat", std::ios_base::app);
+  }
 
 
     if (Convergence.fail())
@@ -224,13 +425,12 @@ void OutputTecplot::printConvergence(int iter, double cl, double cd, double cmx,
 
   if (iter==0)
   {
-    Convergence << "Iteration" << " " << "Cl" << " " << "Cd" << " " << "Cmx" << " " << "Cmy" << " " << "Cmz" << " " << "Density convergence" << " " << "Uu convergence" << " " << "Vv convergence" << " " << "Ww convergence" << " " << "Pressure convergence" << " " << endl;
+    Convergence << "Iteration" << " " << "Cl" << " " << "Cd" << " " << "Cmx" << " " << "Cmy" << " " << "Cmz" << " " << "Density_Convergence" << " " << "Uu_Convergence" << " " << "Vv_Convergence" << " " << "Ww_Convergence" << " " << "Pressure_Convergence" << " " << endl;
   }
 
   Convergence << iter << " " << cl << " " << cd << " " << cmx << " " << cmy << " " << cmz << " " << ro_convergence << " " << uu_convergence << " " << vv_convergence << " " << ww_convergence << " " << pp_convergence << endl;
 
   Convergence.close();
-
 
   //cout << "Ending printConvergence.............................................." << endl;
 }

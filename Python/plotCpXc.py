@@ -6,8 +6,12 @@ from tecplot.exception import *
 from tecplot.constant import *
 
 class plotCpXc(object):
-    def __init__(self, mySurfaceFlowFile, Axis, XCoordinate, YCoordinate, ZCoordinate):
+    def __init__(self, mySurfaceFlowFile, Type, Axis, XCoordinate, YCoordinate, ZCoordinate):
         print("plotCpXc........................................................");
+        # Put input into attributes
+        self.mySurfaceFlowFile_ = mySurfaceFlowFile;
+        self.type_ = Type;
+        self.axis_ = Axis;
 
         self.normal_x_ = 0;
         self.normal_y_ = 0;
@@ -15,11 +19,11 @@ class plotCpXc(object):
 
         # Pre-processing
         # Axis
-        if Axis == 1:
+        if self.axis_ == 1:
             self.normal_x_ = 1;
-        elif Axis == 2:
+        elif self.axis_ == 2:
             self.normal_y_ = 1;
-        elif Axis == 3:
+        elif self.axis_ == 3:
             self.normal_z_ = 1;
 
         #Coordinates
@@ -29,7 +33,7 @@ class plotCpXc(object):
 
         #Processing
         # Graphic
-        dataset = tecplot.data.load_tecplot(mySurfaceFlowFile, read_data_option=2);
+        dataset = tecplot.data.load_tecplot(self.mySurfaceFlowFile_, read_data_option=2);
 
         frame = tecplot.active_frame()
         frame.plot_type = PlotType.Cartesian3D
@@ -55,10 +59,17 @@ class plotCpXc(object):
         plot.delete_linemaps()
 
         # Create Cp vs x/c 2D plot
-        cp_linemap = plot.add_linemap(
-            zone=extracted_slice,
-            x=dataset.variable(0),
-            y=dataset.variable(10))
+        if self.type_ == 0: #EULER
+            cp_linemap = plot.add_linemap(
+                zone=extracted_slice,
+                x=dataset.variable(0),
+                y=dataset.variable(8))
+        elif self.type_ == 1: #SU2
+            cp_linemap = plot.add_linemap(
+                zone=extracted_slice,
+                x=dataset.variable(0),
+                y=dataset.variable(10))
+
 
         # Set graph parameters
         cp_linemap.line.color = tecplot.constant.Color.Blue;

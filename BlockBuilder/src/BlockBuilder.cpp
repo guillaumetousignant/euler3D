@@ -33,7 +33,7 @@ Cell* BlockBuilder::buildCell(int cell_id, std::string cell_type, std::string ce
 	int* cell_2_nodes_connectivity=NULL;
 	int n_nodes_per_cell=0;
 	int n_faces_per_cell=0;
-	
+
 
 
 	if (cell_type == "10") // tetrahede
@@ -65,7 +65,7 @@ Cell* BlockBuilder::buildCell(int cell_id, std::string cell_type, std::string ce
 		n_faces_per_cell = 6;
 
 	}
-	
+
 	else if (cell_type == "ghost")
 	{
 		if (ghost_cell_type == "5")
@@ -75,7 +75,7 @@ Cell* BlockBuilder::buildCell(int cell_id, std::string cell_type, std::string ce
 			sscanf (cell_2_nodes_connectivity_temp.c_str(), "%s %d %d %d",str_temp,&cell_2_nodes_connectivity[0],&cell_2_nodes_connectivity[1],&cell_2_nodes_connectivity[2]);
 			n_nodes_per_cell = 3;
 			n_faces_per_cell = 1;
-		
+
 		}
 		else if (ghost_cell_type == "9")
 		{
@@ -84,7 +84,7 @@ Cell* BlockBuilder::buildCell(int cell_id, std::string cell_type, std::string ce
 			sscanf (cell_2_nodes_connectivity_temp.c_str(), "%s %d %d %d %d",str_temp,&cell_2_nodes_connectivity[0],&cell_2_nodes_connectivity[1],&cell_2_nodes_connectivity[2],&cell_2_nodes_connectivity[3]);
 			n_nodes_per_cell = 4;
 			n_faces_per_cell = 1;
-			
+
 		}
 	}
 
@@ -107,7 +107,7 @@ Cell* BlockBuilder::buildCell(int cell_id, std::string cell_type, std::string ce
 
 	}
 
-	delete [] cell_2_nodes_connectivity; 
+	delete [] cell_2_nodes_connectivity;
 	return new_cell;
 
 
@@ -146,11 +146,11 @@ Face* BlockBuilder::buildFace(int face_id, int n_nodes_per_face,FaceCreator* fac
 void BlockBuilder::setConnectivity(Block* block)
 {
 	int i,j,k,idx,node_0,node_1,node_2,n_cells_linked;
-	int *idx_node,*idx_cell_2_faces,*idx_cell_2_cells; 
+	int *idx_node,*idx_cell_2_faces,*idx_cell_2_cells;
 
-	
+
 	std::cout<<"DÉBUT node2cellsconnectivity"<<std::endl;
-			
+
 		//MISE À JOUR NOMBRE CELLS PAR NODE (VÉRIFIÉ)
 
 		for(i=0;i <= block->n_nodes_in_block_-1 ;i++)
@@ -178,7 +178,7 @@ void BlockBuilder::setConnectivity(Block* block)
 		for(i=0;i <= block->n_all_cells_in_block_-1 ;i++)
 		{
 			for(j=0;j <= block->block_cells_[i]->n_nodes_per_cell_-1 ;j++)
-			{	
+			{
 				idx=block->block_cells_[i]->cell_2_nodes_connectivity_[j];
 				block->block_nodes_[idx]->node_2_cells_connectivity_[idx_node[idx]]=i;
 				idx_node[idx]+=1;
@@ -194,26 +194,26 @@ void BlockBuilder::setConnectivity(Block* block)
 	}
 */
 
-		
+
 std::cout<<"DÉBUT face_2_cells"<<std::endl;
-	
+
 	/*
 	//face_2_cells_connectivity_
 		for(i=0;i <= block->n_faces_in_block_-1 ;i++)
 		{
 			//block->block_faces_[i]->face_2_cells_connectivity_=allocate_1d_array_int(2, "face_2_cells_connectivity_");
 			block->block_faces_[i]->face_2_cells_connectivity_=new int[2]();
-			
+
 
 			idx=0;
 			node_0=block->block_faces_[i]->face_2_nodes_connectivity_[0];
 			node_1=block->block_faces_[i]->face_2_nodes_connectivity_[1];
 			node_2=block->block_faces_[i]->face_2_nodes_connectivity_[2];
-			
+
 			for(j=0;j<=block->block_nodes_[node_0]->n_cells_per_node_-1;j++)
 			{
 				n_cells_linked=0;
-				
+
 				for(k=0;k<=block->block_cells_[block->block_nodes_[node_0]->node_2_cells_connectivity_[j]]->n_nodes_per_cell_-1;k++)
 				{
 						if( (block->block_cells_[block->block_nodes_[node_0]->node_2_cells_connectivity_[j]]->cell_2_nodes_connectivity_[k]==node_1) || (block->block_cells_[block->block_nodes_[node_0]->node_2_cells_connectivity_[j]]->cell_2_nodes_connectivity_[k]==node_2) )
@@ -244,7 +244,7 @@ std::cout<<"DÉBUT face_2_cells"<<std::endl;
 
 		for(i=0;i < block->n_faces_in_block_ ;i++)
 		{
-			
+
 			node_0=block->block_faces_[i]->face_2_nodes_connectivity_[0];
 			node_1=block->block_faces_[i]->face_2_nodes_connectivity_[1];
 			node_2=block->block_faces_[i]->face_2_nodes_connectivity_[2];
@@ -321,13 +321,13 @@ std::cout<<"DÉBUT face_2_cells"<<std::endl;
 				}
 
 				std::cout<<std::endl;
-				
+
 			}
 
 			common_cells_node_0_node_1.clear();
 			common_cells_node_0_node_2.clear();
 			common_cells_node_0_node_1_node_2.clear();
-			
+
 		}
 
 		//VÉRIFICATION
@@ -353,7 +353,7 @@ std::cout<<"DÉBUT cell2facesconnectivity"<<std::endl;
 			//idx_cell_2_faces[i]=0;
 			//idx_cell_2_cells[i]=0;
 			block->block_cells_[i]->cell_2_faces_connectivity_=new int[block->block_cells_[i]->n_faces_per_cell_]();
-			//block->block_cells_[i]->cell_2_faces_connectivity_=allocate_1d_array_int(block->block_cells_[i]->n_faces_per_cell_, "cell_2_faces_connectivity_");	
+			//block->block_cells_[i]->cell_2_faces_connectivity_=allocate_1d_array_int(block->block_cells_[i]->n_faces_per_cell_, "cell_2_faces_connectivity_");
 		}
 
 		for(i=0;i <= block->n_faces_in_block_-1 ;i++)
@@ -399,7 +399,7 @@ for(i=0;i < block->n_farfield_faces_ ;i++)
 	farfield_cell_id=(block->block_farfield_face_ids_[i]);
 	farfield_face_id=(block->block_cells_[farfield_cell_id])->cell_2_faces_connectivity_[0];
 	block ->addFaceIdInFarfield(farfield_face_id,farfield_face_count);
-	
+
 }
 //std::cout<<"TEEEEEEEST WALLLLLL FAAAAAAACE IIIIIIIIDS FIIIIIIIIIIIIIIIIINAL: "<< *wall_face_count<<std::endl;
 
@@ -407,10 +407,10 @@ for(i=0;i < block->n_farfield_faces_ ;i++)
 
 
 
-	
+
 
 	//VÉRIFICATION
-	/*	
+	/*
 	for(i=0;i <= block->n_all_cells_in_block_-1 ;i++)
 	{
 		std::cout << i <<" Nb faces "<< block->block_cells_[i]->n_faces_per_cell_<<" CELL2FACES "<< block->block_cells_[i]->cell_2_faces_connectivity_[0] <<" " << block->block_cells_[i]->cell_2_faces_connectivity_[1] <<" " << block->block_cells_[i]->cell_2_faces_connectivity_[2] <<" " << block->block_cells_[i]->cell_2_faces_connectivity_[3] <<" " << block->block_cells_[i]->cell_2_faces_connectivity_[4] <<" " << block->block_cells_[i]->cell_2_faces_connectivity_[5]  <<std::endl;
@@ -436,8 +436,8 @@ void BlockBuilder::setMetrics(Block* block)
 // 			for(int j=0;j<n_nodes_per_face[i];j++)
 // 			{
 // 				new_face -> face_2_nodes_connectivity_[j] = cell_2_nodes_connectivity_temp[face_2_nodes_connectivity_local[i][j]];
-// 			} 
-// 		} 
+// 			}
+// 		}
 // }
 
 

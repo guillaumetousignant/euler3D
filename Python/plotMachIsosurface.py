@@ -6,7 +6,7 @@ from tecplot.exception import *
 from tecplot.constant import *
 
 class plotMachIsosurface(object):
-    def __init__(self, myFlowFile):
+    def __init__(self, myFlowFile, Type):
         print("plotMachIsosurface..............................................");
         dataset = tecplot.data.load_tecplot(myFlowFile, read_data_option=2);
         frame = tecplot.active_frame();
@@ -24,7 +24,11 @@ class plotMachIsosurface(object):
         cont.colormap_name = 'Magma';
 
         # Setup definition Isosurface layers
-        cont.variable = dataset.variable(11)
+        if Type == 0: # EULER
+            cont.variable = dataset.variable(9);
+        elif Type == 1: # SU2
+            cont.variable = dataset.variable(11);
+
         cont.levels.reset_levels( [0.95,1.,1.1,1.4]);
 
         # Turn on Translucency

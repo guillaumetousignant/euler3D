@@ -69,15 +69,17 @@ class graphicsGenerator(object):
     #Initialize user command's booleans
     def Interface2Booleans(self, userCommands):
         findLine = len(userCommands);
-        startReading = findLine-11;
+        startReading = findLine-13;
 
         #Remove \n from strings
-        string = userCommands[startReading].rstrip();
-        string1 = userCommands[startReading+2].rstrip();
-        string2 = userCommands[startReading+4].rstrip();
-        string3 = userCommands[startReading+6].rstrip();
-        string4 = userCommands[startReading+8].rstrip();
-        string5 = userCommands[startReading+10].rstrip();
+        self.type_ = int(userCommands[startReading].rstrip());
+        string = userCommands[startReading+2].rstrip();
+        string1 = userCommands[startReading+4].rstrip();
+        string2 = userCommands[startReading+6].rstrip();
+        string3 = userCommands[startReading+8].rstrip();
+        string4 = userCommands[startReading+10].rstrip();
+        string5 = userCommands[startReading+12].rstrip();
+        print(self.type_)
 
         #Put values into attributes
         ClAlpha, CdAlpha, CmAlpha = string.split(" ");
@@ -138,10 +140,16 @@ class graphicsGenerator(object):
 
     #Save moment coefficients into a numpy array
     def getCm(self, myDataset):
-        Cmx = myDataset.variable(3).values(0).as_numpy_array();
-        Cmy = myDataset.variable(4).values(0).as_numpy_array();
-        Cmz = myDataset.variable(5).values(0).as_numpy_array();
-        return Cmx, Cmy, Cmz;
+        if self.type_ == 0: #EULER
+            Cmx = myDataset.variable(3).values(0).as_numpy_array();
+            Cmy = myDataset.variable(4).values(0).as_numpy_array();
+            Cmz = myDataset.variable(5).values(0).as_numpy_array();
+            return Cmx, Cmy, Cmz;
+        elif self.type_ == 1: #SU2
+            Cmx = myDataset.variable(4).values(0).as_numpy_array();
+            Cmy = myDataset.variable(5).values(0).as_numpy_array();
+            Cmz = myDataset.variable(6).values(0).as_numpy_array();
+            return Cmx, Cmy, Cmz;
 
     def getIterations(self, myDataset):
         Iterations = myDataset.variable(0).values(0).as_numpy_array();
@@ -149,12 +157,20 @@ class graphicsGenerator(object):
 
     #Save residuals into a numpy array
     def getResiduals(self, myDataset):
-        RoResiduals = myDataset.variable(13).values(0).as_numpy_array();
-        UuResiduals = myDataset.variable(14).values(0).as_numpy_array();
-        VvResiduals = myDataset.variable(15).values(0).as_numpy_array();
-        WwResiduals = myDataset.variable(16).values(0).as_numpy_array();
-        PpResiduals = myDataset.variable(17).values(0).as_numpy_array();
-        return RoResiduals, UuResiduals, VvResiduals, WwResiduals, PpResiduals;
+        if self.type_ == 0: #EULER
+            RoResiduals = myDataset.variable(6).values(0).as_numpy_array();
+            UuResiduals = myDataset.variable(7).values(0).as_numpy_array();
+            VvResiduals = myDataset.variable(8).values(0).as_numpy_array();
+            WwResiduals = myDataset.variable(9).values(0).as_numpy_array();
+            PpResiduals = myDataset.variable(10).values(0).as_numpy_array();
+            return RoResiduals, UuResiduals, VvResiduals, WwResiduals, PpResiduals;
+        elif self.type_ == 1: #SU2
+            RoResiduals = myDataset.variable(13).values(0).as_numpy_array();
+            UuResiduals = myDataset.variable(14).values(0).as_numpy_array();
+            VvResiduals = myDataset.variable(15).values(0).as_numpy_array();
+            WwResiduals = myDataset.variable(16).values(0).as_numpy_array();
+            PpResiduals = myDataset.variable(17).values(0).as_numpy_array();
+            return RoResiduals, UuResiduals, VvResiduals, WwResiduals, PpResiduals;
 
     #Convergence file processing
     def processingConvergenceFile(self, myConvergenceFile):
@@ -165,9 +181,10 @@ class graphicsGenerator(object):
         npIterations = self.getIterations(self.convergenceDataset);
         npConvergenceCl = self.getCl(self.convergenceDataset);
         npConvergenceCd = self.getCd(self.convergenceDataset);
+        npConverenceCmx,npConverenceCmy, npConverenceCmz = self.getCm(self.convergenceDataset);
         npRoResiduals, npUuResiduals, npVvResiduals, npWwResiduals, npPpResiduals = self.getResiduals(self.convergenceDataset);
         print("processingConvergenceFile...................................DONE")
-        return npIterations, npConvergenceCl, npConvergenceCd, npRoResiduals, npUuResiduals, npVvResiduals, npWwResiduals, npPpResiduals;
+        return npIterations, npConvergenceCl, npConvergenceCd, npConverenceCmx,npConverenceCmy, npConverenceCmz, npRoResiduals, npUuResiduals, npVvResiduals, npWwResiduals, npPpResiduals;
 
     #Aerodynamic file processing
     def processingAerodynamicFile(self, myAerodynamicFile):
@@ -191,7 +208,7 @@ class graphicsGenerator(object):
         # Processing files
         if self.CoefficientsConvergence_Indicator_ or self.ResidualsConvergence_Indicator_:
             print(self.myConvergenceFile_)
-            npIterations_, npConvergenceCl_, npConvergenceCd_, npRoResiduals_, npUuResiduals_, npVvResiduals_, npWwResiduals_, npPpResiduals_ = self.processingConvergenceFile(self.myConvergenceFile_);
+            npIterations_, npConvergenceCl_, npConvergenceCd_, npConverenceCmx_, npConverenceCmy_, npConverenceCmz_, npRoResiduals_, npUuResiduals_, npVvResiduals_, npWwResiduals_, npPpResiduals_ = self.processingConvergenceFile(self.myConvergenceFile_);
 
         if self.ClAlpha_Indicator_ or self.CdAlpha_Indicator_ or self.CmAlpha_Indicator_:
             npAngleOfAttack_, npAerodynamicCl_, npAerodynamicCd_, npAerodynamicCmx_, npAerodynamicCmy_, npAerodynamicCmz_ = self.processingAerodynamicFile(self.myAerodynamicFile_);
@@ -207,23 +224,23 @@ class graphicsGenerator(object):
             plotcmaplha_ = plotCmAlpha(npAngleOfAttack_, npAerodynamicCmx_, npAerodynamicCmy_, npAerodynamicCmz_);
 
         if self.CoefficientsConvergence_Indicator_:
-            plotcoefficientsconvergence_ = plotCoefficientsConvergence(npIterations_, npConvergenceCl_, npConvergenceCd_);
+            plotcoefficientsconvergence_ = plotCoefficientsConvergence(npIterations_, npConvergenceCl_, npConvergenceCd_, npConverenceCmx_, npConverenceCmy_, npConverenceCmz_);
 
         if self.ResidualsConvergence_Indicator_:
             plotresidualsconvergence_ = plotResidualsConvergence(npIterations_, npRoResiduals_, npUuResiduals_, npVvResiduals_, npWwResiduals_, npPpResiduals_);
 
         if self.SlicesCp_Indicator_:
-            plotslicescp_ = plotSlicesCp(self.mySurfaceFlowFile_, self.Axis_, self.firstCoordinate_, self.lastCoordinate_, self.numberOfSlices_);
+            plotslicescp_ = plotSlicesCp(self.mySurfaceFlowFile_, self.type_, self.Axis_, self.firstCoordinate_, self.lastCoordinate_, self.numberOfSlices_);
 
         if self.CpXc_Indicator_:
-            plotcpxc_ = plotCpXc(self.mySurfaceFlowFile_, self.Axis_, self.XCoordinate_, self.YCoordinate_, self.ZCoordinate_);
+            plotcpxc_ = plotCpXc(self.mySurfaceFlowFile_, self.type_, self.Axis_, self.XCoordinate_, self.YCoordinate_, self.ZCoordinate_);
 
         if self.SurfaceCpContour_Indicator_:
-            plotsurfacecpcontour_ = plotSurfaceCpContour(self.mySurfaceFlowFile_);
+            plotsurfacecpcontour_ = plotSurfaceCpContour(self.mySurfaceFlowFile_, self.type_);
 
         if self.SurfaceMachContour_Indicator_:
-            plotsurfacemachcontour_ = plotSurfaceMachContour(self.mySurfaceFlowFile_);
+            plotsurfacemachcontour_ = plotSurfaceMachContour(self.mySurfaceFlowFile_, self.type_);
 
         if self.MachIsosurface_Indicator_:
-            plotmachisosurface_ = plotMachIsosurface(self.myFlowFile_);
+            plotmachisosurface_ = plotMachIsosurface(self.myFlowFile_, self.type_);
         print("computeGraphics.............................................DONE")
