@@ -10,9 +10,8 @@ Face::Face()
 	right_cell_r_vector_ = new double[3]();
 	left_cell_r_vector_ = new double[3]();
 	face_2_nodes_connectivity_=nullptr;
-
+	face_center_ = new double[3]();
 }
-
 Face::~Face()
 {
 	

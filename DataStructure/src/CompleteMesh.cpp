@@ -9,9 +9,9 @@
 #include <iostream>
 using namespace std;
 
-CompleteMesh::CompleteMesh(int n_blocks, int n_blocks_in_process, int* my_blocks) : n_blocks_(0), n_blocks_in_process_(0), my_blocks_(nullptr), all_blocks_(nullptr) 
+CompleteMesh::CompleteMesh(int n_blocks, int n_blocks_in_process, int* my_blocks, string topology_file_name) : n_blocks_(0), n_blocks_in_process_(0), my_blocks_(nullptr), all_blocks_(nullptr)
 
-{	
+{
 	n_blocks_=n_blocks;
 	n_blocks_in_process_=n_blocks_in_process;
 
@@ -30,6 +30,7 @@ CompleteMesh::CompleteMesh(int n_blocks, int n_blocks_in_process, int* my_blocks
 
 		all_blocks_[j] = new Block(j);
 	}
+	topology_file_name_ = topology_file_name;
 }
 
 
@@ -51,69 +52,60 @@ void CompleteMesh::InitializeMyBlocks()
 	{
 		block_id = my_blocks_[i];
 
-		std::cout<<block_id<<std::endl;
+		// std::cout<<block_id<<std::endl;
 
 		block_id_string = std::to_string(block_id);
-		block_file = "../naca0012_coarse_nosidewall.su2" /*+ block_id_string + ".su2"*/;
+		// block_file = "../naca0012_coarse_nosidewall.su2";
+		block_file = topology_file_name_;
 		ConcreteBlockBuilder block_builder=ConcreteBlockBuilder(block_file);
 		new_block = all_blocks_[i];
 
-		std::cout<<new_block -> block_id_<<std::endl;
+		//std::cout<<new_block -> block_id_<<std::endl;
 
 		block_builder.preReadMyBlock(new_block);
-	    block_builder.readMyBlock(new_block);
+		block_builder.readMyBlock(new_block);
 
-	    block_builder.createMyFaces(new_block);
+		block_builder.createMyFaces(new_block);
 
-	    cout<<"Cellules\n";
-	    Cell* test_cell;
-	    for(int i=0;i<new_block->n_real_cells_in_block_;i++)
-	    {
-	    	test_cell = new_block ->block_cells_[i];
-	    	cout<<"cell_id_\t"<<test_cell->cell_id_<<endl;
-		    cout<<"cell_2_nodes_connectivity_\t"<<test_cell->cell_2_nodes_connectivity_[0]<<"\t"<<test_cell->cell_2_nodes_connectivity_[1]<<"\t"<<test_cell->cell_2_nodes_connectivity_[2]<<"\t"<<test_cell->cell_2_nodes_connectivity_[3]<<"\t"<<test_cell->cell_2_nodes_connectivity_[4]<<"\t"<<test_cell->cell_2_nodes_connectivity_[5]<<"\t"<<test_cell->cell_2_nodes_connectivity_[6]<<"\t"<<test_cell->cell_2_nodes_connectivity_[7]<<endl;
-		    cout<<"n_nodes_per_cell_\t"<<test_cell->n_nodes_per_cell_<<endl;
-		    cout<<"n_faces_per_cell_\t"<<test_cell->n_faces_per_cell_<<endl;
-		    cout<<"block_id_\t"<<test_cell->block_id_<<endl;
-	    }
+		block_builder.setConnectivity(new_block);
 
-	    for(int i=new_block->n_real_cells_in_block_;i<new_block->n_all_cells_in_block_;i++)
-	    {
-	    	test_cell = new_block ->block_cells_[i];
-	    	cout<<"cell_id_\t"<<test_cell->cell_id_<<endl;
-		    cout<<"cell_2_nodes_connectivity_\t"<<test_cell->cell_2_nodes_connectivity_[0]<<"\t"<<test_cell->cell_2_nodes_connectivity_[1]<<"\t"<<test_cell->cell_2_nodes_connectivity_[2]<<"\t"<<test_cell->cell_2_nodes_connectivity_[3]<<endl;
-		    cout<<"n_nodes_per_cell_\t"<<test_cell->n_nodes_per_cell_<<endl;
-		    cout<<"n_faces_per_cell_\t"<<test_cell->n_faces_per_cell_<<endl;
-		    cout<<"block_id_\t"<<test_cell->block_id_<<endl;
-	    }
+		// cout<<"Cellules\n";
+		Cell* test_cell;
+		for(int i=0;i<new_block->n_real_cells_in_block_;i++)
+		{
+			test_cell = new_block ->block_cells_[i];
+			// cout<<"cell_id_\t"<<test_cell->cell_id_<<endl;
+			// cout<<"cell_2_nodes_connectivity_\t"<<test_cell->cell_2_nodes_connectivity_[0]<<"\t"<<test_cell->cell_2_nodes_connectivity_[1]<<"\t"<<test_cell->cell_2_nodes_connectivity_[2]<<"\t"<<test_cell->cell_2_nodes_connectivity_[3]<<"\t"<<test_cell->cell_2_nodes_connectivity_[4]<<"\t"<<test_cell->cell_2_nodes_connectivity_[5]<<"\t"<<test_cell->cell_2_nodes_connectivity_[6]<<"\t"<<test_cell->cell_2_nodes_connectivity_[7]<<endl;
+			// cout<<"n_nodes_per_cell_\t"<<test_cell->n_nodes_per_cell_<<endl;
+			// cout<<"n_faces_per_cell_\t"<<test_cell->n_faces_per_cell_<<endl;
+			// cout<<"block_id_\t"<<test_cell->block_id_<<endl;
+		}
 
-	    // test_cell = new_block ->block_cells_[12];
-	    // cout<<test_cell->cell_2_nodes_connectivity_[1]<<endl;
-	    cout<<"Noeuds\n";
-	    Node* test_node;
-	    for(int i=0;i<new_block->n_nodes_in_block_;i++)
-	    {
-	    	test_node = new_block ->block_nodes_[i];
-	    	cout<<"node_id_\t"<<test_node->node_id_<<endl;
-		    cout<<"node_coordinates_\t"<<test_node->node_coordinates_[0]<<"\t"<<test_node->node_coordinates_[1]<<"\t"<<test_node->node_coordinates_[2]<<endl;
-		    cout<<"block_id_\t"<<test_node->block_id_<<endl;
-	    }
-	    // test_node = new_block ->block_nodes_[12];
-	    // cout<<test_node->node_coordinates_[1]<<endl;
-	    // cout<<test_node->node_coordinates_[2]<<endl;
-	    Face* test_face;
-	    cout<<"Faces\n";
-	    std::cout<<"TEEEEEEEEEEEEST!!!!---------------------------------  "<< new_block->n_faces_in_block_<<std::endl;
-	    for(int i=0;i<new_block->n_faces_in_block_;i++)
-	    {
-	    	cout<<"numero_id_\t"<<i<<endl;
-	    	test_face = new_block ->block_faces_[i];
+		for(int i=new_block->n_real_cells_in_block_;i<new_block->n_all_cells_in_block_;i++)
+		{
+			test_cell = new_block ->block_cells_[i];
+			// cout<<"cell_id_\t"<<test_cell->cell_id_<<endl;
+			// cout<<"cell_2_nodes_connectivity_\t"<<test_cell->cell_2_nodes_connectivity_[0]<<"\t"<<test_cell->cell_2_nodes_connectivity_[1]<<"\t"<<test_cell->cell_2_nodes_connectivity_[2]<<"\t"<<test_cell->cell_2_nodes_connectivity_[3]<<endl;
+			// cout<<"n_nodes_per_cell_\t"<<test_cell->n_nodes_per_cell_<<endl;
+			// cout<<"n_faces_per_cell_\t"<<test_cell->n_faces_per_cell_<<endl;
+			// cout<<"block_id_\t"<<test_cell->block_id_<<endl;
+		}
 
-	    	cout<<"face_id_\t"<<test_face->face_id_<<endl;
-		    cout<<"face_2_nodes_connectivity_\t"<<test_face->face_2_nodes_connectivity_[0]<<"\t"<<test_face->face_2_nodes_connectivity_[1]<<"\t"<<test_face->face_2_nodes_connectivity_[2]<<"\t"<<test_face->face_2_nodes_connectivity_[3]<<endl;
-		    cout<<"n_nodes_per_face_\t"<<test_face->n_nodes_per_face_<<endl;
-		    cout<<"block_id_\t"<<test_face->block_id_<<endl;
-	    }
+		// test_cell = new_block ->block_cells_[12];
+		// cout<<test_cell->cell_2_nodes_connectivity_[1]<<endl;
+		// cout<<"Noeuds\n";
+		Node* test_node;
+		for(int i=0;i<new_block->n_nodes_in_block_;i++)
+		{
+			test_node = new_block ->block_nodes_[i];
+			// cout<<"node_id_\t"<<test_node->node_id_<<endl;
+			// cout<<"node_coordinates_\t"<<test_node->node_coordinates_[0]<<"\t"<<test_node->node_coordinates_[1]<<"\t"<<test_node->node_coordinates_[2]<<endl;
+			// cout<<"block_id_\t"<<test_node->block_id_<<endl;
+		}
+		// test_node = new_block ->block_nodes_[12];
+		// cout<<test_node->node_coordinates_[1]<<endl;
+		// cout<<test_node->node_coordinates_[2]<<endl;
+
 
 
 	}

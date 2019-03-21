@@ -43,6 +43,8 @@ void ConcreteBlockBuilder::preReadMyBlock(Block* block)
 
 	int n_boundaries=0;
 	int n_elements_in_boundary=0;
+	int n_faces_in_farfield=0;
+	int n_faces_in_wall=0;
 	char boundary_type_temp[200];
 	std::string boundary_type;
 
@@ -78,7 +80,7 @@ void ConcreteBlockBuilder::preReadMyBlock(Block* block)
 			cell_type_temp =str_temp;
 
 			if (cell_type_temp == "10") // tetrahede
-			{	
+			{
 				faces_sum_for_each_cell+=4;
 			}
 			else if (cell_type_temp == "14") //pyramid
@@ -108,9 +110,10 @@ void ConcreteBlockBuilder::preReadMyBlock(Block* block)
 			getline(myfile, line);
 			sscanf (line.c_str(), "%s %d",str_temp,&n_elements_in_boundary);
 
-			if(boundary_type=="FARFIELD" /*|| boundary_type == "WALL" || boundary_type == "CONNEXION"*/)
+			if(boundary_type=="FARFIELD" /*|| boundary_type == "FARFIELD" || boundary_type == "CONNEXION"*/)
 			{
 				faces_sum_in_boundaries+=n_elements_in_boundary;
+				n_faces_in_farfield+=n_elements_in_boundary;
 				//std::cout<<"on a une boundary farfield"<<std::endl;
 			}
 
@@ -119,6 +122,7 @@ void ConcreteBlockBuilder::preReadMyBlock(Block* block)
 			{
 				//std::cout<<"on a une boundary wall"<<std::endl;
 				faces_sum_in_boundaries+=n_elements_in_boundary;
+				n_faces_in_wall+=n_elements_in_boundary;
 			}
 
 
@@ -138,6 +142,13 @@ void ConcreteBlockBuilder::preReadMyBlock(Block* block)
 		}
 		n_boundaries=block->n_real_boundaries_in_block_;
 		block ->block_boundary_cell_ids_ = new BoundaryCellIds* [n_boundaries];
+		// std::cout << "*********************ALLOCATION: "<< n_faces_in_wall<<std::endl;
+		block ->block_wall_face_ids_ = new int [n_faces_in_wall];
+		block->n_wall_faces_=n_faces_in_wall;
+
+		// std::cout << "*********************ALLOCATION: "<< n_faces_in_farfield<<std::endl;
+		block ->block_farfield_face_ids_ = new int [n_faces_in_farfield];
+		block->n_farfield_faces_=n_faces_in_farfield;
 
 		n_all_cells = n_real_cells + n_ghost_cells;
 		block->block_cells_ = new Cell*[n_all_cells];
@@ -150,23 +161,28 @@ void ConcreteBlockBuilder::preReadMyBlock(Block* block)
 		block->n_faces_in_block_ = n_faces;
 		// block->n_faces_in_block_ = 750;
 
-		std::cout<<"---------------------------------  "<< block->n_faces_in_block_<<std::endl;
+		std::cout<<"Pre-Reading block............  "<<std::endl;
 
-		std::cout<<n_faces<<std::endl;
-		
+		// std::cout<<n_faces<<std::endl;
+
 		PrimitiveVariables* prim= new PrimitiveVariables(block->n_all_cells_in_block_);
 		block->block_primitive_variables_=prim;
-		
-		TimeVariables* tim= new TimeVariables(block->n_all_cells_in_block_);
+
+		TimeVariables* tim= new TimeVariables(block->n_real_cells_in_block_);
 		block->block_time_variables_=tim;
-		
+
 		InterpolationVariables* inpvar= new InterpolationVariables(block->n_all_cells_in_block_);
 		block->block_interpolation_variables_=inpvar;
 
-		std::cout<<n_faces<<std::endl;
+		std::cout<<"Number of faces : "<<n_faces<<std::endl;
 
 
 
+	}
+	else
+	{
+		//warning that file was not opened!
+		std::cout<<"WARNING! BLOCK FILE WAS NOT CORRECTLY OPENED IN PRE-READ FUNCTION. ERRATIC BEHAVIOR MAY APPEAR!"<<std::endl;
 	}
 	myfile.close();
 }
@@ -209,7 +225,16 @@ void ConcreteBlockBuilder::readMyBlock(Block* block)
 	std::string ghost_cell_type_temp;
 	std::string cell_2_nodes_connectivity_temp;
 	std::string ghost_cell_2_nodes_connectivity_temp;
+
 	char boundary_type_temp[50];
+
+	int temp_farfield_face_count=0;
+	int* farfield_face_count;
+	farfield_face_count=&temp_farfield_face_count;
+
+	int temp_wall_face_count=0;
+	int* wall_face_count;
+	wall_face_count=&temp_wall_face_count;
 
 	//WallCellIds *wall_boundary_temp;
 	//FarfieldCellIds *farfield_boundary_temp;
@@ -236,7 +261,7 @@ void ConcreteBlockBuilder::readMyBlock(Block* block)
 
 			node_coordinates_temp[0]=x_temp;
 			node_coordinates_temp[1]=y_temp;
-			node_coordinates_temp[2]=z_temp;
+			node_coordinates_temp[2]=z_temp; //ATTENTION PROVISOIRE
 
 			new_node = buildNode(node_id,node_coordinates_temp, node_creator);
 
@@ -273,9 +298,9 @@ void ConcreteBlockBuilder::readMyBlock(Block* block)
 
 
 			new_cell -> block_id_ = block_id;
-			block ->addCell(new_cell);	
+			block ->addCell(new_cell);
 		}
-	
+
 
 		getline(myfile, line);
 		getline(myfile, line);
@@ -313,7 +338,7 @@ void ConcreteBlockBuilder::readMyBlock(Block* block)
 				{
 					//std::cout<<"on a un farfield"<< std::endl;
 					block->block_boundary_cell_ids_[real_boundary_id]= new FarfieldCellIds;
-					
+
 					(block->block_boundary_cell_ids_[real_boundary_id])->n_cell_in_boundary_=n_ghost_cells_temp;
 					(block->block_boundary_cell_ids_[real_boundary_id])->cell_ids_in_boundary_=new int[n_ghost_cells_temp];
 					(block->block_boundary_cell_ids_[real_boundary_id])->cell_count_= new int;
@@ -350,14 +375,15 @@ void ConcreteBlockBuilder::readMyBlock(Block* block)
 				{
 					//std::cout<<"on a un wall"<< std::endl;
 					block ->addCellIdInBoundary(cell_id,block->block_boundary_cell_ids_[real_boundary_id-1]);
-					//block ->addFaceIdInWall(int face_id, int face_count)
+					block ->addFaceIdInWall(cell_id,wall_face_count);
+					// note: cell_id is actually added here instead of face_id. this is normal and the corresponding face_id will replace cell_id during the run of connectivity
 
 				}
 				else if (boundary_type_temp_str == "FARFIELD") //farfield
 				{
 					//std::cout<<"on a un farfield"<< std::endl;
 					block ->addCellIdInBoundary(cell_id,block->block_boundary_cell_ids_[real_boundary_id-1]);
-
+					block ->addFaceIdInFarfield(cell_id,farfield_face_count);
 				}
 				else if (boundary_type_temp_str == "CONNECTION") //Connection inter-bloc
 				{
@@ -368,9 +394,12 @@ void ConcreteBlockBuilder::readMyBlock(Block* block)
 			}
 
 		}
+	} else{
+		//warning that file was not opened!
+		std::cout<<"WARNING! BLOCK FILE WAS NOT CORRECTLY OPENED IN READ FUNCTION. ERRATIC BEHAVIOR MAY APPEAR!"<<std::endl;
 	}
 	myfile.close();
-	delete node_creator; 
+	delete node_creator;
 
 }
 
@@ -389,7 +418,7 @@ void ConcreteBlockBuilder::createMyFaces(Block* block)
 	Face* face;
 	Face* face_already_in_block;
 
-	
+
 
 	temp_face_creators[0] = tetrahedral_face_creator;
 	temp_face_creators[1] = pyramid_face_creator;
@@ -399,24 +428,24 @@ void ConcreteBlockBuilder::createMyFaces(Block* block)
 	int n_possible_combinaisons=0;
 	int** possible_combinaisons=nullptr;
 
-	int possible_combinaisons_4_quad[24][4] = 
+	int possible_combinaisons_4_quad[24][4] =
 				{
 				{1,2,3,4},{1,2,4,3},{1,3,2,4},{1,3,4,2},{1,4,2,3},{1,4,3,2},
 				{2,1,3,4},{2,1,4,3},{2,3,1,4},{2,3,4,1},{2,4,1,3},{2,4,3,1},
 				{3,1,2,4},{3,1,4,2},{3,2,1,4},{3,2,4,1},{3,4,1,2},{3,4,2,1},
 				{4,1,2,3},{4,1,3,2},{4,2,1,3},{4,2,3,1},{4,3,1,2},{4,3,2,1}
 				};
-	int possible_combinaisons_4_triangle[6][3] = 
+	int possible_combinaisons_4_triangle[6][3] =
 				{
 				{1,2,3},{1,3,2},
 				{2,1,3},{2,3,1},
 				{3,1,2},{3,2,1}
 				};
 
-	
-	
 
-	std::cout<< "================================ "<< block->n_real_cells_in_block_<<std::endl;
+
+
+	std::cout<< "Creating Faces............"<< std::endl;
 	for(int i=0; i<block->n_real_cells_in_block_;i++)
 	{
 		Face** temp_face_array;
@@ -427,8 +456,7 @@ void ConcreteBlockBuilder::createMyFaces(Block* block)
 
 		// temp_face_array = new Face*[cell->n_faces_per_cell_];
 
-		temp_face_array = temp_face_creators[cell->creator_key_].createFace(cell);
-
+		temp_face_array = temp_face_creators[cell->creator_key_].createFace(cell); // segfault here with Onera M6
 		for(int j=0;j<cell->n_faces_per_cell_;j++)
 		{
 
@@ -453,8 +481,8 @@ void ConcreteBlockBuilder::createMyFaces(Block* block)
 						possible_combinaisons[k][l]=possible_combinaisons_4_quad[k][l];
 					}
 				}
-				
-				
+
+
 			}
 			else if(face->n_nodes_per_face_==3)
 			{
@@ -463,7 +491,7 @@ void ConcreteBlockBuilder::createMyFaces(Block* block)
 				temp_nodes[0] = face -> face_2_nodes_connectivity_[0];
 				temp_nodes[1] = face -> face_2_nodes_connectivity_[1];
 				temp_nodes[2] = face -> face_2_nodes_connectivity_[2];
-				
+
 				n_possible_combinaisons = 6;
 
 				possible_combinaisons = new int*[n_possible_combinaisons];
@@ -476,11 +504,11 @@ void ConcreteBlockBuilder::createMyFaces(Block* block)
 						possible_combinaisons[k][l]=possible_combinaisons_4_triangle[k][l];
 					}
 				}
-				
-				
+
+
 			}
 
-			
+
 			// std::cout << "\n Press return to continue \n" ;
     		// std::cin.ignore();
 
@@ -530,12 +558,15 @@ void ConcreteBlockBuilder::createMyFaces(Block* block)
 								// std::cout<<node_count<<endl;
 								node_count+=1;
 							}
-							
+
 						}
 
 						if(node_count==face->n_nodes_per_face_)
 						{
+<<<<<<< HEAD
 							// std::cout<<"===================================Yeeeeeee\n";
+=======
+>>>>>>> origin/new_solver_olivier
 
 							flag = false;
 							break ;
@@ -545,12 +576,12 @@ void ConcreteBlockBuilder::createMyFaces(Block* block)
 						// {
 						// 	flag = true;
 						// }
-					}	
+					}
 				}
 				// cout<<face_already_in_block->face_2_nodes_connectivity_[0]<<"\t"<<face_already_in_block->face_2_nodes_connectivity_[1]<<"\t"<<face_already_in_block->face_2_nodes_connectivity_[2]<<"\t"<<face_already_in_block->face_2_nodes_connectivity_[3]<<endl;
 				// modulo_sum = (temp_nodes[0]+1)%(face_already_in_block->face_2_nodes_connectivity_[0]+1)+(temp_nodes[1]+1)%(face_already_in_block->face_2_nodes_connectivity_[1]+1)+(temp_nodes[2]+1)%(face_already_in_block->face_2_nodes_connectivity_[2]+1);
-				
-				
+
+
 				// modulo_product*=modulo_sum;
 
 			}
@@ -573,7 +604,7 @@ void ConcreteBlockBuilder::createMyFaces(Block* block)
 
 				block->addFace(new_face);
 				face_count_+=1;
-
+				// cout << face_count_ << endl; //ICI POUR VOIR LES FACES AUGMENTER
 			}
 
 			// if(temp_nodes)
@@ -623,19 +654,3 @@ void ConcreteBlockBuilder::createMyFaces(Block* block)
 }
 
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
