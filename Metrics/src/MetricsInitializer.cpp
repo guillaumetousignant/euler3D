@@ -144,6 +144,7 @@ void MetricsInitializer::computeNormalFaces(uint iNFaces, Face** iFaces, Node** 
     std::vector<double> centerLeftCell(vec3DSize);
     std::vector<double> centerRightCell(vec3DSize);
     std::vector<double> centerConnecVec(vec3DSize);
+    std::vector<double> centerFace(vec3DSize);
 
     for(uint i = 0; i < iNFaces;i++)
     {
@@ -263,19 +264,19 @@ void MetricsInitializer::computeNormalFaces(uint iNFaces, Face** iFaces, Node** 
 
         //Adjust orientation of vector to obey left to right rule for cells
         uint leftCellID = blockData_->block_faces_[i]->face_2_cells_connectivity_[0];
-        uint rightCellID = blockData_->block_faces_[i]->face_2_cells_connectivity_[1];
 
         centerLeftCell[X] = blockData_->block_cells_[leftCellID]->cell_coordinates_[X];
         centerLeftCell[Y] = blockData_->block_cells_[leftCellID]->cell_coordinates_[Y];
         centerLeftCell[Z] = blockData_->block_cells_[leftCellID]->cell_coordinates_[Z];
 
-        centerRightCell[X] = blockData_->block_cells_[rightCellID]->cell_coordinates_[X];
-        centerRightCell[Y] = blockData_->block_cells_[rightCellID]->cell_coordinates_[Y];
-        centerRightCell[Z] = blockData_->block_cells_[rightCellID]->cell_coordinates_[Z];
+        uint faceID = i;
+        centerFace[X] = blockData_->block_faces_[faceID]->face_center_[X];
+        centerFace[Y] = blockData_->block_faces_[faceID]->face_center_[Y];
+        centerFace[Z] = blockData_->block_faces_[faceID]->face_center_[Z];
 
-        centerConnecVec[X] = centerRightCell[X] - centerLeftCell[X];
-        centerConnecVec[Y] = centerRightCell[Y] - centerLeftCell[Y];
-        centerConnecVec[Z] = centerRightCell[Z] - centerLeftCell[Z];
+        centerConnecVec[X] = centerFace[X] - centerLeftCell[X];
+        centerConnecVec[Y] = centerFace[Y] - centerLeftCell[Y];
+        centerConnecVec[Z] = centerFace[Z] - centerLeftCell[Z];
 
         double dotProduct = centerConnecVec[X]*s_x + centerConnecVec[Y]*s_y + centerConnecVec[Z]*s_z;
 
@@ -309,9 +310,9 @@ void MetricsInitializer::computeInterpVect(uint iNCells, uint iNCellsTot, uint i
         //Get center of face
         double centerFace[3];
 
-        centerFace[X] = iFaces[i]->face_center_[0];
-        centerFace[Y] = iFaces[i]->face_center_[1];
-        centerFace[Z] = iFaces[i]->face_center_[2];
+        centerFace[X] = iFaces[i]->face_center_[X];
+        centerFace[Y] = iFaces[i]->face_center_[Y];
+        centerFace[Z] = iFaces[i]->face_center_[Z];
 
         //Get center coordinates from neighbor's cells
         uint leftCellID = iFaces[i]->face_2_cells_connectivity_[LEFT];

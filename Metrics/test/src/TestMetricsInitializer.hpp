@@ -394,7 +394,7 @@ TEST_CASE( "TestComputeNormals", "Prove that normales of each faces are well def
 
     normalFace5[0] = 0.0;
     normalFace5[1] = 0.0;
-    normalFace5[2] = 2.0;
+    normalFace5[2] = -2.0;
 
     for(int i(0);i<nbCoordVect;i++)
     {
