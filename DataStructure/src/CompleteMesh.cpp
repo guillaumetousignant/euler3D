@@ -60,7 +60,7 @@ void CompleteMesh::InitializeMyBlocks()
 		ConcreteBlockBuilder block_builder=ConcreteBlockBuilder(block_file);
 		new_block = all_blocks_[i];
 
-		std::cout<<new_block -> block_id_<<std::endl;
+		//std::cout<<new_block -> block_id_<<std::endl;
 
 		block_builder.preReadMyBlock(new_block);
 		block_builder.readMyBlock(new_block);
