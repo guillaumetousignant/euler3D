@@ -9,18 +9,18 @@ from tecplot.exception import *
 from tecplot.constant import *
 
 # Euler Files
-#myInterfaceFile_ = "Interface_output.txt";
-#myFlowFile_ = "FlowData.dat";
-#mySurfaceFlowFile_ = "SurfaceFlowData.dat";
-#myConvergenceFile_ = "Convergence.dat";
-#myAerodynamicFile_ = "aerodynamic_file.dat";
+myInterfaceFile_ = "Interface_output.txt";
+myFlowFile_ = "FlowData.dat";
+mySurfaceFlowFile_ = "SurfaceFlowData.dat";
+myConvergenceFile_ = "Convergence.dat";
+myAerodynamicFile_ = "aerodynamic_file.dat";
 
 # SU2 Files
-myInterfaceFile_ = "Interface_output.txt";
-myFlowFile_ = "flow_3.06.dat";
-mySurfaceFlowFile_ = "surface_flow_3.06.dat";
-myConvergenceFile_ = "history_3.06.dat";
-myAerodynamicFile_ = "aerodynamic_file.dat";
+#myInterfaceFile_ = "Interface_output.txt";
+#myFlowFile_ = "flow_3.06.dat";
+#mySurfaceFlowFile_ = "surface_flow_3.06.dat";
+#myConvergenceFile_ = "history_3.06.dat";
+#myAerodynamicFile_ = "aerodynamic_file.dat";
 
 #Instantiate graphicsGenerator class
 graphicsgenerator_ = graphicsGenerator(myInterfaceFile_, myFlowFile_, mySurfaceFlowFile_, myConvergenceFile_, myAerodynamicFile_);
