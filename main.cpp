@@ -46,6 +46,9 @@ int main(int argc, char* argv[])
 	else
 	{
 		cout << "ERROR: No input file" << endl;
+		#ifdef HAVE_MPI
+		MPI_Finalize();
+		#endif
 		exit(0);
 	}
 
