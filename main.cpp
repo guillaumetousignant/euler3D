@@ -30,12 +30,15 @@ int main(int argc, char *argv[])
 	std::string meshFile = argv[1];
 	int nPart = atoi(argv[2]);
 	std::string outputMeshFile = argv[3]; 
-	cout <<"input arguments ok" << endl;
+	
 
 	MetisMesh reader;
 	reader.ReadSingleBlockMesh(meshFile);
     
+	
     MetisMesh* newMesh = reader.Partition(nPart);
+	
 
 	newMesh->WriteMesh(outputMeshFile); 
+	cout << "asdswf" << endl;
 }

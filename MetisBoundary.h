@@ -36,7 +36,6 @@ class MetisBoundary
     int nElements_;
     int *elementType_;
     int *elementNbrNodes_;
-
     //int blockID_;
     //int** boundaryType_;
 
