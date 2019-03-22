@@ -76,7 +76,7 @@ void PostProcessing::checkStopSolver()
   if((current_iter_+1 == max_iter_)|| (ro_convergence_ <= convergence_criterion_)||(file_exist_flag))
   {
     stop_solver_= true;
-    remove( stop_file_name_ );
+    remove( stop_file_name_.c_str() );
   }
   //cout << "Ending checkStopSolver..............................................." << endl;
 
