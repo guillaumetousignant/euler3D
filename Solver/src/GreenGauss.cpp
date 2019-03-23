@@ -11,13 +11,16 @@ using namespace std;
 
 void GreenGauss::computeGradients(Block* block)
 {
+	
 	double rho_L,u_L,v_L,w_L,p_L,rho_R,u_R,v_R,w_R,p_R;
 	Cell* my_cell;
 	int my_cell_n_faces;
 	int* my_cell_2_faces_connectivity;
 	double real_cell_volume;
 
-	double *face_normals;
+	int n_dim=3;
+
+	double face_normals[n_dim];
 
 	int left_cell, right_cell; // my_face,
 	int* neighboor_cells;
@@ -54,7 +57,7 @@ void GreenGauss::computeGradients(Block* block)
 	my_grad_ww_array=my_interpolation_variables->grad_ww_;
 	my_grad_pp_array=my_interpolation_variables->grad_pp_;
 
-	int n_dim=3;
+	
 
 
 	
@@ -93,7 +96,11 @@ void GreenGauss::computeGradients(Block* block)
 			
 			my_face=block->block_faces_[my_face_in_cell_idx];
 			
-			face_normals=my_face->face_normals_;
+			for (int dim_idx=0; dim_idx<n_dim; dim_idx++)
+			{
+				face_normals[dim_idx]=my_face->face_normals_[dim_idx];
+			}
+
 			
 			// Check if cell is on right or on left
 
@@ -107,7 +114,7 @@ void GreenGauss::computeGradients(Block* block)
 				// Cell is on right, orientation needs to be opposite
 				for (int dim_idx=0; dim_idx<n_dim; dim_idx++)
 				{
-					face_normals[dim_idx]*=1.0;
+					face_normals[dim_idx]*=-1.0;
 				}
 
 			}
@@ -135,11 +142,11 @@ void GreenGauss::computeGradients(Block* block)
 			// Note: face_normals has not been normalized, so no need to muliply by face_area
 			for (int dim_idx=0; dim_idx<n_dim; dim_idx++)
 			{
-				my_grad_ro_array[real_cell_idx][dim_idx]=0.5*(rho_L+rho_R)*face_normals[dim_idx];
-				my_grad_uu_array[real_cell_idx][dim_idx]=0.5*(u_L+u_R)*face_normals[dim_idx];
-				my_grad_vv_array[real_cell_idx][dim_idx]=0.5*(v_L+v_R)*face_normals[dim_idx];
-				my_grad_ww_array[real_cell_idx][dim_idx]=0.5*(w_L+w_R)*face_normals[dim_idx];
-				my_grad_pp_array[real_cell_idx][dim_idx]=0.5*(p_L+p_R)*face_normals[dim_idx];
+				my_grad_ro_array[real_cell_idx][dim_idx]+=0.5*(rho_L+rho_R)*face_normals[dim_idx];
+				my_grad_uu_array[real_cell_idx][dim_idx]+=0.5*(u_L+u_R)*face_normals[dim_idx];
+				my_grad_vv_array[real_cell_idx][dim_idx]+=0.5*(v_L+v_R)*face_normals[dim_idx];
+				my_grad_ww_array[real_cell_idx][dim_idx]+=0.5*(w_L+w_R)*face_normals[dim_idx];
+				my_grad_pp_array[real_cell_idx][dim_idx]+=0.5*(p_L+p_R)*face_normals[dim_idx];
 			}
 
 		}
@@ -158,6 +165,8 @@ void GreenGauss::computeGradients(Block* block)
 
 	}
 
+	
+
 	// Reflection formlua is r=d-2(d\dot n)*n, where r is reflected vector, d is incident vector and n is normalized face vector
 
 	// Set gradients in wall cells
@@ -167,7 +176,7 @@ void GreenGauss::computeGradients(Block* block)
 	int int_cell_idx;
 	int ext_cell_idx;
 
-	double* wall_face_normals_normalized;
+	double wall_face_normals_normalized[n_dim];
 	double face_area;
 
 	double ro_dot_product, uu_dot_product, vv_dot_product, ww_dot_product, pp_dot_product;
@@ -179,12 +188,12 @@ void GreenGauss::computeGradients(Block* block)
 		int_cell_idx=block->block_faces_[wall_face_idx]->face_2_cells_connectivity_[0];
 		ext_cell_idx=block->block_faces_[wall_face_idx]->face_2_cells_connectivity_[1];
 
-		wall_face_normals_normalized=block->block_faces_[wall_face_idx]->face_normals_;		
 		face_area=block->block_faces_[wall_face_idx]->face_area_;
 
 		// Normalized normals
 		for (int dim_idx=0; dim_idx<n_dim; dim_idx++)
 		{
+			wall_face_normals_normalized[dim_idx]=block->block_faces_[wall_face_idx]->face_normals_[dim_idx];		
 			wall_face_normals_normalized[dim_idx]/=face_area;
 		}
 
@@ -223,7 +232,7 @@ void GreenGauss::computeGradients(Block* block)
 	int n_symmetry_faces=block->n_symmetry_faces_;
 	int symmetry_face_idx;
 
-	double* symmetry_face_normals_normalized;
+	double symmetry_face_normals_normalized[n_dim];
 
 	for (int i = 0; i < n_symmetry_faces; i++)
 	{
@@ -232,12 +241,12 @@ void GreenGauss::computeGradients(Block* block)
 		int_cell_idx=block->block_faces_[symmetry_face_idx]->face_2_cells_connectivity_[0];
 		ext_cell_idx=block->block_faces_[symmetry_face_idx]->face_2_cells_connectivity_[1];
 
-		symmetry_face_normals_normalized=block->block_faces_[symmetry_face_idx]->face_normals_;		
 		face_area=block->block_faces_[symmetry_face_idx]->face_area_;
 
 		// Normalized normals
 		for (int dim_idx=0; dim_idx<n_dim; dim_idx++)
 		{
+			symmetry_face_normals_normalized[dim_idx]=block->block_faces_[symmetry_face_idx]->face_normals_[dim_idx];		
 			symmetry_face_normals_normalized[dim_idx]/=face_area;
 		}
 
@@ -276,7 +285,7 @@ void GreenGauss::computeGradients(Block* block)
 	int n_farfield_faces=block->n_farfield_faces_;
 	int farfield_face_idx;
 
-	double* farfield_face_normals_normalized;
+	double farfield_face_normals_normalized[n_dim];
 
 	for (int i = 0; i < n_farfield_faces; i++)
 	{
@@ -285,12 +294,12 @@ void GreenGauss::computeGradients(Block* block)
 		int_cell_idx=block->block_faces_[farfield_face_idx]->face_2_cells_connectivity_[0];
 		ext_cell_idx=block->block_faces_[farfield_face_idx]->face_2_cells_connectivity_[1];
 
-		farfield_face_normals_normalized=block->block_faces_[farfield_face_idx]->face_normals_;		
 		face_area=block->block_faces_[farfield_face_idx]->face_area_;
 
 		// Normalized normals
 		for (int dim_idx=0; dim_idx<n_dim; dim_idx++)
 		{
+			farfield_face_normals_normalized[dim_idx]=block->block_faces_[farfield_face_idx]->face_normals_[dim_idx];		
 			farfield_face_normals_normalized[dim_idx]/=face_area;
 		}
 
@@ -324,6 +333,7 @@ void GreenGauss::computeGradients(Block* block)
 
 
 	}
+	
 
 }
 

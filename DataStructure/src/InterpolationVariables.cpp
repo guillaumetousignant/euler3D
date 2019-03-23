@@ -11,6 +11,7 @@ InterpolationVariables::InterpolationVariables(int n_all_cells_in_block)
 	grad_ww_ = new double*[n_all_cells_in_block];
 	grad_pp_ = new double*[n_all_cells_in_block];
 
+	// () means initialize to zero
 	for(int i=0;i<n_all_cells_in_block;i++)
 	{
 		grad_ro_[i]=new double[3]();
@@ -21,6 +22,7 @@ InterpolationVariables::InterpolationVariables(int n_all_cells_in_block)
 
 	}
 
+	// () means initialize to zero
 	limiter_ro_ = new double[n_all_cells_in_block]();
 	limiter_uu_ = new double[n_all_cells_in_block]();
 	limiter_vv_ = new double[n_all_cells_in_block]();
