@@ -12,6 +12,7 @@ class BoundaryCellIds;
 //#include "ConnexionCellIds.h"
 //#include "FarfieldCellIds.h"
 //#include "WallCellIds.h"
+//#include "SymmetryCellIds.h"
 
 class Block
 {
@@ -38,6 +39,9 @@ public:
 	int n_farfield_faces_;
 	int* block_wall_face_ids_;
 	int n_wall_faces_;
+	int* block_symmetry_face_ids_;
+	int n_symmetry_faces_;
+
 
 	void addCell(Cell* new_cell);
 	void addNode(Node* new_node);
@@ -45,6 +49,7 @@ public:
 	void addCellIdInBoundary(int cell_id, BoundaryCellIds* some_boundary);
 	void addFaceIdInWall(int face_id,int* face_count);
 	void addFaceIdInFarfield(int face_id,int* face_count);
+	void addFaceIdInSymmetry(int face_id,int* face_count);
 
 	Block(int block_id);
 	~Block();

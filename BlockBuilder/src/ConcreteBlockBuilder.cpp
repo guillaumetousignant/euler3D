@@ -45,6 +45,7 @@ void ConcreteBlockBuilder::preReadMyBlock(Block* block)
 	int n_elements_in_boundary=0;
 	int n_faces_in_farfield=0;
 	int n_faces_in_wall=0;
+	int n_faces_in_symmetry=0;
 	char boundary_type_temp[200];
 	std::string boundary_type;
 
@@ -125,6 +126,13 @@ void ConcreteBlockBuilder::preReadMyBlock(Block* block)
 				n_faces_in_wall+=n_elements_in_boundary;
 			}
 
+			if(boundary_type=="SYMMETRY")
+			{
+				//std::cout<<"on a une boundary symmetry"<<std::endl;
+				faces_sum_in_boundaries+=n_elements_in_boundary;
+				n_faces_in_symmetry+=n_elements_in_boundary;
+			}
+
 
 			if(boundary_type=="CONNECTION")
 			{
@@ -150,6 +158,10 @@ void ConcreteBlockBuilder::preReadMyBlock(Block* block)
 		block ->block_farfield_face_ids_ = new int [n_faces_in_farfield];
 		block->n_farfield_faces_=n_faces_in_farfield;
 
+		// std::cout << "*********************ALLOCATION: "<< n_faces_in_symmetry<<std::endl;
+		block ->block_symmetry_face_ids_ = new int [n_faces_in_symmetry];
+		block->n_symmetry_faces_=n_faces_in_symmetry;
+
 		n_all_cells = n_real_cells + n_ghost_cells;
 		block->block_cells_ = new Cell*[n_all_cells];
 
@@ -163,13 +175,19 @@ void ConcreteBlockBuilder::preReadMyBlock(Block* block)
 
 		std::cout<<"Pre-Reading block............  "<<std::endl;
 
-		// std::cout<<n_faces<<std::endl;
+		std::cout<<n_faces<<std::endl;
+		std::cout<<n_faces_in_wall<<" "<<n_faces_in_farfield<<" "<<n_faces_in_symmetry<<std::endl;
+		std::cout<<block->n_real_cells_in_block_<<std::endl;
+		std::cout<<block->n_all_cells_in_block_<<std::endl;
 
 		PrimitiveVariables* prim= new PrimitiveVariables(block->n_all_cells_in_block_);
 		block->block_primitive_variables_=prim;
 
 		TimeVariables* tim= new TimeVariables(block->n_real_cells_in_block_);
 		block->block_time_variables_=tim;
+
+
+		
 
 		InterpolationVariables* inpvar= new InterpolationVariables(block->n_all_cells_in_block_);
 		block->block_interpolation_variables_=inpvar;
@@ -235,6 +253,10 @@ void ConcreteBlockBuilder::readMyBlock(Block* block)
 	int temp_wall_face_count=0;
 	int* wall_face_count;
 	wall_face_count=&temp_wall_face_count;
+
+	int temp_symmetry_face_count=0;
+	int* symmetry_face_count;
+	symmetry_face_count=&temp_symmetry_face_count;
 
 	//WallCellIds *wall_boundary_temp;
 	//FarfieldCellIds *farfield_boundary_temp;
@@ -347,6 +369,19 @@ void ConcreteBlockBuilder::readMyBlock(Block* block)
 					real_boundary_id=real_boundary_id+1;
 
 				}
+				else if (boundary_type_temp_str == "SYMMETRY") //symmetry
+				{
+					//std::cout<<"on a un symmetry"<< std::endl;
+					block->block_boundary_cell_ids_[real_boundary_id]= new SymmetryCellIds;
+
+					(block->block_boundary_cell_ids_[real_boundary_id])->n_cell_in_boundary_=n_ghost_cells_temp;
+					(block->block_boundary_cell_ids_[real_boundary_id])->cell_ids_in_boundary_=new int[n_ghost_cells_temp];
+					(block->block_boundary_cell_ids_[real_boundary_id])->cell_count_= new int;
+					*((block->block_boundary_cell_ids_[real_boundary_id])->cell_count_)=0;
+					(block->block_boundary_cell_ids_[real_boundary_id])->owner_block_=block;
+					real_boundary_id=real_boundary_id+1;
+
+				}
 				else if (boundary_type_temp_str == "CONNECTION") //Connection inter-bloc
 				{
 					//block->n_real_boundaries_in_block_=(block->n_real_boundaries_in_block_)-1;
@@ -384,6 +419,14 @@ void ConcreteBlockBuilder::readMyBlock(Block* block)
 					//std::cout<<"on a un farfield"<< std::endl;
 					block ->addCellIdInBoundary(cell_id,block->block_boundary_cell_ids_[real_boundary_id-1]);
 					block ->addFaceIdInFarfield(cell_id,farfield_face_count);
+				}
+				if (boundary_type_temp_str=="SYMMETRY") // symmetry
+				{
+					//std::cout<<"on a un symmetry"<< std::endl;
+					block ->addCellIdInBoundary(cell_id,block->block_boundary_cell_ids_[real_boundary_id-1]);
+					block ->addFaceIdInSymmetry(cell_id,symmetry_face_count);
+					// note: cell_id is actually added here instead of face_id. this is normal and the corresponding face_id will replace cell_id during the run of connectivity
+
 				}
 				else if (boundary_type_temp_str == "CONNECTION") //Connection inter-bloc
 				{
