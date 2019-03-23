@@ -3,11 +3,11 @@ topologyfilename
 ../naca0012_coarse_nosidewall.su2
 INPUT
 cfl gamma angleattackdeg
-0.5 1.4 0.00
+0.5 1.4 5.00
 rkstage mach cmac
 5 0.80 1.00
 nbitermax convcriterion
-500 1e-15
+1000 1e-15
 residual smoothing (0-no 1-yes)
 0
 fluxscheme schemeorder
