@@ -15,12 +15,14 @@
 #include "ConcreteBlockBuilder.h"
 #include "CompleteMesh.h"
 #include "Metrics/src/MetricsInitializer.h"
+#include <chrono> // for high resolution clock
 
 
 using namespace std;
 
 int main(int argc, char* argv[])
 {
+
 	cout << "========================STARTING PROGRAM========================" << endl;
 
 	cout << R"(
@@ -73,6 +75,7 @@ int main(int argc, char* argv[])
 	cout << "In Solver........." << endl;
 	Solver *solver=initializer->initializeSolver(interface);
 	solver->solve(new_block, complete_mesh);
+
 }
 
 
