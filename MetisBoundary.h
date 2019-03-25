@@ -20,26 +20,31 @@ class MetisBoundary
   static BoundaryType FindBoundaryTypeFromTagStr(string tag_str);
 
   public:
-    MetisBoundary(int nElements, int* elementType, int* elementNbrNodes, int **boundaryElements);
+    MetisBoundary();
+    //MetisBoundary(int nElements, int* elementType, int* elementNbrNodes, int **boundaryElements);
     ~MetisBoundary();
-    //void Init(int nBlock, int nElements, int* nNodes);
+    void InitBoundary(int* nElements, int nBoundaries);
 
-  public:
-    vector<vector<int>> localNodes;
-    int **boundaryElements_;
+    string SetBoundaryName(string boundaryName);
+    //vector<vector<int>> localNodes;
+    string* boundaryNames_;
 
-  private:
-    string boundaryName_;
-    
+    //int** boundariesConnectivity_;
+
+  
+    int nBoundaries_;
+    int** boundaryElements_;
+    std::vector<int>** boundaryConnectivity_;
     //int *nNodes_;
     
-    int nElements_;
-    int *elementType_;
-    int *elementNbrNodes_;
+    int* boundaryNelements_;
+    int* elementType_;
+    int** boundaryElementNbrNodes_;
+    
     //int blockID_;
     //int** boundaryType_;
 
-    //vector<int> **boundariesConnectivity_;
+    
 };
 
 #endif
