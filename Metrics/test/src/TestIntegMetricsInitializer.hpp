@@ -228,8 +228,23 @@ TEST_CASE("Compute weight least squares with cell #20")
         cellCenter[1] = blockData->block_cells_[20]->cell_coordinates_[1];
         cellCenter[2] = blockData->block_cells_[20]->cell_coordinates_[2];
 
-        cout << cellNeighbors[i] << ":" << cellCenter[0] << " " << cellCenter[1] << " " << cellCenter[2] << endl;
+        const uint X = 0;
+        const uint Y = 1;
+        const uint Z = 2;
+
+        //Evaluate weigthts between cell 20 and 15
+        REQUIRE(blockData->block_cells_[20]->cell_weights_[0][X] == 0);
+        REQUIRE(blockData->block_cells_[20]->cell_weights_[0][Y] == -1);
+        REQUIRE(blockData->block_cells_[20]->cell_weights_[0][Z] == 1);
+
+        //Evaluate weigthts between cell 20 and 21
+        REQUIRE(blockData->block_cells_[20]->cell_weights_[2][X] == 1);
+        REQUIRE(blockData->block_cells_[20]->cell_weights_[2][Y] == 0);
+        REQUIRE(blockData->block_cells_[20]->cell_weights_[2][Z] == 0);
+
     }
+
+
 
        
     delete blockData;

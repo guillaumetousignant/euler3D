@@ -559,12 +559,12 @@ void MetricsInitializer::computeWLS(uint iNCells, Cell** iCells)
 
             double beta = (r12*r23 - r13*r22)/(r11*r22);
 
-
-            std::vector<std::vector<double>> weightLeastSquared(nbCellsNeighbor);
             const uint vector3DSize = 3;
+            iCells[i]->cell_weights_.resize(nbCellsNeighbor);
 
             for(uint j(0);j < nbCellsNeighbor;j++)
             {
+                iCells[i]->cell_weights_[j].resize(vector3DSize);
 
                 double alpha3 = (1/(r33*r33))*(dzij[j] - (r33/r22)*dyij[j] + beta*dxij[j]);
 
@@ -576,13 +576,12 @@ void MetricsInitializer::computeWLS(uint iNCells, Cell** iCells)
                 double weight2 = alpha2 - (r23/r22)*alpha3;
                 double weight3 = alpha3;
 
-                weightLeastSquared[j].resize(vector3DSize);
-
-                weightLeastSquared[j][0] = weight1;
-                weightLeastSquared[j][1] = weight2;
-                weightLeastSquared[j][2] = weight3;
+                iCells[i]->cell_weights_[j][0] = weight1;
+                iCells[i]->cell_weights_[j][1] = weight2;
+                iCells[i]->cell_weights_[j][2] = weight3;
 
             }
+
 
         }
 
