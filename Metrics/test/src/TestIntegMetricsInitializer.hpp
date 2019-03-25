@@ -166,6 +166,10 @@ TEST_CASE("Compute areas", "")
         REQUIRE(area == result);
     }
 
+       
+    delete blockData;
+    blockData = nullptr;
+
 }
 
 TEST_CASE("Compute Volume", "")
@@ -194,7 +198,47 @@ TEST_CASE("Compute Volume", "")
         REQUIRE(volumeGhost <= 1.01);
     }
 
-   
+      
+    delete blockData;
+    blockData = nullptr;
 
 }
+
+
+TEST_CASE("Compute weight least squares with cell #20")
+{
+
+    //1. Get neighbors of cell reference
+    Block *blockData = new Block(0);
+    buildConnectivityInteg(blockData);
+
+    //Cell ID is 20
+    uint cellID = 20;
+    const uint nbFaces = 6;
+
+    std::vector<double> cellCenter(3);
+
+    std::vector<uint> cellNeighbors;
+
+    for(uint i(0);i < nbFaces;i++)
+    {
+        cellNeighbors.push_back(blockData->block_cells_[cellID]->cell_2_cells_connectivity_[i]);
+
+        cellCenter[0] = blockData->block_cells_[20]->cell_coordinates_[0];
+        cellCenter[1] = blockData->block_cells_[20]->cell_coordinates_[1];
+        cellCenter[2] = blockData->block_cells_[20]->cell_coordinates_[2];
+
+        cout << cellNeighbors[i] << ":" << cellCenter[0] << " " << cellCenter[1] << " " << cellCenter[2] << endl;
+    }
+
+       
+    delete blockData;
+    blockData = nullptr;
+
+
+}
+
+
+
+
 
