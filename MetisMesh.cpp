@@ -191,21 +191,21 @@ void MetisMesh::ReadSingleBlockMesh(std::string fileName)
             getline(myfile, line);
         }
 
-        metisBoundary_ = new MetisBoundary();
+
+        
+
+
         // Stocke le nombre de conditions frontieres
         sscanf(line.c_str(), "NMARK=%d", &nBoundaries);
         std::cout << "Nb de conditions frontieres = " << nBoundaries << endl;
 
-        metisBoundary_->nBoundaries_ = nBoundaries;
-        metisBoundary_->boundaryNelements_ = new int[nBoundaries];
-        metisBoundary_->boundaryElementNbrNodes_ = new int* [nBoundaries];  
-        metisBoundary_->boundaryNames_ = new string[nBoundaries];
-
+        metisBoundary_ = new MetisBoundary(nBoundaries);
+        
         for (int i = 0; i < nBoundaries; i++) {
             
             // Allocation des objets boundary sur le heap
             
-
+            cout << "in tha loop" << endl;
             getline(myfile, line);
             // Finding the first equal sign in the string
             // This is because we want only its right side MARKER_TAG= AIRFOIL
@@ -218,6 +218,7 @@ void MetisMesh::ReadSingleBlockMesh(std::string fileName)
             {
                 str_tag = str_tag.substr(1);
             }
+
             metisBoundary_->boundaryNames_[i] = str_tag;
             std::cout << metisBoundary_->boundaryNames_[i] << endl;
             std::cout << "le nom de la frontiere est " << str_tag << endl;
@@ -229,10 +230,12 @@ void MetisMesh::ReadSingleBlockMesh(std::string fileName)
         
             sscanf(line.c_str(), "MARKER_ELEMS=%d", &boundaryNelements);
             std::cout << "boundaryNelements in " << i << " = "<< boundaryNelements << endl;
-            
+            cout << "name tag arre chiilll" << endl;
+
             int* elementTypeBoundary = new int[boundaryNelements];
             metisBoundary_->boundaryNelements_[i] = boundaryNelements;
             metisBoundary_->boundaryElementNbrNodes_[i] = new int[boundaryNelements];
+            metisBoundary_->boundaryElementType_[i] = new int[boundaryNelements];
             
             std::cout << "boundaryNelements[i] " << metisBoundary_->boundaryNelements_[i] << endl;
             
@@ -243,7 +246,7 @@ void MetisMesh::ReadSingleBlockMesh(std::string fileName)
                 sscanf(line.c_str(), "%d %s", &elementTypeBoundary[j], str_temp);
                 
                 //myfile >> elementTypeBoundary[j];
-
+                metisBoundary_->boundaryElementType_[i][j] = elementTypeBoundary[j];
                 metisBoundary_->boundaryElementNbrNodes_[i][j] = NumberOfNodes(elementTypeBoundary[j]);
                 //boundaryElements[j] = new int[elementNbrNodesBoundary[j]];
                 std::cout << "elementTypeBoundary " << j << " = " << elementTypeBoundary[j] << endl;
@@ -253,7 +256,7 @@ void MetisMesh::ReadSingleBlockMesh(std::string fileName)
         // Fonctions d'initialisation :
         Init(nBlock, &nElements, &nNodes);
         metisBoundary_->InitBoundary(metisBoundary_->boundaryNelements_, nBoundaries);
-        
+        cout << "loliloll " << metisBoundary_->boundaryElementType_[0][7] << endl;
 
         // Prepass 2 : retour au debut du fichier
         myfile.seekg(0, myfile.beg);
@@ -320,8 +323,6 @@ void MetisMesh::ReadSingleBlockMesh(std::string fileName)
             getline(myfile, line);
 
         }
-
-        
 
         
         // getline and tokenize node in boundaries

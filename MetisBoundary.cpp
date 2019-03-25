@@ -2,9 +2,11 @@
 #include <iostream>
 #include <string>
 
+MetisBoundary::MetisBoundary(int nBoundaries) 
+: nBoundaries_(nBoundaries), boundaryNames_(new string[nBoundaries]), boundaryConnectivity_(nullptr), boundaryNelements_(new int[nBoundaries]), 
+boundaryElementType_(new int* [nBoundaries]), boundaryElementNbrNodes_(new int* [nBoundaries]) {}
 
-MetisBoundary::MetisBoundary() 
-: nBoundaries_(0), boundaryConnectivity_(nullptr), boundaryNelements_(nullptr), boundaryElementNbrNodes_(nullptr) {}
+
 /* MetisBoundary::MetisBoundary(int nElements, int* elementType, int* elementNbrNodes, int **boundaryElements)
     : nElements_(nElements), elementType_(elementType),  
     elementNbrNodes_(elementNbrNodes),  boundaryElements_(boundaryElements) {}
