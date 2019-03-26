@@ -53,7 +53,7 @@ void Solver::solve(Block* block, CompleteMesh* complete_mesh)
 
 
 	// PROVISOIRE!!!!
-	/*
+	
 	while(true)
 	{
 		this->saveW0(block);
@@ -64,10 +64,10 @@ void Solver::solve(Block* block, CompleteMesh* complete_mesh)
 		post_processing_->process(block, complete_mesh);
 		//cout<<"Iter: "<<i<<endl;
 	}
-	*/
-
-
 	
+
+
+	/*
 	// TEST GRADIENT
 	// initialize field of pp
 	int n_all_cells_in_block= block -> n_all_cells_in_block_;
@@ -119,7 +119,7 @@ void Solver::solve(Block* block, CompleteMesh* complete_mesh)
 
 	}
 	
-   
+   */
 
 	/*
 
