@@ -6,12 +6,29 @@
 
 
 
-TempFaceCreator::TempFaceCreator()
+TempFaceCreator::TempFaceCreator() /*: face_2_nodes_connectivity_local_(nullptr), n_nodes_per_face_(nullptr), n_faces_(0)*/
 {
 
 }
 TempFaceCreator::~TempFaceCreator()
 {
+	// if (face_2_nodes_connectivity_local_!=nullptr)
+	// {
+	// 	for(int i=0;i<n_faces_;i++)
+	// 	{
+	// 		if(face_2_nodes_connectivity_local_[i]!=nullptr)
+	// 		{
+	// 			delete [] face_2_nodes_connectivity_local_[i];
+	// 		}
+	// 	}
+
+	// 	delete [] face_2_nodes_connectivity_local_;
+	// }
+
+	// if (n_nodes_per_face_!=nullptr)
+	// {
+	// 	delete [] n_nodes_per_face_;
+	// }
 
 }
 
@@ -23,6 +40,8 @@ Face** TempFaceCreator::createFace(Cell* cell)
 	Face* new_face;
 
 
+
+
 	Face** return_face_array = new Face*[n_faces_per_cell];
 
 	for(int i=0;i<n_faces_per_cell;i++)
@@ -31,9 +50,13 @@ Face** TempFaceCreator::createFace(Cell* cell)
 		return_face_array[i] = new Face;
 		new_face = return_face_array[i];
 
-		new_face->face_2_nodes_connectivity_ = new int[n_nodes_per_face_[i]];
+		int n_nodes_per_face=n_nodes_per_face_[i];
+		// int n_nodes_per_face = 8;
+
+		new_face->face_2_nodes_connectivity_ = new int[n_nodes_per_face];
 		new_face->n_nodes_per_face_ = n_nodes_per_face_[i];
-		// new_face = buildFace(face_count_,n_nodes_per_face[i],face_creator);
+		// new_face->n_nodes_per_face_ = n_nodes_per_face;
+		
 		for(int j=0;j<n_nodes_per_face_[i];j++)
 		{
 
@@ -42,9 +65,27 @@ Face** TempFaceCreator::createFace(Cell* cell)
 			// face_count_+=1;
 
 		} 
+		// delete new_face;
+
 	}
 
 	return return_face_array;
+
+	// for(int j=0;j<n_faces_per_cell;j++)
+	// {
+	// 	new_face = return_face_array[j];
+	// 	delete[] new_face -> face_2_nodes_connectivity_;
+	// 	delete[] new_face -> face_normals_;
+	// 	delete[] new_face -> face_2_cells_connectivity_;
+	// 	delete[] new_face -> right_cell_r_vector_;
+	// 	delete[] new_face -> left_cell_r_vector_;
+
+	// 	// delete new_face;
+	// 	delete[] return_face_array[j];
+
+	// }
+
+	// delete[] return_face_array;
 }
 
 
