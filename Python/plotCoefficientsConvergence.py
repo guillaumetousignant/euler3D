@@ -26,6 +26,6 @@ class plotCoefficientsConvergence(object):
         plt.autoscale(enable=True, axis='y', tight=None)
         plt.legend();
         print("Save CoefficientsConvergence.png................................");
-        plt.savefig('CoefficientsConvergence.png');
+        plt.savefig('.png/CoefficientsConvergence.png');
         print("Save CoefficientsConvergence.png............................DONE");
         print("plotCoefficientsConvergence.................................DONE");

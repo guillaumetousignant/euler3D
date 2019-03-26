@@ -14,18 +14,22 @@ class plotResidualsConvergence(object):
         self.VvResiduals_ = npVvResiduals;
         self.WwResiduals_ = npWwResiduals;
         self.PpResiduals_ = npPpResiduals;
+
         plt.figure()
         fig = plt.plot(self.Iterations_, self.RoResiduals_, label = 'Density Residuals');
         fig = plt.plot(self.Iterations_, self.UuResiduals_, label = 'Uu Residuals');
         fig = plt.plot(self.Iterations_, self.VvResiduals_, label = 'Vv Residuals');
         fig = plt.plot(self.Iterations_, self.WwResiduals_, label = 'Ww Residuals');
         fig = plt.plot(self.Iterations_, self.PpResiduals_, label = 'Pressure Residuals');
+        
         plt.title('Residuals Convergence')
         plt.xlabel('Iterations');
         plt.ylabel('Residuals');
         plt.xlim(0);
         plt.legend();
+
         print("Save ResidualsConvergence.png...................................");
-        plt.savefig('ResidualsConvergence.png');
+        plt.savefig('.png/ResidualsConvergence.png');
         print("Save ResidualsConvergence.png...............................DONE");
+
         print("plotResidualsConvergence....................................DONE");

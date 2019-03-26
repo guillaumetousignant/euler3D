@@ -82,6 +82,6 @@ class plotCpXc(object):
         # export image of pressure coefficient as a function of x
         graphName = "CpXc_{:.2f}_{:.2f}_{:.2f}.png".format(self.origin_x, self.origin_y, self.origin_z);
         print("Save {}....................................".format(graphName));
-        tecplot.export.save_png(graphName, 2000, supersample=3)
+        tecplot.export.save_png('.png/'+graphName, 2000, supersample=3)
         print("Save {}................................DONE".format(graphName));
         print("plotCpXc....................................................DONE");

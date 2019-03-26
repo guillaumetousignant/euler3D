@@ -19,6 +19,7 @@ class plotCdAlpha(object):
         plt.ylabel('Drag Coefficient (Cd)');
 
         print("Save CdvsAlpha.png..............................................");
-        plt.savefig('CdvsAlpha.png');
+        plt.savefig('.png/CdvsAlpha.png');
         print("Save CdvsAlpha.png..........................................DONE");
+
         print("plotCdAlpha.................................................DONE");

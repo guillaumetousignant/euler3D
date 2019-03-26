@@ -64,7 +64,7 @@ class plotSlicesCp(object):
                 self.originZ_.append(self.slice_);
 
                 self.slice_ += self.interval_;
-                
+
         #PROCESSING
         # Graphics
         dataset = tecplot.data.load_tecplot(self.mySurfaceFlowFile_, read_data_option=2);
@@ -116,7 +116,7 @@ class plotSlicesCp(object):
             # export image of pressure coefficient as a function of x
             graphName = "SliceCp_{:.2f}_{:.2f}_{:.2f}.png".format(self.originX_[i], self.originY_[i], self.originZ_[i]);
             print("Save {}.................................".format(graphName));
-            tecplot.export.save_png(graphName, 2000, supersample=3)
+            tecplot.export.save_png('.png/'+ graphName, 2000, supersample=3)
             print("Save {}.............................DONE".format(graphName));
 
         print("plotSlicesCp................................................DONE");

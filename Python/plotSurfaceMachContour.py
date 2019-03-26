@@ -28,12 +28,12 @@ class plotSurfaceMachContour(object):
 
         # Save layout for Tecplot
         print("Save MachContour_fullbody.lay...................................");
-        tecplot.save_layout('MachContour_fullbody.lay');
+        tecplot.save_layout('.lay/MachContour_fullbody.lay');
         print("Save MachContour_fullbody.lay...............................DONE");
 
         # export image of full body
         print("Save MachContour_fullbody.png...................................");
-        tecplot.export.save_png('MachContour_fullbody.png', 2000, supersample=3);
+        tecplot.export.save_png('.png/MachContour_fullbody.png', 2000, supersample=3);
         print("Save MachContour_fullbody.png...............................DONE");
 
         plot = frame.plot(PlotType.Cartesian2D)
@@ -50,12 +50,12 @@ class plotSurfaceMachContour(object):
 
         # Save layout for Tecplot
         print("Save MachContour_wing.lay.......................................");
-        tecplot.save_layout('MachContour_wing.lay');
+        tecplot.save_layout('.lay/MachContour_wing.lay');
         print("Save MachContour_wing.lay...................................DONE");
 
         # export image of wing
         print("Save MachContour_wing.png.......................................");
-        tecplot.export.save_png('MachContour_wing.png', 2000, supersample=3);
+        tecplot.export.save_png('.png/MachContour_wing.png', 2000, supersample=3);
         print("Save MachContour_wing.png...................................DONE");
 
         print("plotMachContour.............................................DONE");
