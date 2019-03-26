@@ -7,7 +7,8 @@ Cell::Cell()
 {
 	cell_coordinates_ = new double[3];
 	
-	cell_weights_ = new double[3]();
+	// PAS NECESSAIREMENT long de 3
+	//cell_weights_ = new double[3]();
 }
 
 Cell::~Cell()
