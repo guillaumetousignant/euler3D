@@ -456,7 +456,7 @@ void ConcreteBlockBuilder::createMyFaces(Block* block)
 
 		// temp_face_array = new Face*[cell->n_faces_per_cell_];
 
-		temp_face_array = temp_face_creators[cell->creator_key_].createFace(cell); // segfault here with Onera M6
+		temp_face_array = temp_face_creators[cell->creator_key_].createFace(cell); 
 		for(int j=0;j<cell->n_faces_per_cell_;j++)
 		{
 
@@ -563,10 +563,6 @@ void ConcreteBlockBuilder::createMyFaces(Block* block)
 
 						if(node_count==face->n_nodes_per_face_)
 						{
-<<<<<<< HEAD
-							// std::cout<<"===================================Yeeeeeee\n";
-=======
->>>>>>> origin/new_solver_olivier
 
 							flag = false;
 							break ;
@@ -624,6 +620,11 @@ void ConcreteBlockBuilder::createMyFaces(Block* block)
 			// {
 			// 	delete [] possible_combinaisons;
 			// }
+		}
+
+		for(int j=0;j<cell->n_faces_per_cell_;j++)
+		{
+			temp_face_array[j]->~Face();
 		}
 
 		// for(int j=0;j<cell->n_faces_per_cell_;j++)
