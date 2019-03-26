@@ -25,7 +25,7 @@ filestype (0-Euler 1-SU2)
 clalpha cdalpha cmalpha
 0 0 0
 coefficientsconvergence residualconv
-0 0
+1 1
 cpxc machcontour cpcontour machisosurface
 1 0 0 0
 slicescp

@@ -79,7 +79,6 @@ class graphicsGenerator(object):
         string3 = userCommands[startReading+8].rstrip();
         string4 = userCommands[startReading+10].rstrip();
         string5 = userCommands[startReading+12].rstrip();
-        print(self.type_)
 
         #Put values into attributes
         ClAlpha, CdAlpha, CmAlpha = string.split(" ");
@@ -207,7 +206,6 @@ class graphicsGenerator(object):
 
         # Processing files
         if self.CoefficientsConvergence_Indicator_ or self.ResidualsConvergence_Indicator_:
-            print(self.myConvergenceFile_)
             npIterations_, npConvergenceCl_, npConvergenceCd_, npConverenceCmx_, npConverenceCmy_, npConverenceCmz_, npRoResiduals_, npUuResiduals_, npVvResiduals_, npWwResiduals_, npPpResiduals_ = self.processingConvergenceFile(self.myConvergenceFile_);
 
         if self.ClAlpha_Indicator_ or self.CdAlpha_Indicator_ or self.CmAlpha_Indicator_:

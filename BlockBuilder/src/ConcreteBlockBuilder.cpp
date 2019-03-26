@@ -187,7 +187,7 @@ void ConcreteBlockBuilder::preReadMyBlock(Block* block)
 		block->block_time_variables_=tim;
 
 
-		
+
 
 		InterpolationVariables* inpvar= new InterpolationVariables(block->n_all_cells_in_block_);
 		block->block_interpolation_variables_=inpvar;
@@ -643,7 +643,7 @@ void ConcreteBlockBuilder::createMyFaces(Block* block)
 
 				block->addFace(new_face);
 				face_count_+=1;
-				 cout << face_count_ << endl; //ICI POUR VOIR LES FACES AUGMENTER
+				// cout << face_count_ << endl; //ICI POUR VOIR LES FACES AUGMENTER
 			}
 
 			// if(temp_nodes)

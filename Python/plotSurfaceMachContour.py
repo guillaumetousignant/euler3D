@@ -26,10 +26,15 @@ class plotSurfaceMachContour(object):
         plot.view.psi = 60;
         plot.view.position = (6.9746, 4.3061, 4.26909);
 
+        # Save layout for Tecplot
+        print("Save MachContour_fullbody.lay...................................");
+        tecplot.save_layout('MachContour_fullbody.lay');
+        print("Save MachContour_fullbody.lay...............................DONE");
+
         # export image of full body
-        print("Print MachContour_fullbody.png..................................");
+        print("Save MachContour_fullbody.png...................................");
         tecplot.export.save_png('MachContour_fullbody.png', 2000, supersample=3);
-        print("Print MachContour_fullbody.png..............................DONE");
+        print("Save MachContour_fullbody.png...............................DONE");
 
         plot = frame.plot(PlotType.Cartesian2D)
         plot.activate()
@@ -39,9 +44,14 @@ class plotSurfaceMachContour(object):
             plot.contour(0).variable = dataset.variable(9);
         elif Type == 1: # SU2
             plot.contour(0).variable = dataset.variable(11);
-            
+
         plot.axes.x_axis.show = False;
         plot.axes.y_axis.show = False;
+
+        # Save layout for Tecplot
+        print("Save MachContour_wing.lay.......................................");
+        tecplot.save_layout('MachContour_wing.lay');
+        print("Save MachContour_wing.lay...................................DONE");
 
         # export image of wing
         print("Save MachContour_wing.png.......................................");

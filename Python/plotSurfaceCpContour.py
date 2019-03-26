@@ -26,10 +26,15 @@ class plotSurfaceCpContour(object):
         plot.view.psi = 60;
         plot.view.position = (6.9746, 4.3061, 4.26909);
 
+        # Save layout for Tecplot
+        print("Save CpContour_fullbody.lay.....................................");
+        tecplot.save_layout('CpContour_fullbody.lay');
+        print("Save CpContour_fullbody.lay.................................DONE");
+
         # export image of full body
-        print("Print CpContour_fullbody.png....................................");
+        print("Save CpContour_fullbody.png.....................................");
         tecplot.export.save_png('CpContour_fullbody.png', 2000, supersample=3);
-        print("Print CpContour_fullbody.png................................DONE");
+        print("Save CpContour_fullbody.png.................................DONE");
 
         plot = frame.plot(PlotType.Cartesian2D)
         plot.activate()
@@ -43,6 +48,10 @@ class plotSurfaceCpContour(object):
         plot.axes.x_axis.show = False;
         plot.axes.y_axis.show = False;
 
+        # Save layout for Tecplot
+        print("Save CpContour_wing.lay.........................................");
+        tecplot.save_layout('CpContour_wing.lay');
+        print("Save CpContour_wing.lay.....................................DONE");
 
         # export image of wing
         print("Save CpContour_wing.png.........................................");
