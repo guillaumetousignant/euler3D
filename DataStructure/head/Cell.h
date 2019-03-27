@@ -11,7 +11,8 @@ public:
 	int* cell_2_faces_connectivity_;
 	double cell_volume_;
 	double* cell_coordinates_;
-	double* cell_weights_;
+	//DEPLACEMENT DANS FACE
+	double** cell_weights_;
 	int n_nodes_per_cell_;
 	int n_faces_per_cell_;
 	int creator_key_;

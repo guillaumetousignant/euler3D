@@ -46,6 +46,8 @@ void MetricsInitializer::doInit()
     computeVolumeCells(iNCells, iNCellsTot, iCells, iFaces);
 
     computeInterpVect(iNCells, iNCellsTot,iNFaces, iCells, iFaces);
+
+    computeCenterGhostCells(iNCells, iNCellsTot, iCells, iFaces);
     
     computeWLS(iNCells, iCells);
 
@@ -135,6 +137,7 @@ void MetricsInitializer::computeCenterFaces(uint iNFaces, Face** iFaces, Node** 
 
     }
 }
+
 
 
 void MetricsInitializer::computeNormalFaces(uint iNFaces, Face** iFaces, Node** iNodes)
@@ -484,6 +487,39 @@ void MetricsInitializer::computeVolumeCells(uint iNCells, uint iNCellsTot, Cell*
     }
 
 }
+
+void MetricsInitializer::computeCenterGhostCells(uint iNCells, uint iNCellsTot, Cell** iCells, Face** iFaces)
+{
+    const uint FACE_GHOST = 0;
+
+    const uint X = 0;
+    const uint Y = 1;
+    const uint Z = 2;
+
+    for(uint i(iNCells);i < iNCellsTot;i++)
+    {
+        uint faceID = iCells[i]->cell_2_faces_connectivity_[FACE_GHOST];
+
+        // Get r vector coordinates
+        // Left cell is always inside
+        double r_x, r_y, r_z;
+
+        r_x = iFaces[faceID]->left_cell_r_vector_[X];
+        r_y = iFaces[faceID]->left_cell_r_vector_[Y];
+        r_z = iFaces[faceID]->left_cell_r_vector_[Z];
+
+        // Ghost Cell Center equals the real cell Center so
+        
+
+        iCells[i]->cell_coordinates_[0] += 2.0*r_x;
+        iCells[i]->cell_coordinates_[1] += 2.0*r_y;
+        iCells[i]->cell_coordinates_[2] += 2.0*r_z;
+
+        
+
+    }
+
+}
     
 void MetricsInitializer::computeWLS(uint iNCells, Cell** iCells)
 {
@@ -508,6 +544,8 @@ void MetricsInitializer::computeWLS(uint iNCells, Cell** iCells)
                 centerCell[X] = iCells[i]->cell_coordinates_[X];
                 centerCell[Y] = iCells[i]->cell_coordinates_[Y];
                 centerCell[Z] = iCells[i]->cell_coordinates_[Z];
+
+
 
                 uint cellNeighborID = iCells[i]->cell_2_cells_connectivity_[j];
                 double centerNeighborCell[3] = {0.0, 0.0,0.0};
@@ -544,31 +582,40 @@ void MetricsInitializer::computeWLS(uint iNCells, Cell** iCells)
 
             for(uint j(0);j < nbCellsNeighbor;j++)
             {
-                sumdyijSquare_minus_r12Square += dyij[j]*dyij[j] - r12*r12;
-                sumdyijdzij_minus_r12r13 += dyij[j]*dzij[j] - r12*r13;
+                sumdyijSquare_minus_r12Square += dyij[j]*dyij[j];
+                sumdyijdzij_minus_r12r13 += dyij[j]*dzij[j];
             }
 
-            double r22 = sqrt(sumdyijSquare_minus_r12Square);
+            double r22 = sqrt(sumdyijSquare_minus_r12Square - r12*r12);
 
-            double r23 = (1/r22)*sumdyijdzij_minus_r12r13;
+            double r23 = (1/r22)*(sumdyijdzij_minus_r12r13- r12*r13);
 
             for(uint j(0);j < nbCellsNeighbor;j++)
             {
-                sumdzijSquare_minus_r13Square_minusr23Square += dzij[j]*dzij[j] - (r13*r13 + r23*r23);
+                sumdzijSquare_minus_r13Square_minusr23Square += dzij[j]*dzij[j] ;
             }
 
-            double r33 = sqrt(sumdzijSquare_minus_r13Square_minusr23Square);    
+            double r33 = sqrt(sumdzijSquare_minus_r13Square_minusr23Square- (r13*r13 + r23*r23));    
 
             double beta = (r12*r23 - r13*r22)/(r11*r22);
 
+            //cout<<"Cell idx: "<<i<<" r: "<<r11<<" "<<r12<<" "<<r13<<" "<<r22<<" "<<r23<<" "<<r33<<endl;
+            
 
-            std::vector<std::vector<double>> weightLeastSquared(nbCellsNeighbor);
+            //std::vector<std::vector<double>> weightLeastSquared(nbCellsNeighbor);
             const uint vector3DSize = 3;
+
+            double **weightLeastSquared = new double*[nbCellsNeighbor];
+            for(uint j (0); j < nbCellsNeighbor; j++) {
+                weightLeastSquared[j] = new double[vector3DSize];
+            }
+
+            
 
             for(uint j(0);j < nbCellsNeighbor;j++)
             {
 
-                double alpha3 = (1/(r33*r33))*(dzij[j] - (r33/r22)*dyij[j] + beta*dxij[j]);
+                double alpha3 = (1/(r33*r33))*(dzij[j] - (r23/r22)*dyij[j] + beta*dxij[j]);
 
                 double alpha2 = (1/(r22*r22))*(dyij[j] - (r12/r11)*dxij[j]);
 
@@ -578,13 +625,16 @@ void MetricsInitializer::computeWLS(uint iNCells, Cell** iCells)
                 double weight2 = alpha2 - (r23/r22)*alpha3;
                 double weight3 = alpha3;
 
-                weightLeastSquared[j].resize(vector3DSize);
+               // cout<<"Cell idx: "<<i<<" "<<j<<" Weight: "<<weight1<<" "<<weight2<<" "<<weight3<<endl;
+               
 
                 weightLeastSquared[j][0] = weight1;
                 weightLeastSquared[j][1] = weight2;
                 weightLeastSquared[j][2] = weight3;
 
             }
+
+            iCells[i]->cell_weights_=weightLeastSquared;
 
         }
 

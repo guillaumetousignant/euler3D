@@ -5,15 +5,18 @@
 #include <stdio.h>
 #include <string>
 #include <iostream>
+#include <sys/stat.h>
 
 #include "PostProcessing.h"
 
 using namespace std;
 
+
 PostProcessing::PostProcessing(int n_blocks, int max_iter, double convergence_criterion, double cmac, double mach_aircraft, double aoa_deg, double gamma)
 {
   cout << "Initialize PostProcessing............................................DONE" << endl;
 
+  stop_file_name_="STOP";
   current_iter_=0;
   max_iter_=max_iter;
   iteration_interval_=1;
@@ -65,10 +68,15 @@ void PostProcessing::checkStopSolver()
 
 
 
+  // Check if STOP file exists
+  struct stat buffer;   
+  bool file_exist_flag=(stat (stop_file_name_.c_str(), &buffer) == 0); 
+
   // EN ATTENDANT
-  if(current_iter_+1 == max_iter_)
+  if((current_iter_+1 == max_iter_)|| (ro_convergence_ <= convergence_criterion_)||(file_exist_flag))
   {
     stop_solver_= true;
+    remove( stop_file_name_.c_str() );
   }
   //cout << "Ending checkStopSolver..............................................." << endl;
 
@@ -275,5 +283,7 @@ void PostProcessing::process(Block* block, CompleteMesh* complete_mesh)
 
   //cout << "Ending process......................................................" << endl;
 }
+
+
 
 #endif
