@@ -25,13 +25,13 @@ void MetisBoundary::InitBoundary(int* nElements, int nBoundaries) {
     boundaryConnectivity_ = new std::vector<int> *[nBoundaries];
 
     for (int i = 0; i < nBoundaries; i++) {
-        cout << nElements[i] << endl;
         boundaryConnectivity_[i] = new std::vector<int>[nElements[i]];
     }
 
     
 
 } 
+
 
 /* string MetisBoundary::SetBoundaryName(string boundaryName) {
 

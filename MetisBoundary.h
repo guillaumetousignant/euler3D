@@ -26,6 +26,7 @@ class MetisBoundary
     void InitBoundary(int* nElements, int nBoundaries);
 
     string SetBoundaryName(string boundaryName);
+    
     //vector<vector<int>> localNodes;
     
 
@@ -44,7 +45,7 @@ class MetisBoundary
     
     //int blockID_;
     //int** boundaryType_;
-
+    
     
 };
 
