@@ -74,6 +74,7 @@ void AusmScheme::computeFluxDiss(Block* block)
 	my_pp_limiters = my_interpolation_variables -> limiter_pp_;
 
 	int n_dim=3;
+	double delta=0.25;
 
 	int ncell;
 	ncell = block -> n_real_cells_in_block_;
@@ -195,6 +196,17 @@ void AusmScheme::computeFluxDiss(Block* block)
 
 
 		M_L_R=M_L_plus+M_R_minus;
+
+
+		// Correct for shocks
+		if (fabs(M_L_R)>delta)
+		{
+
+		}
+		else
+		{	
+			M_L_R=(M_L_R*M_L_R+delta*delta)/(2.0*delta);
+		}
 
 		Fc_L_1 = rho_L*c_L;
 		Fc_R_1 = rho_R*c_R;
