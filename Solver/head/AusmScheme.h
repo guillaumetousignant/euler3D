@@ -10,10 +10,12 @@ class AusmScheme : public FluxScheme
 {
 	public:
 		
-		AusmScheme();
+		AusmScheme(double gamma);
 		~AusmScheme();
 
 		void computeFluxDiss(Block* block);
+		void computeFluxConv(Block* block);
+
 
 };
 
