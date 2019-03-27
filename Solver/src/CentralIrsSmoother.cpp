@@ -11,7 +11,7 @@ using namespace std;
 
 void CentralIrsSmoother::smoothResidual(Block* block)
 {
-	 cout<<"\t\t\t\tExécution smoothResidual: Central IRS Smoother: "<<endl;
+	 // cout<<"\t\t\t\tExécution smoothResidual: Central IRS Smoother: "<<endl;
 	PrimitiveVariables* my_primitive_variables;
 	my_primitive_variables = block -> block_primitive_variables_;
 
