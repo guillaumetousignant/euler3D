@@ -24,6 +24,8 @@ void RoeScheme::computeFluxDiss(Block* block)
 	double flux_1_dissipative,flux_2_dissipative,flux_3_dissipative,flux_4_dissipative,flux_5_dissipative;
 	double normal_norm, normalized_x, normalized_y, normalized_z;
 	double LAMBDA1,LAMBDA234,LAMBDA5;
+	double* left_cell_r_vector;
+	double* right_cell_r_vector;
 
 	PrimitiveVariables* my_primitive_variables;
 	my_primitive_variables = block -> block_primitive_variables_;
@@ -51,29 +53,25 @@ void RoeScheme::computeFluxDiss(Block* block)
 	my_diss_res_ww = my_primitive_variables -> diss_res_ww_;
 	my_diss_res_pp = my_primitive_variables -> diss_res_pp_;
 
-	Cell* my_cell;
+	InterpolationVariables* my_interpolation_variables;
+	my_interpolation_variables=block->block_interpolation_variables_;
+
+	double** my_grad_ro_array;
+	double** my_grad_uu_array;
+	double** my_grad_vv_array;
+	double** my_grad_ww_array;
+	double** my_grad_pp_array;
+
+	my_grad_ro_array=my_interpolation_variables->grad_ro_;
+	my_grad_uu_array=my_interpolation_variables->grad_uu_;
+	my_grad_vv_array=my_interpolation_variables->grad_vv_;
+	my_grad_ww_array=my_interpolation_variables->grad_ww_;
+	my_grad_pp_array=my_interpolation_variables->grad_pp_;
+
 	// my_cells = block -> block_cells_;
 	int ncell; // my_cell;
 	ncell = block -> n_real_cells_in_block_;
-	double cell_volume;
-
-	// EST-CE QU'ON DIVISE 2 FOIS?
-	/*
-	for (int cell_idx=0; cell_idx<ncell; cell_idx++)
-	{
-		my_cell = block -> block_cells_[cell_idx];
-		cell_volume  = my_cell -> cell_volume_;
-
-		my_diss_res_ro[cell_idx] *=(1-current_beta_)*cell_volume;
-		my_diss_res_uu[cell_idx] *=(1-current_beta_)*cell_volume;
-		my_diss_res_vv[cell_idx] *=(1-current_beta_)*cell_volume;
-		my_diss_res_ww[cell_idx] *=(1-current_beta_)*cell_volume;
-		my_diss_res_pp[cell_idx] *=(1-current_beta_)*cell_volume;
-
-	}
-	*/
-
-
+	
 	for (int cell_idx=0; cell_idx<ncell; cell_idx++)
 	{
 		
@@ -92,6 +90,8 @@ void RoeScheme::computeFluxDiss(Block* block)
 	Face* my_face;
 	// my_faces = block -> block_faces_;
 	nface = block -> n_faces_in_block_;
+
+	int n_dim=3;
 
 	for (int face_idx = 0; face_idx < nface; face_idx++)
 	{
@@ -119,6 +119,20 @@ void RoeScheme::computeFluxDiss(Block* block)
 		v_L = my_vv_array[left_cell];
 		w_L = my_ww_array[left_cell];
 		p_L = my_pp_array[left_cell];
+		left_cell_r_vector=block -> block_faces_[face_idx] -> left_cell_r_vector_;
+
+		// Add gradient effect
+		/*
+		for (int dim_idx=0; dim_idx<n_dim; dim_idx++)
+		{
+			rho_L+=my_grad_ro_array[left_cell][dim_idx]*left_cell_r_vector[dim_idx];
+			u_L+=my_grad_uu_array[left_cell][dim_idx]*left_cell_r_vector[dim_idx];
+			v_L+=my_grad_vv_array[left_cell][dim_idx]*left_cell_r_vector[dim_idx];
+			w_L+=my_grad_ww_array[left_cell][dim_idx]*left_cell_r_vector[dim_idx];
+			p_L+=my_grad_pp_array[left_cell][dim_idx]*left_cell_r_vector[dim_idx];
+		}
+		*/
+
 		qq_L = u_L*u_L+v_L*v_L+w_L*w_L;
 		H_L = (0.5*qq_L+gamma_/(gamma_-1.0)*p_L/rho_L);
 		V_L = u_L*normalized_x+v_L*normalized_y+w_L*normalized_z;
@@ -129,6 +143,20 @@ void RoeScheme::computeFluxDiss(Block* block)
 		v_R = my_vv_array[right_cell];
 		w_R = my_ww_array[right_cell];
 		p_R = my_pp_array[right_cell];
+		right_cell_r_vector=block -> block_faces_[face_idx] -> right_cell_r_vector_;
+
+		// Add gradient effect
+		/*
+		for (int dim_idx=0; dim_idx<n_dim; dim_idx++)
+		{
+			rho_R+=my_grad_ro_array[right_cell][dim_idx]*right_cell_r_vector[dim_idx];
+			u_R+=my_grad_uu_array[right_cell][dim_idx]*right_cell_r_vector[dim_idx];
+			v_R+=my_grad_vv_array[right_cell][dim_idx]*right_cell_r_vector[dim_idx];
+			w_R+=my_grad_ww_array[right_cell][dim_idx]*right_cell_r_vector[dim_idx];
+			p_R+=my_grad_pp_array[right_cell][dim_idx]*right_cell_r_vector[dim_idx];
+		}
+		*/
+
 		qq_R = u_R*u_R+v_R*v_R+w_R*w_R;
 		H_R = (0.5*qq_R+gamma_/(gamma_-1.0)*p_R/rho_R);
 		V_R = u_R*normalized_x+v_R*normalized_y+w_R*normalized_z;

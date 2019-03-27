@@ -55,6 +55,7 @@ void Solver::solve(Block* block, CompleteMesh* complete_mesh)
 
 	// PROVISOIRE!!!!
 	//auto start = std::chrono::high_resolution_clock::now();
+	/*
 	while(true)
 	{
 		this->saveW0(block);
@@ -69,10 +70,63 @@ void Solver::solve(Block* block, CompleteMesh* complete_mesh)
 		post_processing_->process(block, complete_mesh);
 		//cout<<"Iter: "<<i<<endl;
 	}
+	*/
+
 
 	
+	// TEST GRADIENT
+	// initialize field of pp
+	int n_all_cells_in_block= block -> n_all_cells_in_block_;
+
+	double x;
+	double y;
+	double z;
+
+	for (int all_cell_idx = 0; all_cell_idx < n_all_cells_in_block; all_cell_idx++)
+	{
+		x=block->block_cells_[all_cell_idx]->cell_coordinates_[0];
+		y=block->block_cells_[all_cell_idx]->cell_coordinates_[1];
+		z=block->block_cells_[all_cell_idx]->cell_coordinates_[2];
+
+
+		block->block_primitive_variables_->ro_[all_cell_idx] =1*x+2*y+3*z;
+		block->block_primitive_variables_->uu_[all_cell_idx] =4*x+5*y+6*z;
+		block->block_primitive_variables_->vv_[all_cell_idx] =7*x+8*y+9*z;
+		block->block_primitive_variables_->ww_[all_cell_idx] =10*x+11*y+12*z;
+		block->block_primitive_variables_->pp_[all_cell_idx] =13*x+14*y+15*z;
+	}
+
+	Gradient* gradient=new LeastSquares();
+	gradient->computeGradients(block);
+
 	
-    
+	for (int all_cell_idx = 0; all_cell_idx < n_all_cells_in_block; all_cell_idx++)
+	{
+		cout<<"cell idx: "<<all_cell_idx<<endl;
+		cout<<"grad x ro: "<<block->block_interpolation_variables_->grad_ro_[all_cell_idx][0]<<endl;
+		cout<<"grad y ro: "<<block->block_interpolation_variables_->grad_ro_[all_cell_idx][1]<<endl;
+		cout<<"grad z ro: "<<block->block_interpolation_variables_->grad_ro_[all_cell_idx][2]<<endl<<endl;
+
+		cout<<"grad x uu: "<<block->block_interpolation_variables_->grad_uu_[all_cell_idx][0]<<endl;
+		cout<<"grad y uu: "<<block->block_interpolation_variables_->grad_uu_[all_cell_idx][1]<<endl;
+		cout<<"grad z uu: "<<block->block_interpolation_variables_->grad_uu_[all_cell_idx][2]<<endl<<endl;
+
+		cout<<"grad x vv: "<<block->block_interpolation_variables_->grad_vv_[all_cell_idx][0]<<endl;
+		cout<<"grad y vv: "<<block->block_interpolation_variables_->grad_vv_[all_cell_idx][1]<<endl;
+		cout<<"grad z vv: "<<block->block_interpolation_variables_->grad_vv_[all_cell_idx][2]<<endl<<endl;
+
+		cout<<"grad x ww: "<<block->block_interpolation_variables_->grad_ww_[all_cell_idx][0]<<endl;
+		cout<<"grad y ww: "<<block->block_interpolation_variables_->grad_ww_[all_cell_idx][1]<<endl;
+		cout<<"grad z ww: "<<block->block_interpolation_variables_->grad_ww_[all_cell_idx][2]<<endl<<endl;
+
+		cout<<"grad x pp: "<<block->block_interpolation_variables_->grad_pp_[all_cell_idx][0]<<endl;
+		cout<<"grad y pp: "<<block->block_interpolation_variables_->grad_pp_[all_cell_idx][1]<<endl;
+		cout<<"grad z pp: "<<block->block_interpolation_variables_->grad_pp_[all_cell_idx][2]<<endl<<endl;
+
+	}
+	
+   
+
 	/*
 
 	int i;

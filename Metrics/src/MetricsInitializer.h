@@ -84,6 +84,7 @@ class MetricsInitializer
          * @param iSynchs 
          * @param iFaces 
          */
+
         void computeInterpVect(uint iNCells, uint iNCellsTot, uint iNFaces, Cell** iCells, Face** iFaces);
 
         /**
@@ -122,6 +123,17 @@ class MetricsInitializer
          * @param iNCells: 
          * @param iCells 
          */
+
+           void computeCenterGhostCells(uint iNCells, uint iNCellsTot, Cell** iCells, Face** iFaces);
+        /**
+         * @brief 
+         * 
+         * @param iNCells 
+         * @param iNCellsTot 
+         * @param iCells 
+         * @param iFaces 
+         */
+           
         void computeWLS(uint iNCells, Cell** iCells);
 
     private:

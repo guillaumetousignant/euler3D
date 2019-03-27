@@ -21,6 +21,8 @@ void FluxScheme::computeFluxConv(Block* block)
 	double Fc_L_1,Fc_L_2,Fc_L_3,Fc_L_4,Fc_L_5,Fc_R_1,Fc_R_2,Fc_R_3,Fc_R_4,Fc_R_5;
 	double flux_1_convective,flux_2_convective,flux_3_convective,flux_4_convective,flux_5_convective;
 	double normal_norm, normalized_x, normalized_y, normalized_z;
+	double* left_cell_r_vector;
+	double* right_cell_r_vector;
 
 	PrimitiveVariables* my_primitive_variables;
 	my_primitive_variables = block -> block_primitive_variables_;
@@ -47,6 +49,21 @@ void FluxScheme::computeFluxConv(Block* block)
 	my_conv_res_ww = my_primitive_variables -> conv_res_ww_;
 	my_conv_res_pp = my_primitive_variables -> conv_res_pp_;
 
+	InterpolationVariables* my_interpolation_variables;
+	my_interpolation_variables=block->block_interpolation_variables_;
+
+	double** my_grad_ro_array;
+	double** my_grad_uu_array;
+	double** my_grad_vv_array;
+	double** my_grad_ww_array;
+	double** my_grad_pp_array;
+
+	my_grad_ro_array=my_interpolation_variables->grad_ro_;
+	my_grad_uu_array=my_interpolation_variables->grad_uu_;
+	my_grad_vv_array=my_interpolation_variables->grad_vv_;
+	my_grad_ww_array=my_interpolation_variables->grad_ww_;
+	my_grad_pp_array=my_interpolation_variables->grad_pp_;
+
 
 	int ncell;
 	ncell = block -> n_real_cells_in_block_;
@@ -61,7 +78,7 @@ void FluxScheme::computeFluxConv(Block* block)
 
 	}
 	
-
+	int n_dim=3;
 
 	int nface, left_cell, right_cell;
 	int* neighboor_cells;
@@ -92,6 +109,20 @@ void FluxScheme::computeFluxConv(Block* block)
 		v_L = my_vv_array[left_cell];
 		w_L = my_ww_array[left_cell];
 		p_L = my_pp_array[left_cell];
+		left_cell_r_vector=block -> block_faces_[face_idx] -> left_cell_r_vector_;
+
+		// Add gradient effect
+
+		for (int dim_idx=0; dim_idx<n_dim; dim_idx++)
+		{
+			rho_L+=my_grad_ro_array[left_cell][dim_idx]*left_cell_r_vector[dim_idx];
+			u_L+=my_grad_uu_array[left_cell][dim_idx]*left_cell_r_vector[dim_idx];
+			v_L+=my_grad_vv_array[left_cell][dim_idx]*left_cell_r_vector[dim_idx];
+			w_L+=my_grad_ww_array[left_cell][dim_idx]*left_cell_r_vector[dim_idx];
+			p_L+=my_grad_pp_array[left_cell][dim_idx]*left_cell_r_vector[dim_idx];
+		}
+		
+
 		qq_L = u_L*u_L+v_L*v_L+w_L*w_L;
 		H_L = (0.5*qq_L+gamma_/(gamma_-1.0)*p_L/rho_L);
 		V_L = u_L*normalized_x+v_L*normalized_y+w_L*normalized_z;
@@ -102,6 +133,20 @@ void FluxScheme::computeFluxConv(Block* block)
 		v_R = my_vv_array[right_cell];
 		w_R = my_ww_array[right_cell];
 		p_R = my_pp_array[right_cell];
+		right_cell_r_vector=block -> block_faces_[face_idx] -> right_cell_r_vector_;
+
+		// Add gradient effect
+		
+		for (int dim_idx=0; dim_idx<n_dim; dim_idx++)
+		{
+			rho_R+=my_grad_ro_array[right_cell][dim_idx]*right_cell_r_vector[dim_idx];
+			u_R+=my_grad_uu_array[right_cell][dim_idx]*right_cell_r_vector[dim_idx];
+			v_R+=my_grad_vv_array[right_cell][dim_idx]*right_cell_r_vector[dim_idx];
+			w_R+=my_grad_ww_array[right_cell][dim_idx]*right_cell_r_vector[dim_idx];
+			p_R+=my_grad_pp_array[right_cell][dim_idx]*right_cell_r_vector[dim_idx];
+		}
+		
+
 		qq_R = u_R*u_R+v_R*v_R+w_R*w_R;
 		H_R = (0.5*qq_R+gamma_/(gamma_-1.0)*p_R/rho_R);
 		V_R = u_R*normalized_x+v_R*normalized_y+w_R*normalized_z;
@@ -149,40 +194,6 @@ void FluxScheme::computeFluxConv(Block* block)
 
 	}
 
-
-
-	
-	
-	ncell = block -> n_real_cells_in_block_;
-	double cell_volume;
-	
-	// EST-CE QU'ON DIVISE DEUX FOIS??
-	Cell* my_cell;
-	for (int cell_idx=0; cell_idx<ncell; cell_idx++)
-	{
-		//cout << "=================================================" << endl;
-		//cout << "Cellule id=" << cell_idx << endl;
-		/*
-		my_cell = block -> block_cells_[cell_idx];
-		cell_volume  = my_cell -> cell_volume_;
-		
-		my_conv_res_ro[cell_idx] /= cell_volume;
-		my_conv_res_uu[cell_idx] /= cell_volume;
-		my_conv_res_vv[cell_idx] /= cell_volume;
-		my_conv_res_ww[cell_idx] /= cell_volume;
-		my_conv_res_pp[cell_idx] /= cell_volume;
-		*/
-
-		/*
-		cout << "conv_res_ro= " << my_conv_res_ro[cell_idx] << endl;
-		cout << "conv_res_uu= " << my_conv_res_uu[cell_idx] << endl;
-		cout << "conv_res_vv= " << my_conv_res_vv[cell_idx] << endl;
-		cout << "conv_res_ww= " << my_conv_res_ww[cell_idx] << endl;
-		cout << "conv_res_pp= " << my_conv_res_pp[cell_idx] << endl;
-		*/
-		
-	}
-	
 
 
 }
