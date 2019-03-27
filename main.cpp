@@ -6,16 +6,18 @@
 #include "Initializer.h"
 #include "Interface.h"
 #include "Solver.h"
-
+#include "MetisMesh.h"
 
 #include <iostream>
 #include <string>
 #include <mpi.h>
+
 #include "Block.h"
 #include "ConcreteBlockBuilder.h"
 #include "CompleteMesh.h"
 #include "Metrics/src/MetricsInitializer.h"
-
+#include <metis.h>
+#include <vector>
 
 using namespace std;
 
@@ -35,44 +37,74 @@ int main(int argc, char* argv[])
 
 	)" << endl;
 
-	if (argc > 1)
-	{
-		cout << "Input file is : " << argv[1] << endl;
-	}
-	else
-	{
-		cout << "ERROR: No input file" << endl;
-		exit(0);
-	}
+	// if (argc > 1)
+	// {
+	// 	cout << "Input file is : " << argv[1] << endl;
+	// }
+	// else
+	// {
+	// 	cout << "ERROR: No input file" << endl;
+	// 	exit(0);
+	// }
 
 	MPI_Init(NULL, NULL);
 
-	MPI_Finalize();
+	// MPI_Finalize();
+	//
+	// Interface* interface= new Interface(argv[1]);
+	// Initializer* initializer= new Initializer();
+	//
+	// int* my_blocks = new int[1];
+	// my_blocks[0] = 0;
+	//
+	// cout << "In CompleteMesh........." << endl;
+	// CompleteMesh* complete_mesh = new CompleteMesh(1,1,my_blocks, interface->topology_file_name_interface_);
+	// complete_mesh->InitializeMyBlocks();
+	// Block* new_block = complete_mesh->all_blocks_[0];
+	//
+	// cout << "In MetricsInitializer........." << endl;
+	// MetricsInitializer metricsInit(new_block);
+	// metricsInit.doInit();
+	//
+	// cout << "In calculateFreeVariables........." << endl;
+	// new_block->block_primitive_variables_->calculateFreeVariables(interface->gamma_interface_, interface->aoa_deg_interface_, interface->mach_aircraft_interface_);
+	//
+	// cout << "In initializeFlowField........." << endl;
+	// new_block->block_primitive_variables_->initializeFlowField(new_block->n_all_cells_in_block_);
+	//
+	// cout << "In Solver........." << endl;
+	// Solver *solver=initializer->initializeSolver(interface);
+	// solver->solve(new_block, complete_mesh);
 
-	Interface* interface= new Interface(argv[1]);
-	Initializer* initializer= new Initializer();
+    cout << "This is the main" << endl;
 
-	int* my_blocks = new int[1];
-	my_blocks[0] = 0;
+    // Finalize the MPI environment.
+    MPI_Finalize();
 
-	cout << "In CompleteMesh........." << endl;
-	CompleteMesh* complete_mesh = new CompleteMesh(1,1,my_blocks, interface->topology_file_name_interface_);
-	complete_mesh->InitializeMyBlocks();
-	Block* new_block = complete_mesh->all_blocks_[0];
 
-	cout << "In MetricsInitializer........." << endl;
-	MetricsInitializer metricsInit(new_block);
-	metricsInit.doInit();
+    if (argc != 4)
+	{
+		std::cout << "Usage: ./metis <single block mesh file> <Number of partitions> <Output mesh file name>\n";
+		return 0;
+	}
 
-	cout << "In calculateFreeVariables........." << endl;
-	new_block->block_primitive_variables_->calculateFreeVariables(interface->gamma_interface_, interface->aoa_deg_interface_, interface->mach_aircraft_interface_);
+    //Metis' routine
 
-	cout << "In initializeFlowField........." << endl;
-	new_block->block_primitive_variables_->initializeFlowField(new_block->n_all_cells_in_block_);
+    //Input arguments
+	std::string meshFile = argv[1];
+	int nPart = atoi(argv[2]);
+	std::string outputMeshFile = argv[3];
 
-	cout << "In Solver........." << endl;
-	Solver *solver=initializer->initializeSolver(interface);
-	solver->solve(new_block, complete_mesh);
+
+	MetisMesh reader;
+	reader.ReadSingleBlockMesh(meshFile);
+
+
+    MetisMesh* newMesh = reader.Partition(nPart);
+
+
+	newMesh->WriteMesh(outputMeshFile);
+	cout << "asdswf" << endl;
 }
 
 
