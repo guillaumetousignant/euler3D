@@ -39,6 +39,145 @@ CompleteMesh::~CompleteMesh()
 
 }
 
+string CompleteMesh::preReadTopology(Block* block)
+{
+std::ifstream myfile(Topology);
+char str_temp[200];
+std::string block_file_;
+
+if (myfile.is_open())
+{
+	for(i=0;i<n_blocks_;i++)
+   {
+   	if(i==block->block_id_)
+   	{
+   		getline(myfile, line);
+   		scanf (line.c_str(), "%s",str_temp);
+   		block_file_=str_temp;
+   		return block_file_;
+   	}
+   	else
+   	{
+   		getline(myfile, line);
+   	}
+}
+else if (myfile.fail())
+{
+cerr << "fail opening topology file " << meshFileName << endl;
+}
+
+
+}
+
+}
+
+
+
+void CompleteMesh::readTopology(Block* block)
+{
+std::ifstream myfile(Topology);
+char str_temp[200];
+std::string line;
+std::string block_file_;
+std::string other_block_id_temp;
+std::string cell_type_temp;
+int i,j,k,n1,n2,n3,n4;
+
+if (myfile.is_open())
+{
+   for(i=0;i<n_blocks_;i++)
+   {
+   	if(i==block->block_id_)
+
+   		getline(myfile, line);
+   }
+
+
+   for(i=0;i<n_blocks_;i++)
+   {
+   	getline(myfile, line);
+   	scanf (line.c_str(), "%s %d",str_temp,n1);
+   	getline(myfile, line);
+   	getline(myfile, line);
+    getline(myfile, line);
+    getline(myfile, line);
+    scanf (line.c_str(), "%s %d",str_temp,n2);
+
+   	for(j=0;j<n2;j++)
+   	{
+   		getline(myfile, line);
+   	}
+
+   	getline(myfile, line);
+   	getline(myfile, line);
+    scanf (line.c_str(), "%s %d",str_temp,n2);
+
+   	for(j=0;j<n2;j++)
+   	{
+   		getline(myfile, line);
+   	}
+
+   	getline(myfile, line);
+    scanf (line.c_str(), "%s %d",str_temp,n2);  //nb de block connecté
+   
+    if(i==block->block_id_)
+    {
+    	block->block_connexion_boundary_cell_ids_ = new BoundaryCellIds* [n2];
+    }
+
+   	for(j=0;j<n2;j++)
+   	{
+   		getline(myfile, line);
+   		scanf (line.c_str(), "%s %d",str_temp,n3); //block connecté au block i
+   		getline(myfile, line);
+   		scanf (line.c_str(), "%s %d",str_temp,n4); //nb d'élems connectés
+   		
+   		if(i==block->block_id_)
+   		{	
+   			(block->block_connexion_boundary_cell_ids_[j])= new ConnexionCellIds;
+   			(block->block_connexion_boundary_cell_ids_[j])->cell_ids_in_boundary_connected_= new int[n4];
+   			(block->block_connexion_boundary_cell_ids_[j])->owner_block_id_=i;
+   			(block->block_connexion_boundary_cell_ids_[j])->connected_block_id_=n3;
+   			(block->block_connexion_boundary_cell_ids_[j])->n_cell_in_boundary= n4;
+   			(block->block_connexion_boundary_cell_ids_[j])->cell_ids_in_boundary_ = new int[n4];
+   			(block->block_connexion_boundary_cell_ids_[j])->cell_count_= new int;
+			*((block->block_connexion_boundary_cell_ids_[j])->cell_count_)=0;
+
+   			for(k=0;k<n4;k++)
+   			{
+   				getline(myfile, other_block_id_temp);
+   				scanf (line.c_str(), "%s", cell_type_temp);
+
+   				BLOCK_ETRANGER[]
+
+   					if (cell_type == "9") // tetrahede
+					{
+
+					}
+
+
+   			}
+   		}
+   		else
+   		{
+   			for(k=0;k<n4;k++)
+   			{
+   				getline(myfile, line);
+   			}
+   		}	
+
+   	}
+   }
+}
+else if (myfile.fail())
+{
+cerr << "fail opening topology file " << meshFileName << endl;
+}
+
+
+}
+
+
 void CompleteMesh::InitializeMyBlocks()
 {
 	std::string block_id_string;
@@ -110,6 +249,7 @@ void CompleteMesh::InitializeMyBlocks()
 
 
 	}
+
 
 
 }
