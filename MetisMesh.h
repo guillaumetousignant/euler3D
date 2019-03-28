@@ -9,28 +9,31 @@ class MetisMesh
 private:
     int* nElements_;
     int* nNodes_;
-    int** elementNbrNodes_;
-    int** elementType_;
+    int* elementNbrNodes_;
+    int* elementType_;
     int** local2GlobalElements_;
     int nTotalNode_;
     int nBlock_;
+     //A INIT ET DESTRUCT
 
     double** x_;
     double** y_;
     double** z_;
 
-    std::vector<MetisBoundary*> metisBoundaries_;
+    MetisBoundary* metisBoundary_;
     std::vector<int>** connectivity_;
     std::vector<int>** connectivity_node_;
 
     // std::vector<int>* global2LocalElements_;
-    // std::vector<int>** connectivity_boundary;
+    //std::vector<int>** connectivity_boundary;
 
 public:
     MetisMesh();
     ~MetisMesh();
 
+    friend class MetisBoundary;
     static int nDimensions_;
+    vector<vector<int>>* ReturnFaces(int blockI, int element);
 
 public:
     void Init(int nBlock, int* nElements, int* nNodes);

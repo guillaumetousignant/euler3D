@@ -134,6 +134,7 @@ int* global_n_elements = reader.getnNodes_();
 MetisMesh* newMesh = reader.Partition(nPart);
 
 ReconstructFaces reconstruct_faces = ReconstructFaces(n_blocks, global_n_elements[0]);
+std::vector<int> common_nodes_vector;
 
 for(int k=0; k<n_blocks; k++)
 {
@@ -141,6 +142,9 @@ for(int k=0; k<n_blocks; k++)
 	{
 		if(reconstruct_faces.block_array_4_comparaison_[i][j]!=1)
 		{
+			int first_block_id = i;
+			int second_block_id = j;
+			
 			common_nodes_vector = reconstruct_faces.CompareArraysOfGlobalNodes(  first_block_id,  first_block_node_array,  n_nodes_in_first_block,  second_block_id,  second_block_node_array, n_nodes_in_second_block);
 		}
 	}
