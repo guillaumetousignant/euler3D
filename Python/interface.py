@@ -12,7 +12,7 @@ from output import Output
 class Interface(Input, Solver, Output):
     def __init__(self, master): # Initialize the class
         master.title("GRAPHICAL USER INTERFACE")
-        master.geometry("397x485")
+        master.geometry("397x515")
         master.resizable(0,0)
         
         # TABS OF THE MAIN WINDOW

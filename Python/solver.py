@@ -10,7 +10,7 @@ class Solver():
         self.master = master
         
         # SECTION 2.1: CONVERGENCE CRITERIA
-        title_section_2_1 = ttk.LabelFrame(master, text="2.1 Convergence criteria", labelanchor=N, height=130, width=396)
+        title_section_2_1 = ttk.LabelFrame(master, text="2.1 Convergence criteria", labelanchor=N, height=140, width=396)
         title_section_2_1.grid(row=0, column=0, columnspan=3)
         title_section_2_1.grid_propagate(False)
         title_section_2_1.grid_rowconfigure(0, weight=1)
@@ -42,7 +42,7 @@ class Solver():
         self.convergence_crit_entry.grid(row=2, column=3, columnspan=2, padx=2, pady=2)
 
         # SECTION 2.2: SCHEME SELECTION
-        title_section_2_2 = ttk.LabelFrame(master, text="2.2 Scheme Selection", labelanchor=N, height=110, width=396)
+        title_section_2_2 = ttk.LabelFrame(master, text="2.2 Scheme Selection", labelanchor=N, height=120, width=396)
         title_section_2_2.grid(row=1, column=0, columnspan=3)
         title_section_2_2.grid_propagate(False)
 
@@ -59,7 +59,7 @@ class Solver():
         label_void_4.grid(row=1, column=2)
 
         # SECTION 2.3: SOLVER OPTIONS
-        title_section_2_3 = ttk.LabelFrame(master, text="2.3 Solver options", labelanchor=N, height=190, width=396)
+        title_section_2_3 = ttk.LabelFrame(master, text="2.3 Solver options", labelanchor=N, height=200, width=396)
         title_section_2_3.grid(row=2, column=0, columnspan=3)
         title_section_2_3.grid_propagate(False)
 
