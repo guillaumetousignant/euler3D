@@ -25,12 +25,12 @@ filestype (0-Euler 1-SU2)
 clalpha cdalpha cmalpha
 0 0 0
 coefficientsconvergence residualconv
-1 1
+0 0
 cpxc machcontour cpcontour machisosurface
 1 0 0 0
 slicescp
-1
+0
 axis xcoord ycoord zcoord
-z 0.00 0.00 0.50
+z 0.00 0.00 0.20
 fcoord lcoord numberofslices
 0.10 0.50 5
