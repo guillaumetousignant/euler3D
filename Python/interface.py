@@ -39,7 +39,7 @@ class Interface(Input, Solver, Output):
 
         help_menu = Menu(menubar, tearoff=0)
         menubar.add_cascade(label="Help", menu=help_menu)
-        help_menu.add_command(label="Help guide")
+        help_menu.add_command(label="User guide")
 
         
         # SECTION 1: INPUT

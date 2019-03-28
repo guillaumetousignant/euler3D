@@ -13,6 +13,10 @@ class Solver():
         title_section_2_1 = ttk.LabelFrame(master, text="2.1 Convergence criteria", labelanchor=N, height=130, width=396)
         title_section_2_1.grid(row=0, column=0, columnspan=3)
         title_section_2_1.grid_propagate(False)
+        title_section_2_1.grid_rowconfigure(0, weight=1)
+        title_section_2_1.grid_rowconfigure(1, weight=1)
+        title_section_2_1.grid_rowconfigure(2, weight=1)
+        title_section_2_1.grid_columnconfigure(3, weight=1)
 
         text_section_2_1 = ttk.Label(title_section_2_1, text="\nPlease specify the required convergence criteria:\n")
         text_section_2_1.grid(row=0, column=0, columnspan=6, sticky=NSEW, padx=2)
@@ -22,7 +26,7 @@ class Solver():
 
         self.max_iter = IntVar()
         self.max_iter.set(300)
-        self.max_iter_label = ttk.Label(title_section_2_1, text="Max number of itterations", borderwidth=2, relief="groove", anchor=CENTER, width=22)
+        self.max_iter_label = ttk.Label(title_section_2_1, text="Max number of itterations", borderwidth=2, relief="groove", anchor=CENTER)
         self.max_iter_label.grid(row=1, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
         self.max_iter_entry = ttk.Entry(title_section_2_1, textvariable=self.max_iter, width=15)
         self.max_iter_entry.grid(row=1, column=3, columnspan=2, padx=2, pady=2)
@@ -32,7 +36,7 @@ class Solver():
 
         self.convergence_crit = IntVar()
         self.convergence_crit.set(-15)
-        self.convergence_crit_label = ttk.Label(title_section_2_1, text="Convergence criterion\npower (1.0eX)", borderwidth=2, relief="groove", anchor=CENTER, width=22)
+        self.convergence_crit_label = ttk.Label(title_section_2_1, text="Convergence criterion power (1.0eX)", borderwidth=2, relief="groove", anchor=CENTER)
         self.convergence_crit_label.grid(row=2, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
         self.convergence_crit_entry = ttk.Entry(title_section_2_1, textvariable=self.convergence_crit, width=15)
         self.convergence_crit_entry.grid(row=2, column=3, columnspan=2, padx=2, pady=2)
