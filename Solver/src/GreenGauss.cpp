@@ -172,10 +172,10 @@ void GreenGauss::computeGradients(Block* block)
 
 ////////////////////////////////////////method with boundary objects
 
-	int n_boundaries_real=block->n_real_boundaries_in_block_;
-	for (int i=0;i<n_boundaries_real;i++)
-	{
-	int n_boundary_faces=block->block_boundary_cell_ids_->n_cell_in_boundary_;
+int n_boundaries_real=block->n_real_boundaries_in_block_;
+for (int j=0;j<n_boundaries_real;j++)
+{
+	int n_boundary_faces=((block->block_boundary_cell_ids_)[j])->n_cell_in_boundary_;
 	int boundary_face_idx;
 
 	int int_cell_idx;
@@ -188,10 +188,10 @@ void GreenGauss::computeGradients(Block* block)
 
 	for (int i = 0; i < n_boundary_faces; i++)
 	{
-		boundary_face_idx=block -> block_boundary_face_ids_[i];
-
+		ext_cell_idx=(block->block_boundary_cell_ids_[j])->cell_ids_in_boundary_[i];
+		
+		boundary_face_idx=(block -> block_cells_[ext_cell_idx])->cell_2_faces_connectivity_[0];
 		int_cell_idx=block->block_faces_[boundary_face_idx]->face_2_cells_connectivity_[0];
-		ext_cell_idx=block->block_faces_[boundary_face_idx]->face_2_cells_connectivity_[1];
 
 		face_area=block->block_faces_[boundary_face_idx]->face_area_;
 
@@ -230,6 +230,8 @@ void GreenGauss::computeGradients(Block* block)
 		}
 
 	}
+
+}
 
 
 
