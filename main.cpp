@@ -35,10 +35,10 @@ int main(int argc, char *argv[])
 	MetisMesh reader;
 	reader.ReadSingleBlockMesh(meshFile);
     
-	
-    MetisMesh* newMesh = reader.Partition(nPart);
-	
 
-	newMesh->WriteMesh(outputMeshFile); 
-	cout << "asdswf" << endl;
+    MetisMesh* newMesh = reader.Partition(nPart);
+	//newMesh->ReturnFaces(0, 0);
+
+	newMesh->WriteMesh(outputMeshFile);  
+	
 }
