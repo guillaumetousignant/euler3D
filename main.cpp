@@ -8,6 +8,8 @@
 #include "Solver.h"
 #include "MetisMesh.h"
 
+#include "ReconstructFaces.h"
+
 #include <iostream>
 #include <string>
 #include <mpi.h>
@@ -76,35 +78,81 @@ int main(int argc, char* argv[])
 	// Solver *solver=initializer->initializeSolver(interface);
 	// solver->solve(new_block, complete_mesh);
 
-    cout << "This is the main" << endl;
-
     // Finalize the MPI environment.
     MPI_Finalize();
 
 
-    if (argc != 4)
+
+/*=============================TEST HELENE=============================
+		int n_blocks = 2;
+		int global_n_elements = 10;
+
+ReconstructFaces reconstruct_faces = ReconstructFaces(n_blocks, global_n_elements);
+
+
+std::vector<int> common_nodes_vector;
+int first_block_id = 0;
+int* first_block_node_array = new int[8] {0,1,2,3,4,5,8,9};
+int n_nodes_in_first_block = 8;
+
+int second_block_id =1;
+int* second_block_node_array = new int[6] {1,2,3,4,6,7};
+int n_nodes_in_second_block = 6;
+
+
+common_nodes_vector = reconstruct_faces.CompareArraysOfGlobalNodes(  first_block_id,  first_block_node_array,  n_nodes_in_first_block,  second_block_id,  second_block_node_array, n_nodes_in_second_block);
+
+std::vector<int>** global_cells_vector =
+
+FindElementsInConnexion(std::vector<int> common_nodes_vector, std::vector<int>** global_cells_vector, std::vector<int>** global_nodes_vector, int block_id )
+
+
+reconstruct_faces.~ReconstructFaces();
+=============================TEST HELENE=============================*/
+
+if (argc != 4)
+{
+	std::cout << "Usage: ./metis <single block mesh file> <Number of partitions> <Output mesh file name>\n";
+	return 0;
+}
+
+  //Metis' routine
+
+  //Input arguments
+std::string meshFile = argv[1];
+int nPart = atoi(argv[2]);
+std::string outputMeshFile = argv[3];
+
+
+MetisMesh reader;
+reader.ReadSingleBlockMesh(meshFile);
+
+int n_blocks =nPart;
+int* global_n_elements = reader.getnNodes_();
+
+
+MetisMesh* newMesh = reader.Partition(nPart);
+
+ReconstructFaces reconstruct_faces = ReconstructFaces(n_blocks, global_n_elements[0]);
+
+for(int k=0; k<n_blocks; k++)
+{
+	for(int l=-; l<n_blocks;l++)
 	{
-		std::cout << "Usage: ./metis <single block mesh file> <Number of partitions> <Output mesh file name>\n";
-		return 0;
+		if(reconstruct_faces.block_array_4_comparaison_[i][j]!=1)
+		{
+			common_nodes_vector = reconstruct_faces.CompareArraysOfGlobalNodes(  first_block_id,  first_block_node_array,  n_nodes_in_first_block,  second_block_id,  second_block_node_array, n_nodes_in_second_block);
+		}
 	}
 
-    //Metis' routine
-
-    //Input arguments
-	std::string meshFile = argv[1];
-	int nPart = atoi(argv[2]);
-	std::string outputMeshFile = argv[3];
+}
 
 
-	MetisMesh reader;
-	reader.ReadSingleBlockMesh(meshFile);
 
 
-    MetisMesh* newMesh = reader.Partition(nPart);
+newMesh->WriteMesh(outputMeshFile);
+cout << "asdswf" << endl;
 
-
-	newMesh->WriteMesh(outputMeshFile);
-	cout << "asdswf" << endl;
 }
 
 

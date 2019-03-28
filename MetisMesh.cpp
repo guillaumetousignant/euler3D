@@ -7,6 +7,13 @@
 
 using namespace std;
 
+/*==============HELENE=================*/
+int* MetisMesh::getnNodes_()
+{
+  return nNodes_;
+}
+/*=====================================*/
+
 int findNodeIndex(std::vector<int> &list, int node2find)
 {
     int count(list.size());
@@ -15,7 +22,7 @@ int findNodeIndex(std::vector<int> &list, int node2find)
     {
         if (node2find == list[i])
         {
-    
+
             return i + 1;
         }
     }
@@ -26,8 +33,8 @@ int findNodeIndex(std::vector<int> &list, int node2find)
 
 MetisMesh::MetisMesh()
     : nElements_(nullptr), nNodes_(nullptr), elementType_(nullptr), local2GlobalElements_(nullptr),
-     nTotalNode_(0), nBlock_(0), x_(nullptr), y_(nullptr), z_(nullptr), connectivity_(nullptr)
-   
+     nTotalNode_(0), nBlock_(0), x_(nullptr), y_(nullptr), z_(nullptr), connectivity_(nullptr), connectivity_node_(nullptr)
+
 
 {
     cout << "constructing MetisMesh..." << endl;
@@ -41,10 +48,10 @@ MetisMesh::~MetisMesh()
         delete[] nElements_;
     if (nNodes_ != nullptr)
         delete[] nNodes_;
-    
+
     nElements_ = nullptr;
     nNodes_ = nullptr;
-   
+
     for (int blockI = 0; blockI < nBlock_; blockI++)
     {
         if (x_[blockI] != nullptr)
@@ -53,21 +60,29 @@ MetisMesh::~MetisMesh()
             delete[] y_[blockI];
         if (z_[blockI] != nullptr)
             delete[] z_[blockI];
-        
+
         if (elementType_[blockI] != nullptr)
             delete[] elementType_[blockI];
         if (elementNbrNodes_[blockI] != nullptr)
             delete[] elementNbrNodes_[blockI];
-        
+
         delete local2GlobalElements_;
 
 
         if (connectivity_[blockI] != nullptr)
             delete[] connectivity_[blockI];
-        
-        
+
+
         connectivity_[blockI] = nullptr;
-      
+
+        /*==============HELENE=================*/
+        if (connectivity_node_[blockI] != nullptr)
+            delete[] connectivity_node_[blockI];
+
+
+        connectivity_node_[blockI] = nullptr;
+        /*=====================================*/
+
     }
 
 
@@ -88,15 +103,27 @@ MetisMesh::~MetisMesh()
 
     if (connectivity_ != nullptr)
         delete[] connectivity_;
+    /*==============HELENE=================*/
+    if (connectivity_node_ != nullptr)
+        delete[] connectivity_node_;
+    /*=====================================*/
+
+
 
     x_ = nullptr;
     y_ = nullptr;
     z_ = nullptr;
-    
+
     local2GlobalElements_ = nullptr;
     elementType_ = nullptr;
 
     connectivity_ = nullptr;
+
+    /*==============HELENE=================*/
+    connectivity_node_ = nullptr;
+    /*=====================================*/
+
+
 
     cout << "destruct succeed" << endl;
 }
@@ -108,9 +135,9 @@ void MetisMesh::Init(int nBlock, int *nElements, int *nNodes)
     nBlock_ = nBlock;
     nElements_ = new int[nBlock];
     nNodes_ = new int[nBlock];
-    
-    elementType_ = new int *[nBlock]; 
-    elementNbrNodes_ = new int *[nBlock]; 
+
+    elementType_ = new int *[nBlock];
+    elementNbrNodes_ = new int *[nBlock];
 
 
     x_ = new double *[nBlock];
@@ -118,6 +145,8 @@ void MetisMesh::Init(int nBlock, int *nElements, int *nNodes)
     z_ = new double *[nBlock];
 
     connectivity_ = new std::vector<int> *[nBlock];
+    connectivity_node_ = new std::vector<int> *[nBlock];
+
 
 
     for (int i = 0; i < nBlock; i++)
@@ -131,19 +160,21 @@ void MetisMesh::Init(int nBlock, int *nElements, int *nNodes)
         elementNbrNodes_[i] = new int [nElements[i]];
 
         connectivity_[i] = new std::vector<int>[nElements_[i]];
+        connectivity_node_[i] = new std::vector<int>[nNodes_[i]];
+
     }
 
     // Only want to initialize after partitioning
     if (nBlock != 1) {
         local2GlobalElements_ = new int *[nBlock];
-        
+
         for (int i = 0; i < nBlock; i++) {
-            local2GlobalElements_[i] = new int [nElements[i]];       
+            local2GlobalElements_[i] = new int [nElements[i]];
         }
         cout << "Initialisation done global" << endl;
     }
-   
-    
+
+
 }
 
 // Initialize static int attribute nDimensions_
@@ -207,7 +238,7 @@ void MetisMesh::ReadSingleBlockMesh(std::string fileName)
             size_t pos_equal_sign = line.find('=');
             // The string tag is whatever is at the right of the equal sign.
             string str_tag = line.substr(pos_equal_sign+1);
-            // The following is the equivalent to a left trim (strip) 
+            // The following is the equivalent to a left trim (strip)
             while (str_tag[0] == ' ')
             {
                 str_tag = str_tag.substr(1);
@@ -234,13 +265,13 @@ void MetisMesh::ReadSingleBlockMesh(std::string fileName)
                 for (int k = 0; k < elementNbrNodesBoundary[j]; k++)
                 {
                     myfile >> boundaryElements[j][k];
-                
+
                 }
-                
+
             }
-            
+
             // creation d'un objet metisBoundary* x nb de boundary
-            
+
             //this->metisBoundaries[i] = new MetisBoundary(nElementsInBoundary, elementTypeInBoundary, elementNbrNodes, boundaryElements);
             //boundaryElements = nullptr;
             getline(myfile, line);
@@ -253,7 +284,7 @@ void MetisMesh::ReadSingleBlockMesh(std::string fileName)
         // Prepass 2 : retour au debut du fichier
         myfile.seekg(0, myfile.beg);
         getline(myfile, line);
-        
+
         getline(myfile, line);
         getline(myfile, line);
         nTotalNode_ = 0;
@@ -300,6 +331,9 @@ void MetisMesh::ReadSingleBlockMesh(std::string fileName)
                 int node;
                 myfile >> node;
                 connectivity_[0][i].push_back(node);
+                /*==============HELENE=================*/
+                connectivity_node_[0][node].push_back(i);
+                /*=====================================*/
             }
         }
 
@@ -309,9 +343,9 @@ void MetisMesh::ReadSingleBlockMesh(std::string fileName)
         cout << "closing... " << fileName << endl;
 
     }
-    else 
+    else
         cout << "could not open " << fileName << endl;
-    
+
 }
 
 
@@ -328,13 +362,13 @@ void MetisMesh::WriteMesh(std::string fileName)
         fprintf(fid, "Block= %d\n", blockI + 1);
         fprintf(fid, "NDIME= %d\n", nDimensions_);
         fprintf(fid, "NELEM= %d\n", nElements);
-        
+
         for (int elementI = 0; elementI < nElements; elementI++)
         {
             fprintf(fid, "%d ", elementType_[0][elementI]);
             for (int j = 0; j < elementNbrNodes_[0][elementI]; j++)
             {
-                
+
                 fprintf(fid, "%d ", connectivity_[blockI][elementI][j]);
             }
 
@@ -432,11 +466,11 @@ MetisMesh* MetisMesh::Partition(int nPart)
 
         count += elementNbrNodes_[0][i];
         eptr[i+1] = count; // i + 1, car eptr[0] doit commencer a 0
-        
+
 
     }
 
-    
+
     for (int i = 0; i < nElements_[0]; i++)
     {
         for (int j = 0; j < elementNbrNodes_[0][i]; j++)
@@ -444,7 +478,7 @@ MetisMesh* MetisMesh::Partition(int nPart)
             eind[count1] = connectivity_[0][i][j];
             count1++;
 
-        }   
+        }
     }
 
     cout << "fin connectivite" << endl;
@@ -465,19 +499,27 @@ MetisMesh* MetisMesh::Partition(int nPart)
 
     for (int i = 0; i < nElements_[0]; i++)
     {
-        
+
         int blockId = epart[i];
         elementsPerBlock[blockId].push_back(i);
-        
-        elementNbrNodesPerBlock[blockId].push_back(elementNbrNodes_[0][i]);   
+        elementNbrNodesPerBlock[blockId].push_back(elementNbrNodes_[0][i]);
     }
+
+    /*==============HELENE=================*/
+    std::vector<int> nodesPerBlock[nPart];
+    for (int i = 0; i < nNodes_[0]; i++)
+    {
+        int blockId = npart[i];
+        nodesPerBlock[blockId].push_back(i);
+    }
+    /*=====================================*/
 
 
     int newNelements[nPart];
 
     for (int blockI = 0; blockI < nPart; blockI++) {
         newNelements[blockI] = elementsPerBlock[blockI].size();
-       
+
     }
 
     std::vector<int> addedNode[nPart];
@@ -487,18 +529,18 @@ MetisMesh* MetisMesh::Partition(int nPart)
     for (int blockI = 0; blockI < nPart; blockI++)
     {
         newConnectivity[blockI] = new std::vector<int>[newNelements[blockI]];
-        
+
         for (int i = 0; i < newNelements[blockI]; i++)
         {
-            
+
             for (int j = 0; j < elementNbrNodesPerBlock[blockI][i]; j++)
             {
                 int elementIblockI = elementsPerBlock[blockI][i];
-                
+
                 int n1 = connectivity_[0][elementIblockI][j] ;
                 int newN1 = findNodeIndex(addedNode[blockI], n1);
                 newConnectivity[blockI][i].push_back(newN1);
-                
+
             }
         }
 
@@ -519,7 +561,7 @@ MetisMesh* MetisMesh::Partition(int nPart)
 
     cout << "newMesh ok" << endl;
 
-   
+
     for (int blockI = 0; blockI < nPart; blockI++) {
         newNelements[blockI] = elementsPerBlock[blockI].size();
 
@@ -527,7 +569,7 @@ MetisMesh* MetisMesh::Partition(int nPart)
             newMesh->local2GlobalElements_[blockI][i] = elementsPerBlock[blockI][i];
         }
     }
-  
+
     for (int blockI = 0; blockI < nPart; blockI++)
     {
 
@@ -541,8 +583,8 @@ MetisMesh* MetisMesh::Partition(int nPart)
             newMesh->z_[blockI][i] = z_[0][nodeId];
         }
     }
-    
- 
+
+
     for (int blockI = 0; blockI < nPart; blockI++)
     {
         if (newConnectivity[blockI] != nullptr)
@@ -568,7 +610,7 @@ MetisMesh* MetisMesh::Partition(int nPart)
     return newMesh;
 
 }
-/* 
+/*
 
 Mesh* Mesh::Partition(int nPart)
 {
@@ -687,7 +729,7 @@ Mesh* Mesh::Partition(int nPart)
     if (newConnectivity != nullptr) delete [] newConnectivity;
     newConnectivity = nullptr;
 
-    return newMesh; 
+    return newMesh;
 }*/
 
 void MetisMesh::SetConnectivity(std::vector<int> **connectivity)

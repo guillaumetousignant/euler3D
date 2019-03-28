@@ -3,18 +3,18 @@
 
 #include "ReconstructFaces.h"
 
-ReconstructFaces::ReconstructFaces(int n_blocks, int global_n_elements):n_blocks_(n_blocks), global_n_elements_(global_n_elements), block_array_4_comparaison_(nullptr), cell_flag_4_face_reconstruction(nullptr)
+ReconstructFaces::ReconstructFaces(int n_blocks, int global_n_elements):n_blocks_(n_blocks), global_n_elements_(global_n_elements), block_array_4_comparaison_(nullptr), cell_flag_4_face_reconstruction_(nullptr)
 {
-	block_array_4_comparaison_ = new int*[n_blocks_];
+	block_array_4_comparaison_ = new int*[n_blocks_]();
 
-	cell_flag_4_face_reconstruction_ = new int[global_n_elements_](0);
+	cell_flag_4_face_reconstruction_ = new int[global_n_elements_]();
 
 
 
-	for(int i = 0, i< n_blocks_, i++)
+	for(int i = 0; i< n_blocks_; i++)
 	{
 		block_array_4_comparaison_[i] = new int[n_blocks_]();
-		for(int j = 0, j < n_blocks_, j++)
+		for(int j = 0; j < n_blocks_; j++)
 		{
 			if(i==j)
 			{
@@ -27,24 +27,29 @@ ReconstructFaces::ReconstructFaces(int n_blocks, int global_n_elements):n_blocks
 
 ReconstructFaces::~ReconstructFaces()
 {
-	if(block_array_4_comparaison_)
+	if(block_array_4_comparaison_!=nullptr)
 	{
-		for(int i = 0, i< n_blocks_, i++)
+		for(int i = 0; i< n_blocks_; i++)
 		{
-			if(block_array_4_comparaison_[i])
+			if(block_array_4_comparaison_[i]!=nullptr)
 			{
-				delete [] block_array_4_comparaison_[i];
+				delete[] block_array_4_comparaison_[i];
+				block_array_4_comparaison_[i] = nullptr;
 			}
 		}
-		delete [] block_array_4_comparaison_
+		delete[] block_array_4_comparaison_;
+		block_array_4_comparaison_=nullptr;
 	}
 
-	if(cell_flag_4_face_reconstruction_)
+	if(cell_flag_4_face_reconstruction_!=nullptr)
 	{
-		delete [] cell_flag_4_face_reconstruction_;
+		delete[] cell_flag_4_face_reconstruction_;
+		cell_flag_4_face_reconstruction_ = nullptr;
 	}
 
 }
+
+
 
 std::vector<int> ReconstructFaces::CompareArraysOfGlobalNodes( int first_block_id, int* first_block_node_array, int n_nodes_in_first_block, int second_block_id, int* second_block_node_array, int n_nodes_in_second_block)
 {
@@ -56,7 +61,7 @@ std::vector<int> ReconstructFaces::CompareArraysOfGlobalNodes( int first_block_i
 	std::sort(first_block_node_array,first_block_node_array+n_nodes_in_first_block);
 	std::sort(second_block_node_array,second_block_node_array+n_nodes_in_second_block);
 
-	it = std::set_intersection( first_block_node_array, first_block_node_array + n_nodes_in_first_block, second_block_node_array, second_block_node_array + n_nodes_in_second_block, common_nodes_vector.begin() )
+	it = std::set_intersection( first_block_node_array, first_block_node_array + n_nodes_in_first_block, second_block_node_array, second_block_node_array + n_nodes_in_second_block, common_nodes_vector.begin() );
 
 	if(!common_nodes_vector.empty())
 	{
@@ -67,10 +72,10 @@ std::vector<int> ReconstructFaces::CompareArraysOfGlobalNodes( int first_block_i
 		block_array_4_comparaison_[second_block_id][first_block_id] =1;
 
 	}
-	return common_nodes_vector
+	return common_nodes_vector;
 }
 
-ReconstructFaces::FindElementsInConnexion(std::vector<int> common_nodes_vector, std::vector<int>** global_cells_vector, std::vector<int>** global_nodes_vector, int block_id )
+void ReconstructFaces::FindElementsInConnexion(std::vector<int> common_nodes_vector, std::vector<int>** global_cells_vector, std::vector<int>** global_nodes_vector, int block_id )
 {
 
 	int n_common_nodes = common_nodes_vector.size();
@@ -99,9 +104,9 @@ ReconstructFaces::FindElementsInConnexion(std::vector<int> common_nodes_vector, 
 				std::vector<int>::iterator it;
 				std::vector<int> face_2_nodes_connectivity (4);
 
-				std::sort(cell_2_nodes_connectivity, cell_2_nodes_connectivity+n_nodes_in_cell);
+				std::sort(cell_2_nodes_connectivity.begin(), cell_2_nodes_connectivity.end());
 
-				it = std::set_intersection( common_nodes_vector, common_nodes_vector + n_common_nodes, cell_2_nodes_connectivity, cell_2_nodes_connectivity + n_nodes_in_cell, face_2_nodes_connectivity.begin() );
+				it = std::set_intersection( common_nodes_vector.begin(), common_nodes_vector.end(), cell_2_nodes_connectivity.begin(), cell_2_nodes_connectivity.begin(), face_2_nodes_connectivity.begin() );
 
 				if(!face_2_nodes_connectivity.empty())
 				{
@@ -109,20 +114,9 @@ ReconstructFaces::FindElementsInConnexion(std::vector<int> common_nodes_vector, 
 
 					cell_flag_4_face_reconstruction_[cell_id] = 1;
 				}
-
-				
-
 			}
 		}
-
-
 	}
-
-
-
 }
 
-
-
-
-
+#endif
