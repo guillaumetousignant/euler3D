@@ -28,6 +28,20 @@ class Interface(Input, Solver, Output):
         tab3 = ttk.Frame(tabControl)
         tabControl.add(tab3, text="3. Output")
 
+        # MENU BAR
+        menubar = Menu(master)
+        master.config(menu=menubar)
+
+        file_menu = Menu(menubar, tearoff=0)
+        menubar.add_cascade(label="File", menu=file_menu)
+        file_menu.add_command(label="Save As")
+        file_menu.add_command(label="Import")
+
+        help_menu = Menu(menubar, tearoff=0)
+        menubar.add_cascade(label="Help", menu=help_menu)
+        help_menu.add_command(label="Help guide")
+
+        
         # SECTION 1: INPUT
         self.input = Input(tab1)
 
@@ -65,6 +79,16 @@ class Interface(Input, Solver, Output):
         solve_button_output = ttk.Button(tab3, text="Solve")
         solve_button_output.grid(row=2, column=2, padx=2, pady=2)
 
+        #self.createMenus()
+
+    #def createMenus(self):
+        #menubar = Menu(self)
+        #self.config(menu=menubar)
+
+        #file_option = Menu(menubar)
+        #menubar.add_cascade(label="File", menu=file_option)
+    
+    
     def clearAllPages(self):
         self.input.clearPage()
         self.solver.clearPage()
@@ -76,7 +100,7 @@ class Interface(Input, Solver, Output):
         solver = self.solver.writePartialOutput()
         output = self.output.writePartialOutput()
 
-        file_path = '/home/etudiant/Documents/'
+        file_path = '/home/frederique/Documents/'
         file_name = "output_interface.txt"
 
         complete_file_name = os.path.join(file_path, file_name)

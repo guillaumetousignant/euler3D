@@ -16,16 +16,16 @@ class Input():
         text_section_1_1 = ttk.Label(title_section_1_1, text="\n\nPlease select the desired mesh or geometry:\n")
         text_section_1_1.grid(row=0, column=0, columnspan=3, sticky=NSEW, padx=2)
 
-        import_mesh = Button(title_section_1_1, text="Import mesh", command=self.importMesh, width=12, anchor=CENTER)
+        import_mesh = Button(title_section_1_1, text="Import mesh", command=self.importMesh, anchor=CENTER)
         import_mesh.grid(row=1, column=0, sticky=NSEW, padx=2, pady=2)
 
-        import_geometry = Button(title_section_1_1, text="Import\ngeometry", command=self.importGeometry, width=12, anchor=CENTER)
+        import_geometry = Button(title_section_1_1, text="Import\ngeometry", command=self.importGeometry, anchor=CENTER)
         import_geometry.grid(row=1, column=1, sticky=NSEW, padx=2, pady=2)
         
-        generate_geometry = Button(title_section_1_1, text="Generate\ngeometry", command=self.generateGeometry, width=12, anchor=CENTER)
+        generate_geometry = Button(title_section_1_1, text="Generate\ngeometry", command=self.generateGeometry, anchor=CENTER)
         generate_geometry.grid(row=1, column=2, sticky=NSEW, padx=2, pady=2)
 
-        show_resulting_mesh = Button(title_section_1_1, text="Show resulting\nmesh", command=self.showResultingMesh, width=12, anchor=CENTER)
+        show_resulting_mesh = Button(title_section_1_1, text="Show resulting\nmesh", command=self.showResultingMesh, anchor=CENTER)
         show_resulting_mesh.grid(row=2, column=1, sticky=NSEW, padx=2, pady=2)
 
         # SECTION 1.2: INPUT VALUES
@@ -85,6 +85,7 @@ class Input():
         self.mesh_window = Toplevel(self.master)
         self.mesh_window.title("Mesh importation")
         self.mesh_window.resizable(0,0)
+        self.mesh_window.lift()
 
         text_mesh_importation = ttk.Label(self.mesh_window, text="\nImport the desired mesh:\n")
         text_mesh_importation.grid(row=0, column=0, columnspan=4, sticky=W, padx=2)
@@ -117,6 +118,7 @@ class Input():
         geometry_window = Toplevel(self.master)
         geometry_window.title("Geometry importation")
         geometry_window.resizable(0,0)
+        geometry_window.lift()
 
         text_geometry_importation = ttk.Label(geometry_window, text="\nImport the desired geometry:\n")
         text_geometry_importation.grid(row=0, column=0, columnspan=4, sticky=W, padx=2)

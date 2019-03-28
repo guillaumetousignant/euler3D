@@ -114,6 +114,7 @@ class Solver():
         self.flux_scheme_window = Toplevel(self.master)
         self.flux_scheme_window.title("Scheme selection")
         self.flux_scheme_window.resizable(0,0)
+        self.flux_scheme_window.lift()
         text_flux_scheme_window = ttk.Label(self.flux_scheme_window, text="\nPlease configure the following parameters:\n", anchor=W)
         text_flux_scheme_window.grid(row=0, column=0, columnspan=4, padx=2, sticky=W)
         
@@ -228,7 +229,7 @@ class Solver():
         self.nb_process.set(0)
         self.solver_option.set(3)
 
-        self.flux_scheme_choice.set("Roe")
+        self.flux_scheme.set("Roe")
         self.scheme_order.set("1")
         self.gradient.set("Green Gauss")
         self.limiter.set("Barth Jespersen")
