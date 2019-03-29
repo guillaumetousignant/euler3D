@@ -83,29 +83,17 @@ void PostProcessing::checkStopSolver()
 
 }
 
-void PostProcessing::convergenceSum0(CompleteMesh* complete_mesh)
+void PostProcessing::convergenceSum0()
 {
 
   // EN ATTENDANT
   //cout << "Starting convergenceSum.............................................." << endl;
 
-  int i;
-
-  ro_rms0_mesh_=0.0;
-  uu_rms0_mesh_=0.0;
-  vv_rms0_mesh_=0.0;
-  ww_rms0_mesh_=0.0;
-  pp_rms0_mesh_=0.0;
-
-  for(i=0;i<complete_mesh->n_blocks_;i++)
-  {
-    // Convergence data
-    ro_rms0_mesh_ += ro_rms_blocks_[i];
-    uu_rms0_mesh_ += uu_rms_blocks_[i];
-    vv_rms0_mesh_ += vv_rms_blocks_[i];
-    ww_rms0_mesh_ += ww_rms_blocks_[i];
-    pp_rms0_mesh_ += pp_rms_blocks_[i];
-  }
+  ro_rms0_mesh_=ro_rms_mesh_;
+  uu_rms0_mesh_=uu_rms_mesh_;
+  vv_rms0_mesh_=vv_rms_mesh_;
+  ww_rms0_mesh_=ww_rms_mesh_;
+  pp_rms0_mesh_=pp_rms_mesh_;
 
   //cout << "Ending convergenceSum................................................" << endl;
 }
@@ -248,12 +236,11 @@ void PostProcessing::process(CompleteMesh* complete_mesh, BlockCommunicator* com
     all_blocks=complete_mesh->all_blocks_;
 
     // Sum aerodynamic parameters and convergence for each block
-    coefficientsSum(complete_mesh);
     // Sum convergence for each block
-    convergenceSum(complete_mesh);
+    communicator->getGlobal(complete_mesh, this);
     if (current_iter_==0)
     {
-      convergenceSum0(complete_mesh);
+      convergenceSum0();
     }
 
 

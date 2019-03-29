@@ -88,7 +88,7 @@ public:
   void computeFlowData(Block* block);
   void checkStopSolver();
   void convergenceSum(CompleteMesh* complete_mesh);
-  void convergenceSum0(CompleteMesh* complete_mesh);
+  void convergenceSum0();
   void coefficientsSum(CompleteMesh* complete_mesh);
   void saveConvergence(Block* block);
   void saveCoefficients(Block* block);
