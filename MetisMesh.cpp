@@ -22,10 +22,6 @@ int findNodeIndex(std::vector<int> &list, int node2find)
     {
         if (node2find == list[i])
         {
-<<<<<<< HEAD
-
-=======
->>>>>>> origin/metis_isa
             return i + 1;
         }
     }
@@ -54,12 +50,7 @@ MetisMesh::~MetisMesh()
 
     nElements_ = nullptr;
     nNodes_ = nullptr;
-<<<<<<< HEAD
-
-=======
-
     cout << "destructor ok 1" << endl;
->>>>>>> origin/metis_isa
     for (int blockI = 0; blockI < nBlock_; blockI++)
     {
         if (x_[blockI] != nullptr)
@@ -68,15 +59,8 @@ MetisMesh::~MetisMesh()
             delete[] y_[blockI];
         if (z_[blockI] != nullptr)
             delete[] z_[blockI];
-<<<<<<< HEAD
 
-        if (elementType_[blockI] != nullptr)
-            delete[] elementType_[blockI];
-        if (elementNbrNodes_[blockI] != nullptr)
-            delete[] elementNbrNodes_[blockI];
-
-        delete local2GlobalElements_;
-=======
+        // delete local2GlobalElements_;
         if (local2GlobalElements_[blockI] != nullptr)
             delete[] local2GlobalElements_[blockI];
          /* if (elementType_[blockI] != nullptr)
@@ -85,16 +69,12 @@ MetisMesh::~MetisMesh()
             delete[] elementNbrNodes_[blockI]; */
 
 
->>>>>>> origin/metis_isa
-
 
         if (connectivity_[blockI] != nullptr)
             delete[] connectivity_[blockI];
 
 
         connectivity_[blockI] = nullptr;
-<<<<<<< HEAD
-
         /*==============HELENE=================*/
         if (connectivity_node_[blockI] != nullptr)
             delete[] connectivity_node_[blockI];
@@ -102,10 +82,6 @@ MetisMesh::~MetisMesh()
 
         connectivity_node_[blockI] = nullptr;
         /*=====================================*/
-
-=======
-
->>>>>>> origin/metis_isa
     }
 
     cout << "destructor ok 2" << endl;
@@ -129,17 +105,14 @@ MetisMesh::~MetisMesh()
 
     if (connectivity_ != nullptr)
         delete[] connectivity_;
-<<<<<<< HEAD
+
     /*==============HELENE=================*/
     if (connectivity_node_ != nullptr)
         delete[] connectivity_node_;
     /*=====================================*/
 
-
-
-=======
     cout << "destructor ok 3.5" << endl;
->>>>>>> origin/metis_isa
+
     x_ = nullptr;
     y_ = nullptr;
     z_ = nullptr;
@@ -166,8 +139,12 @@ void MetisMesh::Init(int nBlock, int *nElements, int *nNodes)
     nElements_ = new int[nBlock];
     nNodes_ = new int[nBlock];
 
-    elementType_ = new int *[nBlock];
-    elementNbrNodes_ = new int *[nBlock];
+
+    /*==============HELENE=================*/
+    elementType_ = new int [nBlock];
+    elementNbrNodes_ = new int [nBlock];
+    /*=====================================*/
+
 
 
     x_ = new double *[nBlock];
@@ -621,7 +598,7 @@ MetisMesh* MetisMesh::Partition(int nPart)
         elementNbrNodesPerBlock[blockId].push_back(elementNbrNodes_[0][i]);
     }
 
-    /*==============HELENE=================*/
+    /*==============HELENE=================
     std::vector<int> nodesPerBlock[nPart];
     for (int i = 0; i < nNodes_[0]; i++)
     {
@@ -629,7 +606,7 @@ MetisMesh* MetisMesh::Partition(int nPart)
         nodesPerBlock[blockId].push_back(i);
         elementNbrNodesPerBlock[blockId].push_back(elementNbrNodes_[i]);
     }
-    /*=====================================*/
+    =====================================*/
 
    /*   for (int i = 0; i < 15; i++)
     {
@@ -661,9 +638,20 @@ MetisMesh* MetisMesh::Partition(int nPart)
             for (int j = 0; j < elementNbrNodesPerBlock[blockI][i]; j++)
             {
                 int elementIblockI = elementsPerBlock[blockI][i];
+                int vector_size = NumberOfNodes(elementType_[elementIblockI]);
+                newConnectivity[blockI][i][j].resize(vector_size);
+            }
+        }
+
+        for (int i = 0; i < newNelements[blockI]; i++)
+        {
+
+            for (int j = 0; j < elementNbrNodesPerBlock[blockI][i]; j++)
+            {
+                int elementIblockI = elementsPerBlock[blockI][i];
                 int n1 = connectivity_[0][elementIblockI][j];
                 int newN1 = findNodeIndex(addedNode[blockI], n1);
-                newConnectivity[blockI][i].push_back(newN1);
+                newConnectivity[blockI][i][j] = newN1;
 
             }
         }
