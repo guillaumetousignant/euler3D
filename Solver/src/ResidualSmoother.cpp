@@ -17,7 +17,7 @@ void ResidualSmoother::smoothResidual(Block* block)
 
 ResidualSmoother::ResidualSmoother()
 {
-	
+
 }
 
 ResidualSmoother::~ResidualSmoother()

@@ -8,6 +8,7 @@
 #include "Solver.h"
 #include "PostProcessing.h"
 
+//#include <chrono> // for high resolution clock
 #include <string>
 #include <iostream>
 using namespace std;
@@ -60,13 +61,17 @@ void Solver::solve(Block* block, CompleteMesh* complete_mesh)
 		timestep_->computeTimestep(block);
 		runge_kutta_->computeRungeKutta(block);
 		post_processing_->computeFlowData(block);
+			        //record end time
+        //auto finish = std::chrono::high_resolution_clock::now();
+        //std::chrono::duration<double> elapsed = finish - start;
+        //std::cout << "Elapsed time:" << elapsed.count() << " seconde\n";
 		post_processing_->process(block, complete_mesh);
 		//cout<<"Iter: "<<i<<endl;
 	}
-	
 
 
-	
+
+	/*
 	// TEST GRADIENT
 	// initialize field of pp
 	int n_all_cells_in_block= block -> n_all_cells_in_block_;
@@ -92,7 +97,7 @@ void Solver::solve(Block* block, CompleteMesh* complete_mesh)
 	Gradient* gradient=new LeastSquares();
 	gradient->computeGradients(block);
 
-	
+
 	for (int all_cell_idx = 0; all_cell_idx < n_all_cells_in_block; all_cell_idx++)
 	{
 		cout<<"cell idx: "<<all_cell_idx<<endl;
@@ -117,8 +122,8 @@ void Solver::solve(Block* block, CompleteMesh* complete_mesh)
 		cout<<"grad z pp: "<<block->block_interpolation_variables_->grad_pp_[all_cell_idx][2]<<endl<<endl;
 
 	}
-	
-   
+
+   */
 
 	/*
 
@@ -165,7 +170,7 @@ void Solver::saveW0(Block* block)
 {
 	//cout<<"\tExécution w0: "<<endl;
 
-	
+
 	int nb_real_cells=block->n_real_cells_in_block_;
 	int cell_idx;
 	double ro, uu, vv, ww, pp;
@@ -192,7 +197,7 @@ void Solver::saveW0(Block* block)
 		block->block_primitive_variables_->rw_0_[cell_idx]=rw_0;
 		block->block_primitive_variables_->re_0_[cell_idx]=re_0;
 
-		
+
 	}
 
 	/* Vérification
@@ -205,7 +210,7 @@ void Solver::saveW0(Block* block)
 	}
 	*/
 
-	
+
 }
 
 
