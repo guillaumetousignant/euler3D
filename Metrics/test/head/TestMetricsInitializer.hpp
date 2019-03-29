@@ -4,9 +4,9 @@
 
 //Project files
 #include "Block.h"
-#include "Metrics/src/MetricsInitializer.h"
+#include "MetricsInitializer.h"
 
-using namespace std;
+//using namespace std;
 
 
 void buildConnectivity(Block *iBlock)

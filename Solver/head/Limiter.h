@@ -10,7 +10,7 @@ class Limiter
 	public:
 		
 		Limiter();
-		~Limiter();
+		virtual ~Limiter();
 
 		virtual void computeLimiters(Block* block)=0;
 
