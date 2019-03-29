@@ -89,7 +89,7 @@ void FluxScheme::computeFluxConv(Block* block)
 		my_conv_res_pp[cell_idx] =0.0;
 
 	}
-	
+
 	int n_dim=3;
 
 	int nface, left_cell, right_cell;
@@ -132,9 +132,9 @@ void FluxScheme::computeFluxConv(Block* block)
 			w_L+=my_ww_limiters[left_cell]*my_grad_ww_array[left_cell][dim_idx]*left_cell_r_vector[dim_idx];
 			p_L+=my_pp_limiters[left_cell]*my_grad_pp_array[left_cell][dim_idx]*left_cell_r_vector[dim_idx];
 		}
-		
-		
-		
+
+
+
 
 		qq_L = u_L*u_L+v_L*v_L+w_L*w_L;
 		H_L = (0.5*qq_L+gamma_/(gamma_-1.0)*p_L/rho_L);
@@ -157,7 +157,7 @@ void FluxScheme::computeFluxConv(Block* block)
 			w_R+=my_ww_limiters[right_cell]*my_grad_ww_array[right_cell][dim_idx]*right_cell_r_vector[dim_idx];
 			p_R+=my_pp_limiters[right_cell]*my_grad_pp_array[right_cell][dim_idx]*right_cell_r_vector[dim_idx];
 		}
-		
+
 
 		qq_R = u_R*u_R+v_R*v_R+w_R*w_R;
 		H_R = (0.5*qq_R+gamma_/(gamma_-1.0)*p_R/rho_R);
@@ -189,7 +189,7 @@ void FluxScheme::computeFluxConv(Block* block)
 		// cout << "conv_res_vv= " << my_conv_res_vv[left_cell] << endl;
 		// cout << "conv_res_ww= " << my_conv_res_ww[left_cell] << endl;
 		// cout << "conv_res_pp= " << my_conv_res_pp[left_cell] << endl;
-		
+
 
 		my_conv_res_ro[left_cell] += flux_1_convective;
 		my_conv_res_uu[left_cell] += flux_2_convective;
