@@ -86,7 +86,7 @@ int main(int argc, char* argv[])
 	}
 
 	Solver *solver=initializer->initializeSolver(interface);
-	solver->solve(complete_mesh);
+	solver->solve(complete_mesh, communicator);
 
 	#ifdef HAVE_MPI
 	MPI_Finalize();

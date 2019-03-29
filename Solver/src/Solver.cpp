@@ -33,7 +33,7 @@ Solver::Solver()
 	runge_kutta_=NULL;
 }
 
-void Solver::solve(CompleteMesh* complete_mesh)
+void Solver::solve(CompleteMesh* complete_mesh, BlockCommunicator* communicator)
 {
 	int i;
 	int n_blocks_in_process;

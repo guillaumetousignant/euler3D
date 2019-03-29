@@ -237,6 +237,16 @@ void PostProcessing::process(Block* block, CompleteMesh* complete_mesh)
   if (current_iter_%iteration_interval_==0||current_iter_+1==max_iter_)
   {
 
+    int i;
+    int n_blocks_in_process;
+    int* my_blocks;
+    Block** all_blocks;
+    Block* current_block;
+
+    n_blocks_in_process=complete_mesh->n_blocks_in_process_;
+    my_blocks=complete_mesh->my_blocks_;
+    all_blocks=complete_mesh->all_blocks_;
+
     // Sum aerodynamic parameters and convergence for each block
     coefficientsSum(complete_mesh);
     // Sum convergence for each block
@@ -272,9 +282,15 @@ void PostProcessing::process(Block* block, CompleteMesh* complete_mesh)
     {
       cout << "Writing Solution......................................................" << endl;
       // Pour chaque block
-      output_tecplot_->printFlowData(block);
-      output_tecplot_->printSurfaceFlowData(block);
-      output_tecplot_->printRestartFile(block);
+      for (i=0;i<n_blocks_in_process;i++)
+      {
+        /// ATTENTION NE GÈRE PAS LES NOMS DES BLOCKS DIFFÉRENTS PRESENTEMENT
+        current_block=all_blocks[my_blocks[i]];
+        printFlowData(current_block);
+        printSurfaceFlowData(current_block);
+        printRestartFile(current_block);//PARTIE QUI FAIT JUSTE CALCULER LES CL ET CONVERGENCE PARTIELLE
+      }
+      
       // Pour le complete mesh seulement
       output_tecplot_->printAerodynamicCoefficients(cl_geometry_mesh_, cd_geometry_mesh_, cmx_geometry_mesh_, cmy_geometry_mesh_, cmz_geometry_mesh_);
       cout << "========================END OF PROGRAM========================" << endl;
