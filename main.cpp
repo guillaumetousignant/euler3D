@@ -82,9 +82,11 @@ int main(int argc, char* argv[])
 		new_block->block_primitive_variables_->initializeFlowField(new_block->n_all_cells_in_block_);
 
 		cout << "In Solver........." << endl;
-		Solver *solver=initializer->initializeSolver(interface);
-		solver->solve(new_block, complete_mesh);
+		
 	}
+
+	Solver *solver=initializer->initializeSolver(interface);
+	solver->solve(complete_mesh);
 
 	#ifdef HAVE_MPI
 	MPI_Finalize();

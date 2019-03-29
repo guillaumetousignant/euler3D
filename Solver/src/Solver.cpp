@@ -33,42 +33,42 @@ Solver::Solver()
 	runge_kutta_=NULL;
 }
 
-void Solver::solve(Block* block, CompleteMesh* complete_mesh)
+void Solver::solve(CompleteMesh* complete_mesh)
 {
-	/*
-	while (true)
-	{
-	cout<<"Exécution solve: "<<endl;
-	this->saveW0(block);
-	cout<<endl<<"\tDans Timestep"<<endl;
-	timestep_->computeSpectralRadius(block);
-	timestep_->computeTimestep(block);
-	cout<<"\tFin Timestep"<<endl;
-	cout<<endl<<"\tDans RungeKutta"<<endl;
-	runge_kutta_->computeRungeKutta(block);
-	cout<<"\tFin RungeKutta"<<endl;
-	post_processing_->process(block, complete_mesh);
-	cout<<"Fin de l'Exécution solve"<<endl;
-	}
-	*/
+	int i;
+	int n_blocks_in_process;
+	int* my_blocks;
+	Block** all_blocks;
+	Block* current_block;
+
+	n_blocks_in_process=complete_mesh->n_blocks_in_process_;
+	my_blocks=complete_mesh->my_blocks_;
+	all_blocks=complete_mesh->all_blocks_;
 
 
-	// PROVISOIRE!!!!
 	while(!post_processing_->stop_solver_)
 	{
-		this->saveW0(block);
-		timestep_->computeSpectralRadius(block);
-		timestep_->computeTimestep(block);
-		runge_kutta_->computeRungeKutta(block);
-		post_processing_->computeFlowData(block);
-			        //record end time
-        //auto finish = std::chrono::high_resolution_clock::now();
-        //std::chrono::duration<double> elapsed = finish - start;
-        //std::cout << "Elapsed time:" << elapsed.count() << " seconde\n";
-		post_processing_->process(block, complete_mesh);
-		//cout<<"Iter: "<<i<<endl;
-	}
+		
+		//post_processing_->process(block, complete_mesh); //PARTIE QUI CALCULE LES SOMMES, PRENDS LES DÉCISIONS ET PUBLISH
+		/// FIN DES TRUCS MPI
 
+		for	(i=0;i<n_blocks_in_process;i++)
+		{
+			current_block=all_blocks[my_blocks[i]];
+			this->saveW0(current_block);
+			timestep_->computeSpectralRadius(current_block);
+			timestep_->computeTimestep(current_block);
+			runge_kutta_->computeRungeKutta(current_block);
+			post_processing_->computeFlowData(current_block); //PARTIE QUI FAIT JUSTE CALCULER LES CL ET CONVERGENCE PARTIELLE
+		}
+
+		///INSÉRER LES TRUCS DE MPI ICI JE CROIS
+		//updater_->synchroniseUpdate(complete_mesh??); // SYNCHRONISE LES VARIABLES PRIMITIVES DES CELLULES PHANTOMES
+		//timestep_->synchroniseGradient(complete_mesh??); //SYNCHRONISE LES GRADIENTS DES CELLULES PHANTOMES (peut-être déplacer la fonction autre que dans timestep_??)
+		//timestep_->synchroniseLimiter(complete_mesh??); //SYNCHRONISE LES LIMITERS DES CELLULES PHANTOMES (peut-être déplacer la fonction autre que dans timestep_??)
+		post_processing_->process(current_block, complete_mesh);
+
+	}
 
 
 	/*
@@ -125,45 +125,7 @@ void Solver::solve(Block* block, CompleteMesh* complete_mesh)
 
    */
 
-	/*
 
-	int i;
-	int n_blocks_in_process;
-	int* my_blocks;
-	Block* all_blocks;
-	Block* current_block;
-
-	n_blocks_in_process=complete_mesh->n_blocks_in_process_;
-	my_blocks=complete_mesh->my_blocks_;
-	all_blocks=complete_mesh->all_blocks_;
-
-	// AJOUTER INITIALISATION
-
-	while (true)
-	{
-		///INSÉRER LES TRUCS DE MPI ICI JE CROIS
-		//updater_->synchroniseUpdate(complete_mesh??); // SYNCHRONISE LES VARIABLES PRIMITIVES DES CELLULES PHANTOMES
-		//timestep_->synchroniseGradient(complete_mesh??); //SYNCHRONISE LES GRADIENTS DES CELLULES PHANTOMES (peut-être déplacer la fonction autre que dans timestep_??)
-		//timestep_->synchroniseLimiter(complete_mesh??); //SYNCHRONISE LES LIMITERS DES CELLULES PHANTOMES (peut-être déplacer la fonction autre que dans timestep_??)
-		//post_processing_->process(block, complete_mesh); //PARTIE QUI CALCULE LES SOMMES, PRENDS LES DÉCISIONS ET PUBLISH
-		/// FIN DES TRUCS MPI
-
-		for	(i=0;i<n_blocks_in_process;i++)
-		{
-			current_block=all_blocks[my_blocks[i]];
-			timestep_->computeSpectralRadius(current_block);
-			timestep_->computeTimestep(current_block);
-			this->saveW0(current_block);
-			runge_kutta_->computeRungeKutta(current_block);
-			post_processing_->computeFlowData(current_block); //PARTIE QUI FAIT JUSTE CALCULER LES CL ET CONVERGENCE PARTIELLE
-		}
-
-	}
-
-	// REMPLACER EXIT
-
-
-	*/
 }
 
 void Solver::saveW0(Block* block)

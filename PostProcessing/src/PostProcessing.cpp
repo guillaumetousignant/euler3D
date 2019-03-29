@@ -231,6 +231,8 @@ void PostProcessing::computeFlowData(Block* block)
 
 void PostProcessing::process(Block* block, CompleteMesh* complete_mesh)
 {
+
+  // CHANGER LE PROTOTYPE POUR AVOIR SEULEMENT COMPLETE MESH ET BOUCLER SUR COMPLETE MESH
   //cout << "Starting process....................................................." << endl;
   if (current_iter_%iteration_interval_==0||current_iter_+1==max_iter_)
   {
@@ -262,15 +264,19 @@ void PostProcessing::process(Block* block, CompleteMesh* complete_mesh)
     cout<<"Iter: "<<current_iter_<<" Convergence Ro: "<<ro_convergence_<<" cl: "<<cl_geometry_mesh_<<" cd: "<<cd_geometry_mesh_<<endl;
 
     // Save and print flow data into binary files
+
+    // Pour le complete mesh seulement
     output_tecplot_->printConvergence(current_iter_, cl_geometry_mesh_, cd_geometry_mesh_, cmx_geometry_mesh_, cmy_geometry_mesh_, cmz_geometry_mesh_, ro_convergence_, uu_convergence_, vv_convergence_, ww_convergence_, pp_convergence_);
 
     if (stop_solver_==true)
     {
       cout << "Writing Solution......................................................" << endl;
+      // Pour chaque block
       output_tecplot_->printFlowData(block);
       output_tecplot_->printSurfaceFlowData(block);
-      output_tecplot_->printAerodynamicCoefficients(cl_geometry_mesh_, cd_geometry_mesh_, cmx_geometry_mesh_, cmy_geometry_mesh_, cmz_geometry_mesh_);
       output_tecplot_->printRestartFile(block);
+      // Pour le complete mesh seulement
+      output_tecplot_->printAerodynamicCoefficients(cl_geometry_mesh_, cd_geometry_mesh_, cmx_geometry_mesh_, cmy_geometry_mesh_, cmz_geometry_mesh_);
       cout << "========================END OF PROGRAM========================" << endl;
 
       //exit(0);

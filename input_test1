@@ -15,7 +15,7 @@ roe 1
 gradient limiter
 leastsquares barthjespersen
 omega k
-1.0e6 5.00
+2.16-16 5.00
 EXECUTABLE (0-no 1-yes)
 build execute
 1 1
