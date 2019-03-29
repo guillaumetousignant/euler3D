@@ -48,7 +48,7 @@ int main(int argc, char* argv[])
 		#ifdef HAVE_MPI
 		MPI_Finalize();
 		#endif
-		exit(0);
+		exit(-1);
 	}
 
 	Interface* interface= new Interface(argv[1]);
