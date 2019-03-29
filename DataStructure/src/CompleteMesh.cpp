@@ -56,7 +56,13 @@ void CompleteMesh::InitializeMyBlocks(Interface* interface)
 
 		block_id_string = std::to_string(block_id);
 		// block_file = "../naca0012_coarse_nosidewall.su2";
-		block_file = topology_file_name_;
+		std::size_t found = topology_file_name_.find_last_of(".");
+  		if (found!=std::string::npos){
+			block_file = topology_file_name_.substr(0, found) + block_id_string + topology_file_name_.substr(found);
+		}
+		else{
+			block_file = topology_file_name_ + block_id_string;
+		}
 		ConcreteBlockBuilder block_builder=ConcreteBlockBuilder(block_file);
 		new_block = all_blocks_[i];
 
