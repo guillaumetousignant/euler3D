@@ -216,7 +216,7 @@ void BlockCommunicator::getGlobal(CompleteMesh* mesh, PostProcessing* postproces
     double cmz_geometry_process=0.0;
     int blockid;
 
-    for(unsigned int i = 0; i < mesh->n_blocks_in_process_ ; i++) // For each block
+    for(int i = 0; i < mesh->n_blocks_in_process_ ; i++) // For each block
     {
         blockid = mesh->my_blocks_[i];
         // Convergence data
