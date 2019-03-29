@@ -55,7 +55,7 @@ void Solver::solve(Block* block, CompleteMesh* complete_mesh)
 
 	// PROVISOIRE!!!!
 	//auto start = std::chrono::high_resolution_clock::now();
-	/*
+	
 	while(true)
 	{
 		this->saveW0(block);
@@ -70,6 +70,7 @@ void Solver::solve(Block* block, CompleteMesh* complete_mesh)
 		post_processing_->process(block, complete_mesh);
 		//cout<<"Iter: "<<i<<endl;
 	}
+	
 	
 
 
