@@ -49,7 +49,7 @@ int main(int argc, char* argv[])
 
 	MPI_Init(NULL, NULL);
 
-	MPI_Finalize();
+
 
 	Interface* interface= new Interface(argv[1]);
 	Initializer* initializer= new Initializer();
@@ -75,6 +75,7 @@ int main(int argc, char* argv[])
 	cout << "In Solver........." << endl;
 	Solver *solver=initializer->initializeSolver(interface);
 	solver->solve(new_block, complete_mesh);
+	MPI_Finalize();
 
 }
 

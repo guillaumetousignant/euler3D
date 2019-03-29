@@ -5,15 +5,15 @@ INPUT
 cfl gamma angleattackdeg
 0.5 1.4 3.00
 rkstage mach cmac
-5 0.50 1.00
+5 0.60 1.00
 nbitermax convcriterion
-1000 1e-15
+1000 -15
 residual smoothing (0-no 1-yes)
 0
 fluxscheme schemeorder
 roe 1
 gradient limiter
-greengauss barthjespersen
+leastsquares barthjespersen
 omega k
 1.0e6 5.00
 EXECUTABLE (0-no 1-yes)

@@ -170,7 +170,7 @@ void GreenGauss::computeGradients(Block* block)
 	// Reflection formlua is r=d-2(d\dot n)*n, where r is reflected vector, d is incident vector and n is normalized face vector
 
 
-////////////////////////////////////////method with boundary objects
+//////////////////////////////////////method with boundary objects
 
 int n_boundaries_real=block->n_real_boundaries_in_block_;
 for (int j=0;j<n_boundaries_real;j++)
@@ -235,174 +235,174 @@ for (int j=0;j<n_boundaries_real;j++)
 
 
 
-////////////////////////////////////////method without boundary objects
-	// // Set gradients in wall cells
-	// int n_wall_faces=block->n_wall_faces_;
-	// int wall_face_idx;
+// //////////////////////////////////////method without boundary objects
+// 	// Set gradients in wall cells
+// 	int n_wall_faces=block->n_wall_faces_;
+// 	int wall_face_idx;
 
-	// int int_cell_idx;
-	// int ext_cell_idx;
+// 	int int_cell_idx;
+// 	int ext_cell_idx;
 
-	// double wall_face_normals_normalized[n_dim];
-	// double face_area;
+// 	double wall_face_normals_normalized[n_dim];
+// 	double face_area;
 
-	// double ro_dot_product, uu_dot_product, vv_dot_product, ww_dot_product, pp_dot_product;
+// 	double ro_dot_product, uu_dot_product, vv_dot_product, ww_dot_product, pp_dot_product;
 
-	// for (int i = 0; i < n_wall_faces; i++)
-	// {
-	// 	wall_face_idx=block -> block_wall_face_ids_[i];
+// 	for (int i = 0; i < n_wall_faces; i++)
+// 	{
+// 		wall_face_idx=block -> block_wall_face_ids_[i];
 
-	// 	int_cell_idx=block->block_faces_[wall_face_idx]->face_2_cells_connectivity_[0];
-	// 	ext_cell_idx=block->block_faces_[wall_face_idx]->face_2_cells_connectivity_[1];
+// 		int_cell_idx=block->block_faces_[wall_face_idx]->face_2_cells_connectivity_[0];
+// 		ext_cell_idx=block->block_faces_[wall_face_idx]->face_2_cells_connectivity_[1];
 
-	// 	face_area=block->block_faces_[wall_face_idx]->face_area_;
+// 		face_area=block->block_faces_[wall_face_idx]->face_area_;
 
-	// 	// Normalized normals
-	// 	for (int dim_idx=0; dim_idx<n_dim; dim_idx++)
-	// 	{
-	// 		wall_face_normals_normalized[dim_idx]=block->block_faces_[wall_face_idx]->face_normals_[dim_idx];		
-	// 		wall_face_normals_normalized[dim_idx]/=face_area;
-	// 	}
+// 		// Normalized normals
+// 		for (int dim_idx=0; dim_idx<n_dim; dim_idx++)
+// 		{
+// 			wall_face_normals_normalized[dim_idx]=block->block_faces_[wall_face_idx]->face_normals_[dim_idx];		
+// 			wall_face_normals_normalized[dim_idx]/=face_area;
+// 		}
 
-	// 	// Compute dot product
-	// 	ro_dot_product=0.0;
-	// 	uu_dot_product=0.0;
-	// 	vv_dot_product=0.0;
-	// 	ww_dot_product=0.0;
-	// 	pp_dot_product=0.0;
+// 		// Compute dot product
+// 		ro_dot_product=0.0;
+// 		uu_dot_product=0.0;
+// 		vv_dot_product=0.0;
+// 		ww_dot_product=0.0;
+// 		pp_dot_product=0.0;
 
-	// 	for (int dim_idx=0; dim_idx<n_dim; dim_idx++)
-	// 	{
-	// 		ro_dot_product+=my_grad_ro_array[int_cell_idx][dim_idx]*wall_face_normals_normalized[dim_idx];
-	// 		uu_dot_product+=my_grad_uu_array[int_cell_idx][dim_idx]*wall_face_normals_normalized[dim_idx];
-	// 		vv_dot_product+=my_grad_vv_array[int_cell_idx][dim_idx]*wall_face_normals_normalized[dim_idx];
-	// 		ww_dot_product+=my_grad_ww_array[int_cell_idx][dim_idx]*wall_face_normals_normalized[dim_idx];
-	// 		pp_dot_product+=my_grad_pp_array[int_cell_idx][dim_idx]*wall_face_normals_normalized[dim_idx];
-	// 	}
+// 		for (int dim_idx=0; dim_idx<n_dim; dim_idx++)
+// 		{
+// 			ro_dot_product+=my_grad_ro_array[int_cell_idx][dim_idx]*wall_face_normals_normalized[dim_idx];
+// 			uu_dot_product+=my_grad_uu_array[int_cell_idx][dim_idx]*wall_face_normals_normalized[dim_idx];
+// 			vv_dot_product+=my_grad_vv_array[int_cell_idx][dim_idx]*wall_face_normals_normalized[dim_idx];
+// 			ww_dot_product+=my_grad_ww_array[int_cell_idx][dim_idx]*wall_face_normals_normalized[dim_idx];
+// 			pp_dot_product+=my_grad_pp_array[int_cell_idx][dim_idx]*wall_face_normals_normalized[dim_idx];
+// 		}
 
-	// 	// Compute reflected gradients
+// 		// Compute reflected gradients
 
-	// 	for (int dim_idx=0; dim_idx<n_dim; dim_idx++)
-	// 	{
-	// 		my_grad_ro_array[ext_cell_idx][dim_idx]=my_grad_ro_array[int_cell_idx][dim_idx]-2.0*ro_dot_product*wall_face_normals_normalized[dim_idx];
-	// 		my_grad_uu_array[ext_cell_idx][dim_idx]=my_grad_uu_array[int_cell_idx][dim_idx]-2.0*uu_dot_product*wall_face_normals_normalized[dim_idx];
-	// 		my_grad_vv_array[ext_cell_idx][dim_idx]=my_grad_vv_array[int_cell_idx][dim_idx]-2.0*vv_dot_product*wall_face_normals_normalized[dim_idx];
-	// 		my_grad_ww_array[ext_cell_idx][dim_idx]=my_grad_ww_array[int_cell_idx][dim_idx]-2.0*ww_dot_product*wall_face_normals_normalized[dim_idx];
-	// 		my_grad_pp_array[ext_cell_idx][dim_idx]=my_grad_pp_array[int_cell_idx][dim_idx]-2.0*pp_dot_product*wall_face_normals_normalized[dim_idx];
-	// 	}
-
-
-
-	// }
-
-	// // Set gradients in symmetry cells
-	// int n_symmetry_faces=block->n_symmetry_faces_;
-	// int symmetry_face_idx;
-
-	// double symmetry_face_normals_normalized[n_dim];
-
-	// for (int i = 0; i < n_symmetry_faces; i++)
-	// {
-	// 	symmetry_face_idx=block -> block_symmetry_face_ids_[i];
-
-	// 	int_cell_idx=block->block_faces_[symmetry_face_idx]->face_2_cells_connectivity_[0];
-	// 	ext_cell_idx=block->block_faces_[symmetry_face_idx]->face_2_cells_connectivity_[1];
-
-	// 	face_area=block->block_faces_[symmetry_face_idx]->face_area_;
-
-	// 	// Normalized normals
-	// 	for (int dim_idx=0; dim_idx<n_dim; dim_idx++)
-	// 	{
-	// 		symmetry_face_normals_normalized[dim_idx]=block->block_faces_[symmetry_face_idx]->face_normals_[dim_idx];		
-	// 		symmetry_face_normals_normalized[dim_idx]/=face_area;
-	// 	}
-
-	// 	// Compute dot product
-	// 	ro_dot_product=0.0;
-	// 	uu_dot_product=0.0;
-	// 	vv_dot_product=0.0;
-	// 	ww_dot_product=0.0;
-	// 	pp_dot_product=0.0;
-
-	// 	for (int dim_idx=0; dim_idx<n_dim; dim_idx++)
-	// 	{
-	// 		ro_dot_product+=my_grad_ro_array[int_cell_idx][dim_idx]*symmetry_face_normals_normalized[dim_idx];
-	// 		uu_dot_product+=my_grad_uu_array[int_cell_idx][dim_idx]*symmetry_face_normals_normalized[dim_idx];
-	// 		vv_dot_product+=my_grad_vv_array[int_cell_idx][dim_idx]*symmetry_face_normals_normalized[dim_idx];
-	// 		ww_dot_product+=my_grad_ww_array[int_cell_idx][dim_idx]*symmetry_face_normals_normalized[dim_idx];
-	// 		pp_dot_product+=my_grad_pp_array[int_cell_idx][dim_idx]*symmetry_face_normals_normalized[dim_idx];
-	// 	}
-
-	// 	// Compute reflected gradients
-
-	// 	for (int dim_idx=0; dim_idx<n_dim; dim_idx++)
-	// 	{
-	// 		my_grad_ro_array[ext_cell_idx][dim_idx]=my_grad_ro_array[int_cell_idx][dim_idx]-2.0*ro_dot_product*symmetry_face_normals_normalized[dim_idx];
-	// 		my_grad_uu_array[ext_cell_idx][dim_idx]=my_grad_uu_array[int_cell_idx][dim_idx]-2.0*uu_dot_product*symmetry_face_normals_normalized[dim_idx];
-	// 		my_grad_vv_array[ext_cell_idx][dim_idx]=my_grad_vv_array[int_cell_idx][dim_idx]-2.0*vv_dot_product*symmetry_face_normals_normalized[dim_idx];
-	// 		my_grad_ww_array[ext_cell_idx][dim_idx]=my_grad_ww_array[int_cell_idx][dim_idx]-2.0*ww_dot_product*symmetry_face_normals_normalized[dim_idx];
-	// 		my_grad_pp_array[ext_cell_idx][dim_idx]=my_grad_pp_array[int_cell_idx][dim_idx]-2.0*pp_dot_product*symmetry_face_normals_normalized[dim_idx];
-	// 	}
+// 		for (int dim_idx=0; dim_idx<n_dim; dim_idx++)
+// 		{
+// 			my_grad_ro_array[ext_cell_idx][dim_idx]=my_grad_ro_array[int_cell_idx][dim_idx]-2.0*ro_dot_product*wall_face_normals_normalized[dim_idx];
+// 			my_grad_uu_array[ext_cell_idx][dim_idx]=my_grad_uu_array[int_cell_idx][dim_idx]-2.0*uu_dot_product*wall_face_normals_normalized[dim_idx];
+// 			my_grad_vv_array[ext_cell_idx][dim_idx]=my_grad_vv_array[int_cell_idx][dim_idx]-2.0*vv_dot_product*wall_face_normals_normalized[dim_idx];
+// 			my_grad_ww_array[ext_cell_idx][dim_idx]=my_grad_ww_array[int_cell_idx][dim_idx]-2.0*ww_dot_product*wall_face_normals_normalized[dim_idx];
+// 			my_grad_pp_array[ext_cell_idx][dim_idx]=my_grad_pp_array[int_cell_idx][dim_idx]-2.0*pp_dot_product*wall_face_normals_normalized[dim_idx];
+// 		}
 
 
 
-	// }
+// 	}
 
-	// // Set gradients in farfield cells
-	// int n_farfield_faces=block->n_farfield_faces_;
-	// int farfield_face_idx;
+// 	// Set gradients in symmetry cells
+// 	int n_symmetry_faces=block->n_symmetry_faces_;
+// 	int symmetry_face_idx;
 
-	// double farfield_face_normals_normalized[n_dim];
+// 	double symmetry_face_normals_normalized[n_dim];
 
-	// for (int i = 0; i < n_farfield_faces; i++)
-	// {
-	// 	farfield_face_idx=block -> block_farfield_face_ids_[i];
+// 	for (int i = 0; i < n_symmetry_faces; i++)
+// 	{
+// 		symmetry_face_idx=block -> block_symmetry_face_ids_[i];
 
-	// 	int_cell_idx=block->block_faces_[farfield_face_idx]->face_2_cells_connectivity_[0];
-	// 	ext_cell_idx=block->block_faces_[farfield_face_idx]->face_2_cells_connectivity_[1];
+// 		int_cell_idx=block->block_faces_[symmetry_face_idx]->face_2_cells_connectivity_[0];
+// 		ext_cell_idx=block->block_faces_[symmetry_face_idx]->face_2_cells_connectivity_[1];
 
-	// 	face_area=block->block_faces_[farfield_face_idx]->face_area_;
+// 		face_area=block->block_faces_[symmetry_face_idx]->face_area_;
 
-	// 	// Normalized normals
-	// 	for (int dim_idx=0; dim_idx<n_dim; dim_idx++)
-	// 	{
-	// 		farfield_face_normals_normalized[dim_idx]=block->block_faces_[farfield_face_idx]->face_normals_[dim_idx];		
-	// 		farfield_face_normals_normalized[dim_idx]/=face_area;
-	// 	}
+// 		// Normalized normals
+// 		for (int dim_idx=0; dim_idx<n_dim; dim_idx++)
+// 		{
+// 			symmetry_face_normals_normalized[dim_idx]=block->block_faces_[symmetry_face_idx]->face_normals_[dim_idx];		
+// 			symmetry_face_normals_normalized[dim_idx]/=face_area;
+// 		}
 
-	// 	// Compute dot product
-	// 	ro_dot_product=0.0;
-	// 	uu_dot_product=0.0;
-	// 	vv_dot_product=0.0;
-	// 	ww_dot_product=0.0;
-	// 	pp_dot_product=0.0;
+// 		// Compute dot product
+// 		ro_dot_product=0.0;
+// 		uu_dot_product=0.0;
+// 		vv_dot_product=0.0;
+// 		ww_dot_product=0.0;
+// 		pp_dot_product=0.0;
 
-	// 	for (int dim_idx=0; dim_idx<n_dim; dim_idx++)
-	// 	{
-	// 		ro_dot_product+=my_grad_ro_array[int_cell_idx][dim_idx]*farfield_face_normals_normalized[dim_idx];
-	// 		uu_dot_product+=my_grad_uu_array[int_cell_idx][dim_idx]*farfield_face_normals_normalized[dim_idx];
-	// 		vv_dot_product+=my_grad_vv_array[int_cell_idx][dim_idx]*farfield_face_normals_normalized[dim_idx];
-	// 		ww_dot_product+=my_grad_ww_array[int_cell_idx][dim_idx]*farfield_face_normals_normalized[dim_idx];
-	// 		pp_dot_product+=my_grad_pp_array[int_cell_idx][dim_idx]*farfield_face_normals_normalized[dim_idx];
-	// 	}
+// 		for (int dim_idx=0; dim_idx<n_dim; dim_idx++)
+// 		{
+// 			ro_dot_product+=my_grad_ro_array[int_cell_idx][dim_idx]*symmetry_face_normals_normalized[dim_idx];
+// 			uu_dot_product+=my_grad_uu_array[int_cell_idx][dim_idx]*symmetry_face_normals_normalized[dim_idx];
+// 			vv_dot_product+=my_grad_vv_array[int_cell_idx][dim_idx]*symmetry_face_normals_normalized[dim_idx];
+// 			ww_dot_product+=my_grad_ww_array[int_cell_idx][dim_idx]*symmetry_face_normals_normalized[dim_idx];
+// 			pp_dot_product+=my_grad_pp_array[int_cell_idx][dim_idx]*symmetry_face_normals_normalized[dim_idx];
+// 		}
 
-	// 	// Compute reflected gradients
+// 		// Compute reflected gradients
 
-	// 	for (int dim_idx=0; dim_idx<n_dim; dim_idx++)
-	// 	{
-	// 		my_grad_ro_array[ext_cell_idx][dim_idx]=my_grad_ro_array[int_cell_idx][dim_idx]-2.0*ro_dot_product*farfield_face_normals_normalized[dim_idx];
-	// 		my_grad_uu_array[ext_cell_idx][dim_idx]=my_grad_uu_array[int_cell_idx][dim_idx]-2.0*uu_dot_product*farfield_face_normals_normalized[dim_idx];
-	// 		my_grad_vv_array[ext_cell_idx][dim_idx]=my_grad_vv_array[int_cell_idx][dim_idx]-2.0*vv_dot_product*farfield_face_normals_normalized[dim_idx];
-	// 		my_grad_ww_array[ext_cell_idx][dim_idx]=my_grad_ww_array[int_cell_idx][dim_idx]-2.0*ww_dot_product*farfield_face_normals_normalized[dim_idx];
-	// 		my_grad_pp_array[ext_cell_idx][dim_idx]=my_grad_pp_array[int_cell_idx][dim_idx]-2.0*pp_dot_product*farfield_face_normals_normalized[dim_idx];
-	// 	}
+// 		for (int dim_idx=0; dim_idx<n_dim; dim_idx++)
+// 		{
+// 			my_grad_ro_array[ext_cell_idx][dim_idx]=my_grad_ro_array[int_cell_idx][dim_idx]-2.0*ro_dot_product*symmetry_face_normals_normalized[dim_idx];
+// 			my_grad_uu_array[ext_cell_idx][dim_idx]=my_grad_uu_array[int_cell_idx][dim_idx]-2.0*uu_dot_product*symmetry_face_normals_normalized[dim_idx];
+// 			my_grad_vv_array[ext_cell_idx][dim_idx]=my_grad_vv_array[int_cell_idx][dim_idx]-2.0*vv_dot_product*symmetry_face_normals_normalized[dim_idx];
+// 			my_grad_ww_array[ext_cell_idx][dim_idx]=my_grad_ww_array[int_cell_idx][dim_idx]-2.0*ww_dot_product*symmetry_face_normals_normalized[dim_idx];
+// 			my_grad_pp_array[ext_cell_idx][dim_idx]=my_grad_pp_array[int_cell_idx][dim_idx]-2.0*pp_dot_product*symmetry_face_normals_normalized[dim_idx];
+// 		}
 
 
 
-	// }
+// 	}
+
+// 	// Set gradients in farfield cells
+// 	int n_farfield_faces=block->n_farfield_faces_;
+// 	int farfield_face_idx;
+
+// 	double farfield_face_normals_normalized[n_dim];
+
+// 	for (int i = 0; i < n_farfield_faces; i++)
+// 	{
+// 		farfield_face_idx=block -> block_farfield_face_ids_[i];
+
+// 		int_cell_idx=block->block_faces_[farfield_face_idx]->face_2_cells_connectivity_[0];
+// 		ext_cell_idx=block->block_faces_[farfield_face_idx]->face_2_cells_connectivity_[1];
+
+// 		face_area=block->block_faces_[farfield_face_idx]->face_area_;
+
+// 		// Normalized normals
+// 		for (int dim_idx=0; dim_idx<n_dim; dim_idx++)
+// 		{
+// 			farfield_face_normals_normalized[dim_idx]=block->block_faces_[farfield_face_idx]->face_normals_[dim_idx];		
+// 			farfield_face_normals_normalized[dim_idx]/=face_area;
+// 		}
+
+// 		// Compute dot product
+// 		ro_dot_product=0.0;
+// 		uu_dot_product=0.0;
+// 		vv_dot_product=0.0;
+// 		ww_dot_product=0.0;
+// 		pp_dot_product=0.0;
+
+// 		for (int dim_idx=0; dim_idx<n_dim; dim_idx++)
+// 		{
+// 			ro_dot_product+=my_grad_ro_array[int_cell_idx][dim_idx]*farfield_face_normals_normalized[dim_idx];
+// 			uu_dot_product+=my_grad_uu_array[int_cell_idx][dim_idx]*farfield_face_normals_normalized[dim_idx];
+// 			vv_dot_product+=my_grad_vv_array[int_cell_idx][dim_idx]*farfield_face_normals_normalized[dim_idx];
+// 			ww_dot_product+=my_grad_ww_array[int_cell_idx][dim_idx]*farfield_face_normals_normalized[dim_idx];
+// 			pp_dot_product+=my_grad_pp_array[int_cell_idx][dim_idx]*farfield_face_normals_normalized[dim_idx];
+// 		}
+
+// 		// Compute reflected gradients
+
+// 		for (int dim_idx=0; dim_idx<n_dim; dim_idx++)
+// 		{
+// 			my_grad_ro_array[ext_cell_idx][dim_idx]=my_grad_ro_array[int_cell_idx][dim_idx]-2.0*ro_dot_product*farfield_face_normals_normalized[dim_idx];
+// 			my_grad_uu_array[ext_cell_idx][dim_idx]=my_grad_uu_array[int_cell_idx][dim_idx]-2.0*uu_dot_product*farfield_face_normals_normalized[dim_idx];
+// 			my_grad_vv_array[ext_cell_idx][dim_idx]=my_grad_vv_array[int_cell_idx][dim_idx]-2.0*vv_dot_product*farfield_face_normals_normalized[dim_idx];
+// 			my_grad_ww_array[ext_cell_idx][dim_idx]=my_grad_ww_array[int_cell_idx][dim_idx]-2.0*ww_dot_product*farfield_face_normals_normalized[dim_idx];
+// 			my_grad_pp_array[ext_cell_idx][dim_idx]=my_grad_pp_array[int_cell_idx][dim_idx]-2.0*pp_dot_product*farfield_face_normals_normalized[dim_idx];
+// 		}
+
+
+
+// 	}
 	
 
-}
+ }
 
 
 
