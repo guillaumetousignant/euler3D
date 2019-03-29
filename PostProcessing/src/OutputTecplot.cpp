@@ -32,12 +32,13 @@ void OutputTecplot::printFlowData(Block* block, int block_id)
   cout << "Starting printFlowData..............................................." << endl;
 
   //FlowData.open("FlowData.plt", ios::binary);
-  FlowData.open("FlowData.dat");
+  std::string filename = "FlowData" + std::to_string(block_id) + ".dat";
+  FlowData.open(filename);
 
     if (FlowData.fail())
     {
       // TODO throw exception
-      cerr << "Fail opening file FlowData.plt" << endl;
+      cerr << "Fail opening file " << filename << endl;
       //return;
     }
 
@@ -191,12 +192,13 @@ void OutputTecplot::printSurfaceFlowData(Block* block, int block_id)
   cout << "Starting printSurfaceFlowData........................................" << endl;
 
   //SurfaceFlowData.open("SurfaceFlowData.plt", ios::binary);
-  SurfaceFlowData.open("SurfaceFlowData.dat");
+  std::string filename = "SurfaceFlowData" + std::to_string(block_id) + ".dat";
+  SurfaceFlowData.open(filename);
 
     if (SurfaceFlowData.fail())
     {
       // TODO throw exception
-      cerr << "Fail opening file SurfaceFlowData.plt" << endl;
+      cerr << "Fail opening file " << filename << endl;
       //return;
     }
 
@@ -465,12 +467,13 @@ void OutputTecplot::printRestartFile(Block* block, int block_id)
 {
   cout << "Starting printRestartFile............................................" << endl;
 
-  RestartFile.open("RestartFile.dat");
+  std::string filename = "RestartFile" + std::to_string(block_id) + ".dat";
+  RestartFile.open(filename);
 
     if (RestartFile.fail())
     {
       // TODO throw exception
-      cerr << "Fail opening file RestartFile.dat" << endl;
+      cerr << "Fail opening file " << filename << endl;
       //return;
     }
 
