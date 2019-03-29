@@ -8,6 +8,7 @@
 #include "Solver.h"
 #include "PostProcessing.h"
 
+//#include <chrono> // for high resolution clock
 #include <string>
 #include <iostream>
 using namespace std;
@@ -60,6 +61,10 @@ void Solver::solve(Block* block, CompleteMesh* complete_mesh)
 		timestep_->computeTimestep(block);
 		runge_kutta_->computeRungeKutta(block);
 		post_processing_->computeFlowData(block);
+			        //record end time
+        //auto finish = std::chrono::high_resolution_clock::now();
+        //std::chrono::duration<double> elapsed = finish - start;
+        //std::cout << "Elapsed time:" << elapsed.count() << " seconde\n";
 		post_processing_->process(block, complete_mesh);
 		//cout<<"Iter: "<<i<<endl;
 	}
