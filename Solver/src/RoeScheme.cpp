@@ -68,6 +68,18 @@ void RoeScheme::computeFluxDiss(Block* block)
 	my_grad_ww_array=my_interpolation_variables->grad_ww_;
 	my_grad_pp_array=my_interpolation_variables->grad_pp_;
 
+	double* my_ro_limiters;
+	double* my_uu_limiters;
+	double* my_vv_limiters;
+	double* my_ww_limiters;
+	double* my_pp_limiters;
+
+	my_ro_limiters = my_interpolation_variables -> limiter_ro_;
+	my_uu_limiters = my_interpolation_variables -> limiter_uu_;
+	my_vv_limiters = my_interpolation_variables -> limiter_vv_;
+	my_ww_limiters = my_interpolation_variables -> limiter_ww_;
+	my_pp_limiters = my_interpolation_variables -> limiter_pp_;
+
 	// my_cells = block -> block_cells_;
 	int ncell; // my_cell;
 	ncell = block -> n_real_cells_in_block_;
@@ -121,17 +133,16 @@ void RoeScheme::computeFluxDiss(Block* block)
 		p_L = my_pp_array[left_cell];
 		left_cell_r_vector=block -> block_faces_[face_idx] -> left_cell_r_vector_;
 
-		// Add gradient effect
-		/*
+		// Add gradient effect and limiter
 		for (int dim_idx=0; dim_idx<n_dim; dim_idx++)
 		{
-			rho_L+=my_grad_ro_array[left_cell][dim_idx]*left_cell_r_vector[dim_idx];
-			u_L+=my_grad_uu_array[left_cell][dim_idx]*left_cell_r_vector[dim_idx];
-			v_L+=my_grad_vv_array[left_cell][dim_idx]*left_cell_r_vector[dim_idx];
-			w_L+=my_grad_ww_array[left_cell][dim_idx]*left_cell_r_vector[dim_idx];
-			p_L+=my_grad_pp_array[left_cell][dim_idx]*left_cell_r_vector[dim_idx];
+			rho_L+=my_ro_limiters[left_cell]*my_grad_ro_array[left_cell][dim_idx]*left_cell_r_vector[dim_idx];
+			u_L+=my_uu_limiters[left_cell]*my_grad_uu_array[left_cell][dim_idx]*left_cell_r_vector[dim_idx];
+			v_L+=my_vv_limiters[left_cell]*my_grad_vv_array[left_cell][dim_idx]*left_cell_r_vector[dim_idx];
+			w_L+=my_ww_limiters[left_cell]*my_grad_ww_array[left_cell][dim_idx]*left_cell_r_vector[dim_idx];
+			p_L+=my_pp_limiters[left_cell]*my_grad_pp_array[left_cell][dim_idx]*left_cell_r_vector[dim_idx];
 		}
-		*/
+		
 
 		qq_L = u_L*u_L+v_L*v_L+w_L*w_L;
 		H_L = (0.5*qq_L+gamma_/(gamma_-1.0)*p_L/rho_L);
@@ -145,17 +156,16 @@ void RoeScheme::computeFluxDiss(Block* block)
 		p_R = my_pp_array[right_cell];
 		right_cell_r_vector=block -> block_faces_[face_idx] -> right_cell_r_vector_;
 
-		// Add gradient effect
-		/*
+		// Add gradient effect and limiter
 		for (int dim_idx=0; dim_idx<n_dim; dim_idx++)
 		{
-			rho_R+=my_grad_ro_array[right_cell][dim_idx]*right_cell_r_vector[dim_idx];
-			u_R+=my_grad_uu_array[right_cell][dim_idx]*right_cell_r_vector[dim_idx];
-			v_R+=my_grad_vv_array[right_cell][dim_idx]*right_cell_r_vector[dim_idx];
-			w_R+=my_grad_ww_array[right_cell][dim_idx]*right_cell_r_vector[dim_idx];
-			p_R+=my_grad_pp_array[right_cell][dim_idx]*right_cell_r_vector[dim_idx];
+			rho_R+=my_ro_limiters[right_cell]*my_grad_ro_array[right_cell][dim_idx]*right_cell_r_vector[dim_idx];
+			u_R+=my_uu_limiters[right_cell]*my_grad_uu_array[right_cell][dim_idx]*right_cell_r_vector[dim_idx];
+			v_R+=my_vv_limiters[right_cell]*my_grad_vv_array[right_cell][dim_idx]*right_cell_r_vector[dim_idx];
+			w_R+=my_ww_limiters[right_cell]*my_grad_ww_array[right_cell][dim_idx]*right_cell_r_vector[dim_idx];
+			p_R+=my_pp_limiters[right_cell]*my_grad_pp_array[right_cell][dim_idx]*right_cell_r_vector[dim_idx];
 		}
-		*/
+		
 
 		qq_R = u_R*u_R+v_R*v_R+w_R*w_R;
 		H_R = (0.5*qq_R+gamma_/(gamma_-1.0)*p_R/rho_R);
