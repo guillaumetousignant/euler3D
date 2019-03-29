@@ -4,6 +4,7 @@
 #endif
 #include <algorithm>
 #include <iostream> // REMOVE
+#include "PostProcessing.h"
 
 #define N_VARIABLES 20
 
@@ -201,8 +202,48 @@ void BlockCommunicator::initialize(){
 
 }
 
-double BlockCommunicator::getGlobal(double const coeff_local) const {
-    return 0.0;
+void BlockCommunicator::getGlobal(CompleteMesh* mesh, PostProcessing* postprocess) {
+    double ro_rms_process=0.0;
+    double uu_rms_process=0.0;
+    double vv_rms_process=0.0;
+    double ww_rms_process=0.0;
+    double pp_rms_process=0.0;
+    double cl_geometry_process=0.0;
+    double cd_geometry_process=0.0;
+    double cmx_geometry_process=0.0;
+    double cmy_geometry_process=0.0;
+    double cmz_geometry_process=0.0;
+    int blockid;
+
+    for(unsigned int i = 0; i < mesh->n_blocks_in_process_ ; i++) // For each block
+    {
+        blockid = mesh->my_blocks_[i];
+        // Convergence data
+        ro_rms_process += postprocess->ro_rms_blocks_[blockid];
+        uu_rms_process += postprocess->uu_rms_blocks_[blockid];
+        vv_rms_process += postprocess->vv_rms_blocks_[blockid];
+        ww_rms_process += postprocess->ww_rms_blocks_[blockid];
+        pp_rms_process += postprocess->pp_rms_blocks_[blockid];
+        cl_geometry_process += postprocess->cl_geometry_blocks_[blockid];
+        cd_geometry_process += postprocess->cd_geometry_blocks_[blockid];
+        cmx_geometry_process += postprocess->cmx_geometry_blocks_[blockid];
+        cmy_geometry_process += postprocess->cmy_geometry_blocks_[blockid];
+        cmz_geometry_process += postprocess->cmz_geometry_blocks_[blockid];
+    }
+
+    MPI_Allreduce(&ro_rms_process, &postprocess->ro_rms_mesh_, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+    MPI_Allreduce(&uu_rms_process, &postprocess->uu_rms_mesh_, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+    MPI_Allreduce(&vv_rms_process, &postprocess->vv_rms_mesh_, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+    MPI_Allreduce(&ww_rms_process, &postprocess->ww_rms_mesh_, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+    MPI_Allreduce(&pp_rms_process, &postprocess->pp_rms_mesh_, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+    MPI_Allreduce(&cl_geometry_process, &postprocess->cl_geometry_mesh_, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+    MPI_Allreduce(&cd_geometry_process, &postprocess->cd_geometry_mesh_, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+    MPI_Allreduce(&cmx_geometry_process, &postprocess->cmx_geometry_mesh_, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+    MPI_Allreduce(&cmy_geometry_process, &postprocess->cmy_geometry_mesh_, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+    MPI_Allreduce(&cmz_geometry_process, &postprocess->cmz_geometry_mesh_, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+    MPI_Barrier(MPI_COMM_WORLD); // Dunno if needed, check
+
+
 }
 
 void BlockCommunicator::setBoundaryOffset(){
