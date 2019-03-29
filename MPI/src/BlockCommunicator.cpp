@@ -242,8 +242,6 @@ void BlockCommunicator::getGlobal(CompleteMesh* mesh, PostProcessing* postproces
     MPI_Allreduce(&cmy_geometry_process, &postprocess->cmy_geometry_mesh_, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
     MPI_Allreduce(&cmz_geometry_process, &postprocess->cmz_geometry_mesh_, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
     MPI_Barrier(MPI_COMM_WORLD); // Dunno if needed, check
-
-
 }
 
 void BlockCommunicator::setBoundaryOffset(){
