@@ -18,6 +18,7 @@
 class AerodynamicParameters;
 class Convergence;
 class OutputTecplot;
+class BlockCommunicator;
 
 class PostProcessing
 {
@@ -27,7 +28,7 @@ public:
   PostProcessing(int n_blocks, int max_iter, double convergence_criterion, double cmac, double mach_aircraft, double aoa_deg, double gamma);
   ~PostProcessing();
 
-  void process(CompleteMesh* complete_mesh);
+  void process(CompleteMesh* complete_mesh, BlockCommunicator* communicator);
 
 
 

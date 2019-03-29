@@ -8,6 +8,7 @@
 #include <sys/stat.h>
 
 #include "PostProcessing.h"
+#include "BlockCommunicator.h"
 
 using namespace std;
 
@@ -229,7 +230,7 @@ void PostProcessing::computeFlowData(Block* block)
 }
 
 
-void PostProcessing::process(CompleteMesh* complete_mesh)
+void PostProcessing::process(CompleteMesh* complete_mesh, BlockCommunicator* communicator)
 {
 
   //cout << "Starting process....................................................." << endl;
@@ -275,8 +276,10 @@ void PostProcessing::process(CompleteMesh* complete_mesh)
     // Save and print flow data into binary files
 
     // Pour le complete mesh seulement
-    output_tecplot_->printConvergence(current_iter_, cl_geometry_mesh_, cd_geometry_mesh_, cmx_geometry_mesh_, cmy_geometry_mesh_, cmz_geometry_mesh_, ro_convergence_, uu_convergence_, vv_convergence_, ww_convergence_, pp_convergence_);
-
+    if (communicator->process_id_ == 0){
+      output_tecplot_->printConvergence(current_iter_, cl_geometry_mesh_, cd_geometry_mesh_, cmx_geometry_mesh_, cmy_geometry_mesh_, cmz_geometry_mesh_, ro_convergence_, uu_convergence_, vv_convergence_, ww_convergence_, pp_convergence_);
+    }
+    
     if (stop_solver_==true)
     {
       cout << "Writing Solution......................................................" << endl;
@@ -292,7 +295,9 @@ void PostProcessing::process(CompleteMesh* complete_mesh)
       }
       
       // Pour le complete mesh seulement
-      output_tecplot_->printAerodynamicCoefficients(cl_geometry_mesh_, cd_geometry_mesh_, cmx_geometry_mesh_, cmy_geometry_mesh_, cmz_geometry_mesh_);
+      if (communicator->process_id_ == 0){
+        output_tecplot_->printAerodynamicCoefficients(cl_geometry_mesh_, cd_geometry_mesh_, cmx_geometry_mesh_, cmy_geometry_mesh_, cmz_geometry_mesh_);
+      }
       cout << "========================END OF PROGRAM========================" << endl;
 
       //exit(0);

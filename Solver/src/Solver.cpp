@@ -45,6 +45,7 @@ void Solver::solve(CompleteMesh* complete_mesh, BlockCommunicator* communicator)
 	my_blocks=complete_mesh->my_blocks_;
 	all_blocks=complete_mesh->all_blocks_;
 
+	communicator->updateBoundaries(complete_mesh);
 
 	while(!post_processing_->stop_solver_)
 	{
@@ -64,7 +65,7 @@ void Solver::solve(CompleteMesh* complete_mesh, BlockCommunicator* communicator)
 
 		///INSÉRER LES TRUCS DE MPI ICI JE CROIS
 		communicator->updateBoundaries(complete_mesh);
-		post_processing_->process(complete_mesh);
+		post_processing_->process(complete_mesh, communicator);
 
 	}
 
