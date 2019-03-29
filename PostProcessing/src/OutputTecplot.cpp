@@ -25,7 +25,7 @@ OutputTecplot::~OutputTecplot()
 
 }
 
-void OutputTecplot::printFlowData(Block* block)
+void OutputTecplot::printFlowData(Block* block, int block_id)
 {
   int i;
 
@@ -186,7 +186,7 @@ void OutputTecplot::printFlowData(Block* block)
 
 }
 
-void OutputTecplot::printSurfaceFlowData(Block* block)
+void OutputTecplot::printSurfaceFlowData(Block* block, int block_id)
 {
   cout << "Starting printSurfaceFlowData........................................" << endl;
 
@@ -461,7 +461,7 @@ void OutputTecplot::printAerodynamicCoefficients(double cl, double cd, double cm
   cout << "Ending printAerodynamicCoefficients.................................." << endl;
 }
 
-void OutputTecplot::printRestartFile(Block* block)
+void OutputTecplot::printRestartFile(Block* block, int block_id)
 {
   cout << "Starting printRestartFile............................................" << endl;
 

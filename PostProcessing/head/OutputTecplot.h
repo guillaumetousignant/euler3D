@@ -31,11 +31,11 @@ std::ofstream RestartFile;
 
   // Methods
 
-void printFlowData(Block* block);
-void printSurfaceFlowData(Block* block);
+void printFlowData(Block* block, int block_id);
+void printSurfaceFlowData(Block* block, int block_id);
 void printConvergence(int iter, double cl, double cd, double cmx, double cmy, double cmz, double ro_convergence, double uu_convergence, double vv_convergence, double ww_convergence, double pp_convergence);
 void printAerodynamicCoefficients(double cl, double cd, double cmx, double cmy, double cmz);
-void printRestartFile(Block* block);
+void printRestartFile(Block* block, int block_id);
 
 };
 

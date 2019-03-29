@@ -276,9 +276,9 @@ void PostProcessing::process(CompleteMesh* complete_mesh, BlockCommunicator* com
       {
         /// ATTENTION NE GÈRE PAS LES NOMS DES BLOCKS DIFFÉRENTS PRESENTEMENT
         current_block=all_blocks[my_blocks[i]];
-        output_tecplot_->printFlowData(current_block);
-        output_tecplot_->printSurfaceFlowData(current_block);
-        output_tecplot_->printRestartFile(current_block);//PARTIE QUI FAIT JUSTE CALCULER LES CL ET CONVERGENCE PARTIELLE
+        output_tecplot_->printFlowData(current_block, my_blocks[i]);
+        output_tecplot_->printSurfaceFlowData(current_block, my_blocks[i]);
+        output_tecplot_->printRestartFile(current_block, my_blocks[i]);//PARTIE QUI FAIT JUSTE CALCULER LES CL ET CONVERGENCE PARTIELLE
       }
       
       // Pour le complete mesh seulement
