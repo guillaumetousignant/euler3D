@@ -401,6 +401,19 @@ for(i=0;i < block->n_farfield_faces_ ;i++)
 	block ->addFaceIdInFarfield(farfield_face_id,farfield_face_count);
 
 }
+
+std::cout<<"Remplissage de l'array face_ids_in_symmetry"<<std::endl;
+int temp_symmetry_face_count=0;
+int* symmetry_face_count;
+symmetry_face_count=&temp_symmetry_face_count;
+int symmetry_face_id, symmetry_cell_id;
+for(i=0;i < block->n_symmetry_faces_ ;i++)
+{
+	symmetry_cell_id=(block->block_symmetry_face_ids_[i]);
+	symmetry_face_id=(block->block_cells_[symmetry_cell_id])->cell_2_faces_connectivity_[0];
+	block ->addFaceIdInSymmetry(symmetry_face_id,symmetry_face_count);
+
+}
 //std::cout<<"TEEEEEEEST WALLLLLL FAAAAAAACE IIIIIIIIDS FIIIIIIIIIIIIIIIIINAL: "<< *wall_face_count<<std::endl;
 
 

@@ -19,6 +19,8 @@
 #include "BoundaryCellIds.h"
 #include "FarfieldCellIds.h"
 #include "WallCellIds.h"
+#include "SymmetryCellIds.h"
+
 
 
 

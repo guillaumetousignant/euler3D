@@ -12,7 +12,7 @@ using namespace std;
 void BarthJespersen::computeLimiters(Block* block)
 {
 
-	cout<<"\t\t\t\t\tExécution computeLimiters: BarthJespersen: "<<endl;
+	//cout<<"\t\t\t\t\tExécution computeLimiters: BarthJespersen: "<<endl;
 }
 
 
