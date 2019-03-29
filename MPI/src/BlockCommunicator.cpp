@@ -203,6 +203,7 @@ void BlockCommunicator::initialize(){
 }
 
 void BlockCommunicator::getGlobal(CompleteMesh* mesh, PostProcessing* postprocess) {
+    #ifdef HAVE_MPI
     double ro_rms_process=0.0;
     double uu_rms_process=0.0;
     double vv_rms_process=0.0;
@@ -242,6 +243,35 @@ void BlockCommunicator::getGlobal(CompleteMesh* mesh, PostProcessing* postproces
     MPI_Allreduce(&cmy_geometry_process, &postprocess->cmy_geometry_mesh_, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
     MPI_Allreduce(&cmz_geometry_process, &postprocess->cmz_geometry_mesh_, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
     MPI_Barrier(MPI_COMM_WORLD); // Dunno if needed, check
+    #else
+
+    postprocess->ro_rms_mesh_=0.0;
+    postprocess->uu_rms_mesh_=0.0;
+    postprocess->vv_rms_mesh_=0.0;
+    postprocess->ww_rms_mesh_=0.0;
+    postprocess->pp_rms_mesh_=0.0;
+    postprocess->cl_geometry_mesh_=0.0;
+    postprocess->cd_geometry_mesh_=0.0;
+    postprocess->cmx_geometry_mesh_=0.0;
+    postprocess->cmy_geometry_mesh_=0.0;
+    postprocess->cmz_geometry_mesh_=0.0;
+
+    for(i=0; i<complete_mesh->n_blocks_ ; i++) // For each block
+    {
+        // Convergence data
+        postprocess->ro_rms_mesh_ += postprocess->ro_rms_blocks_[i];
+        postprocess->uu_rms_mesh_ += postprocess->uu_rms_blocks_[i];
+        postprocess->vv_rms_mesh_ += postprocess->vv_rms_blocks_[i];
+        postprocess->ww_rms_mesh_ += postprocess->ww_rms_blocks_[i];
+        postprocess->pp_rms_mesh_ += postprocess->pp_rms_blocks_[i];
+        // Aerodynamic data
+        postprocess->cl_geometry_mesh_ += postprocess->cl_geometry_blocks_[i];
+        postprocess->cd_geometry_mesh_ += postprocess->cd_geometry_blocks_[i];
+        postprocess->cmx_geometry_mesh_ += postprocess->cmx_geometry_blocks_[i];
+        postprocess->cmy_geometry_mesh_ += postprocess->cmy_geometry_blocks_[i];
+        postprocess->cmz_geometry_mesh_ += postprocess->cmz_geometry_blocks_[i];
+    }
+    #endif
 }
 
 void BlockCommunicator::setBoundaryOffset(){
