@@ -5,6 +5,8 @@
 #include "Block.h"
 #include "BlockBuilder.h"
 #include "ConcreteBlockBuilder.h"
+#include "MetricsInitializer.h"
+#include "Interface.h"
 #include <string>
 #include <iostream>
 using namespace std;
@@ -39,14 +41,12 @@ CompleteMesh::~CompleteMesh()
 
 }
 
-void CompleteMesh::InitializeMyBlocks()
+void CompleteMesh::InitializeMyBlocks(Interface* interface)
 {
 	std::string block_id_string;
 	std::string block_file;
 	Block* new_block;
-
 	int block_id;
-
 
 	for(int i=0;i<n_blocks_in_process_;i++)
 	{
@@ -107,10 +107,18 @@ void CompleteMesh::InitializeMyBlocks()
 		// cout<<test_node->node_coordinates_[2]<<endl;
 
 
+		cout << "In MetricsInitializer........." << endl;
+		MetricsInitializer metricsInit(new_block);
+		metricsInit.doInit();
 
+		cout << "In calculateFreeVariables........." << endl;
+		new_block->block_primitive_variables_->calculateFreeVariables(interface->gamma_interface_, interface->aoa_deg_interface_, interface->mach_aircraft_interface_);
+
+		cout << "In initializeFlowField........." << endl;
+		new_block->block_primitive_variables_->initializeFlowField(new_block->n_all_cells_in_block_);
+
+		cout << "In Solver........." << endl;
 	}
-
-
 }
 
 #endif

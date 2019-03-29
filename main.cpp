@@ -14,7 +14,6 @@
 #include "ConcreteBlockBuilder.h"
 #include "BlockCommunicator.h"
 #include "CompleteMesh.h"
-#include "MetricsInitializer.h"
 
 
 using namespace std;
@@ -66,24 +65,7 @@ int main(int argc, char* argv[])
 
 	cout << "In CompleteMesh........." << endl;
 	CompleteMesh* complete_mesh = new CompleteMesh(n_blocks, n_blocks_in_process, my_blocks, interface->topology_file_name_interface_);
-	complete_mesh->InitializeMyBlocks();
-
-	for (int i = 0; i < complete_mesh->n_blocks_in_process_; i++){
-		Block* new_block = complete_mesh->all_blocks_[complete_mesh->my_blocks_[i]];
-
-		cout << "In MetricsInitializer........." << endl;
-		MetricsInitializer metricsInit(new_block);
-		metricsInit.doInit();
-
-		cout << "In calculateFreeVariables........." << endl;
-		new_block->block_primitive_variables_->calculateFreeVariables(interface->gamma_interface_, interface->aoa_deg_interface_, interface->mach_aircraft_interface_);
-
-		cout << "In initializeFlowField........." << endl;
-		new_block->block_primitive_variables_->initializeFlowField(new_block->n_all_cells_in_block_);
-
-		cout << "In Solver........." << endl;
-		
-	}
+	complete_mesh->InitializeMyBlocks(interface);
 
 	Solver *solver=initializer->initializeSolver(interface);
 	solver->solve(complete_mesh, communicator);
