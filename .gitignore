@@ -5,4 +5,10 @@
 /bin/*
 *.out
 /.vscode/*
-.DS_Store
+*.DS_Store
+output*.txt
+*.dat
+/Python/__pycache__/*
+*.pyc
+*.log
+*.m

@@ -53,8 +53,7 @@ void Solver::solve(Block* block, CompleteMesh* complete_mesh)
 
 
 	// PROVISOIRE!!!!
-	
-	while(true)
+	while(!post_processing_->stop_solver_)
 	{
 		this->saveW0(block);
 		timestep_->computeSpectralRadius(block);
@@ -64,7 +63,7 @@ void Solver::solve(Block* block, CompleteMesh* complete_mesh)
 		post_processing_->process(block, complete_mesh);
 		//cout<<"Iter: "<<i<<endl;
 	}
-	
+
 
 
 	/*
@@ -93,7 +92,7 @@ void Solver::solve(Block* block, CompleteMesh* complete_mesh)
 	Gradient* gradient=new LeastSquares();
 	gradient->computeGradients(block);
 
-	
+
 	for (int all_cell_idx = 0; all_cell_idx < n_all_cells_in_block; all_cell_idx++)
 	{
 		cout<<"cell idx: "<<all_cell_idx<<endl;
@@ -118,7 +117,7 @@ void Solver::solve(Block* block, CompleteMesh* complete_mesh)
 		cout<<"grad z pp: "<<block->block_interpolation_variables_->grad_pp_[all_cell_idx][2]<<endl<<endl;
 
 	}
-	
+
    */
 
 	/*
@@ -166,7 +165,7 @@ void Solver::saveW0(Block* block)
 {
 	//cout<<"\tExécution w0: "<<endl;
 
-	
+
 	int nb_real_cells=block->n_real_cells_in_block_;
 	int cell_idx;
 	double ro, uu, vv, ww, pp;
@@ -193,7 +192,7 @@ void Solver::saveW0(Block* block)
 		block->block_primitive_variables_->rw_0_[cell_idx]=rw_0;
 		block->block_primitive_variables_->re_0_[cell_idx]=re_0;
 
-		
+
 	}
 
 	/* Vérification
@@ -206,7 +205,7 @@ void Solver::saveW0(Block* block)
 	}
 	*/
 
-	
+
 }
 
 
