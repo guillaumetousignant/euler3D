@@ -229,10 +229,9 @@ void PostProcessing::computeFlowData(Block* block)
 }
 
 
-void PostProcessing::process(Block* block, CompleteMesh* complete_mesh)
+void PostProcessing::process(CompleteMesh* complete_mesh)
 {
 
-  // CHANGER LE PROTOTYPE POUR AVOIR SEULEMENT COMPLETE MESH ET BOUCLER SUR COMPLETE MESH
   //cout << "Starting process....................................................." << endl;
   if (current_iter_%iteration_interval_==0||current_iter_+1==max_iter_)
   {
@@ -282,13 +281,14 @@ void PostProcessing::process(Block* block, CompleteMesh* complete_mesh)
     {
       cout << "Writing Solution......................................................" << endl;
       // Pour chaque block
+      // SINON ON PEUT FAIRE PAR EXEMPLE printFlowData(complete_mesh), pis c'est le printFlowData qui gère la patente
       for (i=0;i<n_blocks_in_process;i++)
       {
         /// ATTENTION NE GÈRE PAS LES NOMS DES BLOCKS DIFFÉRENTS PRESENTEMENT
         current_block=all_blocks[my_blocks[i]];
-        printFlowData(current_block);
-        printSurfaceFlowData(current_block);
-        printRestartFile(current_block);//PARTIE QUI FAIT JUSTE CALCULER LES CL ET CONVERGENCE PARTIELLE
+        output_tecplot_->printFlowData(current_block);
+        output_tecplot_->printSurfaceFlowData(current_block);
+        output_tecplot_->printRestartFile(current_block);//PARTIE QUI FAIT JUSTE CALCULER LES CL ET CONVERGENCE PARTIELLE
       }
       
       // Pour le complete mesh seulement

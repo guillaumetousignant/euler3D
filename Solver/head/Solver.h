@@ -6,6 +6,7 @@
 #include "Timestep.h"
 #include "RungeKutta.h"
 #include "PostProcessing.h"
+#include "BlockCommunicator.h"
 
 #include <string>
 using namespace std;
@@ -14,6 +15,7 @@ class Timestep;
 class RungeKutta;
 class PostProcessing;
 class Block;
+class BlockCommunicator;
 
 class Solver
 {

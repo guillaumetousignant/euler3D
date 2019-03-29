@@ -63,10 +63,8 @@ void Solver::solve(CompleteMesh* complete_mesh, BlockCommunicator* communicator)
 		}
 
 		///INSÉRER LES TRUCS DE MPI ICI JE CROIS
-		//updater_->synchroniseUpdate(complete_mesh??); // SYNCHRONISE LES VARIABLES PRIMITIVES DES CELLULES PHANTOMES
-		//timestep_->synchroniseGradient(complete_mesh??); //SYNCHRONISE LES GRADIENTS DES CELLULES PHANTOMES (peut-être déplacer la fonction autre que dans timestep_??)
-		//timestep_->synchroniseLimiter(complete_mesh??); //SYNCHRONISE LES LIMITERS DES CELLULES PHANTOMES (peut-être déplacer la fonction autre que dans timestep_??)
-		post_processing_->process(current_block, complete_mesh);
+		communicator->updateBoundaries(complete_mesh);
+		post_processing_->process(complete_mesh);
 
 	}
 

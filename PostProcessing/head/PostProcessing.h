@@ -27,7 +27,7 @@ public:
   PostProcessing(int n_blocks, int max_iter, double convergence_criterion, double cmac, double mach_aircraft, double aoa_deg, double gamma);
   ~PostProcessing();
 
-  void process(Block* block, CompleteMesh* complete_mesh);
+  void process(CompleteMesh* complete_mesh);
 
 
 
