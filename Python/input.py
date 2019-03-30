@@ -3,6 +3,7 @@ from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
 from tkinter import filedialog
+import os
 import os.path
 
 
@@ -266,21 +267,39 @@ class Input():
         info =  mesh_file_name + " has been created."
 
         file_path = '../euler3D/'
-        file_name = "NACA_test_3.csm"
+        file_name = "NACA_ESP.csm"
 
         complete_file_name = os.path.join(file_path, file_name)
 
         file = open(complete_file_name,"w")
 
-        file.write("# ../data/NACA_test_3.csm written by ocsmSave (v1.14)\n\n" + (
-                    "# Constant, Design, and Output Parameters:\n") + (
-                    "despmtr   series_w    " + first_digit + second_digit + third_fourth_digit + ".00000\n") + (
+        # file.write("# ../data/NACA_test_3.csm written by ocsmSave (v1.14)\n\n" + (
+        #             "# Constant, Design, and Output Parameters:\n") + (
+        #             "despmtr   series_w    " + first_digit + second_digit + third_fourth_digit + ".00000\n") + (
+        #             "dimension wing   3   5   1\n") + (
+        #             "despmtr   wing[1,:]   \"     4.00000;     0.00000;     0.20000;     6.00000;     0.00000;\"\n") + (
+        #             "despmtr   wing[2,:]   \"     7.00000;     1.00000;     0.20000;     3.00000;     0.00000;\"\n") + (
+        #             "despmtr   wing[3,:]   \"     0.00000;     " + span + "000;     0.00000;     " + corde_ratio + "0000;     270.00000;\"\n\n") + (
+        #             "# Global Attributes:\n\n") + (
+        #             "# Branches:\n") + (
+        #             "mark\n") + (
+        #             "udprim    naca   Series   series_w\n") + (
+        #             "rotatez   -wing[3,5]   0   0\n") + (
+        #             "rotatex   90   0   0\n") + (
+        #             "scale     wing[3,4]   0   0   0\n") + (
+        #             "translate wing[3,1]   -wing[3,2]   wing[3,3]\n\n") + (
+        #             "udprim    naca   Series   series_w\n") + (
+        #             "rotatez   -wing[3,5]   0   0\n") + (
+        #             "rotatex   90   0   0\n") + (
+        #             "#scale     wing[3,4]   0   0   0\n") + (
+        #             "#translate wing[3,1]   +wing[3,2]   wing[3,3]\n") + (
+        #             "rule      0\n\n") + (
+        #             "DUMP $/" + mesh_file_name + " 0 0\n") + (
+        #             "end"))
+
+        file.write("despmtr   series_w    " + first_digit + second_digit + third_fourth_digit + ".00000\n" + (
                     "dimension wing   3   5   1\n") + (
-                    "#despmtr   wing[1,:]   \"     4.00000;     0.00000;     0.20000;     6.00000;     0.00000;\"\n") + (
-                    "#despmtr   wing[2,:]   \"     7.00000;     1.00000;     0.20000;     3.00000;     0.00000;\"\n") + (
-                    "despmtr   wing[3,:]   \"     0.00000;     " + span + "000;     0.00000;     " + corde_ratio + "0000;     270.00000;\"\n\n") + (
-                    "# Global Attributes:\n\n") + (
-                    "# Branches:\n") + (
+                    "despmtr   wing[3,:]   \"     0.00000;     " + span + "000;     0.00000;     " + corde_ratio + "0000;     180.00000;\"\n\n") + (
                     "mark\n") + (
                     "udprim    naca   Series   series_w\n") + (
                     "rotatez   -wing[3,5]   0   0\n") + (
@@ -290,15 +309,18 @@ class Input():
                     "udprim    naca   Series   series_w\n") + (
                     "rotatez   -wing[3,5]   0   0\n") + (
                     "rotatex   90   0   0\n") + (
-                    "#scale     wing[3,4]   0   0   0\n") + (
-                    "#translate wing[3,1]   +wing[3,2]   wing[3,3]\n") + (
                     "rule      0\n\n") + (
                     "DUMP $/" + mesh_file_name + " 0 0\n") + (
                     "end"))
+        
         file.close()
 
         
         self.geometry_generation_window.destroy()
+
+        #os.system("serveCSM -batch ~/Documents/EulerFred/euler3D/NACA_ESP")
+        os.system("serveCSM ~/Documents/EulerFred/euler3D/NACA_ESP")
+
         messagebox.showinfo("Ready for meshing", info)
 
     def showResultingMesh(self):
