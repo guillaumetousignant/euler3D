@@ -1,0 +1,32 @@
+MESH
+topologyfilename
+void
+INPUT
+cfl gamma angleattackdeg
+7.5 1.4 0.0
+rkstage mach cmac
+5 0.8 1.0
+nbitermax convcriterion
+300 1.0e-15
+residual smoothing (0-no 1-yes)
+1
+fluxscheme schemeorder
+roe 1
+gradient limiter
+greengauss barthjespersen
+omega k
+1.0e6 5.0
+EXECUTABLE (0-no 1-yes)
+build execute
+1 1
+OUTPUT (0-no 1-yes)
+clalpha cdalpha cmalpha
+0 0 0
+coefficientsconv residualconv
+0 0
+cpxc machcontour cpcontour machisosurface
+0 0 0 0
+slicecp
+0
+axis xcoord ycoord zcoord
+x 0.0 0.0 0.0

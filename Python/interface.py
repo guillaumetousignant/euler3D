@@ -100,7 +100,7 @@ class Interface(Input, Solver, Output):
         solver = self.solver.writePartialOutput()
         output = self.output.writePartialOutput()
 
-        file_path = '/home/frederique/Documents/'
+        file_path = '../euler3D/'
         file_name = "output_interface.txt"
 
         complete_file_name = os.path.join(file_path, file_name)
@@ -108,7 +108,6 @@ class Interface(Input, Solver, Output):
         file = open(complete_file_name,"w")
 
         file.write(input+solver+output)
-        # file.write("Hey, keep up the good work!")
         file.close()        
 
 
