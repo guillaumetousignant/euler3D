@@ -28,7 +28,7 @@ class Solver():
         self.max_iter.set(300)
         self.max_iter_label = ttk.Label(title_section_2_1, text="Max number of itterations", borderwidth=2, relief="groove", anchor=CENTER)
         self.max_iter_label.grid(row=1, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
-        self.max_iter_entry = ttk.Entry(title_section_2_1, textvariable=self.max_iter, width=15)
+        self.max_iter_entry = ttk.Entry(title_section_2_1, textvariable=self.max_iter, width=15, justify=CENTER)
         self.max_iter_entry.grid(row=1, column=3, columnspan=2, padx=2, pady=2)
 
         label_void_2 = ttk.Label(title_section_2_1, text="", width=4)
@@ -38,7 +38,7 @@ class Solver():
         self.convergence_crit.set(-15)
         self.convergence_crit_label = ttk.Label(title_section_2_1, text="Convergence criterion power (1.0eX)", borderwidth=2, relief="groove", anchor=CENTER)
         self.convergence_crit_label.grid(row=2, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
-        self.convergence_crit_entry = ttk.Entry(title_section_2_1, textvariable=self.convergence_crit, width=15)
+        self.convergence_crit_entry = ttk.Entry(title_section_2_1, textvariable=self.convergence_crit, width=15, justify=CENTER)
         self.convergence_crit_entry.grid(row=2, column=3, columnspan=2, padx=2, pady=2)
 
         # SECTION 2.2: SCHEME SELECTION
@@ -73,7 +73,7 @@ class Solver():
         self.nb_process.set(6)
         self.nb_process_label = ttk.Label(title_section_2_3, text="Number of process", relief="groove", borderwidth=2, anchor=CENTER, width=22)
         self.nb_process_label.grid(row=1, column=1, columnspan=2, sticky=NSEW, padx=2, pady=2)
-        self.nb_process_entry = ttk.Entry(title_section_2_3, textvariable=self.nb_process, width=15)
+        self.nb_process_entry = ttk.Entry(title_section_2_3, textvariable=self.nb_process, width=15, justify=CENTER)
         self.nb_process_entry.grid(row=1, column=3, columnspan=2, padx=2, pady=2)
 
         label_void_6 = ttk.Label(title_section_2_3, text="", width=4)
@@ -126,14 +126,14 @@ class Solver():
         self.flux_scheme.set("Roe")
         self.flux_scheme_label = ttk.Label(self.flux_scheme_window, text="Flux scheme:", anchor=CENTER)
         self.flux_scheme_label.grid(row=1, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
-        self.flux_scheme_entry = ttk.Combobox(self.flux_scheme_window, values=("Roe", "Ausm"), width=15, textvariable=self.flux_scheme)
+        self.flux_scheme_entry = ttk.Combobox(self.flux_scheme_window, values=("Roe", "Ausm"), width=15, textvariable=self.flux_scheme, justify=CENTER)
         self.flux_scheme_entry.grid(row=2, column=1, columnspan=2, pady=2)
         
         self.scheme_order = StringVar()
         self.scheme_order.set("1")
         self.scheme_order_label = ttk.Label(self.flux_scheme_window, text="Scheme order:", anchor=CENTER)
         self.scheme_order_label.grid(row=3, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
-        self.scheme_order_entry = ttk.Combobox(self.flux_scheme_window, values=("1", "2"), width=15, textvariable=self.scheme_order)
+        self.scheme_order_entry = ttk.Combobox(self.flux_scheme_window, values=("1", "2"), width=15, textvariable=self.scheme_order, justify=CENTER)
         self.scheme_order_entry.grid(row=4, column=1, columnspan=2, pady=2)
         self.scheme_order_entry.bind('<<ComboboxSelected>>', self.activateGradientAndLimiter)
 
@@ -141,14 +141,14 @@ class Solver():
         self.gradient.set("Green Gauss")
         self.gradient_label = ttk.Label(self.flux_scheme_window, text="Gradient:", anchor=CENTER, state="disabled")
         self.gradient_label.grid(row=5, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
-        self.gradient_entry = ttk.Combobox(self.flux_scheme_window, values=("Green Gauss", "Least Squares"), width=15, state="disabled", textvariable=self.gradient)
+        self.gradient_entry = ttk.Combobox(self.flux_scheme_window, values=("Green Gauss", "Least Squares"), width=15, state="disabled", textvariable=self.gradient, justify=CENTER)
         self.gradient_entry.grid(row=6, column=1, columnspan=2, pady=2)
         
         self.limiter = StringVar()
         self.limiter.set("Barth Jespersen")
         self.limiter_label = ttk.Label(self.flux_scheme_window, text="Limiter:", anchor=CENTER, state="disabled")
         self.limiter_label.grid(row=7, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
-        self.limiter_entry = ttk.Combobox(self.flux_scheme_window, values=("Barth Jespersen", "Venkatakrishnan"), width=15, state="disabled", textvariable=self.limiter)
+        self.limiter_entry = ttk.Combobox(self.flux_scheme_window, values=("Barth Jespersen", "Venkatakrishnan"), width=15, state="disabled", textvariable=self.limiter, justify=CENTER)
         self.limiter_entry.grid(row=8, column=1, columnspan=2, pady=2)
         self.limiter_entry.bind('<<ComboboxSelected>>', self.activateOmegaOrK)
 
@@ -156,14 +156,14 @@ class Solver():
         self.omega.set(6)
         self.omega_label = ttk.Label(self.flux_scheme_window, text="Omega power\n(1.0eX)", width=13, anchor=CENTER, borderwidth=2, relief="groove", state="disabled")
         self.omega_label.grid(row=9, column=0, padx=2, pady=7)
-        self.omega_entry = ttk.Entry(self.flux_scheme_window, textvariable=self.omega, width=10, state="disabled")
+        self.omega_entry = ttk.Entry(self.flux_scheme_window, textvariable=self.omega, width=10, state="disabled", justify=CENTER)
         self.omega_entry.grid(row=9, column=1, padx=2, pady=10)
 
         self.k = DoubleVar()
         self.k.set(5.0)
         self.k_label = ttk.Label(self.flux_scheme_window, text="k", width=13, anchor=CENTER, borderwidth=2, relief="groove", state="disabled")
         self.k_label.grid(row=9, column=2, padx=2, pady=7)
-        self.k_entry = ttk.Entry(self.flux_scheme_window, textvariable=self.k, width=10, state="disabled")
+        self.k_entry = ttk.Entry(self.flux_scheme_window, textvariable=self.k, width=10, state="disabled", justify=CENTER)
         self.k_entry.grid(row=9, column=3, padx=2, pady=10)
 
         self.smoothing = IntVar()
