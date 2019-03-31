@@ -201,12 +201,17 @@ class Output():
         self.cp_contour.set(0)
         self.slice_cp.set(0)
         self.axis_cut_cp_xc.set("x")
+        self.axis_cut_slice_cp.set("x")
         self.x_coord.set(0.0)
         self.y_coord.set(0.0)
         self.z_coord.set(0.0)
+        self.first_coord.set(0.0)
+        self.last_coord.set(0.0)
 
         self.axis_cut_cp_xc_label.configure(state="disabled")
         self.axis_cut_cp_xc_entry.configure(state="disabled")
+        self.axis_cut_slice_cp_label.configure(state="disabled")
+        self.axis_cut_slice_cp_entry.configure(state="disabled")
         self.x_coord_label.configure(state="disabled")
         self.x_coord_entry.configure(state="disabled")
         self.y_coord_label.configure(state="disabled")
@@ -231,29 +236,50 @@ class Output():
         mach_iso_str = str(self.mach_iso.get())
         mach_cont_str = str(self.mach_contour.get())
         cp_cont_str = str(self.cp_contour.get())
+        filetype_str = str(self.files_type.get())
         
-        slice_cp_str = str(self.slice_cp.get())
-        if slice_cp_str == "1":
-            axis_str = self.axis_cut_cp_xc.get()
+        cp_xc_str = str(self.cp_xc.get())
+        if cp_xc_str == "1":
+            axis_cp_xc_str = self.axis_cut_cp_xc.get()
             xcoord_str = str(self.x_coord.get())
             ycoord_str = str(self.y_coord.get())
             zcoord_str = str(self.z_coord.get())
         
-        elif slice_cp_str == "0":
-            axis_str = "x"
+        elif cp_xc_str == "0":
+            axis_cp_xc_str = "x"
             xcoord_str = "0.0"
             ycoord_str = "0.0"
             zcoord_str = "0.0"
 
-        partial_output = "\nOUTPUT (0-no 1-yes)\nclalpha cdalpha cmalpha\n"+(
+        slice_cp_str = str(self.slice_cp.get())
+        if slice_cp_str == "1":
+            axis_slice_cp_str = self.axis_cut_cp_xc.get()
+            firstcoord_str = str(self.first_coord.get())
+            lastcoord_str = str(self.last_coord.get())
+            nb_slice_str = str(self.nb_slices.get())
+
+        elif slice_cp_str == "0":
+            axis_slice_cp_str = "x"
+            firstcoord_str = "0.0"
+            lastcoord_str = "0.0"
+            nb_slice_str = "0"
+
+
+
+        partial_output = "\nOUTPUT (0-no 1-yes)"+(
+                         "\nfilestype (0-Euler 1-SU2\n")+(
+                         filetype_str)+(
+                         "\nclalpha cdalpha cmalpha\n")+(
                          cl_alpha_str+" "+cd_alpha_str+" "+cm_alpha_str)+(
-                         "\ncoefficientsconv residualconv\n")+(
+                         "\ncoefficientsconvergence residualconv\n")+(
                          coeff_conv_str+" "+res_conv_str)+(
                          "\ncpxc machcontour cpcontour machisosurface\n")+(
                          cp_xc_str+" "+mach_cont_str+" "+cp_cont_str+" "+mach_iso_str)+(
                          "\nslicecp\n")+(
                          slice_cp_str)+(
-                         "\naxis xcoord ycoord zcoord\n")+(
-                         axis_str+" "+xcoord_str+" "+ycoord_str+" "+zcoord_str)
+                         "\naxiscpxc xcoord ycoord zcoord\n")+(
+                         axis_cp_xc_str+" "+xcoord_str+" "+ycoord_str+" "+zcoord_str)+(
+                         "\naxisslicecp fcoord lcoord numberofslices\n")+(
+                         axis_slice_cp_str+" "+firstcoord_str+" "+lastcoord_str+" "+nb_slice_str)
 
         return partial_output

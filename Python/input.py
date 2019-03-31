@@ -173,14 +173,14 @@ class Input():
         self.geometry_generation_window.lift()
 
         ttk.Label(self.geometry_generation_window, text="\nSpecify the needed information for geometry generation:\n").grid(row=0, column=0, columnspan=4, sticky=W, padx=2)
-        ttk.Label(self.geometry_generation_window, text="NACA profile:").grid(row=1, column=0, columnspan=2, sticky=W, padx=2)
+        ttk.Label(self.geometry_generation_window, text="NACA profile:").grid(row=1, column=0, columnspan=2, sticky=W, padx=2, pady=2)
            
         self.max_camber = IntVar()
         self.max_camber.set(0)
         self.max_camber_label = ttk.Label(self.geometry_generation_window, text="Max camber (%)", borderwidth=2, relief="groove", width=20)
         self.max_camber_label.grid(row=2, column=0, columnspan=2, sticky=NSEW, padx=2)
         self.max_camber_entry = ttk.Entry(self.geometry_generation_window, textvariable=self.max_camber, width=10)
-        self.max_camber_entry.grid(row=2, column=2, sticky=W, padx=2)
+        self.max_camber_entry.grid(row=2, column=2, sticky=NW, padx=2)
         ttk.Label(self.geometry_generation_window, text="(0 to 9.5%)", anchor=CENTER, width=10).grid(row=2, column=3, sticky=NSEW)
         
         self.max_camber_position = IntVar()
@@ -188,7 +188,7 @@ class Input():
         self.max_camber_position_label = ttk.Label(self.geometry_generation_window, text="Max camber position (%)", borderwidth=2, relief="groove", width=20)
         self.max_camber_position_label.grid(row=3, column=0, columnspan=2, sticky=NSEW, padx=2)
         self.max_camber_position_entry = ttk.Entry(self.geometry_generation_window, textvariable=self.max_camber_position, width=10)
-        self.max_camber_position_entry.grid(row=3, column=2, sticky=W, padx=2)
+        self.max_camber_position_entry.grid(row=3, column=2, sticky=NW, padx=2)
         ttk.Label(self.geometry_generation_window, text="(0 to 90%)", anchor=CENTER, width=10).grid(row=3, column=3, sticky=NSEW)
 
         self.thickness = IntVar()
@@ -196,13 +196,13 @@ class Input():
         self.thickness_label = ttk.Label(self.geometry_generation_window, text="Thickness (%)", borderwidth=2, relief="groove", width=20)
         self.thickness_label.grid(row=4, column=0, columnspan=2, sticky=NSEW, padx=2)
         self.thickness_entry = ttk.Entry(self.geometry_generation_window, textvariable=self.thickness, width=10)
-        self.thickness_entry.grid(row=4, column=2, sticky=W, padx=2)
+        self.thickness_entry.grid(row=4, column=2, sticky=NW, padx=2)
         ttk.Label(self.geometry_generation_window, text="(1 to 40%)", anchor=CENTER, width=10).grid(row=4, column=3, sticky=NSEW)
       
         refresh = ttk.Button(self.geometry_generation_window, text="Refresh", command=self.changeNACADigits)
-        refresh.grid(row=5, column=0, sticky=NSEW, padx=2)
+        refresh.grid(row=5, column=0, sticky=NSEW, padx=2, pady=2)
         self.naca_result = ttk.Label(self.geometry_generation_window, text="NACA 0012", borderwidth=2, relief="groove", width=10)
-        self.naca_result.grid(row=5, column=1, sticky=NSEW, padx=2)
+        self.naca_result.grid(row=5, column=1, sticky=NSEW, padx=2, pady=2)
 
         ttk.Label(self.geometry_generation_window, text="\n").grid(row=6, column=0, columnspan=4)
 
@@ -216,23 +216,23 @@ class Input():
         self.croot_ctip = DoubleVar()
         self.croot_ctip.set(1.0)
         self.croot_ctip_label = ttk.Label(self.geometry_generation_window, text="Croot/Ctip", borderwidth=2, relief="groove")
-        self.croot_ctip_label.grid(row=8, column=0, sticky=NSEW, padx=2)
+        self.croot_ctip_label.grid(row=8, column=0, sticky=NSEW, padx=2, pady=2)
         self.croot_ctip_entry = ttk.Entry(self.geometry_generation_window, textvariable=self.croot_ctip, width=10)
         self.croot_ctip_entry.grid(row=8, column=1, padx=2)
 
         ttk.Label(self.geometry_generation_window, text="\n").grid(row=9, column=0, columnspan=4)
-        ttk.Label(self.geometry_generation_window, text="Mesh file type:").grid(row=10, column=0, columnspan=3, sticky=W, padx=2)
+        ttk.Label(self.geometry_generation_window, text="Mesh file type:").grid(row=10, column=0, columnspan=3, sticky=W, padx=2, pady=2)
 
         self.mesh_type = IntVar()
         self.mesh_type.set(3)
         self.mesh_type_egads = Radiobutton(self.geometry_generation_window, text=".egads", value=1, variable=self.mesh_type, relief="groove", borderwidth=2, anchor=W, width=10)
-        self.mesh_type_egads.grid(row=11, column=0, sticky=NSEW, padx=2)
+        self.mesh_type_egads.grid(row=11, column=0, sticky=NSEW, padx=2, pady=2)
 
         self.mesh_type_iges = Radiobutton(self.geometry_generation_window, text=".iges", value=2, variable=self.mesh_type, relief="groove", borderwidth=2, anchor=W, width=10)
-        self.mesh_type_iges.grid(row=12, column=0, sticky=NSEW, padx=2)
+        self.mesh_type_iges.grid(row=12, column=0, sticky=NSEW, padx=2, pady=2)
 
         self.mesh_type_step = Radiobutton(self.geometry_generation_window, text=".step", value=3, variable=self.mesh_type, relief="groove", borderwidth=2, anchor=W, width=10)
-        self.mesh_type_step.grid(row=13, column=0, sticky=NSEW, padx=2)
+        self.mesh_type_step.grid(row=13, column=0, sticky=NSEW, padx=2, pady=2)
 
         ok_button = ttk.Button(self.geometry_generation_window, text="Ok", command=self.saveGeometry)
         ok_button.grid(row=14, column=1, pady=5)

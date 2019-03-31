@@ -20,13 +20,17 @@ EXECUTABLE (0-no 1-yes)
 build execute
 1 1
 OUTPUT (0-no 1-yes)
+filestype (0-Euler 1-SU2
+1
 clalpha cdalpha cmalpha
 0 0 0
-coefficientsconv residualconv
+coefficientsconvergence residualconv
 0 0
 cpxc machcontour cpcontour machisosurface
 0 0 0 0
 slicecp
 0
-axis xcoord ycoord zcoord
+axiscpxc xcoord ycoord zcoord
 x 0.0 0.0 0.0
+axisslicecp fcoord lcoord numberofslices
+x 0.0 0.0 0
