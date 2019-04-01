@@ -318,8 +318,8 @@ class Input():
         
         self.geometry_generation_window.destroy()
 
-        #os.system("serveCSM -batch ~/Documents/EulerFred/euler3D/NACA_ESP")
-        os.system("serveCSM ~/Documents/EulerFred/euler3D/NACA_ESP")
+        os.system("serveCSM -batch ~/Documents/EulerFred/euler3D/NACA_ESP")
+        # os.system("serveCSM ~/Documents/EulerFred/euler3D/NACA_ESP")
 
         messagebox.showinfo("Ready for meshing", info)
 

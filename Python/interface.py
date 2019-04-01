@@ -3,7 +3,9 @@ from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
 from tkinter import filedialog
+import os
 import os.path
+import subprocess
 from input import Input
 from solver import Solver
 from output import Output
@@ -41,7 +43,6 @@ class Interface(Input, Solver, Output):
         menubar.add_cascade(label="Help", menu=help_menu)
         help_menu.add_command(label="User guide")
 
-        
         # SECTION 1: INPUT
         self.input = Input(tab1)
 
@@ -70,37 +71,46 @@ class Interface(Input, Solver, Output):
         clear_button_output = ttk.Button(tab3, text="Clear this page", command=self.output.clearPage)
         clear_button_output.grid(row=2, column=1, padx=2, pady=2)
 
-        solve_button_input = ttk.Button(tab1, text="Solve")
+        solve_button_input = ttk.Button(tab1, text="Solve", command=self.solveCode)
         solve_button_input.grid(row=2, column=2, padx=2, pady=2)
-
-        solve_button_solver = ttk.Button(tab2, text="Solve")
+ 
+        solve_button_solver = ttk.Button(tab2, text="Solve", command=self.solveCode)
         solve_button_solver.grid(row=3, column=2, padx=2, pady=2)
 
-        solve_button_output = ttk.Button(tab3, text="Solve")
+        solve_button_output = ttk.Button(tab3, text="Solve", command=self.solveCode)
         solve_button_output.grid(row=2, column=2, padx=2, pady=2)
-
-        #self.createMenus()
-
-    #def createMenus(self):
-        #menubar = Menu(self)
-        #self.config(menu=menubar)
-
-        #file_option = Menu(menubar)
-        #menubar.add_cascade(label="File", menu=file_option)
-    
-    
+   
     def clearAllPages(self):
         self.input.clearPage()
         self.solver.clearPage()
         self.output.clearPage()
+    
+    def solveCode(self):
+        solver_option = self.solver.solver_option.get()
+        
+        if solver_option == 1:
+            command = "make"
 
-    def save_entry(self):
+        elif solver_option == 2:
+            command = "../euler3D/bin output_interface.txt"
+
+        elif solver_option == 3:
+            command = "make ../euler3D/bin output_interface.txt"
+        
+        print(solver_option)
+        print(command)
+        
+        # main_window.quit()
+        # main_window.saveEntries()
+        # subprocess.run([command])
+
+    def saveEntries(self):
 
         input = self.input.writePartialOutput()
         solver = self.solver.writePartialOutput()
         output = self.output.writePartialOutput()
 
-        file_path = '../euler3D/'
+        file_path = '../euler3D/bin'
         file_name = "output_interface.txt"
 
         complete_file_name = os.path.join(file_path, file_name)
@@ -110,8 +120,10 @@ class Interface(Input, Solver, Output):
         file.write(input+solver+output)
         file.close()        
 
+    # def quit(self):
+    #     master.destroy()
 
 root = Tk()
 main_window = Interface(root)
 root.mainloop()
-main_window.save_entry()
+main_window.saveEntries()
