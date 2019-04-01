@@ -14,12 +14,30 @@ Face::Face()
 }
 Face::~Face()
 {
-	
-	delete[] face_2_nodes_connectivity_;
-	delete[] face_normals_;
-	delete[] face_2_cells_connectivity_;
-	delete[] right_cell_r_vector_;
-	delete[] left_cell_r_vector_;
+	if (face_2_nodes_connectivity_)
+	{
+		delete[] face_2_nodes_connectivity_;
+	}
+
+	if (face_normals_)
+	{
+		delete[] face_normals_;
+	}
+
+	if (face_2_cells_connectivity_)
+	{
+		delete[] face_2_cells_connectivity_;
+	}
+
+	if (right_cell_r_vector_)
+	{
+		delete[] right_cell_r_vector_;
+	}
+
+	if (left_cell_r_vector_)
+	{
+		delete[] left_cell_r_vector_;
+	}
 
 }
 
