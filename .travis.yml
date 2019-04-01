@@ -5,7 +5,7 @@ before_install:
   - test -n $CXX && unset CXX
   - sudo apt update
   - apt search libomp
-  - sudo apt install -y tree openssh-client openssh-server openmpi-bin openmpi-common libopenmpi1.6 libopenmpi-dev libopenmpi1.6-dbg cppcheck libmetis-dev libmetis5 libmetis5-dbg libomp-dev
+  - sudo apt install -y tree openssh-client openssh-server openmpi-bin openmpi-common libopenmpi1.6 libopenmpi-dev libopenmpi1.6-dbg cppcheck libmetis-dev libmetis5 libmetis5-dbg
 script: 
   - make VERIFY=true
   - ./bin/euler3D
