@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 #include <math.h>
+#include <iostream>
+#include <sys/stat.h>
 
 #include "AerodynamicParameters.h"
 #include "Convergence.h"
@@ -25,7 +27,7 @@ public:
   PostProcessing(int n_blocks, int max_iter, double convergence_criterion, double cmac, double mach_aircraft, double aoa_deg, double gamma);
   ~PostProcessing();
 
-  void process(Block* block, CompleteMesh* complete_mesh);
+  void process(CompleteMesh* complete_mesh);
 
 
 
@@ -33,6 +35,8 @@ public:
   int current_iter_;
   int max_iter_;
   int iteration_interval_;
+
+  std::string stop_file_name_;
 
   double convergence_criterion_;
   bool stop_solver_;
@@ -87,6 +91,9 @@ public:
   void coefficientsSum(CompleteMesh* complete_mesh);
   void saveConvergence(Block* block);
   void saveCoefficients(Block* block);
+
+
+  
 
 };
 

@@ -5,13 +5,12 @@
 #include "ConnexionCellIds.h"
 
 #include <iostream>
-using namespace std;
 
 void ConnexionCellIds::updateBoundary()
 {
-	cout<<"Connexion cells (fakely) updated \n";
+	std::cout<<"Connexion cells updated" << std::endl;
 }
-	
+
 ConnexionCellIds::ConnexionCellIds()
 {
 std::ifstream myfile(Topology);
@@ -122,9 +121,10 @@ cerr << "fail opening topology file " << meshFileName << endl;
 
 }
 
-ConnexionCellIds::~ConnexionCellIds()
-{
-
+ConnexionCellIds::~ConnexionCellIds(){
+    if (cell_ids_in_boundary_other_block_ != nullptr){
+        delete [] cell_ids_in_boundary_other_block_;
+    }
 }
 
 #endif

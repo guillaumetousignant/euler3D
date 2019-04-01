@@ -1,21 +1,21 @@
 MESH
 topologyfilename
-../naca0012_coarse_nosidewall.su2
+../naca0012_coarse.su2
 INPUT
 cfl gamma angleattackdeg
-0.5 1.4 0.00
+0.5 1.4 3.00
 rkstage mach cmac
-5 0.80 1.00
+5 0.60 1.00
 nbitermax convcriterion
-500 1e-15
+2 -15
 residual smoothing (0-no 1-yes)
 0
 fluxscheme schemeorder
 roe 1
 gradient limiter
-greengauss barthjespersen
+leastsquares barthjespersen
 omega k
-1.0e6 5.00
+2.16-16 5.00
 EXECUTABLE (0-no 1-yes)
 build execute
 1 1

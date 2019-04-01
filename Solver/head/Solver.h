@@ -6,6 +6,7 @@
 #include "Timestep.h"
 #include "RungeKutta.h"
 #include "PostProcessing.h"
+#include "BlockCommunicator.h"
 
 #include <string>
 using namespace std;
@@ -14,6 +15,7 @@ class Timestep;
 class RungeKutta;
 class PostProcessing;
 class Block;
+class BlockCommunicator;
 
 class Solver
 {
@@ -23,7 +25,7 @@ class Solver
 		RungeKutta *runge_kutta_;
 		PostProcessing *post_processing_;
 
-		void solve(Block* block, CompleteMesh* complete_mesh);
+		void solve(CompleteMesh* complete_mesh, BlockCommunicator* communicator);
 		void saveW0(Block* block);
 
 		Solver(double gamma, double cfl, int stage_number, int interpolation_choice, string gradient_choice, string limiter_choice, string flux_scheme_choice, bool residual_smoother_choice, int n_blocks, int max_iter, double convergence_criterion, double cmac, double aoa_deg, double mach_aircraft, double omega, double k);
