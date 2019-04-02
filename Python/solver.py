@@ -70,7 +70,7 @@ class Solver():
         label_void_5.grid(row=1, column=0)
         
         self.nb_process = IntVar()
-        self.nb_process.set(6)
+        self.nb_process.set(1)
         self.nb_process_label = ttk.Label(title_section_2_3, text="Number of process", relief="groove", borderwidth=2, anchor=CENTER, width=22)
         self.nb_process_label.grid(row=1, column=1, columnspan=2, sticky=NSEW, padx=2, pady=2)
         self.nb_process_entry = ttk.Entry(title_section_2_3, textvariable=self.nb_process, width=15, justify=CENTER)
@@ -153,7 +153,7 @@ class Solver():
         self.limiter_entry.bind('<<ComboboxSelected>>', self.activateOmegaOrK)
 
         self.omega = IntVar()
-        self.omega.set(6)
+        self.omega.set(-16)
         self.omega_label = ttk.Label(self.flux_scheme_window, text="Omega power\n(1.0eX)", width=13, anchor=CENTER, borderwidth=2, relief="groove", state="disabled")
         self.omega_label.grid(row=9, column=0, padx=2, pady=7)
         self.omega_entry = ttk.Entry(self.flux_scheme_window, textvariable=self.omega, width=10, state="disabled", justify=CENTER)
@@ -283,8 +283,7 @@ class Solver():
     def writePartialOutput(self):
         nb_niter_max_str = str(self.max_iter.get())
         conv_criterion_str = str(self.convergence_crit.get())
-        conv_criterion_str = "1.0e"+conv_criterion_str
-
+        
         solver_option = self.solver_option.get()
         if solver_option == 1:
             build_str = "1"

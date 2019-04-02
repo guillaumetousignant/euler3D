@@ -92,17 +92,16 @@ class Interface(Input, Solver, Output):
             command = "make"
 
         elif solver_option == 2:
-            command = "../euler3D/bin output_interface.txt"
+            # nb_process_str = str(self.solver.nb_process.get())
+            # command = "mpiexec -n " + nb_process_str + " ./bin/euler3D ./bin/output_interface"
+            command = "./bin/euler3D ./bin/output_interface"
 
         elif solver_option == 3:
-            command = "make ../euler3D/bin output_interface.txt"
+            command = "make; ./bin/euler3D"
         
-        print(solver_option)
-        print(command)
-        
-        # main_window.quit()
-        # main_window.saveEntries()
-        # subprocess.run([command])
+        self.saveEntries()
+        root.destroy()
+        os.system(command)
 
     def saveEntries(self):
 
@@ -111,7 +110,7 @@ class Interface(Input, Solver, Output):
         output = self.output.writePartialOutput()
 
         file_path = '../euler3D/bin'
-        file_name = "output_interface.txt"
+        file_name = "output_interface"
 
         complete_file_name = os.path.join(file_path, file_name)
 
@@ -120,8 +119,6 @@ class Interface(Input, Solver, Output):
         file.write(input+solver+output)
         file.close()        
 
-    # def quit(self):
-    #     master.destroy()
 
 root = Tk()
 main_window = Interface(root)

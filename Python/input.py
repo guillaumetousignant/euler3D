@@ -199,7 +199,7 @@ class Input():
         self.thickness_entry.grid(row=4, column=2, sticky=NW, padx=2)
         ttk.Label(self.geometry_generation_window, text="(1 to 40%)", anchor=CENTER, width=10).grid(row=4, column=3, sticky=NSEW)
       
-        refresh = ttk.Button(self.geometry_generation_window, text="Refresh", command=self.changeNACADigits)
+        refresh = ttk.Button(self.geometry_generation_window, text="Refresh NACA", command=self.changeNACADigits)
         refresh.grid(row=5, column=0, sticky=NSEW, padx=2, pady=2)
         self.naca_result = ttk.Label(self.geometry_generation_window, text="NACA 0012", borderwidth=2, relief="groove", width=10)
         self.naca_result.grid(row=5, column=1, sticky=NSEW, padx=2, pady=2)
@@ -234,10 +234,21 @@ class Input():
         self.mesh_type_step = Radiobutton(self.geometry_generation_window, text=".step", value=3, variable=self.mesh_type, relief="groove", borderwidth=2, anchor=W, width=10)
         self.mesh_type_step.grid(row=13, column=0, sticky=NSEW, padx=2, pady=2)
 
+        self.show_geometry = IntVar()
+        self.show_geometry.set(0)
+        self.show_geometry_label = ttk.Label(self.geometry_generation_window, text="\n\nWould you like to show geometry?", anchor=CENTER)
+        self.show_geometry_label.grid(row=14, column=0, columnspan=2, padx=2)
+        
+        self.show_geometry_yes = Radiobutton(self.geometry_generation_window, text="Yes", value=1, variable=self.show_geometry, relief="groove", borderwidth=2, width=8, anchor=W)
+        self.show_geometry_yes.grid(row=15, column=0, padx=2, pady=2, sticky=NSEW)
+
+        self.show_geometry_no = Radiobutton(self.geometry_generation_window, text="No", value=0, variable=self.show_geometry, relief="groove", borderwidth=2, width=8, anchor=W)
+        self.show_geometry_no.grid(row=16, column=0, padx=2, pady=2, sticky=NSEW)
+
         ok_button = ttk.Button(self.geometry_generation_window, text="Ok", command=self.saveGeometry)
-        ok_button.grid(row=14, column=1, pady=5)
+        ok_button.grid(row=17, column=1, pady=5)
         cancel_button = ttk.Button(self.geometry_generation_window, text="Cancel", command=self.geometry_generation_window.destroy)
-        cancel_button.grid(row=14, column=2, pady=5)
+        cancel_button.grid(row=17, column=2, pady=5)
 
     def changeNACADigits(self):
         first_digit = str(self.max_camber.get())
@@ -318,8 +329,10 @@ class Input():
         
         self.geometry_generation_window.destroy()
 
-        os.system("serveCSM -batch ~/Documents/EulerFred/euler3D/NACA_ESP")
-        # os.system("serveCSM ~/Documents/EulerFred/euler3D/NACA_ESP")
+        if self.show_geometry == 0:
+            os.system("serveCSM -batch ~/Documents/EulerFred/euler3D/NACA_ESP")
+        elif self.show_geometry == 1:
+            os.system("serveCSM ~/Documents/EulerFred/euler3D/NACA_ESP")
 
         messagebox.showinfo("Ready for meshing", info)
 
