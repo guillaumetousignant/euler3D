@@ -43,18 +43,20 @@ CompleteMesh::~CompleteMesh()
 
 void CompleteMesh::InitializeMyBlocks(Interface* interface)
 {
-	std::string block_id_string;
-	std::string block_file;
-	Block* new_block;
-	int block_id;
+	//std::string block_id_string;
+	//std::string block_file;
+	//Block* new_block;
+	//int block_id;
 
+	#pragma omp parallel for schedule(guided)
 	for(int i=0;i<n_blocks_in_process_;i++)
 	{
-		block_id = my_blocks_[i];
+		std::string block_file;
+		int block_id = my_blocks_[i];
 
 		// std::cout<<block_id<<std::endl;
 
-		block_id_string = std::to_string(block_id);
+		std::string block_id_string = std::to_string(block_id);
 		// block_file = "../naca0012_coarse_nosidewall.su2";
 		std::size_t found = topology_file_name_.find_last_of(".");
   		if (found!=std::string::npos){
@@ -64,7 +66,7 @@ void CompleteMesh::InitializeMyBlocks(Interface* interface)
 			block_file = topology_file_name_ + block_id_string;
 		}
 		ConcreteBlockBuilder block_builder=ConcreteBlockBuilder(block_file);
-		new_block = all_blocks_[block_id];
+		Block* new_block = all_blocks_[block_id];
 
 		//std::cout<<new_block -> block_id_<<std::endl;
 
