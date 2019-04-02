@@ -236,7 +236,7 @@ class Input():
 
         self.show_geometry = IntVar()
         self.show_geometry.set(0)
-        self.show_geometry_label = ttk.Label(self.geometry_generation_window, text="\n\nWould you like to show geometry?", anchor=CENTER)
+        self.show_geometry_label = ttk.Label(self.geometry_generation_window, text="\n\nWould you like to visualize geometry in ESP?", anchor=CENTER)
         self.show_geometry_label.grid(row=14, column=0, columnspan=2, padx=2)
         
         self.show_geometry_yes = Radiobutton(self.geometry_generation_window, text="Yes", value=1, variable=self.show_geometry, relief="groove", borderwidth=2, width=8, anchor=W)
@@ -252,7 +252,17 @@ class Input():
 
     def changeNACADigits(self):
         first_digit = str(self.max_camber.get())
-        second_digit = str(self.max_camber_position.get())
+
+        if first_digit == "0":
+            second_digit = "0"
+        
+        else:
+            if self.max_camber_position.get() < 10:
+                second_digit = "1"
+            else:
+                second_digit = str(self.max_camber_position.get())
+                second_digit = second_digit[0]
+        
         third_fourth_digit = str(self.thickness.get())
         naca_result_text = "NACA " + first_digit + second_digit + third_fourth_digit
         self.naca_result.configure(text=naca_result_text)
@@ -329,9 +339,9 @@ class Input():
         
         self.geometry_generation_window.destroy()
 
-        if self.show_geometry == 0:
+        if self.show_geometry.get() == 0:
             os.system("serveCSM -batch ~/Documents/EulerFred/euler3D/NACA_ESP")
-        elif self.show_geometry == 1:
+        elif self.show_geometry.get() == 1:
             os.system("serveCSM ~/Documents/EulerFred/euler3D/NACA_ESP")
 
         messagebox.showinfo("Ready for meshing", info)
