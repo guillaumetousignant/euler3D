@@ -113,4 +113,155 @@ void CompleteMesh::InitializeMyBlocks()
 
 }
 
+void CompleteMesh::InitializeMPIboundaries()
+{
+	std::string block_id_string;
+	std::string block_file;
+	std::string topology_file_name;
+
+	topology_file_name="../dummy_topology.txt";
+
+	int block_id;
+	int nb_of_blocks;
+	int n_nodes_temp;
+	int n_real_cells_temp;
+	int n_ghost_cells_temp;
+	int n_boundaries_temp;
+	char boundary_type_temp[50];
+	std::ifstream myfile(topology_file_name);
+
+	char str_temp[200];
+	std::string line;
+
+	if (myfile.is_open())
+	{
+		getline(myfile,line);
+		getline(myfile,line)
+		sscanf (line.c_str(), "%i",&nb_of_blocks);
+		for(int i=0;i<nb_of_blocks;i++)
+		{
+			getline(myfile,line)
+			sscanf(line.c_str(),"%s",str_temp);
+			block_file=str_temp;
+			std::ifstream myblockfile(block_file);
+
+			if (myblockfile.isopen())
+			{
+				getline(myblockfile, line);
+
+				getline(myblockfile, line);
+				getline(myblockfile, line);
+				sscanf (line.c_str(), "%s %d",str_temp,&n_nodes_temp);
+
+				for( int node_id = 0; node_id < n_nodes_temp; node_id++)
+				{
+					getline(myblockfile, line);
+				}
+				getline(myblockfile, line);
+				sscanf (line.c_str(), "%s %d",str_temp,&n_real_cells_temp);
+				for(int n_elem_temp=0 ; n_elem_temp < n_real_cells_temp; n_elem_temp++)
+				//for(int cell_id = 0; cell_id < n_real_cells; cell_id++)
+
+				{
+					getline(myblockfile, line);
+				}
+
+
+				getline(myblockfile, line);
+				sscanf (line.c_str(), "%s %i",str_temp,&n_boundaries_temp);				
+
+				for(int boundary_id = 0; boundary_id < n_boundaries_temp; boundary_id++)
+				{
+					getline(myblockfile, line);
+					sscanf (line.c_str(), "%s %s",str_temp,boundary_type_temp);
+					std::string boundary_type_temp_str(boundary_type_temp);
+					std::size_t found=boundary_type_temp.find("Block_");
+					getline(myblockfile, line);
+					sscanf (line.c_str(), "%s %i",str_temp,&n_ghost_cells_temp);
+
+						if (boundary_type_temp_str=="WALL") // wall
+						{
+							for(int compteur_temp_ghost=0 ; compteur_temp_ghost < n_ghost_cells_temp; compteur_temp_ghost++)
+							{
+								getline(myblockfile, line);
+							}
+							//std::cout<<"on a un wall"<< std::endl;
+							// block->block_boundary_cell_ids_[real_boundary_id]= new WallCellIds;
+
+							// (block->block_boundary_cell_ids_[real_boundary_id])->n_cell_in_boundary_=n_ghost_cells_temp;
+							// (block->block_boundary_cell_ids_[real_boundary_id])->cell_ids_in_boundary_=new int[n_ghost_cells_temp];
+							// (block->block_boundary_cell_ids_[real_boundary_id])->cell_count_= new int;
+							// *((block->block_boundary_cell_ids_[real_boundary_id])->cell_count_)=0;
+							// (block->block_boundary_cell_ids_[real_boundary_id])->owner_block_=block;
+							// real_boundary_id=real_boundary_id+1;
+
+
+						}
+						else if (boundary_type_temp_str == "FARFIELD") //farfield
+						{
+							for(int compteur_temp_ghost=0 ; compteur_temp_ghost < n_ghost_cells_temp; compteur_temp_ghost++)
+							{
+								getline(myblockfile, line);
+							}
+							//std::cout<<"on a un farfield"<< std::endl;
+							// block->block_boundary_cell_ids_[real_boundary_id]= new FarfieldCellIds;
+
+							// (block->block_boundary_cell_ids_[real_boundary_id])->n_cell_in_boundary_=n_ghost_cells_temp;
+							// (block->block_boundary_cell_ids_[real_boundary_id])->cell_ids_in_boundary_=new int[n_ghost_cells_temp];
+							// (block->block_boundary_cell_ids_[real_boundary_id])->cell_count_= new int;
+							// *((block->block_boundary_cell_ids_[real_boundary_id])->cell_count_)=0;
+							// (block->block_boundary_cell_ids_[real_boundary_id])->owner_block_=block;
+							// real_boundary_id=real_boundary_id+1;
+
+						}
+						else if (boundary_type_temp_str == "SYMMETRY") //symmetry
+						{
+							for(int compteur_temp_ghost=0 ; compteur_temp_ghost < n_ghost_cells_temp; compteur_temp_ghost++)
+							{
+								getline(myblockfile, line);
+							}
+							//std::cout<<"on a un symmetry"<< std::endl;
+							// block->block_boundary_cell_ids_[real_boundary_id]= new SymmetryCellIds;
+
+							// (block->block_boundary_cell_ids_[real_boundary_id])->n_cell_in_boundary_=n_ghost_cells_temp;
+							// (block->block_boundary_cell_ids_[real_boundary_id])->cell_ids_in_boundary_=new int[n_ghost_cells_temp];
+							// (block->block_boundary_cell_ids_[real_boundary_id])->cell_count_= new int;
+							// *((block->block_boundary_cell_ids_[real_boundary_id])->cell_count_)=0;
+							// (block->block_boundary_cell_ids_[real_boundary_id])->owner_block_=block;
+							// real_boundary_id=real_boundary_id+1;
+
+						}
+						else if (!found=std::string::npos) //Connection inter-bloc
+						{
+							std::cout<<"on a une connexion boundary"<<std::endl;
+							ConnexionCellIds* boundary_connec=new ConnexionCellIds;
+							//boundary_type_temp_str.substr(found+7,1)
+
+							for(int compteur_temp_ghost=0 ; compteur_temp_ghost < n_ghost_cells_temp; compteur_temp_ghost++)
+							{
+								getline(myblockfile, line);
+							}
+							//block->n_real_boundaries_in_block_=(block->n_real_boundaries_in_block_)-1;
+
+						}
+
+					//std::cout<<"test type bound: "<< boundary_type_temp <<std::endl;
+					//std::cout<<"test nbcell in bound: "<< n_ghost_cells_temp <<std::endl;
+					//std::cout<<"test la ou on est: "<< cell_id <<std::endl;
+
+				}
+			}else{
+				//warning that file was not opened!
+				std::cout<<"WARNING! BLOCK FILE WAS NOT CORRECTLY OPENED IN DUMMY MPI READ FUNCTION. ERRATIC BEHAVIOR MAY APPEAR!"<<std::endl;
+				 }
+
+		}
+	}else{
+		//warning that file was not opened!
+		std::cout<<"WARNING! DUMMYTOPOLOGY FILE WAS NOT CORRECTLY OPENED IN READ FUNCTION. ERRATIC BEHAVIOR MAY APPEAR!"<<std::endl;
+		 }
+
+
+}
+
 #endif
