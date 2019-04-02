@@ -1,6 +1,6 @@
 MESH
 topologyfilename
-/home/guillaume/Documents/code/euler3D/naca0012_coarse.su2
+/home/guillaume/Documents/code/euler3D/Meshes/naca0012_coarse.su2
 INPUT
 cfl gamma angleattackdeg
 0.5 1.4 3.00
