@@ -5,6 +5,7 @@
 #include "Block.h"
 #include "BlockBuilder.h"
 #include "ConcreteBlockBuilder.h"
+#include "ConnexionCellIds.h"
 #include <string>
 #include <iostream>
 using namespace std;
@@ -136,22 +137,23 @@ void CompleteMesh::InitializeMPIboundaries()
 	if (myfile.is_open())
 	{
 		getline(myfile,line);
-		getline(myfile,line)
+		getline(myfile,line);
 		sscanf (line.c_str(), "%i",&nb_of_blocks);
+		getline(myfile,line);
 		for(int i=0;i<nb_of_blocks;i++)
 		{
-			getline(myfile,line)
+			getline(myfile,line);
 			sscanf(line.c_str(),"%s",str_temp);
-			block_file=str_temp;
+			std::string block_file(str_temp);
+			//std::cout<< "TEEEEEEST"<< block_file<<std::endl;
 			std::ifstream myblockfile(block_file);
 
-			if (myblockfile.isopen())
+			if (myblockfile.is_open())
 			{
-				getline(myblockfile, line);
-
 				getline(myblockfile, line);
 				getline(myblockfile, line);
 				sscanf (line.c_str(), "%s %d",str_temp,&n_nodes_temp);
+				std::cout<<"premier test"<<line<<std::endl;
 
 				for( int node_id = 0; node_id < n_nodes_temp; node_id++)
 				{
@@ -168,14 +170,18 @@ void CompleteMesh::InitializeMPIboundaries()
 
 
 				getline(myblockfile, line);
-				sscanf (line.c_str(), "%s %i",str_temp,&n_boundaries_temp);				
+				std::cout<<"TEEEEEEEEEEEEEEEEEEEST LECTURE"<< line<<std::endl;
+				sscanf (line.c_str(), "%s %i",str_temp,&n_boundaries_temp);	
+				std::cout<<"TEEEEEEEEST nombre"<< n_boundaries_temp<<std::endl;			
 
 				for(int boundary_id = 0; boundary_id < n_boundaries_temp; boundary_id++)
 				{
 					getline(myblockfile, line);
 					sscanf (line.c_str(), "%s %s",str_temp,boundary_type_temp);
 					std::string boundary_type_temp_str(boundary_type_temp);
-					std::size_t found=boundary_type_temp.find("Block_");
+					std::cout <<"TEEEEEST LECTURE BOUNDARY"<<boundary_type_temp_str<<std::endl;
+					std::size_t found=boundary_type_temp_str.find("Block_");
+					std::cout<<"TEEEEEEEEEEEST"<<found<<std::endl;
 					getline(myblockfile, line);
 					sscanf (line.c_str(), "%s %i",str_temp,&n_ghost_cells_temp);
 
@@ -231,7 +237,7 @@ void CompleteMesh::InitializeMPIboundaries()
 							// real_boundary_id=real_boundary_id+1;
 
 						}
-						else if (!found=std::string::npos) //Connection inter-bloc
+						else if (found!=std::string::npos) //Connection inter-bloc
 						{
 							std::cout<<"on a une connexion boundary"<<std::endl;
 							ConnexionCellIds* boundary_connec=new ConnexionCellIds;

@@ -7,7 +7,7 @@ cfl gamma angleattackdeg
 rkstage mach cmac
 5 0.50 1.00
 nbitermax convcriterion
-2000 -15
+20 -15
 residual smoothing (0-no 1-yes)
 1
 fluxscheme schemeorder

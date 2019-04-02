@@ -9623,7 +9623,7 @@ NELEM= 4096
 12    5420   5421   5438   5437   5505   5506   5523   5522
 12    5421   5422   5439   5438   5506   5507   5524   5523
 NMARK= 6
-MARKER_TAG= Block_0_panel_WAL_ID_0
+MARKER_TAG= WALL
 MARKER_ELEMS= 64
 9       0     17     18      1
 9       1     18     19      2
@@ -9689,7 +9689,7 @@ MARKER_ELEMS= 64
 9      64     81     82     65
 9      65     82     83     66
 9      66     83     84     67
-MARKER_TAG= Block_0_panel_FAR_ID_1
+MARKER_TAG= FARFIELD
 MARKER_ELEMS= 64
 9    5440   5441   5458   5457
 9    5441   5442   5459   5458

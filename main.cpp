@@ -85,7 +85,7 @@ int main(int argc, char* argv[])
 		
 	}
 	cout<< "In MPI Boundaries initialization"<< endl;
-	Complete_mesh->InitializeMPIboundaries();
+	complete_mesh->InitializeMPIboundaries();
 
 	cout << "In Solver........." << endl;	
 
