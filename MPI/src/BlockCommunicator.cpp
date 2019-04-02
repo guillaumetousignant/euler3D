@@ -3,7 +3,6 @@
 #include <mpi.h>
 #endif
 #include <algorithm>
-#include <iostream> // REMOVE
 #include "PostProcessing.h"
 
 #define N_VARIABLES 20
