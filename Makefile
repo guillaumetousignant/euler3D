@@ -116,7 +116,7 @@ METISLIBS += -L$(METISROOT)/lib -lmetis
 #---------------------------------------------------------------------------------------------------+
 # Targets
 
-all : mpirelease $(MPIReleaseObjectFiles)
+all : mpidebug $(MPIReleaseObjectFiles)
 
 debug : .debug  begun $(DebugObjectFiles) $(ExecutableDebugObjectFile)
 	@printf '   Linking Debug...'
@@ -145,7 +145,7 @@ mpirelease : .mpirelease begun $(MPIReleaseObjectFiles) $(ExecutableMPIReleaseOb
 reset : clean
 	@$(shell reset)
 
-verify : mpirelease $(MPIReleaseObjectFiles)
+verify : mpidebug $(MPIDebugObjectFiles)
 
 #---------------------------------------------------------------------------------------------------+
 #---------------------------------------------------------------------------------------+
