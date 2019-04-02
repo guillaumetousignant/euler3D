@@ -1,12 +1,10 @@
-#include "Block.h"
-
 #include "Initializer.h"
 #include "Interface.h"
 #include "Solver.h"
 
-
 #include <iostream>
 #include <string>
+#include <chrono>
 #ifdef HAVE_MPI
 #include <mpi.h>
 #endif
@@ -14,7 +12,6 @@
 #include "ConcreteBlockBuilder.h"
 #include "BlockCommunicator.h"
 #include "CompleteMesh.h"
-
 
 using namespace std;
 
@@ -68,7 +65,13 @@ int main(int argc, char* argv[])
 	complete_mesh->InitializeMyBlocks(interface);
 
 	Solver *solver=initializer->initializeSolver(interface);
-	solver->solve(complete_mesh, communicator);
+
+	auto t_start = std::chrono::high_resolution_clock::now();
+    solver->solve(complete_mesh, communicator);
+    auto t_end = std::chrono::high_resolution_clock::now();
+    std::cout << "Time elapsed solving: " 
+            << std::chrono::duration<double, std::milli>(t_end-t_start).count()/1000.0 
+            << "s." << std::endl;
 
 	#ifdef HAVE_MPI
 	MPI_Finalize();
