@@ -16,8 +16,8 @@ public:
 
 	CompleteMesh(int n_blocks, int n_block_in_process, int* my_blocks, string topology_file_name);
 	~CompleteMesh();
-	string preReadTopology(Block* block);
-	void readTopology(Block* block);
+	string preReadTopology(Block* block,int MPI_block_id);
+	void readTopology(Block* block, int MPI_block_id, int& count);
 	void InitializeMyBlocks();
 
 };

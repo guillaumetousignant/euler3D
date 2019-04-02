@@ -9,7 +9,8 @@
 #include <iostream>
 using namespace std;
 
-CompleteMesh::CompleteMesh(int n_blocks, int n_blocks_in_process, int* my_blocks, string topology_file_name) : n_blocks_(0), n_blocks_in_process_(0), my_blocks_(nullptr), all_blocks_(nullptr)
+
+CompleteMesh::CompleteMesh(int n_blocks, int n_blocks_in_process, int* my_blocks) : n_blocks_(0), n_blocks_in_process_(0), my_blocks_(nullptr), all_blocks_(nullptr)
 
 {
 	n_blocks_=n_blocks;
@@ -39,27 +40,34 @@ CompleteMesh::~CompleteMesh()
 
 }
 
-string CompleteMesh::preReadTopology(Block* block)
+string CompleteMesh::preReadTopology(Block* block,int MPI_block_id)
 {
 std::ifstream myfile(Topology);
 char str_temp[200];
 std::string block_file_;
+int n_blocks
 
 if (myfile.is_open())
 {
-	for(i=0;i<n_blocks_;i++)
+	getline(myfile, line);
+  scanf (line.c_str(), "%s %d",str_temp,n_blocks);
+
+  for(i=0;i<n_blocks;i++)
    {
-   	if(i==block->block_id_)
+   	if(i==MPI_block_id)
    	{
    		getline(myfile, line);
    		scanf (line.c_str(), "%s",str_temp);
    		block_file_=str_temp;
    		return block_file_;
+      break;
    	}
    	else
    	{
    		getline(myfile, line);
-   	}
+   	}   
+}
+myfile.close();
 }
 else if (myfile.fail())
 {
@@ -69,105 +77,94 @@ cerr << "fail opening topology file " << meshFileName << endl;
 
 }
 
-}
-
-
-
-void CompleteMesh::readTopology(Block* block)
+void CompleteMesh::readTopology(Block* block, int MPI_block_id, int& count)
 {
 std::ifstream myfile(Topology);
 char str_temp[200];
 std::string line;
-std::string block_file_;
-std::string other_block_id_temp;
-std::string cell_type_temp;
-int i,j,k,n1,n2,n3,n4;
+int i,j,k;
+int n_blocks,n_connexions,n_boundaries,n_elems,block_destination_temp,elem_id_destination_temp;
 
 if (myfile.is_open())
 {
-   for(i=0;i<n_blocks_;i++)
-   {
-   	if(i==block->block_id_)
+  getline(myfile, line);
+  scanf (line.c_str(), "%s %d",str_temp,n_blocks);
 
-   		getline(myfile, line);
+  for(i=0;i<n_blocks;i++)
+   {
+      getline(myfile, line);
    }
 
-
-   for(i=0;i<n_blocks_;i++)
+   for(i=0;i<n_blocks;i++)
    {
-   	getline(myfile, line);
-   	scanf (line.c_str(), "%s %d",str_temp,n1);
-   	getline(myfile, line);
-   	getline(myfile, line);
-    getline(myfile, line);
-    getline(myfile, line);
-    scanf (line.c_str(), "%s %d",str_temp,n2);
 
-   	for(j=0;j<n2;j++)
-   	{
-   		getline(myfile, line);
-   	}
-
-   	getline(myfile, line);
-   	getline(myfile, line);
-    scanf (line.c_str(), "%s %d",str_temp,n2);
-
-   	for(j=0;j<n2;j++)
-   	{
-   		getline(myfile, line);
-   	}
-
-   	getline(myfile, line);
-    scanf (line.c_str(), "%s %d",str_temp,n2);  //nb de block connecté
-   
-    if(i==block->block_id_)
+    if(i==MPI_block_id)
     {
-    	block->block_connexion_boundary_cell_ids_ = new BoundaryCellIds* [n2];
+      getline(myfile, line);
+      scanf (line.c_str(), "%s %d",str_temp,n_boundaries);
+
+      int** block_connexion_boundary_cell_ids_ = new ConnexionCellIds*[n_boundaries];
+
+      for(j=0;j<n_boundaries;j++)
+      {
+        getline(myfile, line);
+        scanf (line.c_str(), "%s %d",str_temp,block_destination_temp); 
+        getline(myfile, line);
+        scanf (line.c_str(), "%s %d",str_temp,n_elems); 
+        
+
+        count=0;
+        block_connexion_boundary_cell_ids_[j]->block_origin_=i;
+        block_connexion_boundary_cell_ids_[j]->block_destination_=block_destination_temp;
+        block_connexion_boundary_cell_ids_[j]->n_cell_in_boundary_=n_elems;
+        block_connexion_boundary_cell_ids_[j]->cell_ids_in_boundary_other_block_=new int[n_elems]();
+        block_connexion_boundary_cell_ids_[j]->cell_ids_in_boundary_=new int[n_elems]();
+        block_connexion_boundary_cell_ids_[j]->owner_block_=block;
+        block_connexion_boundary_cell_ids_[j]->cell_count_= new int;
+        *((block->block_connexion_boundary_cell_ids_[j])->cell_count_)=0;
+
+        for(k=0;k<n_elems;k++)
+        {
+          getline(myfile, line);
+          scanf (line.c_str(), "%s %d",str_temp,elem_id_destination_temp); 
+
+          block_connexion_boundary_cell_ids_[j]->cell_ids_in_boundary_[k]=count;
+          count=+1;
+          *(block->block_connexion_boundary_cell_ids_[j]->cell_count_)+=1;
+
+          block_connexion_boundary_cell_ids_[j]->cell_ids_in_boundary_other_block_=elem_id_destination_temp;
+          int* cell_ids_in_boundary_other_block_;
+          int* cell_ids_in_boundary_;
+          Block* owner_block_;
+
+        }
+
+        BlockCommunicator::addCellIdInConnexion(block_connexion_boundary_cell_ids_[j]);
+      
+      }
+
+    }
+    else
+    {
+      getline(myfile, line);
+      scanf (line.c_str(), "%s %d",str_temp,n_boundaries);
+
+      for(j=0;j<n_boundaries;j++)
+      {
+        getline(myfile, line);
+        getline(myfile, line);
+        scanf (line.c_str(), "%s %d",str_temp,n_elems); 
+
+        for(k=0;k<n_elems;k++)
+        {
+          getline(myfile, line);
+        }
+      }
     }
 
-   	for(j=0;j<n2;j++)
-   	{
-   		getline(myfile, line);
-   		scanf (line.c_str(), "%s %d",str_temp,n3); //block connecté au block i
-   		getline(myfile, line);
-   		scanf (line.c_str(), "%s %d",str_temp,n4); //nb d'élems connectés
-   		
-   		if(i==block->block_id_)
-   		{	
-   			(block->block_connexion_boundary_cell_ids_[j])= new ConnexionCellIds;
-   			(block->block_connexion_boundary_cell_ids_[j])->cell_ids_in_boundary_connected_= new int[n4];
-   			(block->block_connexion_boundary_cell_ids_[j])->owner_block_id_=i;
-   			(block->block_connexion_boundary_cell_ids_[j])->connected_block_id_=n3;
-   			(block->block_connexion_boundary_cell_ids_[j])->n_cell_in_boundary= n4;
-   			(block->block_connexion_boundary_cell_ids_[j])->cell_ids_in_boundary_ = new int[n4];
-   			(block->block_connexion_boundary_cell_ids_[j])->cell_count_= new int;
-			*((block->block_connexion_boundary_cell_ids_[j])->cell_count_)=0;
 
-   			for(k=0;k<n4;k++)
-   			{
-   				getline(myfile, other_block_id_temp);
-   				scanf (line.c_str(), "%s", cell_type_temp);
-
-   				BLOCK_ETRANGER[]
-
-   					if (cell_type == "9") // tetrahede
-					{
-
-					}
-
-
-   			}
-   		}
-   		else
-   		{
-   			for(k=0;k<n4;k++)
-   			{
-   				getline(myfile, line);
-   			}
-   		}	
-
-   	}
-   }
+  }
+myfile.close();
 }
 else if (myfile.fail())
 {

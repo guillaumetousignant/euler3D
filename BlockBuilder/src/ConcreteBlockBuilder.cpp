@@ -20,6 +20,9 @@ ConcreteBlockBuilder::~ConcreteBlockBuilder()
 
 void ConcreteBlockBuilder::preReadMyBlock(Block* block)
 {
+	
+	block_file_=CompleteMesh::preReadTopology(block,MPI_block_id);
+
 	std::ifstream myfile(block_file_);
 
 	char str_temp[200];
@@ -237,6 +240,7 @@ void ConcreteBlockBuilder::readMyBlock(Block* block)
 	int n_boundaries_temp;
 	int n_boundaries;
 	int n_ghost_cells_temp;
+	int count_connexions=0;
 	//int n_ghost_cells;
 	int cell_id = 0;
 	int real_boundary_id;
@@ -324,6 +328,7 @@ void ConcreteBlockBuilder::readMyBlock(Block* block)
 			block ->addCell(new_cell);
 		}
 
+		count_connexions+=n_real_cells;
 
 		getline(myfile, line);
 		getline(myfile, line);
@@ -344,7 +349,7 @@ void ConcreteBlockBuilder::readMyBlock(Block* block)
 			sscanf (line.c_str(), "%s %i",str_temp,&n_ghost_cells_temp);
 
 				if (boundary_type_temp_str=="WALL") // wall
-				{
+				{	
 					//std::cout<<"on a un wall"<< std::endl;
 					block->block_boundary_cell_ids_[real_boundary_id]= new WallCellIds;
 
@@ -354,6 +359,7 @@ void ConcreteBlockBuilder::readMyBlock(Block* block)
 					*((block->block_boundary_cell_ids_[real_boundary_id])->cell_count_)=0;
 					(block->block_boundary_cell_ids_[real_boundary_id])->owner_block_=block;
 					real_boundary_id=real_boundary_id+1;
+					count_connexions+=n_ghost_cells_temp;
 
 
 				}
@@ -368,6 +374,7 @@ void ConcreteBlockBuilder::readMyBlock(Block* block)
 					*((block->block_boundary_cell_ids_[real_boundary_id])->cell_count_)=0;
 					(block->block_boundary_cell_ids_[real_boundary_id])->owner_block_=block;
 					real_boundary_id=real_boundary_id+1;
+					count_connexions+=n_ghost_cells_temp;
 
 				}
 				else if (boundary_type_temp_str == "SYMMETRY") //symmetry
@@ -381,12 +388,14 @@ void ConcreteBlockBuilder::readMyBlock(Block* block)
 					*((block->block_boundary_cell_ids_[real_boundary_id])->cell_count_)=0;
 					(block->block_boundary_cell_ids_[real_boundary_id])->owner_block_=block;
 					real_boundary_id=real_boundary_id+1;
+					count_connexions+=n_ghost_cells_temp;
 
 				}
 				else if (boundary_type_temp_str == "CONNECTION") //Connection inter-bloc
 				{
 					//block->n_real_boundaries_in_block_=(block->n_real_boundaries_in_block_)-1;
-
+					//LIGNE PROPOSÉ EN DESSOUS
+					CompleteMesh::readTopology(block, MPI_block_id, count_connexions)
 				}
 
 
@@ -487,13 +496,9 @@ void ConcreteBlockBuilder::createMyFaces(Block* block)
 				};
 
 
-<<<<<<< HEAD
-	//std::cout<< "================================ "<< block->n_real_cells_in_block_<<std::endl;
-=======
-
 
 	std::cout<< "Creating Faces............"<< std::endl;
->>>>>>> origin/structure_donnees_helene
+
 	for(int i=0; i<block->n_real_cells_in_block_;i++)
 	{
 		Face** temp_face_array;
@@ -638,7 +643,7 @@ void ConcreteBlockBuilder::createMyFaces(Block* block)
 				new_face = buildFace(face_count_, face->n_nodes_per_face_,real_face_creator);
 				new_face -> block_id_ = block->block_id_;
 				// std::cout<<"====================================== facecount"<< face_count_<<std::endl;
-
+				cout << new_face->face_id_ << endl;
 
 				for(int node_in_face=0;node_in_face<face->n_nodes_per_face_;node_in_face++)
 				{
