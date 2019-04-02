@@ -116,7 +116,7 @@ METISLIBS += -L$(METISROOT)/lib -lmetis
 #---------------------------------------------------------------------------------------------------+
 # Targets
 
-all : mpidebug $(MPIReleaseObjectFiles)
+all : mpidebug $(MPIDebugObjectFiles)
 
 debug : .debug  begun $(DebugObjectFiles) $(ExecutableDebugObjectFile)
 	@printf '   Linking Debug...'
