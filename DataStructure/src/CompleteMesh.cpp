@@ -64,7 +64,7 @@ void CompleteMesh::InitializeMyBlocks(Interface* interface)
 			block_file = topology_file_name_ + block_id_string;
 		}
 		ConcreteBlockBuilder block_builder=ConcreteBlockBuilder(block_file);
-		new_block = all_blocks_[i];
+		new_block = all_blocks_[block_id];
 
 		//std::cout<<new_block -> block_id_<<std::endl;
 
