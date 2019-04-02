@@ -67,7 +67,11 @@ class plotSlicesCp(object):
 
         #PROCESSING
         # Graphics
-        dataset = tecplot.data.load_tecplot(self.mySurfaceFlowFile_, read_data_option=2);
+
+        if self.type_ == 0: #EULER
+            dataset = tecplot.data.load_tecplot_szl(self.mySurfaceFlowFile_, read_data_option=2);
+        elif self.type_ == 1: #SU2
+            dataset = tecplot.data.load_tecplot(self.mySurfaceFlowFile_, read_data_option=2);
 
         # Extract slice using user commands
         for i in range(0, self.numberOfSlices_):

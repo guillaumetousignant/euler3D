@@ -8,7 +8,15 @@ from tecplot.constant import *
 class plotMachIsosurface(object):
     def __init__(self, myFlowFile, Type):
         print("plotMachIsosurface..............................................");
-        dataset = tecplot.data.load_tecplot(myFlowFile, read_data_option=2);
+
+        self.myFlowFile_ = myFlowFile;
+        self.type_ = Type;
+
+        if self.type_ == 0: #EULER
+            dataset = tecplot.data.load_tecplot_szl(self.myFlowFile_, read_data_option=2);
+        elif self.type_ == 1: #SU2
+            dataset = tecplot.data.load_tecplot(self.myFlowFile_, read_data_option=2);
+
         frame = tecplot.active_frame();
         plot = frame.plot();
 
@@ -24,9 +32,9 @@ class plotMachIsosurface(object):
         cont.colormap_name = 'Magma';
 
         # Setup definition Isosurface layers
-        if Type == 0: # EULER
+        if self.type_ == 0: # EULER
             cont.variable = dataset.variable(9);
-        elif Type == 1: # SU2
+        elif self.type_ == 1: # SU2
             cont.variable = dataset.variable(11);
 
         cont.levels.reset_levels( [0.95,1.,1.1,1.4]);

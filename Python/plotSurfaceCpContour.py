@@ -8,16 +8,23 @@ from tecplot.constant import *
 class plotSurfaceCpContour(object):
     def __init__(self, mySurfaceFlowFile, Type):
         print("plotCpContour...................................................");
-        dataset = tecplot.data.load_tecplot(mySurfaceFlowFile, read_data_option=2);
+
+        self.mySurfaceFlowFile_ = mySurfaceFlowFile;
+        self.type_ = Type;
+
+        if self.type_ == 0: #EULER
+            dataset = tecplot.data.load_tecplot_szl(self.mySurfaceFlowFile_, read_data_option=2);
+        elif self.type_ == 1: #SU2
+            dataset = tecplot.data.load_tecplot(self.mySurfaceFlowFile_, read_data_option=2);
 
         frame = tecplot.active_frame();
         plot = frame.plot(PlotType.Cartesian3D)
         plot.activate()
         plot.show_contour = True;
 
-        if Type == 0: #EULER
+        if self.type_ == 0: #EULER
             plot.contour(0).variable = dataset.variable(8);
-        elif Type == 1: #SU2
+        elif self.type_ == 1: #SU2
             plot.contour(0).variable = dataset.variable(10);
 
         plot.view.width = 1.62571;
@@ -40,9 +47,9 @@ class plotSurfaceCpContour(object):
         plot.activate()
         plot.show_contour = True;
 
-        if Type == 0: #EULER
+        if self.type_ == 0: #EULER
             plot.contour(0).variable = dataset.variable(8);
-        elif Type == 1: #SU2
+        elif self.type_ == 1: #SU2
             plot.contour(0).variable = dataset.variable(10);
 
         plot.axes.x_axis.show = False;

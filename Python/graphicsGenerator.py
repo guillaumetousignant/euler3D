@@ -241,4 +241,5 @@ class graphicsGenerator(object):
 
         if self.MachIsosurface_Indicator_:
             plotmachisosurface_ = plotMachIsosurface(self.myFlowFile_, self.type_);
+
         print("computeGraphics.............................................DONE")
