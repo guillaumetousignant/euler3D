@@ -6,6 +6,8 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <sstream>
+#include <iomanip>
 
 #include "OutputTecplot.h"
 
@@ -32,7 +34,9 @@ void OutputTecplot::printFlowData(Block* block)
   cout << "Starting printFlowData..............................................." << endl;
 
   //FlowData.open("FlowData.plt", ios::binary);
-  std::string filename = "FlowData" + std::to_string(block->block_id_) + ".dat";
+  std::stringstream ss;
+  ss << std::setw(6) << std::setfill('0') << block->block_id_;
+  std::string filename = "FlowData" + ss.str() + ".dat";
   FlowData.open(filename);
 
     if (FlowData.fail())
@@ -192,7 +196,9 @@ void OutputTecplot::printSurfaceFlowData(Block* block)
   cout << "Starting printSurfaceFlowData........................................" << endl;
 
   //SurfaceFlowData.open("SurfaceFlowData.plt", ios::binary);
-  std::string filename = "SurfaceFlowData" + std::to_string(block->block_id_) + ".dat";
+  std::stringstream ss;
+  ss << std::setw(6) << std::setfill('0') << block->block_id_;
+  std::string filename = "SurfaceFlowData" + ss.str() + ".dat";
   SurfaceFlowData.open(filename);
 
     if (SurfaceFlowData.fail())
@@ -467,7 +473,9 @@ void OutputTecplot::printRestartFile(Block* block)
 {
   cout << "Starting printRestartFile............................................" << endl;
 
-  std::string filename = "RestartFile" + std::to_string(block->block_id_) + ".dat";
+  std::stringstream ss;
+  ss << std::setw(6) << std::setfill('0') << block->block_id_;
+  std::string filename = "RestartFile" + ss.str() + ".dat";
   RestartFile.open(filename);
 
     if (RestartFile.fail())
