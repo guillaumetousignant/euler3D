@@ -20,6 +20,7 @@ ConcreteBlockBuilder::~ConcreteBlockBuilder()
 
 void ConcreteBlockBuilder::preReadMyBlock(Block* block)
 {
+	std::cout << block_file_ << std::endl; // REMOVE
 	std::ifstream myfile(block_file_);
 
 	char str_temp[200];
