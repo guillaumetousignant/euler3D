@@ -25,14 +25,14 @@ OutputTecplot::~OutputTecplot()
 
 }
 
-void OutputTecplot::printFlowData(Block* block, int block_id)
+void OutputTecplot::printFlowData(Block* block)
 {
   int i;
 
   cout << "Starting printFlowData..............................................." << endl;
 
   //FlowData.open("FlowData.plt", ios::binary);
-  std::string filename = "FlowData" + std::to_string(block_id) + ".dat";
+  std::string filename = "FlowData" + std::to_string(block->block_id_) + ".dat";
   FlowData.open(filename);
 
     if (FlowData.fail())
@@ -187,12 +187,12 @@ void OutputTecplot::printFlowData(Block* block, int block_id)
 
 }
 
-void OutputTecplot::printSurfaceFlowData(Block* block, int block_id)
+void OutputTecplot::printSurfaceFlowData(Block* block)
 {
   cout << "Starting printSurfaceFlowData........................................" << endl;
 
   //SurfaceFlowData.open("SurfaceFlowData.plt", ios::binary);
-  std::string filename = "SurfaceFlowData" + std::to_string(block_id) + ".dat";
+  std::string filename = "SurfaceFlowData" + std::to_string(block->block_id_) + ".dat";
   SurfaceFlowData.open(filename);
 
     if (SurfaceFlowData.fail())
@@ -463,11 +463,11 @@ void OutputTecplot::printAerodynamicCoefficients(double cl, double cd, double cm
   cout << "Ending printAerodynamicCoefficients.................................." << endl;
 }
 
-void OutputTecplot::printRestartFile(Block* block, int block_id)
+void OutputTecplot::printRestartFile(Block* block)
 {
   cout << "Starting printRestartFile............................................" << endl;
 
-  std::string filename = "RestartFile" + std::to_string(block_id) + ".dat";
+  std::string filename = "RestartFile" + std::to_string(block->block_id_) + ".dat";
   RestartFile.open(filename);
 
     if (RestartFile.fail())
