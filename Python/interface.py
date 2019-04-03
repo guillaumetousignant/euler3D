@@ -157,18 +157,71 @@ class Interface(Input, Solver, Output):
             file.readline() # "topologyfilename"
             file.readline() # File name
             file.readline() # "INPUT"
-            file.readline() # "cfl gamma angleattackdeg"
-            cfl, gamma, angleattackdeg = file.readline().strip()
-            file.read(1)
-            print(cfl)
             
-            print(file.readline()) 
+            file.readline() # "cfl gamma angleattackdeg"
+            a = file.readline()
+            cfl, gamma, angleattackdeg = a.split()
 
+            file.readline() # "rkstage mach cmac"
+            a = file.readline()
+            rkstage, mach, cmac = a.split()
 
+            file.readline() # "nbitermax convcriterion"
+            a = file.readline()
+            nbitermax, convcriterion = a.split()
 
+            file.readline() # "residual smoothing (0-no 1-yes)"
+            smoothing = file.readline()
+            
+            file.readline() # "fluxscheme schemeorder"
+            a = file.readline()
+            fluxscheme, schemeorder = a.split()
 
-            file.close()            
+            file.readline() # "gradient limiter"
+            a = file.readline()
+            gradient, limiter = a.split()
 
+            file.readline() # "omega k"
+            a = file.readline()
+            omega, k = a.split()
+
+            file.readline() # "EXECUTABLE (0-no 1-yes)"
+            
+            file.readline() # "build execute"
+            a = file.readline()
+            build, execute = a.split()
+
+            file.readline() # "OUTPUT (0-no 1-yes)"
+
+            file.readline() # "filestype (0-Euler 1 -SU2)"
+            filestype = file.readline()
+            
+            file.readline() # "clalpha cdalpha cmalpha"
+            a = file.readline()
+            clalpha, cdalpha, cmalpha = a.split()
+
+            file.readline() # "coefficientsconvergence residualconv"
+            a = file.readline()
+            coefficientsconvergence, residualconv = a.split()
+
+            file.readline() # "cpxc machcontour cpcontour machisosurface"
+            a = file.readline()
+            cpxc, machcontour, cpcontour, machisosurface = a.split()
+
+            file.readline() # "slicecp"
+            slicecp = file.readline()
+
+            file.readline() # "axiscpxc xcoord ycoord zcoord"
+            a = file.readline()
+            axiscpxc, xcoord, ycoord, zcoord = a.split()
+
+            file.readline() # "axisslicecp fcoord lcoord numberofslices"
+            a = file.readline()
+            axisslicecp, fcoord, lcoord, numberofslices = a.split()
+
+            file.close()
+
+            self.solver.saveDataImported(nbitermax, convcriterion, build, execute, smoothing, fluxscheme, schemeorder, gradient, limiter, omega, k)
 
 
 

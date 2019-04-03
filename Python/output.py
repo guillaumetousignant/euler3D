@@ -267,7 +267,7 @@ class Output():
 
 
         partial_output = "\nOUTPUT (0-no 1-yes)"+(
-                         "\nfilestype (0-Euler 1-SU2\n")+(
+                         "\nfilestype (0-Euler 1-SU2)\n")+(
                          filetype_str)+(
                          "\nclalpha cdalpha cmalpha\n")+(
                          cl_alpha_str+" "+cd_alpha_str+" "+cm_alpha_str)+(

@@ -332,3 +332,17 @@ class Solver():
             partial_output = "\nnbitermax convcriterion\n" + nb_niter_max_str + " " + conv_criterion_str + self.partial_output_flux_scheme + "\nEXECUTABLE (0-no 1-yes)\nbuild execute\n" + build_str + " " + execute_str                   
         
         return partial_output
+
+    def saveDataImported(self, nb_iter_max_var, conv_criterion_var, build_var, execute_var, smoothing_var, flux_scheme_var, scheme_order_var, gradient_var, limiter_var, omega_var, k_var):
+        self.max_iter.set(nb_iter_max_var)
+        self.convergence_crit.set(conv_criterion_var)
+        # self.solver_option_build.set(build_var)
+        # self.solver_option_execute.set(execute_var)
+        self.smoothing.set(smoothing_var)
+        self.flux_scheme.set(flux_scheme_var)
+        self.scheme_order.set(scheme_order_var)
+        self.gradient.set(gradient_var)
+        self.limiter.set(limiter_var)
+        self.omega.set(omega_var)
+        self.k.set(k_var)
+
