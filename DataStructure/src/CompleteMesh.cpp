@@ -40,7 +40,7 @@ CompleteMesh::~CompleteMesh()
 
 }
 
-string CompleteMesh::preReadTopology(Block* block,int MPI_block_id)
+string CompleteMesh::preReadTopology(Block* block)
 {
 std::ifstream myfile(Topology);
 char str_temp[200];
@@ -54,7 +54,7 @@ if (myfile.is_open())
 
   for(i=0;i<n_blocks;i++)
    {
-   	if(i==MPI_block_id)
+   	if(i==block->block_id_)
    	{
    		getline(myfile, line);
    		scanf (line.c_str(), "%s",str_temp);
@@ -77,7 +77,7 @@ cerr << "fail opening topology file " << meshFileName << endl;
 
 }
 
-void CompleteMesh::readTopology(Block* block, int MPI_block_id, int& count)
+void CompleteMesh::readTopology(Block* block, int& count)
 {
 std::ifstream myfile(Topology);
 char str_temp[200];
@@ -98,15 +98,16 @@ if (myfile.is_open())
    for(i=0;i<n_blocks;i++)
    {
 
-    if(i==MPI_block_id)
+    if(i==block->block_id_)
     {
       getline(myfile, line);
       scanf (line.c_str(), "%s %d",str_temp,n_boundaries);
 
-      int** block_connexion_boundary_cell_ids_ = new ConnexionCellIds*[n_boundaries];
-
       for(j=0;j<n_boundaries;j++)
       {
+
+        int** block_connexion_boundary_cell_ids_ = new ConnexionCellIds*;
+
         getline(myfile, line);
         scanf (line.c_str(), "%s %d",str_temp,block_destination_temp); 
         getline(myfile, line);
@@ -133,33 +134,54 @@ if (myfile.is_open())
           *(block->block_connexion_boundary_cell_ids_[j]->cell_count_)+=1;
 
           block_connexion_boundary_cell_ids_[j]->cell_ids_in_boundary_other_block_=elem_id_destination_temp;
-          int* cell_ids_in_boundary_other_block_;
-          int* cell_ids_in_boundary_;
-          Block* owner_block_;
 
         }
 
-        BlockCommunicator::addCellIdInConnexion(block_connexion_boundary_cell_ids_[j]);
+        BlockCommunicator::addCellIdInConnexion(block_connexion_boundary_cell_ids_);
       
       }
 
     }
     else
     {
-      getline(myfile, line);
+ getline(myfile, line);
       scanf (line.c_str(), "%s %d",str_temp,n_boundaries);
 
       for(j=0;j<n_boundaries;j++)
       {
+
+        int** block_connexion_boundary_cell_ids_ = new ConnexionCellIds*;
+
         getline(myfile, line);
+        scanf (line.c_str(), "%s %d",str_temp,block_destination_temp); 
         getline(myfile, line);
         scanf (line.c_str(), "%s %d",str_temp,n_elems); 
+        
+
+        count=0;
+        block_connexion_boundary_cell_ids_[j]->block_origin_=i;
+        block_connexion_boundary_cell_ids_[j]->block_destination_=block_destination_temp;
+        block_connexion_boundary_cell_ids_[j]->n_cell_in_boundary_=n_elems;
+        block_connexion_boundary_cell_ids_[j]->cell_ids_in_boundary_other_block_=new int[n_elems]();
+        block_connexion_boundary_cell_ids_[j]->cell_ids_in_boundary_=new int[n_elems]();
+        block_connexion_boundary_cell_ids_[j]->owner_block_=block;
+        block_connexion_boundary_cell_ids_[j]->cell_count_= new int;
+        *((block->block_connexion_boundary_cell_ids_[j])->cell_count_)=0;
 
         for(k=0;k<n_elems;k++)
         {
           getline(myfile, line);
+          scanf (line.c_str(), "%s %d",str_temp,elem_id_destination_temp); 
+
+          block_connexion_boundary_cell_ids_[j]->cell_ids_in_boundary_[k]= nullptr;
+          *(block->block_connexion_boundary_cell_ids_[j]->cell_count_)+=1;
+
+          block_connexion_boundary_cell_ids_[j]->cell_ids_in_boundary_other_block_=elem_id_destination_temp;
+
+
         }
-      }
+
+        BlockCommunicator::addCellIdInConnexion(block_connexion_boundary_cell_ids_);
     }
 
 
