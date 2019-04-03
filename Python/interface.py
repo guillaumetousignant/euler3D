@@ -36,12 +36,12 @@ class Interface(Input, Solver, Output):
 
         file_menu = Menu(menubar, tearoff=0)
         menubar.add_cascade(label="File", menu=file_menu)
-        file_menu.add_command(label="Save As")
-        file_menu.add_command(label="Import")
+        file_menu.add_command(label="Save As", command=self.saveOutputAs)
+        file_menu.add_command(label="Import", command=self.importDataFile)
 
         help_menu = Menu(menubar, tearoff=0)
         menubar.add_cascade(label="Help", menu=help_menu)
-        help_menu.add_command(label="User guide")
+        help_menu.add_command(label="User guide", command=self.openUserGuide)
 
         # SECTION 1: INPUT
         self.input = Input(tab1)
@@ -97,7 +97,7 @@ class Interface(Input, Solver, Output):
             command = "./bin/euler3D ./bin/output_interface"
 
         elif solver_option == 3:
-            command = "make; ./bin/euler3D"
+            command = "make clean; make; ./bin/euler3D ./bin/output_interface"
         
         self.saveEntries()
         root.destroy()
@@ -109,7 +109,7 @@ class Interface(Input, Solver, Output):
         solver = self.solver.writePartialOutput()
         output = self.output.writePartialOutput()
 
-        file_path = '../euler3D/bin'
+        file_path = "../euler3D/bin"
         file_name = "output_interface"
 
         complete_file_name = os.path.join(file_path, file_name)
@@ -117,7 +117,60 @@ class Interface(Input, Solver, Output):
         file = open(complete_file_name,"w")
 
         file.write(input+solver+output)
-        file.close()        
+        file.close()
+
+    def openUserGuide(self):
+        print("Hello")
+        # file_path = "~/Documents/"
+        # file_name = "user_guide.pdf"
+
+        # complete_file_name = os.path.join(file_path, file_name)
+
+        # subprocess.Popen([file_name],shell=True)
+    
+    def saveOutputAs(self):
+
+        input = self.input.writePartialOutput()
+        solver = self.solver.writePartialOutput()
+        output = self.output.writePartialOutput()
+
+
+        filename =  filedialog.asksaveasfilename(initialdir = "/home/etudiant/",title = "Save Output As",filetypes = (("plain text","*.txt"),("all files","*.*")))
+
+        if filename != ():
+            file = open(filename,"w")
+
+            file.write(input+solver+output)
+            file.close()
+
+            info = filename + " has been created."
+
+            messagebox.showinfo("Output Saved", info)
+
+    def importDataFile(self):
+        filename =  filedialog.askopenfilename(initialdir = "/home/etudiant/",title = "Import Data File",filetypes = (("plain text","*.txt"),("all files","*.*")))
+
+        if filename != ():
+            file = open(filename, "r")
+
+            file.readline() # "MESH"
+            file.readline() # "topologyfilename"
+            file.readline() # File name
+            file.readline() # "INPUT"
+            file.readline() # "cfl gamma angleattackdeg"
+            cfl, gamma, angleattackdeg = file.readline().strip()
+            file.read(1)
+            print(cfl)
+            
+            print(file.readline()) 
+
+
+
+
+            file.close()            
+
+
+
 
 
 root = Tk()
