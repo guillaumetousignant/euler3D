@@ -48,7 +48,7 @@ void CompleteMesh::InitializeMyBlocks(Interface* interface)
 	//Block* new_block;
 	//int block_id;
 
-	#pragma omp parallel for schedule(guided)
+	//#pragma omp parallel for schedule(guided)
 	for(int i=0;i<n_blocks_in_process_;i++)
 	{
 		std::string block_file;
