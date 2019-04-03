@@ -5,8 +5,6 @@
 #include <algorithm>
 #include "PostProcessing.h"
 
-#include <iostream> // REMOVE
-
 #define N_VARIABLES 20
 
 BlockCommunicator::BlockCommunicator(int nblocks): n_blocks_(nblocks), n_inter_block_boundaries_(0), inter_block_boundaries_(nullptr) {
@@ -44,18 +42,13 @@ void BlockCommunicator::updateBoundaries(CompleteMesh* mesh) const {
     #ifdef HAVE_MPI
     int *** buffers;
 
-    std::cout << "Process " << process_id_ << " raises its hand, as it got to the start of the update boundary function. Yay for process " << process_id_ << std::endl; // REMOVE
-    std::cout << "Process " << process_id_ << " says it has " << n_inter_block_boundaries_ << " inter-block boundaries. Good for you process " << process_id_ << std::endl; // REMOVE
     buffers = new int**[n_inter_block_boundaries_];
-    std::cout << "Process " << process_id_ << " says buffers is " << buffers << std::endl; // REMOVE
     for (int i = 0; i < n_inter_block_boundaries_; i++){ // Move ton constructor?
         buffers[i] = new int*[N_VARIABLES*2];
         for (unsigned int j = 0; j < N_VARIABLES*2; j++){
             buffers[i][j] = nullptr;
         }
     }
-
-    std::cout << "Process " << process_id_ << " created its buffers. Isn't that great process " << process_id_ << "?" << std::endl; // REMOVE
 
     for (int i = 0; i < n_inter_block_boundaries_; i++){
         // If this process is sender
@@ -107,8 +100,6 @@ void BlockCommunicator::updateBoundaries(CompleteMesh* mesh) const {
         }
     }
 
-    std::cout << "Process " << process_id_ << " got the barrier, that's big." << std::endl; // REMOVE
-
     MPI_Barrier(MPI_COMM_WORLD);
 
     // Put in blocks
@@ -139,8 +130,6 @@ void BlockCommunicator::updateBoundaries(CompleteMesh* mesh) const {
         }
     }
 
-    std::cout << "Process " << process_id_ << " filled its buffers, why can't you all be like process " << process_id_ << "?" << std::endl; // REMOVE
-
     // Delete buffers
     for (int i = 0; i < n_inter_block_boundaries_; i++){
         for (int j = 0; j < N_VARIABLES*2; j++){
@@ -150,12 +139,7 @@ void BlockCommunicator::updateBoundaries(CompleteMesh* mesh) const {
         }
         delete [] buffers[i];
     }
-    std::cout << "Process " << process_id_ << " got to that place where you delete the whole buffer thingy." << std::endl; // REMOVE
-    std::cout << "Process " << process_id_ << " now says buffers is " << buffers << std::endl; // REMOVE
     delete [] buffers; // This line throws "munmap_chunk(): invalid pointer" on process 3 when there are 6 blocks and 6 processes. wtf
-    std::cout << "Process " << process_id_ << " deleted the whole buffer thingy." << std::endl; // REMOVE
-
-    std::cout << "Process " << process_id_ << " finished the whole delete thing, everyone say you're proud or something." << std::endl; // REMOVE
 
     #else
     for (int i = 0; i < n_inter_block_boundaries_; i++){
