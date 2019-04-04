@@ -158,7 +158,7 @@ class Interface(Input, Solver, Output):
             file.readline() # "MESH"
             
             file.readline() # "topologyfilename"
-            filename = str(file.readline()) # File name
+            filename, space = file.readline().split("\n") # File name
 
             file.readline() # "INPUT"
             
@@ -224,13 +224,10 @@ class Interface(Input, Solver, Output):
             axisslicecp, fcoord, lcoord, numberofslices = a.split()
 
             file.close()
-            
-            print(filename)
+
             self.input.saveImportedData(filename, cfl, gamma, angleattackdeg, rkstage, mach, cmac)
             self.solver.saveImportedData(nbitermax, convcriterion, build, execute, smoothing, fluxscheme, schemeorder, gradient, limiter, omega, k)
             self.output.saveImportedData(filestype, clalpha, cdalpha, cmalpha, coefficientsconvergence, residualconv, cpxc, machcontour, cpcontour, machisosurface, slicecp, axiscpxc, xcoord, ycoord, zcoord, axisslicecp, fcoord, lcoord, numberofslices)
-
-
 
 
 root = Tk()
