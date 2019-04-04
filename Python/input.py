@@ -393,3 +393,11 @@ class Input():
                             "\nrkstage mach cmac\n" + rk_str + " " + mach_str + " " + cmac_str)  
         
         return partial_output
+
+    def saveImportedData(self, cfl_var, gamma_var, angle_attack_var, rk_var, mach_var, cmac_var):
+        self.cfl.set(cfl_var)
+        self.gamma.set(gamma_var)
+        self.angle_attack.set(angle_attack_var)
+        self.rk.set(rk_var)
+        self.mach.set(mach_var)
+        self.cmac.set(cmac_var)

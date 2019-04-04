@@ -221,7 +221,10 @@ class Interface(Input, Solver, Output):
 
             file.close()
 
-            self.solver.saveDataImported(nbitermax, convcriterion, build, execute, smoothing, fluxscheme, schemeorder, gradient, limiter, omega, k)
+            
+            self.input.saveImportedData(cfl, gamma, angleattackdeg, rkstage, mach, cmac)
+            # self.solver.saveImportedData(nbitermax, convcriterion, build, execute, smoothing, fluxscheme, schemeorder, gradient, limiter, omega, k)
+            self.output.saveImportedData(filestype, clalpha, cdalpha, cmalpha, coefficientsconvergence, residualconv, cpxc, machcontour, cpcontour, machisosurface, slicecp, axiscpxc, xcoord, ycoord, zcoord, axisslicecp, fcoord, lcoord, numberofslices)
 
 
 

@@ -333,7 +333,7 @@ class Solver():
         
         return partial_output
 
-    def saveDataImported(self, nb_iter_max_var, conv_criterion_var, build_var, execute_var, smoothing_var, flux_scheme_var, scheme_order_var, gradient_var, limiter_var, omega_var, k_var):
+    def saveImportedData(self, nb_iter_max_var, conv_criterion_var, build_var, execute_var, smoothing_var, flux_scheme_var, scheme_order_var, gradient_var, limiter_var, omega_var, k_var):
         self.max_iter.set(nb_iter_max_var)
         self.convergence_crit.set(conv_criterion_var)
         # self.solver_option_build.set(build_var)

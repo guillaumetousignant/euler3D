@@ -283,3 +283,26 @@ class Output():
                          axis_slice_cp_str+" "+firstcoord_str+" "+lastcoord_str+" "+nb_slice_str)
 
         return partial_output
+
+    def saveImportedData(self, file_type_var, cl_alpha_var, cd_alpha_var, cm_alpha_var, coeff_conv_var, res_conv_var, cp_xc_var, mach_cont_var, cp_cont_var, 
+                        mach_iso_var, slice_cp_var, axis_cp_xc_var, xcood_var, ycoord_var, zcoord_var, axis_slice_cp_var, first_coord_var, last_coord_var, nb_slice_var):
+
+        self.files_type.set(file_type_var)
+        self.cl_alpha.set(cl_alpha_var)
+        self.cd_alpha.set(cd_alpha_var)
+        self.cm_alpha.set(cm_alpha_var)
+        self.coefficients_convergence.set(coeff_conv_var)
+        self.residual_convergence.set(res_conv_var)
+        self.cp_xc.set(cp_xc_var)
+        self.mach_contour.set(mach_cont_var)
+        self.cp_contour.set(cp_cont_var)
+        self.mach_iso.set(mach_iso_var)
+        self.slice_cp.set(slice_cp_var)
+        self.axis_cut_cp_xc.set(axis_cp_xc_var)
+        self.x_coord.set(xcood_var)
+        self.y_coord.set(ycoord_var)
+        self.z_coord.set(zcoord_var)
+        self.axis_cut_slice_cp.set(axis_slice_cp_var)
+        self.first_coord.set(first_coord_var)
+        self.last_coord.set(last_coord_var)
+        self.nb_slices.set(nb_slice_var)
