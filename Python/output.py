@@ -122,7 +122,7 @@ class Output():
         self.axis_cut_slice_cp_entry.grid(row=6, column=3, padx=2, pady=2, sticky=N)
         
         self.nb_slices = IntVar()
-        self.nb_slices.set(1)
+        self.nb_slices.set(0)
         self.nb_slices_label = ttk.Label(title_section_3_2, text="Number of slices", relief="groove", state="disabled", borderwidth=2, width=15, anchor=CENTER)
         self.nb_slices_label.grid(row=7, column=2, padx=2, pady=2)
         self.nb_slices_entry = ttk.Entry(title_section_3_2, textvariable=self.nb_slices, state="disabled", justify=CENTER, takefocus=0)
@@ -299,6 +299,7 @@ class Output():
         self.mach_contour.set(mach_cont_var)
         self.cp_contour.set(cp_cont_var)
         self.mach_iso.set(mach_iso_var)
+
         self.slice_cp.set(slice_cp_var)
         self.axis_cut_cp_xc.set(axis_cp_xc_var)
         self.x_coord.set(xcood_var)
@@ -308,3 +309,41 @@ class Output():
         self.first_coord.set(first_coord_var)
         self.last_coord.set(last_coord_var)
         self.nb_slices.set(nb_slice_var)
+
+        if self.cp_xc.get() == 1:
+            self.axis_cut_cp_xc_entry.configure(state="normal")
+            self.axis_cut_cp_xc_label.configure(state="normal")
+            self.x_coord_entry.configure(state="normal")
+            self.x_coord_label.configure(state="normal")
+            self.y_coord_entry.configure(state="normal")
+            self.y_coord_label.configure(state="normal")
+            self.z_coord_entry.configure(state="normal")
+            self.z_coord_label.configure(state="normal")
+        else:
+            self.axis_cut_cp_xc_entry.configure(state="disabled")
+            self.axis_cut_cp_xc_label.configure(state="disabled")
+            self.x_coord_entry.configure(state="disabled")
+            self.x_coord_label.configure(state="disabled")
+            self.y_coord_entry.configure(state="disabled")
+            self.y_coord_label.configure(state="disabled")
+            self.z_coord_entry.configure(state="disabled")
+            self.z_coord_label.configure(state="disabled")
+
+        if self.slice_cp.get() == 1:
+            self.axis_cut_slice_cp_entry.configure(state="normal")
+            self.axis_cut_slice_cp_label.configure(state="normal")
+            self.nb_slices_entry.configure(state="normal")
+            self.nb_slices_label.configure(state="normal")
+            self.first_coord_entry.configure(state="normal")
+            self.first_coord_label.configure(state="normal")
+            self.last_coord_entry.configure(state="normal")
+            self.last_coord_label.configure(state="normal")
+        else:
+            self.axis_cut_slice_cp_entry.configure(state="disabled")
+            self.axis_cut_slice_cp_label.configure(state="disabled")
+            self.nb_slices_entry.configure(state="disabled")
+            self.nb_slices_label.configure(state="disabled")
+            self.first_coord_entry.configure(state="disabled")
+            self.first_coord_label.configure(state="disabled")
+            self.last_coord_entry.configure(state="disabled")
+            self.last_coord_label.configure(state="disabled")

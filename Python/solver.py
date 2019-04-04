@@ -365,7 +365,11 @@ class Solver():
             execute_str = "1"
         
         if 'self.partial_output_flux_scheme' in globals():
-            partial_output = "\nnbitermax convcriterion\n" + nb_niter_max_str + " " + conv_criterion_str + self.partial_output_flux_scheme + "\nEXECUTABLE (0-no 1-yes)\nbuild execute\n" + build_str + " " + execute_str
+            partial_output = "\nnbitermax convcriterion\n"+(
+                             nb_niter_max_str+" "+conv_criterion_str)+(
+                             self.partial_output_flux_scheme)+(
+                             "\nEXECUTABLE (0-no 1-yes)\nbuild execute\n")+(
+                             build_str+" "+execute_str)
         
         else:
             smoothing_str = str(self.smoothing.get())
@@ -391,12 +395,19 @@ class Solver():
             omega_str = "1.0e"+omega_str
             k_str = str(self.k.get())
 
-            self.partial_output_flux_scheme = "\nresidual smoothing (0-no 1-yes)\n" + smoothing_str + (
-                                          "\nfluxscheme schemeorder\n" + flux_scheme_str + " " + scheme_order_str) + (
-                                          "\ngradient limiter\n" + gradient_str + " " + limiter_str) + (
-                                          "\nomega k\n" + omega_str + " " + k_str)
+            self.partial_output_flux_scheme = "\nresidual smoothing (0-no 1-yes)\n"+(
+                                              smoothing_str)+(
+                                              "\nfluxscheme schemeorder\n")+(
+                                              flux_scheme_str+" "+scheme_order_str)+(
+                                              "\ngradient limiter\n")+(
+                                              gradient_str+" "+limiter_str)+(
+                                              "\nomega k\n"+omega_str+" "+k_str)
             
-            partial_output = "\nnbitermax convcriterion\n" + nb_niter_max_str + " " + conv_criterion_str + self.partial_output_flux_scheme + "\nEXECUTABLE (0-no 1-yes)\nbuild execute\n" + build_str + " " + execute_str                   
+            partial_output = "\nnbitermax convcriterion\n"+(
+                             nb_niter_max_str+" "+conv_criterion_str)+(
+                             self.partial_output_flux_scheme)+(
+                             "\nEXECUTABLE (0-no 1-yes)\nbuild execute\n")+(
+                             build_str+" "+execute_str)                   
         
         return partial_output
 

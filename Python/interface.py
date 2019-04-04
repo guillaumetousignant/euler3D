@@ -213,7 +213,7 @@ class Interface(Input, Solver, Output):
             cpxc, machcontour, cpcontour, machisosurface = a.split()
 
             file.readline() # "slicecp"
-            slicecp = file.readline()
+            slicecp, space = file.readline().split("\n")
 
             file.readline() # "axiscpxc xcoord ycoord zcoord"
             a = file.readline()

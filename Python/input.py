@@ -393,13 +393,18 @@ class Input():
         cmac_str = str(self.cmac.get())
 
         if 'self.partial_output_mesh' in globals():
-            partial_output = self.partial_output_mesh + (
-                            "\nINPUT\ncfl gamma angleattackdeg\n" + cfl_str + " " + gamma_str + " " + angle_attack_str) + (
-                            "\nrkstage mach cmac\n" + rk_str + " " + mach_str + " " + cmac_str)                        
+            partial_output = self.partial_output_mesh+(
+                             "\nINPUT\ncfl gamma angleattackdeg\n")+(
+                             cfl_str+" "+gamma_str+" "+angle_attack_str)+(
+                             "\nrkstage mach cmac\n")+(
+                             rk_str+" "+mach_str+" "+cmac_str)                        
         else:
-            partial_output = "MESH\ntopologyfilename\n" + self.filename_mesh + (
-                            "\nINPUT\ncfl gamma angleattackdeg\n" + cfl_str + " " + gamma_str + " " + angle_attack_str) + (
-                            "\nrkstage mach cmac\n" + rk_str + " " + mach_str + " " + cmac_str)  
+            partial_output = "MESH\ntopologyfilename\n"+(
+                             self.filename_mesh)+(
+                             "\nINPUT\ncfl gamma angleattackdeg\n")+(
+                             cfl_str+" "+gamma_str+" "+angle_attack_str)+(
+                             "\nrkstage mach cmac\n")+(
+                             rk_str+" "+mach_str+" "+cmac_str)  
         
         return partial_output
 
