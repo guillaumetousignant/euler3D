@@ -11,7 +11,7 @@ void ConnexionCellIds::updateBoundary()
 	std::cout<<"Connexion cells updated" << std::endl;
 }
 
-ConnexionCellIds::ConnexionCellIds()
+ConnexionCellIds::ConnexionCellIds() : cell_ids_in_boundary_other_block_(nullptr)
 {
 
 }

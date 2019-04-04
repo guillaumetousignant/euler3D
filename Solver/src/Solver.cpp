@@ -35,26 +35,28 @@ Solver::Solver()
 
 void Solver::solve(CompleteMesh* complete_mesh, BlockCommunicator* communicator)
 {
-	int i;
+	//int i;
 	int n_blocks_in_process;
 	int* my_blocks;
 	Block** all_blocks;
-	Block* current_block;
+	//Block* current_block;
 
 	n_blocks_in_process=complete_mesh->n_blocks_in_process_;
 	my_blocks=complete_mesh->my_blocks_;
 	all_blocks=complete_mesh->all_blocks_;
 
+	communicator->updateBoundaries(complete_mesh);
 
 	while(!post_processing_->stop_solver_)
 	{
 		
 		//post_processing_->process(block, complete_mesh); //PARTIE QUI CALCULE LES SOMMES, PRENDS LES DÉCISIONS ET PUBLISH
 		/// FIN DES TRUCS MPI
-
-		for	(i=0;i<n_blocks_in_process;i++)
+		
+		//#pragma omp parallel for schedule(guided)
+		for	(int i=0;i<n_blocks_in_process;i++)
 		{
-			current_block=all_blocks[my_blocks[i]];
+			Block* current_block=all_blocks[my_blocks[i]];
 			this->saveW0(current_block);
 			timestep_->computeSpectralRadius(current_block);
 			timestep_->computeTimestep(current_block);
@@ -64,7 +66,7 @@ void Solver::solve(CompleteMesh* complete_mesh, BlockCommunicator* communicator)
 
 		///INSÉRER LES TRUCS DE MPI ICI JE CROIS
 		communicator->updateBoundaries(complete_mesh);
-		post_processing_->process(complete_mesh);
+		post_processing_->process(complete_mesh, communicator);
 
 	}
 

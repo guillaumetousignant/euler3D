@@ -3,7 +3,7 @@
 #include <mpi.h>
 #endif
 #include <algorithm>
-#include <iostream> // REMOVE
+#include "PostProcessing.h"
 
 #define N_VARIABLES 20
 
@@ -139,7 +139,7 @@ void BlockCommunicator::updateBoundaries(CompleteMesh* mesh) const {
         }
         delete [] buffers[i];
     }
-    delete [] buffers;
+    delete [] buffers; // This line throws "munmap_chunk(): invalid pointer" on process 3 when there are 6 blocks and 6 processes. wtf
 
     #else
     for (int i = 0; i < n_inter_block_boundaries_; i++){
@@ -201,8 +201,76 @@ void BlockCommunicator::initialize(){
 
 }
 
-double BlockCommunicator::getGlobal(double const coeff_local) const {
-    return 0.0;
+void BlockCommunicator::getGlobal(CompleteMesh* mesh, PostProcessing* postprocess) {
+    #ifdef HAVE_MPI
+    double ro_rms_process=0.0;
+    double uu_rms_process=0.0;
+    double vv_rms_process=0.0;
+    double ww_rms_process=0.0;
+    double pp_rms_process=0.0;
+    double cl_geometry_process=0.0;
+    double cd_geometry_process=0.0;
+    double cmx_geometry_process=0.0;
+    double cmy_geometry_process=0.0;
+    double cmz_geometry_process=0.0;
+    int blockid;
+
+    for(int i = 0; i < mesh->n_blocks_in_process_ ; i++) // For each block
+    {
+        blockid = mesh->my_blocks_[i];
+        // Convergence data
+        ro_rms_process += postprocess->ro_rms_blocks_[blockid];
+        uu_rms_process += postprocess->uu_rms_blocks_[blockid];
+        vv_rms_process += postprocess->vv_rms_blocks_[blockid];
+        ww_rms_process += postprocess->ww_rms_blocks_[blockid];
+        pp_rms_process += postprocess->pp_rms_blocks_[blockid];
+        cl_geometry_process += postprocess->cl_geometry_blocks_[blockid];
+        cd_geometry_process += postprocess->cd_geometry_blocks_[blockid];
+        cmx_geometry_process += postprocess->cmx_geometry_blocks_[blockid];
+        cmy_geometry_process += postprocess->cmy_geometry_blocks_[blockid];
+        cmz_geometry_process += postprocess->cmz_geometry_blocks_[blockid];
+    }
+
+    MPI_Allreduce(&ro_rms_process, &postprocess->ro_rms_mesh_, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+    MPI_Allreduce(&uu_rms_process, &postprocess->uu_rms_mesh_, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+    MPI_Allreduce(&vv_rms_process, &postprocess->vv_rms_mesh_, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+    MPI_Allreduce(&ww_rms_process, &postprocess->ww_rms_mesh_, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+    MPI_Allreduce(&pp_rms_process, &postprocess->pp_rms_mesh_, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+    MPI_Allreduce(&cl_geometry_process, &postprocess->cl_geometry_mesh_, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+    MPI_Allreduce(&cd_geometry_process, &postprocess->cd_geometry_mesh_, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+    MPI_Allreduce(&cmx_geometry_process, &postprocess->cmx_geometry_mesh_, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+    MPI_Allreduce(&cmy_geometry_process, &postprocess->cmy_geometry_mesh_, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+    MPI_Allreduce(&cmz_geometry_process, &postprocess->cmz_geometry_mesh_, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+    MPI_Barrier(MPI_COMM_WORLD); // Dunno if needed, check
+    #else
+
+    postprocess->ro_rms_mesh_=0.0;
+    postprocess->uu_rms_mesh_=0.0;
+    postprocess->vv_rms_mesh_=0.0;
+    postprocess->ww_rms_mesh_=0.0;
+    postprocess->pp_rms_mesh_=0.0;
+    postprocess->cl_geometry_mesh_=0.0;
+    postprocess->cd_geometry_mesh_=0.0;
+    postprocess->cmx_geometry_mesh_=0.0;
+    postprocess->cmy_geometry_mesh_=0.0;
+    postprocess->cmz_geometry_mesh_=0.0;
+
+    for(i=0; i<complete_mesh->n_blocks_ ; i++) // For each block
+    {
+        // Convergence data
+        postprocess->ro_rms_mesh_ += postprocess->ro_rms_blocks_[i];
+        postprocess->uu_rms_mesh_ += postprocess->uu_rms_blocks_[i];
+        postprocess->vv_rms_mesh_ += postprocess->vv_rms_blocks_[i];
+        postprocess->ww_rms_mesh_ += postprocess->ww_rms_blocks_[i];
+        postprocess->pp_rms_mesh_ += postprocess->pp_rms_blocks_[i];
+        // Aerodynamic data
+        postprocess->cl_geometry_mesh_ += postprocess->cl_geometry_blocks_[i];
+        postprocess->cd_geometry_mesh_ += postprocess->cd_geometry_blocks_[i];
+        postprocess->cmx_geometry_mesh_ += postprocess->cmx_geometry_blocks_[i];
+        postprocess->cmy_geometry_mesh_ += postprocess->cmy_geometry_blocks_[i];
+        postprocess->cmz_geometry_mesh_ += postprocess->cmz_geometry_blocks_[i];
+    }
+    #endif
 }
 
 void BlockCommunicator::setBoundaryOffset(){

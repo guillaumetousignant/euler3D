@@ -6,8 +6,12 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <sstream>
+#include <iomanip>
 
 #include "OutputTecplot.h"
+
+#define OUTPUT_ZERO_PADDING 6
 
 using namespace std;
 
@@ -32,12 +36,15 @@ void OutputTecplot::printFlowData(Block* block)
   cout << "Starting printFlowData..............................................." << endl;
 
   //FlowData.open("FlowData.plt", ios::binary);
-  FlowData.open("FlowData.dat");
+  std::stringstream ss;
+  ss << std::setw(OUTPUT_ZERO_PADDING) << std::setfill('0') << block->block_id_;
+  std::string filename = "FlowData" + ss.str() + ".dat";
+  FlowData.open(filename);
 
     if (FlowData.fail())
     {
       // TODO throw exception
-      cerr << "Fail opening file FlowData.plt" << endl;
+      cerr << "Fail opening file " << filename << endl;
       //return;
     }
 
@@ -191,12 +198,15 @@ void OutputTecplot::printSurfaceFlowData(Block* block)
   cout << "Starting printSurfaceFlowData........................................" << endl;
 
   //SurfaceFlowData.open("SurfaceFlowData.plt", ios::binary);
-  SurfaceFlowData.open("SurfaceFlowData.dat");
+  std::stringstream ss;
+  ss << std::setw(OUTPUT_ZERO_PADDING) << std::setfill('0') << block->block_id_;
+  std::string filename = "SurfaceFlowData" + ss.str() + ".dat";
+  SurfaceFlowData.open(filename);
 
     if (SurfaceFlowData.fail())
     {
       // TODO throw exception
-      cerr << "Fail opening file SurfaceFlowData.plt" << endl;
+      cerr << "Fail opening file " << filename << endl;
       //return;
     }
 
@@ -465,12 +475,15 @@ void OutputTecplot::printRestartFile(Block* block)
 {
   cout << "Starting printRestartFile............................................" << endl;
 
-  RestartFile.open("RestartFile.dat");
+  std::stringstream ss;
+  ss << std::setw(OUTPUT_ZERO_PADDING) << std::setfill('0') << block->block_id_;
+  std::string filename = "RestartFile" + ss.str() + ".dat";
+  RestartFile.open(filename);
 
     if (RestartFile.fail())
     {
       // TODO throw exception
-      cerr << "Fail opening file RestartFile.dat" << endl;
+      cerr << "Fail opening file " << filename << endl;
       //return;
     }
 

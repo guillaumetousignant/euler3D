@@ -6,6 +6,8 @@
 #include "BlockBuilder.h"
 #include "ConcreteBlockBuilder.h"
 #include "ConnexionCellIds.h"
+#include "MetricsInitializer.h"
+#include "Interface.h"
 #include <string>
 #include <iostream>
 using namespace std;
@@ -40,13 +42,12 @@ CompleteMesh::~CompleteMesh()
 
 }
 
-void CompleteMesh::InitializeMyBlocks()
+void CompleteMesh::InitializeMyBlocks(Interface* interface)
 {
-	std::string block_id_string;
-	std::string block_file;
-	Block* new_block;
-
-	int block_id;
+	// std::string block_id_string;
+	// std::string block_file;
+	// Block* new_block;
+	// int block_id;
 
 	// for(int i=0;i<(all_blocks_-n_blocks_in_process_);i++)
 	// {
@@ -70,18 +71,25 @@ void CompleteMesh::InitializeMyBlocks()
 	// 	block_builder.setConnectivity(new_block);
 	// }
 
-
+	//#pragma omp parallel for schedule(guided)
 	for(int i=0;i<n_blocks_in_process_;i++)
 	{
-		block_id = my_blocks_[i];
+		std::string block_file;
+		int block_id = my_blocks_[i];
 
 		// std::cout<<block_id<<std::endl;
 
-		block_id_string = std::to_string(block_id);
+		std::string block_id_string = std::to_string(block_id);
 		// block_file = "../naca0012_coarse_nosidewall.su2";
-		block_file = topology_file_name_;
+		std::size_t found = topology_file_name_.find_last_of(".");
+  		if (found!=std::string::npos){
+			block_file = topology_file_name_.substr(0, found) + block_id_string + topology_file_name_.substr(found);
+		}
+		else{
+			block_file = topology_file_name_ + block_id_string;
+		}
 		ConcreteBlockBuilder block_builder=ConcreteBlockBuilder(block_file);
-		new_block = all_blocks_[i];
+		Block* new_block = all_blocks_[block_id];
 
 		//std::cout<<new_block -> block_id_<<std::endl;
 
@@ -130,10 +138,18 @@ void CompleteMesh::InitializeMyBlocks()
 		// cout<<test_node->node_coordinates_[2]<<endl;
 
 
+		cout << "In MetricsInitializer........." << endl;
+		MetricsInitializer metricsInit(new_block);
+		metricsInit.doInit();
 
+		cout << "In calculateFreeVariables........." << endl;
+		new_block->block_primitive_variables_->calculateFreeVariables(interface->gamma_interface_, interface->aoa_deg_interface_, interface->mach_aircraft_interface_);
+
+		cout << "In initializeFlowField........." << endl;
+		new_block->block_primitive_variables_->initializeFlowField(new_block->n_all_cells_in_block_);
+
+		cout << "In Solver........." << endl;
 	}
-
-
 }
 
 void CompleteMesh::InitializeMPIboundaries()

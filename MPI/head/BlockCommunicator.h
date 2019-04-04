@@ -4,6 +4,8 @@
 #include "CompleteMesh.h"
 #include "ConnexionCellIds.h"
 
+class PostProcessing;
+
 class BlockCommunicator {
     public:
         BlockCommunicator(int nblocks); // Should take a mesh as input
@@ -20,7 +22,8 @@ class BlockCommunicator {
         void addCellIdInConnexion(ConnexionCellIds* boundary);
         void getMyBlocks(int& n_blocks_in_process, int* &my_blocks) const;
         void initialize();
-        double getGlobal(double const coeff_local) const;
+        void getGlobal(CompleteMesh* mesh, PostProcessing* postprocess);
+
         void setBoundaryOffset();
 };
 #endif
