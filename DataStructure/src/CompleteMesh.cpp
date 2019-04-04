@@ -48,6 +48,28 @@ void CompleteMesh::InitializeMyBlocks()
 
 	int block_id;
 
+	// for(int i=0;i<(all_blocks_-n_blocks_in_process_);i++)
+	// {
+	// 	block_id = my_blocks_[i];
+
+	// 	// std::cout<<block_id<<std::endl;
+
+	// 	block_id_string = std::to_string(block_id);
+	// 	// block_file = "../naca0012_coarse_nosidewall.su2";
+	// 	block_file = topology_file_name_;
+	// 	ConcreteBlockBuilder block_builder=ConcreteBlockBuilder(block_file);
+	// 	new_block = all_blocks_[i];
+
+	// 	//std::cout<<new_block -> block_id_<<std::endl;
+
+	// 	block_builder.preReadMyBlock(new_block);
+	// 	block_builder.readMyBlock(new_block);
+
+	// 	block_builder.createMyFaces(new_block);
+
+	// 	block_builder.setConnectivity(new_block);
+	// }
+
 
 	for(int i=0;i<n_blocks_in_process_;i++)
 	{
