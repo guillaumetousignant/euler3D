@@ -40,7 +40,7 @@ class graphicsGenerator(object):
         self.myAerodynamicFile_ = myAerodynamicFile;
 
         #Attributes
-        self.Axis_ = "x";
+        self.CpAxis_ = "x";
         self.XCoordinate_ = 0.;
         self.YCoordinate_ = 0.;
         self.ZCoordinate_ = 0.;
@@ -86,14 +86,25 @@ class graphicsGenerator(object):
         CpXc, SurfaceMachContour, SurfaceCpContour, MachIsosurface = string2.split(" ");
         SlicesCp = string3;
         Axis, XCoordinate, YCoordinate, ZCoordinate = string4.split(" ");
-        firstCoordinate, lastCoordinate, numberOfSlices = string5.split(" ");
 
         if Axis == "x":
-            self.Axis_ = 1;
+            self.CpAxis_ = 1;
         elif Axis == "y":
-            self.Axis_ = 2;
+            self.CpAxis_ = 2;
         elif Axis == "z":
-            self.Axis_ = 3;
+            self.CpAxis_ = 3;
+
+        Axis, firstCoordinate, lastCoordinate, numberOfSlices = string5.split(" ");
+
+        if Axis == "x":
+            self.SliceAxis_ = 1;
+        elif Axis == "y":
+            self.SliceAxis_ = 2;
+        elif Axis == "z":
+            self.SliceAxis_ = 3;
+
+        print(self.CpAxis_)
+        print(self.SliceAxis_)
 
         # String to float
         self.XCoordinate_ = float(XCoordinate);
@@ -228,10 +239,10 @@ class graphicsGenerator(object):
             plotresidualsconvergence_ = plotResidualsConvergence(npIterations_, npRoResiduals_, npUuResiduals_, npVvResiduals_, npWwResiduals_, npPpResiduals_);
 
         if self.SlicesCp_Indicator_:
-            plotslicescp_ = plotSlicesCp(self.mySurfaceFlowFile_, self.type_, self.Axis_, self.firstCoordinate_, self.lastCoordinate_, self.numberOfSlices_);
+            plotslicescp_ = plotSlicesCp(self.mySurfaceFlowFile_, self.type_, self.SliceAxis_, self.firstCoordinate_, self.lastCoordinate_, self.numberOfSlices_);
 
         if self.CpXc_Indicator_:
-            plotcpxc_ = plotCpXc(self.mySurfaceFlowFile_, self.type_, self.Axis_, self.XCoordinate_, self.YCoordinate_, self.ZCoordinate_);
+            plotcpxc_ = plotCpXc(self.mySurfaceFlowFile_, self.type_, self.CpAxis_, self.XCoordinate_, self.YCoordinate_, self.ZCoordinate_);
 
         if self.SurfaceCpContour_Indicator_:
             plotsurfacecpcontour_ = plotSurfaceCpContour(self.mySurfaceFlowFile_, self.type_);

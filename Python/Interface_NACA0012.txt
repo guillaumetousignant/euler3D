@@ -32,5 +32,5 @@ slicescp
 1
 axis xcoord ycoord zcoord
 z 0.00 0.00 0.20
-fcoord lcoord numberofslices
-0.10 0.50 5
+axis fcoord lcoord numberofslices
+z 0.10 0.50 5

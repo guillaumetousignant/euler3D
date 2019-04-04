@@ -6,7 +6,6 @@ import numpy as np
 import math
 import string
 import glob
-from mergeFiles import mergeFiles
 from graphicsGenerator import graphicsGenerator
 from tecplot.exception import *
 from tecplot.constant import *
