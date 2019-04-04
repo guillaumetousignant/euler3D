@@ -198,7 +198,7 @@ class Interface(Input, Solver, Output):
             file.readline() # "OUTPUT (0-no 1-yes)"
 
             file.readline() # "filestype (0-Euler 1 -SU2)"
-            filestype = file.readline()
+            filestype, space = file.readline().split("\n")
             
             file.readline() # "clalpha cdalpha cmalpha"
             a = file.readline()

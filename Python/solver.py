@@ -404,13 +404,13 @@ class Solver():
         self.max_iter.set(nb_iter_max_var)
         self.convergence_crit.set(conv_criterion_var)
 
-        if build_var == 1 and execute_var == 0:
+        if build_var == "1" and execute_var == "0":
             self.solver_option.set(1)
 
-        elif build_var == 0 and execute_var == 1:
+        elif build_var == "0" and execute_var == "1":
             self.solver_option.set(2)
 
-        elif build_var == 1 and execute_var == 1:
+        elif build_var == "1" and execute_var == "1":
             self.solver_option.set(3)
 
         self.smoothing.set(smoothing_var)
