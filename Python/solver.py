@@ -317,15 +317,6 @@ class Solver():
         self.k.set(5.0)
         self.smoothing.set(1)
 
-        # self.gradient_label.configure(state="disabled")
-        # self.gradient_entry.configure(state="disabled")
-        # self.limiter_label.configure(state="disabled")
-        # self.limiter_entry.configure(state="disabled")
-        # self.omega_label.configure(state="disabled")
-        # self.omega_entry.configure(state="disabled")
-        # self.k_label.configure(state="disabled")
-        # self.k_entry.configure(state="disabled")
-
     def writePartialOutputFluxScheme(self):
         smoothing_str = str(self.smoothing.get())
         flux_scheme_str = self.flux_scheme.get().lower()
@@ -412,8 +403,16 @@ class Solver():
     def saveImportedData(self, nb_iter_max_var, conv_criterion_var, build_var, execute_var, smoothing_var, flux_scheme_var, scheme_order_var, gradient_var, limiter_var, omega_var, k_var):
         self.max_iter.set(nb_iter_max_var)
         self.convergence_crit.set(conv_criterion_var)
-        # self.solver_option_build.set(build_var)
-        # self.solver_option_execute.set(execute_var)
+
+        if build_var == 1 and execute_var == 0:
+            self.solver_option.set(1)
+
+        elif build_var == 0 and execute_var == 1:
+            self.solver_option.set(2)
+
+        elif build_var == 1 and execute_var == 1:
+            self.solver_option.set(3)
+
         self.smoothing.set(smoothing_var)
         self.flux_scheme.set(flux_scheme_var)
         self.scheme_order.set(scheme_order_var)
@@ -421,4 +420,3 @@ class Solver():
         self.limiter.set(limiter_var)
         self.omega.set(omega_var)
         self.k.set(k_var)
-

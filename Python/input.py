@@ -87,6 +87,7 @@ class Input():
         self.rk_entry.grid(row=3, column=3, sticky=NSEW, padx=2, pady=2)
 
         self.filename_mesh = "void"
+        self.filename_geometry = "void"
  
     # METHODS
     def importMesh(self):
@@ -101,8 +102,12 @@ class Input():
         select_file_button = ttk.Button(self.mesh_window, text="Select a file", command=self.meshFileDialog)
         select_file_button.grid(row=1, column=0, padx=2)
         
-        self.filename_label_mesh = ttk.Label(self.mesh_window, text="", relief="solid", width=40)
+        self.filename_label_mesh = ttk.Label(self.mesh_window, text="", relief="solid", width=60)
         self.filename_label_mesh.grid(row=1, column=1, columnspan=3, padx=2)
+        if self.filename_mesh != "void":
+            self.filename_label_mesh.configure(text=self.filename_mesh)
+        else:
+            self.filename_label_mesh.configure(text="")
         
         ok_button = ttk.Button(self.mesh_window, text="Ok", command=self.saveAndDestroyWindow)
         ok_button.grid(row=2, column=1, pady=5)
@@ -113,7 +118,7 @@ class Input():
     def meshFileDialog(self):
         self.filename_mesh = filedialog.askopenfilename(initialdir="/home/etudiant/", title="Select a file", filetypes=(("SU2", "*.su2"),("All Files", "*.*")))
 
-        if self.filename_mesh=="":
+        if self.filename_mesh=="void":
             self.filename_label_mesh.configure(text="")
         
         elif self.filename_mesh.endswith('.su2'):
@@ -136,8 +141,12 @@ class Input():
         select_file_button = ttk.Button(self.geometry_window, text="Select a file", command=self.geometryFileDialog)
         select_file_button.grid(row=1, column=0, padx=2)
         
-        self.filename_label_geometry = ttk.Label(self.geometry_window, text="", relief="solid", width=40)
+        self.filename_label_geometry = ttk.Label(self.geometry_window, text="", relief="solid", width=60)
         self.filename_label_geometry.grid(row=1, column=1, columnspan=3, padx=2)
+        if self.filename_geometry != "void":
+            self.filename_label_geometry.configure(text=self.filename_geometry)
+        else:
+            self.filename_label_geometry.configure(text="")
 
         self.number_blocks = IntVar()
         self.number_blocks.set(3)
@@ -154,7 +163,7 @@ class Input():
     def geometryFileDialog(self):
         self.filename_geometry = filedialog.askopenfilename(initialdir="/home/etudiant/", title="Select a file", filetypes=(("csm", "*.csm"),("All Files", "*.*")))
         
-        if self.filename_geometry=="":
+        if self.filename_geometry=="void":
             self.filename_label_geometry.configure(text="")
         
         elif self.filename_geometry.endswith('.csm'):
@@ -394,7 +403,8 @@ class Input():
         
         return partial_output
 
-    def saveImportedData(self, cfl_var, gamma_var, angle_attack_var, rk_var, mach_var, cmac_var):
+    def saveImportedData(self, filename_var, cfl_var, gamma_var, angle_attack_var, rk_var, mach_var, cmac_var):
+        self.filename_label_mesh.configure(text=filename_var)
         self.cfl.set(cfl_var)
         self.gamma.set(gamma_var)
         self.angle_attack.set(angle_attack_var)
