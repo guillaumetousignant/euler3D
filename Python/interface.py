@@ -30,6 +30,8 @@ class Interface(Input, Solver, Output):
         tab3 = ttk.Frame(tabControl)
         tabControl.add(tab3, text="3. Output")
 
+        tabControl.select(tab1)
+        
         # MENU BAR
         menubar = Menu(master)
         master.config(menu=menubar)
@@ -220,10 +222,9 @@ class Interface(Input, Solver, Output):
             axisslicecp, fcoord, lcoord, numberofslices = a.split()
 
             file.close()
-
             
             self.input.saveImportedData(cfl, gamma, angleattackdeg, rkstage, mach, cmac)
-            # self.solver.saveImportedData(nbitermax, convcriterion, build, execute, smoothing, fluxscheme, schemeorder, gradient, limiter, omega, k)
+            self.solver.saveImportedData(nbitermax, convcriterion, build, execute, smoothing, fluxscheme, schemeorder, gradient, limiter, omega, k)
             self.output.saveImportedData(filestype, clalpha, cdalpha, cmalpha, coefficientsconvergence, residualconv, cpxc, machcontour, cpcontour, machisosurface, slicecp, axiscpxc, xcoord, ycoord, zcoord, axisslicecp, fcoord, lcoord, numberofslices)
 
 

@@ -28,7 +28,7 @@ class Solver():
         self.max_iter.set(300)
         self.max_iter_label = ttk.Label(title_section_2_1, text="Max number of itterations", borderwidth=2, relief="groove", anchor=CENTER)
         self.max_iter_label.grid(row=1, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
-        self.max_iter_entry = ttk.Entry(title_section_2_1, textvariable=self.max_iter, width=15, justify=CENTER)
+        self.max_iter_entry = ttk.Entry(title_section_2_1, textvariable=self.max_iter, width=15, justify=CENTER, takefocus=0)
         self.max_iter_entry.grid(row=1, column=3, columnspan=2, padx=2, pady=2)
 
         label_void_2 = ttk.Label(title_section_2_1, text="", width=4)
@@ -38,7 +38,7 @@ class Solver():
         self.convergence_crit.set(-15)
         self.convergence_crit_label = ttk.Label(title_section_2_1, text="Convergence criterion power (1.0eX)", borderwidth=2, relief="groove", anchor=CENTER)
         self.convergence_crit_label.grid(row=2, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
-        self.convergence_crit_entry = ttk.Entry(title_section_2_1, textvariable=self.convergence_crit, width=15, justify=CENTER)
+        self.convergence_crit_entry = ttk.Entry(title_section_2_1, textvariable=self.convergence_crit, width=15, justify=CENTER, takefocus=0)
         self.convergence_crit_entry.grid(row=2, column=3, columnspan=2, padx=2, pady=2)
 
         # SECTION 2.2: SCHEME SELECTION
@@ -52,7 +52,7 @@ class Solver():
         label_void_3 = ttk.Label(title_section_2_2, text="", width=12)
         label_void_3.grid(row=1, column=0)
 
-        flux_scheme_button = ttk.Button(title_section_2_2, text="Select flux scheme", command=self.selectFluxScheme, width=23)
+        flux_scheme_button = ttk.Button(title_section_2_2, text="Select flux scheme", command=self.selectFluxScheme, width=23, takefocus=0)
         flux_scheme_button.grid(row=1, column=1, sticky=NSEW)
 
         label_void_4 = ttk.Label(title_section_2_2, text="", width=4)
@@ -73,7 +73,7 @@ class Solver():
         self.nb_process.set(1)
         self.nb_process_label = ttk.Label(title_section_2_3, text="Number of process", relief="groove", borderwidth=2, anchor=CENTER, width=22)
         self.nb_process_label.grid(row=1, column=1, columnspan=2, sticky=NSEW, padx=2, pady=2)
-        self.nb_process_entry = ttk.Entry(title_section_2_3, textvariable=self.nb_process, width=15, justify=CENTER)
+        self.nb_process_entry = ttk.Entry(title_section_2_3, textvariable=self.nb_process, width=15, justify=CENTER, takefocus=0)
         self.nb_process_entry.grid(row=1, column=3, columnspan=2, padx=2, pady=2)
 
         label_void_6 = ttk.Label(title_section_2_3, text="", width=4)
@@ -81,37 +81,64 @@ class Solver():
         
         self.solver_option = IntVar()
         self.solver_option.set(3)
-        self.solver_option_build = Radiobutton(title_section_2_3, text="Build the code", value=1, variable=self.solver_option, relief="groove", borderwidth=2, width=23, anchor=W)
+        self.solver_option_build = Radiobutton(title_section_2_3, text="Build the code", value=1, variable=self.solver_option, relief="groove", borderwidth=2, width=23, anchor=W, takefocus=0)
         self.solver_option_build.grid(row=2, column=1, columnspan=4, padx=2, pady=2)
 
-        self.solver_option_execute = Radiobutton(title_section_2_3, text="Execute the code", value=2, variable=self.solver_option, relief="groove", borderwidth=2, width=23, anchor=W)
+        self.solver_option_execute = Radiobutton(title_section_2_3, text="Execute the code", value=2, variable=self.solver_option, relief="groove", borderwidth=2, width=23, anchor=W, takefocus=0)
         self.solver_option_execute.grid(row=3, column=1, columnspan=4, padx=2, pady=2)
 
-        self.solver_option_build_execute = Radiobutton(title_section_2_3, text="Build and execute the code", value=3, variable=self.solver_option, relief="groove", borderwidth=2, width=23, anchor=W)
+        self.solver_option_build_execute = Radiobutton(title_section_2_3, text="Build and execute the code", value=3, variable=self.solver_option, relief="groove", borderwidth=2, width=23, anchor=W, takefocus=0)
         self.solver_option_build_execute.grid(row=4, column=1, columnspan=4, padx=2, pady=2)
 
         # INITIALIZATION OF FLUX SCHEME VARIABLES: 
-        # those variables have to be initialized before the method is called, beaucoup otherwise A LOT of problems will be encountered...
+        # those variables have to be initialized before the method is called, otherwise A LOT of problems will be encountered...
         self.flux_scheme = StringVar()
-        self.flux_scheme.set("Roe")
+        if self.flux_scheme.get() == "Roe" or self.flux_scheme.get() == "":
+            self.flux_scheme.set("Roe")
+        else:
+            self.flux_scheme.set("Ausm")
+
 
         self.scheme_order = StringVar()
-        self.scheme_order.set("1")
+        if self.scheme_order.get() == "1" or self.scheme_order.get() == "":
+            self.scheme_order.set("1")
+        else:
+            self.scheme_order.set("2")
+
 
         self.gradient = StringVar()
-        self.gradient.set("Green Gauss")
+        if self.gradient.get() == "Green Gauss" or self.gradient.get() == "greengauss" or self.gradient.get() == "":
+            self.gradient.set("Green Gauss")
+        else:
+            self.gradient.set("Least Squares")
+
 
         self.limiter = StringVar()
-        self.limiter.set("Barth Jespersen")
+        if self.limiter.get() == "Barth Jespersen" or self.limiter.get() == "barthjespersen" or self.limiter.get() == "":
+            self.limiter.set("Barth Jespersen")
+        else:
+            self.limiter.set("Venkatakrishnan")
+
 
         self.omega = IntVar()
-        self.omega.set(6)
+        if self.omega.get() == -16 or self.omega.get() == 0:
+            self.omega.set("-16")
+        else:
+            self.omega.set(self.omega.get())
+
 
         self.k = DoubleVar()
-        self.k.set(5.0)
+        if self.k.get() == 5.0 or self.k.get() == 0.0:
+            self.k.set(5.0)
+        else:
+            self.k.set(self.k.get())
+
 
         self.smoothing = IntVar()
-        self.smoothing.set(1)
+        if self.smoothing.get() == 1:
+            self.smoothing.set(1)
+        else:
+            self.smoothing.set(0)
 
     # METHODS
     def selectFluxScheme(self):
@@ -122,52 +149,98 @@ class Solver():
         text_flux_scheme_window = ttk.Label(self.flux_scheme_window, text="\nPlease configure the following parameters:\n", anchor=W)
         text_flux_scheme_window.grid(row=0, column=0, columnspan=4, padx=2, sticky=W)
         
-        self.flux_scheme = StringVar()
-        self.flux_scheme.set("Roe")
+
+        # If statements: to return last values entered (with the state of the labels, if necessary).
+        if self.flux_scheme.get() == "Roe" or self.flux_scheme.get() == "":
+            self.flux_scheme.set("Roe")
+        else:
+            self.flux_scheme.set("Ausm")
         self.flux_scheme_label = ttk.Label(self.flux_scheme_window, text="Flux scheme:", anchor=CENTER)
         self.flux_scheme_label.grid(row=1, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
         self.flux_scheme_entry = ttk.Combobox(self.flux_scheme_window, values=("Roe", "Ausm"), width=15, textvariable=self.flux_scheme, justify=CENTER)
         self.flux_scheme_entry.grid(row=2, column=1, columnspan=2, pady=2)
         
-        self.scheme_order = StringVar()
-        self.scheme_order.set("1")
+
+        if self.scheme_order.get() == "1" or self.scheme_order.get() == "":
+            self.scheme_order.set("1")
+        else:
+            self.scheme_order.set("2")
         self.scheme_order_label = ttk.Label(self.flux_scheme_window, text="Scheme order:", anchor=CENTER)
         self.scheme_order_label.grid(row=3, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
         self.scheme_order_entry = ttk.Combobox(self.flux_scheme_window, values=("1", "2"), width=15, textvariable=self.scheme_order, justify=CENTER)
         self.scheme_order_entry.grid(row=4, column=1, columnspan=2, pady=2)
         self.scheme_order_entry.bind('<<ComboboxSelected>>', self.activateGradientAndLimiter)
 
-        self.gradient = StringVar()
-        self.gradient.set("Green Gauss")
+
+        if self.gradient.get() == "Green Gauss" or self.gradient.get() == "greengauss" or self.gradient.get() == "":
+            self.gradient.set("Green Gauss")
+        else:
+            self.gradient.set("Least Squares")
         self.gradient_label = ttk.Label(self.flux_scheme_window, text="Gradient:", anchor=CENTER, state="disabled")
         self.gradient_label.grid(row=5, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
         self.gradient_entry = ttk.Combobox(self.flux_scheme_window, values=("Green Gauss", "Least Squares"), width=15, state="disabled", textvariable=self.gradient, justify=CENTER)
         self.gradient_entry.grid(row=6, column=1, columnspan=2, pady=2)
+        if self.scheme_order.get() == "2":
+            self.gradient_label.configure(state="normal")
+            self.gradient_entry.configure(state="normal")
+        else:
+            self.gradient_label.configure(state="disabled")
+            self.gradient_entry.configure(state="disabled")
         
-        self.limiter = StringVar()
-        self.limiter.set("Barth Jespersen")
+
+        if self.limiter.get() == "Barth Jespersen" or self.limiter.get() == "barthjespersen" or self.limiter.get() == "":
+            self.limiter.set("Barth Jespersen")
+        else:
+            self.limiter.set("Venkatakrishnan")
         self.limiter_label = ttk.Label(self.flux_scheme_window, text="Limiter:", anchor=CENTER, state="disabled")
         self.limiter_label.grid(row=7, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
         self.limiter_entry = ttk.Combobox(self.flux_scheme_window, values=("Barth Jespersen", "Venkatakrishnan"), width=15, state="disabled", textvariable=self.limiter, justify=CENTER)
         self.limiter_entry.grid(row=8, column=1, columnspan=2, pady=2)
         self.limiter_entry.bind('<<ComboboxSelected>>', self.activateOmegaOrK)
+        if self.scheme_order.get() == "2":
+            self.limiter_label.configure(state="normal")
+            self.limiter_entry.configure(state="normal")
+        else:
+            self.limiter_label.configure(state="disabled")
+            self.limiter_entry.configure(state="disabled")
 
-        self.omega = IntVar()
-        self.omega.set(-16)
+
+        if self.omega.get() == -16 or self.omega.get() == 0:
+            self.omega.set(-16)
+        else:
+            self.omega.set(self.omega.get())
         self.omega_label = ttk.Label(self.flux_scheme_window, text="Omega power\n(1.0eX)", width=13, anchor=CENTER, borderwidth=2, relief="groove", state="disabled")
         self.omega_label.grid(row=9, column=0, padx=2, pady=7)
         self.omega_entry = ttk.Entry(self.flux_scheme_window, textvariable=self.omega, width=10, state="disabled", justify=CENTER)
         self.omega_entry.grid(row=9, column=1, padx=2, pady=10)
+        if self.scheme_order.get() == "2" and self.limiter.get() == "Barth Jespersen":
+            self.omega_label.configure(state="normal")
+            self.omega_entry.configure(state="normal")
+        else:
+            self.omega_label.configure(state="disabled")
+            self.omega_entry.configure(state="disabled")
 
-        self.k = DoubleVar()
-        self.k.set(5.0)
+
+        if self.k.get() == 5.0 or self.k.get() == 0.0:
+            self.k.set(5.0)
+        else:
+            self.k.set(self.k.get())
         self.k_label = ttk.Label(self.flux_scheme_window, text="k", width=13, anchor=CENTER, borderwidth=2, relief="groove", state="disabled")
         self.k_label.grid(row=9, column=2, padx=2, pady=7)
         self.k_entry = ttk.Entry(self.flux_scheme_window, textvariable=self.k, width=10, state="disabled", justify=CENTER)
         self.k_entry.grid(row=9, column=3, padx=2, pady=10)
+        if self.scheme_order.get() == "2" and self.limiter.get() == "Venkatakrishnan":
+            self.k_label.configure(state="normal")
+            self.k_entry.configure(state="normal")
+        else:
+            self.k_label.configure(state="disabled")
+            self.k_entry.configure(state="disabled")
 
-        self.smoothing = IntVar()
-        self.smoothing.set(1)
+
+        if self.smoothing.get() == 1:
+            self.smoothing.set(1)
+        else:
+            self.smoothing.set(0)
         self.smoothing_label = ttk.Label(self.flux_scheme_window, text="Residual smoothing?", anchor=CENTER)
         self.smoothing_label.grid(row=10, column=1, columnspan=2, padx=2)
         
@@ -192,6 +265,9 @@ class Solver():
 
             self.limiter_label.configure(state="normal")
             self.limiter_entry.configure(state="normal")
+
+            self.omega_label.configure(state="normal")
+            self.omega_entry.configure(state="normal")
 
         elif scheme_order_result == "1":
             self.gradient_label.configure(state="disabled")

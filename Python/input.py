@@ -22,16 +22,16 @@ class Input():
         text_section_1_1 = ttk.Label(title_section_1_1, text="\n\nPlease select the desired mesh or geometry:\n")
         text_section_1_1.grid(row=0, column=0, columnspan=3, sticky=NSEW, padx=2)
 
-        import_mesh = Button(title_section_1_1, text=" Import \n  mesh  ", command=self.importMesh, anchor=CENTER)
+        import_mesh = Button(title_section_1_1, text=" Import \n  mesh  ", command=self.importMesh, anchor=CENTER, takefocus=0)
         import_mesh.grid(row=1, column=0, sticky=NSEW, padx=2, pady=2)
 
-        import_geometry = Button(title_section_1_1, text="Import\ngeometry", command=self.importGeometry, anchor=CENTER)
+        import_geometry = Button(title_section_1_1, text="Import\ngeometry", command=self.importGeometry, anchor=CENTER, takefocus=0)
         import_geometry.grid(row=1, column=1, sticky=NSEW, padx=2, pady=2)
         
-        generate_geometry = Button(title_section_1_1, text="Generate\ngeometry", command=self.generateGeometry, anchor=CENTER)
+        generate_geometry = Button(title_section_1_1, text="Generate\ngeometry", command=self.generateGeometry, anchor=CENTER, takefocus=0)
         generate_geometry.grid(row=1, column=2, sticky=NSEW, padx=2, pady=2)
 
-        show_resulting_mesh = Button(title_section_1_1, text="Show resulting\nmesh", command=self.showResultingMesh, anchor=CENTER)
+        show_resulting_mesh = Button(title_section_1_1, text="Show resulting\nmesh", command=self.showResultingMesh, anchor=CENTER, takefocus=0)
         show_resulting_mesh.grid(row=2, column=1, sticky=NSEW, padx=2, pady=2)
 
         # SECTION 1.2: INPUT VALUES
@@ -48,42 +48,42 @@ class Input():
         self.cfl.set(7.5)
         self.cfl_label = ttk.Label(title_section_1_2, text="     cfl     ", borderwidth=2, relief="groove", anchor=CENTER)
         self.cfl_label.grid(row=1, column=0, sticky=NSEW, padx=2, pady=2)
-        self.cfl_entry = ttk.Entry(title_section_1_2, textvariable=self.cfl, justify=CENTER)
+        self.cfl_entry = ttk.Entry(title_section_1_2, textvariable=self.cfl, justify=CENTER, takefocus=0)
         self.cfl_entry.grid(row=1, column=1, sticky=NSEW, padx=2, pady=2)
 
         self.gamma = DoubleVar()
         self.gamma.set(1.4)
         self.gamma_label = ttk.Label(title_section_1_2, text="    gamma    ", borderwidth=2, relief="groove", anchor=CENTER)
         self.gamma_label.grid(row=2, column=0, sticky=NSEW, padx=2, pady=2)
-        self.gamma_entry = ttk.Entry(title_section_1_2, textvariable=self.gamma, justify=CENTER)
+        self.gamma_entry = ttk.Entry(title_section_1_2, textvariable=self.gamma, justify=CENTER, takefocus=0)
         self.gamma_entry.grid(row=2, column=1, sticky=NSEW, padx=2, pady=2)
 
         self.mach = DoubleVar()
         self.mach.set(0.8)
         self.mach_label = ttk.Label(title_section_1_2, text="    mach    ", borderwidth=2, relief="groove", anchor=CENTER)
         self.mach_label.grid(row=3, column=0, sticky=NSEW, padx=2, pady=2)
-        self.mach_entry = ttk.Entry(title_section_1_2, textvariable=self.mach, justify=CENTER)
+        self.mach_entry = ttk.Entry(title_section_1_2, textvariable=self.mach, justify=CENTER, takefocus=0)
         self.mach_entry.grid(row=3, column=1, sticky=NSEW, padx=2, pady=2)
 
         self.cmac = DoubleVar()
         self.cmac.set(1.0)
         self.cmac_label = ttk.Label(title_section_1_2, text="cmac", borderwidth=2, relief="groove", anchor=CENTER)
         self.cmac_label.grid(row=1, column=2, sticky=NSEW, padx=2, pady=2)
-        self.cmac_entry = ttk.Entry(title_section_1_2, textvariable=self.cmac, justify=CENTER)
+        self.cmac_entry = ttk.Entry(title_section_1_2, textvariable=self.cmac, justify=CENTER, takefocus=0)
         self.cmac_entry.grid(row=1, column=3, sticky=NSEW, padx=2, pady=2)
 
         self.angle_attack = DoubleVar()
         self.angle_attack.set(0.0)
         self.angle_attack_label = ttk.Label(title_section_1_2, text="Angle of attack (deg)", borderwidth=2, relief="groove", anchor=CENTER)
         self.angle_attack_label.grid(row=2, column=2, sticky=NSEW, padx=2, pady=2)
-        self.angle_attack_entry = ttk.Entry(title_section_1_2, textvariable=self.angle_attack, justify=CENTER)
+        self.angle_attack_entry = ttk.Entry(title_section_1_2, textvariable=self.angle_attack, justify=CENTER, takefocus=0)
         self.angle_attack_entry.grid(row=2, column=3, sticky=NSEW, padx=2, pady=2)
 
         self.rk = IntVar()
         self.rk.set(5)
         self.rk_label = ttk.Label(title_section_1_2, text="Number of stages (RK)", borderwidth=2, relief="groove", anchor=CENTER)
         self.rk_label.grid(row=3, column=2, sticky=NSEW, padx=2, pady=2)
-        self.rk_entry = ttk.Entry(title_section_1_2, textvariable=self.rk, justify=CENTER)
+        self.rk_entry = ttk.Entry(title_section_1_2, textvariable=self.rk, justify=CENTER, takefocus=0)
         self.rk_entry.grid(row=3, column=3, sticky=NSEW, padx=2, pady=2)
 
         self.filename_mesh = "void"
