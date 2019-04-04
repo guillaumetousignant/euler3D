@@ -47,7 +47,7 @@ void CompleteMesh::InitializeMyBlocks()
 
 	int block_id;
 
-
+	// #pragma omp parallel for num_threads(8) // DECOMMENTER POUR AVOIR OPENMP
 	for(int i=0;i<n_blocks_in_process_;i++)
 	{
 		block_id = my_blocks_[i];

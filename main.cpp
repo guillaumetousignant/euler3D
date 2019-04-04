@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <string>
+#include <omp.h>
 #ifdef HAVE_MPI
 #include <mpi.h>
 #endif
@@ -68,6 +69,7 @@ int main(int argc, char* argv[])
 	CompleteMesh* complete_mesh = new CompleteMesh(n_blocks, n_blocks_in_process, my_blocks, interface->topology_file_name_interface_);
 	complete_mesh->InitializeMyBlocks();
 
+	// #pragma omp parallel for num_threads(8) // DECOMMENTER POUR AVOIR OPENMP
 	for (int i = 0; i < complete_mesh->n_blocks_in_process_; i++){
 		Block* new_block = complete_mesh->all_blocks_[complete_mesh->my_blocks_[i]];
 
@@ -82,7 +84,7 @@ int main(int argc, char* argv[])
 		new_block->block_primitive_variables_->initializeFlowField(new_block->n_all_cells_in_block_);
 
 		cout << "In Solver........." << endl;
-		
+
 	}
 
 	Solver *solver=initializer->initializeSolver(interface);
