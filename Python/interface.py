@@ -16,13 +16,19 @@ class Interface(Input, Solver, Output):
         master.title("GRAPHICAL USER INTERFACE")
         master.geometry("397x515")
         master.resizable(0,0)
+        master.grid_columnconfigure(0, weight=1)
+        master.grid_columnconfigure(1, weight=1)
+        master.grid_columnconfigure(2, weight=1)
+        master.grid_rowconfigure(0, weight=1)
+        master.grid_rowconfigure(1, weight=1)
+        master.grid_rowconfigure(2, weight=1)
         
         # TABS OF THE MAIN WINDOW
         tabControl = ttk.Notebook(master)
         tabControl.grid(row=0, column=0, columnspan=10, sticky='NESW')
 
         tab1 = ttk.Frame(tabControl)
-        tabControl.add(tab1, text="1. Input")
+        tabControl.add(tab1, text="1. Input",)
 
         tab2 = ttk.Frame(tabControl)
         tabControl.add(tab2, text="2. Solver")

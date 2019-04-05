@@ -360,7 +360,29 @@ class Input():
 
     def saveAndDestroyWindow(self):
         self.writePartialOutputMesh()
-        self.mesh_window.destroy()
+        
+        self.partition_window = Toplevel(self.master)
+        self.partition_window.title("Mesh Partitionning?")
+        self.partition_window.resizable(0,0)
+        self.partition_window.lift()
+
+        ttk.Label(self.partition_window, text="Do you want to partition your mesh?").grid(row=0, column=0, columnspan=4)
+
+        self.partition = IntVar()
+        self.partition.set(0)
+        self.partition_yes = Radiobutton(self.partition_window, text="Yes", value=1, variable=self.partition, relief="groove", borderwidth=2, width=5, anchor=W, takefocus=0)
+        self.partition_yes.grid(row=1, column=1, columnspan=2, padx=2, pady=2)
+        self.partition_no = Radiobutton(self.partition_window, text="No", value=0, variable=self.partition, relief="groove", borderwidth=2, width=5, anchor=W, takefocus=0)
+        self.partition_no.grid(row=2, column=1, columnspan=2, padx=2, pady=2)
+
+        ok_button = ttk.Button(self.partition_window, text="Ok", command=lambda:[self.partition_window.destroy(),self.mesh_window.destroy()])
+        ok_button.grid(row=3, column=1, pady=5)
+        cancel_button = ttk.Button(self.partition_window, text="Cancel", command=self.partition_window.destroy)
+        cancel_button.grid(row=3, column=2, pady=5)
+
+        # self.mesh_window.destroy()
+
+
 
     def clearAllPages(self):
         self.cfl.set(0.0)
