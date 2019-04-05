@@ -9,8 +9,6 @@
 #include <sstream>
 #include <iomanip>
 
-#include <mpi.h> // REMOVE
-
 #include "OutputTecplot.h"
 
 #define OUTPUT_ZERO_PADDING 6
@@ -35,14 +33,8 @@ void OutputTecplot::printFlowData(Block* block)
 {
   int i;
 
-  //cout << "Starting printFlowData..............................................." << endl;
-
-  int process_id_; // REMOVE
-  MPI_Comm_rank(MPI_COMM_WORLD, &process_id_); // REMOVE
-  cout << process_id_ << " Starting printFlowData..............................................." << endl; // REMOVE
-  cout << process_id_ << "'s block is " << block << endl; // REMOVE
-  cout << process_id_ << "'s block id is " << block->block_id_ << endl; // REMOVE
-
+  cout << "Starting printFlowData..............................................." << endl;
+  
   //FlowData.open("FlowData.plt", ios::binary);
   std::stringstream ss;
   ss << std::setw(OUTPUT_ZERO_PADDING) << std::setfill('0') << block->block_id_;
@@ -50,17 +42,12 @@ void OutputTecplot::printFlowData(Block* block)
   std::ofstream FlowData;
   FlowData.open(filename);
 
-    if (!FlowData.is_open())
-    {
-      cout << process_id_ << " fucked uuuuuuuuuuuuup opening its file." << endl; // REMOVE
-
-      // TODO throw exception
-      cerr << "Fail opening file " << filename << endl;
-      //return;
-    }
-
-  cout << process_id_ << " opened file ..............................................." << endl; // REMOVE
-
+  if (!FlowData.is_open())
+  {
+    // TODO throw exception
+    cerr << "Failed opening file " << filename << endl;
+    //return;
+  }
 
   FlowData << "TTILE = \"Vizualisation of the volumetric solution\""<<endl;
   FlowData << "VARIABLES=\"X\",\"Y\",\"Z\",\"RO\",\"UU\",\"VV\",\"WW\",\"PP\",\"CP\",\"MACH\"" << endl;
@@ -68,8 +55,6 @@ void OutputTecplot::printFlowData(Block* block)
   FlowData << "Nodes=" << block->n_nodes_in_block_ << ", " << "Elements=" << block->n_real_cells_in_block_ << ", " << "ZONETYPE=FEBRICK" << endl;
   FlowData << "DATAPACKING=BLOCK" << endl;
   FlowData << "VARLOCATION=([4,5,6,7,8,9,10]=CELLCENTERED)" << endl;
-
-  cout << process_id_ << " wrote header ..............................................." << endl; // REMOVE
 
   double x_node;
   // Print X coordinate for each node
@@ -80,8 +65,6 @@ void OutputTecplot::printFlowData(Block* block)
     FlowData << x_node << endl;
   }
   
-  cout << process_id_ << " wrote x ..............................................." << endl; // REMOVE
-
   double y_node;
   // Print Y coordinate for each node
   for(i=0; i < block->n_nodes_in_block_; i++)
@@ -90,8 +73,6 @@ void OutputTecplot::printFlowData(Block* block)
 
     FlowData << y_node << endl;
   }
-
-  cout << process_id_ << " wrote y ..............................................." << endl; // REMOVE
 
   double z_node;
   // Print Z coordinate for each node
@@ -102,8 +83,6 @@ void OutputTecplot::printFlowData(Block* block)
     FlowData << z_node << endl;
   }
 
-  cout << process_id_ << " wrote z ..............................................." << endl; // REMOVE
-
   double ro_cell;
   // Print density for each cell
   for(i=0; i < block->n_real_cells_in_block_; i++)
@@ -112,8 +91,6 @@ void OutputTecplot::printFlowData(Block* block)
 
     FlowData << ro_cell << endl;
   }
-
-  cout << process_id_ << " wrote ro ..............................................." << endl; // REMOVE
 
   double uu_cell;
   // Print UU velocity for each cell
@@ -124,9 +101,6 @@ void OutputTecplot::printFlowData(Block* block)
     FlowData << uu_cell << endl;
   }
 
-  cout << process_id_ << " wrote uu ..............................................." << endl; // REMOVE
-
-
   double vv_cell;
   // Print VV velocity for each cell
   for(i=0; i < block->n_real_cells_in_block_; i++)
@@ -135,9 +109,6 @@ void OutputTecplot::printFlowData(Block* block)
 
     FlowData << vv_cell << endl;
   }
-
-  cout << process_id_ << " wrote vv ..............................................." << endl; // REMOVE
-
 
   double ww_cell;
   // Print WW velocity for each cell
@@ -148,9 +119,6 @@ void OutputTecplot::printFlowData(Block* block)
     FlowData << ww_cell << endl;
   }
 
-  cout << process_id_ << " wrote ww ..............................................." << endl; // REMOVE
-
-
   double pp_cell;
   // Print pressure for each cell
   for(i=0; i < block->n_real_cells_in_block_; i++)
@@ -159,10 +127,6 @@ void OutputTecplot::printFlowData(Block* block)
 
     FlowData << pp_cell << endl;
   }
-
-  cout << process_id_ << " wrote pp ..............................................." << endl; // REMOVE
-
-
 
   double dyn_head;
   double cp_cell;
@@ -178,9 +142,6 @@ void OutputTecplot::printFlowData(Block* block)
     cp_cell = (pp_cell-1.)/dyn_head;
     FlowData << cp_cell << endl;
   }
-
-  cout << process_id_ << " wrote cp ..............................................." << endl; // REMOVE
-
 
   double a_cell;
   double velocity_cell;
@@ -206,10 +167,6 @@ void OutputTecplot::printFlowData(Block* block)
     FlowData << mach_cell << endl;
   }
 
-  cout << process_id_ << " wrote mach ..............................................." << endl; // REMOVE
-
-
-
   int j;
   for(i=0;i < block->n_real_cells_in_block_; i++)
   {
@@ -228,17 +185,9 @@ void OutputTecplot::printFlowData(Block* block)
     */
   }
 
-  cout << process_id_ << " wrote... something? ..............................................." << endl; // REMOVE
-
-
   FlowData.close();
 
-  cout << process_id_ << " closed file ..............................................." << endl; // REMOVE
-
-
-  cout << process_id_ <<  " Ending printFlowData..............................................." << endl; // REMOVE
-  //cout << "Ending printFlowData..............................................." << endl;
-
+  cout << "Ending printFlowData..............................................." << endl;
 }
 
 void OutputTecplot::printSurfaceFlowData(Block* block)
@@ -255,7 +204,7 @@ void OutputTecplot::printSurfaceFlowData(Block* block)
     if (!SurfaceFlowData.is_open())
     {
       // TODO throw exception
-      cerr << "Fail opening file " << filename << endl;
+      cerr << "Failed opening file " << filename << endl;
       //return;
     }
 
@@ -479,7 +428,7 @@ void OutputTecplot::printConvergence(int iter, double cl, double cd, double cmx,
     if (!Convergence.is_open())
     {
       // TODO throw exception
-      cerr << "Fail opening file Convergence.plt" << endl;
+      cerr << "Failed opening file Convergence.plt" << endl;
       //return;
     }
 
@@ -506,7 +455,7 @@ void OutputTecplot::printAerodynamicCoefficients(double cl, double cd, double cm
     if (!AerodynamicCoefficients.is_open())
     {
       // TODO throw exception
-      cerr << "Fail opening file AerodynamicCoefficients.dat" << endl;
+      cerr << "Failed opening file AerodynamicCoefficients.dat" << endl;
       //return;
     }
 
@@ -535,7 +484,7 @@ void OutputTecplot::printRestartFile(Block* block)
     if (!RestartFile.is_open())
     {
       // TODO throw exception
-      cerr << "Fail opening file " << filename << endl;
+      cerr << "Failed opening file " << filename << endl;
       //return;
     }
 
