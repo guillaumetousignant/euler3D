@@ -103,9 +103,6 @@ class graphicsGenerator(object):
         elif Axis == "z":
             self.SliceAxis_ = 3;
 
-        print(self.CpAxis_)
-        print(self.SliceAxis_)
-
         # String to float
         self.XCoordinate_ = float(XCoordinate);
         self.YCoordinate_ = float(YCoordinate);

@@ -112,6 +112,9 @@ def postProcessingEuler():
                 # Delete .dat file
                 os.remove(myNewFileName_ + ".dat");
 
+                for i in range(0,len(myFlowFiles_)):
+                    os.remove(myFlowFiles_[i]);
+
                 print("Merging Flow Files..........................................DONE")
 
     if len(mySurfaceFiles_) != 0:
@@ -210,11 +213,13 @@ def postProcessingEuler():
                 # Delete .dat file
                 os.remove(myNewSurfaceFileName_ + ".dat");
 
+                for i in range(0,len(mySurfaceFiles_)):
+                    os.remove(mySurfaceFiles_[i]);
+
                 print("Merging Surface Flow Files..................................DONE")
 
 
     if len(myFlowFiles_) >= 1 and len(mySurfaceFiles_) >= 1:
-        print("yo")
         # Euler Files
         myInterfaceFile_ = "Interface_NACA0012.txt";
         myFlowFile_ = myNewFileName_ + ".szplt";
