@@ -49,7 +49,7 @@ void OutputTecplot::printFlowData(Block* block)
   std::string filename = "FlowData" + ss.str() + ".dat";
   FlowData.open(filename);
 
-    if (FlowData.fail())
+    if (FlowData.is_open())
     {
       cout << process_id_ << " fucked uuuuuuuuuuuuup opening its file." << endl; // REMOVE
 

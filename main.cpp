@@ -53,7 +53,7 @@ int main(int argc, char* argv[])
 
 	int n_blocks_in_process;
     int* my_blocks;
-    int n_blocks = 12;
+    int n_blocks = 8;
 
 	BlockCommunicator* communicator = new BlockCommunicator(n_blocks);
     communicator->getMyBlocks(n_blocks_in_process, my_blocks);
