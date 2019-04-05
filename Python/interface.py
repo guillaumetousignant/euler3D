@@ -46,13 +46,13 @@ class Interface(Input, Solver, Output):
         help_menu.add_command(label="User guide", command=self.openUserGuide)
 
         # SECTION 1: INPUT
-        self.input = Input(tab1)
+        self.input_ = Input(tab1)
 
         # SECTION 2: SOLVER
-        self.solver = Solver(tab2)
+        self.solver_ = Solver(tab2)
 
         # SECTION 3: OUTPUT
-        self.output = Output(tab3)
+        self.output_ = Output(tab3)
 
         # GENERAL BUTTONS
         clear_all_button_intput = ttk.Button(tab1, text="Clear All", command=self.clearAllPages)
@@ -64,13 +64,13 @@ class Interface(Input, Solver, Output):
         clear_all_button_output = ttk.Button(tab3, text="Clear All", command=self.clearAllPages)
         clear_all_button_output.grid(row=2, column=0, padx=2, pady=2)
 
-        clear_button_input = ttk.Button(tab1, text="Clear this page", command=self.input.clearPage)
+        clear_button_input = ttk.Button(tab1, text="Clear this page", command=self.input_.clearPage)
         clear_button_input.grid(row=2, column=1, padx=2, pady=2)
 
-        clear_button_solver = ttk.Button(tab2, text="Clear this page", command=self.solver.clearPage)
+        clear_button_solver = ttk.Button(tab2, text="Clear this page", command=self.solver_.clearPage)
         clear_button_solver.grid(row=3, column=1, padx=2, pady=2)
 
-        clear_button_output = ttk.Button(tab3, text="Clear this page", command=self.output.clearPage)
+        clear_button_output = ttk.Button(tab3, text="Clear this page", command=self.output_.clearPage)
         clear_button_output.grid(row=2, column=1, padx=2, pady=2)
 
         solve_button_input = ttk.Button(tab1, text="Solve", command=self.solveCode)
@@ -83,12 +83,12 @@ class Interface(Input, Solver, Output):
         solve_button_output.grid(row=2, column=2, padx=2, pady=2)
    
     def clearAllPages(self):
-        self.input.clearPage()
-        self.solver.clearPage()
-        self.output.clearPage()
+        self.input_.clearPage()
+        self.solver_.clearPage()
+        self.output_.clearPage()
     
     def solveCode(self):
-        solver_option = self.solver.solver_option.get()
+        solver_option = self.solver_.solver_option.get()
         
         if solver_option == 1:
             command = "make"
@@ -107,9 +107,9 @@ class Interface(Input, Solver, Output):
 
     def saveEntries(self):
 
-        input = self.input.writePartialOutput()
-        solver = self.solver.writePartialOutput()
-        output = self.output.writePartialOutput()
+        input_text = self.input_.writePartialOutput()
+        solver_text = self.solver_.writePartialOutput()
+        output_text = self.output_.writePartialOutput()
 
         file_path = "../euler3D/bin"
         file_name = "output_interface"
@@ -118,7 +118,7 @@ class Interface(Input, Solver, Output):
 
         file = open(complete_file_name,"w")
 
-        file.write(input+solver+output)
+        file.write(input_text + solver_text + output_text)
         file.close()
 
     def openUserGuide(self):
@@ -132,9 +132,9 @@ class Interface(Input, Solver, Output):
     
     def saveOutputAs(self):
 
-        input = self.input.writePartialOutput()
-        solver = self.solver.writePartialOutput()
-        output = self.output.writePartialOutput()
+        input_text = self.input_.writePartialOutput()
+        solver_text = self.solver_.writePartialOutput()
+        output_text = self.output_.writePartialOutput()
 
 
         filename =  filedialog.asksaveasfilename(initialdir = "/home/etudiant/",title = "Save Output As",filetypes = (("plain text","*.txt"),("all files","*.*")))
@@ -142,7 +142,7 @@ class Interface(Input, Solver, Output):
         if filename != ():
             file = open(filename,"w")
 
-            file.write(input+solver+output)
+            file.write(input_text + solver_text + output_text)
             file.close()
 
             info = filename + " has been created."
@@ -225,9 +225,9 @@ class Interface(Input, Solver, Output):
 
             file.close()
 
-            self.input.saveImportedData(filename, cfl, gamma, angleattackdeg, rkstage, mach, cmac)
-            self.solver.saveImportedData(nbitermax, convcriterion, build, execute, smoothing, fluxscheme, schemeorder, gradient, limiter, omega, k)
-            self.output.saveImportedData(filestype, clalpha, cdalpha, cmalpha, coefficientsconvergence, residualconv, cpxc, machcontour, cpcontour, machisosurface, slicecp, axiscpxc, xcoord, ycoord, zcoord, axisslicecp, fcoord, lcoord, numberofslices)
+            self.input_.saveImportedData(filename, cfl, gamma, angleattackdeg, rkstage, mach, cmac)
+            self.solver_.saveImportedData(nbitermax, convcriterion, build, execute, smoothing, fluxscheme, schemeorder, gradient, limiter, omega, k)
+            self.output_.saveImportedData(filestype, clalpha, cdalpha, cmalpha, coefficientsconvergence, residualconv, cpxc, machcontour, cpcontour, machisosurface, slicecp, axiscpxc, xcoord, ycoord, zcoord, axisslicecp, fcoord, lcoord, numberofslices)
 
 
 root = Tk()
