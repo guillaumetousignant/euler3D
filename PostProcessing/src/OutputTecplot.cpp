@@ -40,6 +40,7 @@ void OutputTecplot::printFlowData(Block* block)
   int process_id_; // REMOVE
   MPI_Comm_rank(MPI_COMM_WORLD, &process_id_); // REMOVE
   cout << process_id_ << " Starting printFlowData..............................................." << endl; // REMOVE
+  cout << process_id_ << "'s block is " << block << endl; // REMOVE
 
   //FlowData.open("FlowData.plt", ios::binary);
   std::stringstream ss;
