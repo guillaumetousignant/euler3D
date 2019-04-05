@@ -47,9 +47,10 @@ void OutputTecplot::printFlowData(Block* block)
   std::stringstream ss;
   ss << std::setw(OUTPUT_ZERO_PADDING) << std::setfill('0') << block->block_id_;
   std::string filename = "FlowData" + ss.str() + ".dat";
+  std::ofstream FlowData;
   FlowData.open(filename);
 
-    if (FlowData.is_open())
+    if (!FlowData.is_open())
     {
       cout << process_id_ << " fucked uuuuuuuuuuuuup opening its file." << endl; // REMOVE
 
@@ -248,9 +249,10 @@ void OutputTecplot::printSurfaceFlowData(Block* block)
   std::stringstream ss;
   ss << std::setw(OUTPUT_ZERO_PADDING) << std::setfill('0') << block->block_id_;
   std::string filename = "SurfaceFlowData" + ss.str() + ".dat";
+  std::ofstream SurfaceFlowData;
   SurfaceFlowData.open(filename);
 
-    if (SurfaceFlowData.fail())
+    if (!SurfaceFlowData.is_open())
     {
       // TODO throw exception
       cerr << "Fail opening file " << filename << endl;
@@ -463,6 +465,7 @@ void OutputTecplot::printConvergence(int iter, double cl, double cd, double cmx,
   //cout << "Starting printConvergence............................................" << endl;
 
   //Convergence.open("Convergence.plt", ios::binary);
+  std::ofstream Convergence;
   if(iter == 0)
   {
     Convergence.open("Convergence.dat");
@@ -473,7 +476,7 @@ void OutputTecplot::printConvergence(int iter, double cl, double cd, double cmx,
   }
 
 
-    if (Convergence.fail())
+    if (!Convergence.is_open())
     {
       // TODO throw exception
       cerr << "Fail opening file Convergence.plt" << endl;
@@ -497,9 +500,10 @@ void OutputTecplot::printAerodynamicCoefficients(double cl, double cd, double cm
   cout << "Starting printAerodynamicCoefficients................................" << endl;
 
   //AerodynamicCoefficients.open("AerodynamicCoefficients.plt", ios::binary);
+  std::ofstream AerodynamicCoefficients;
   AerodynamicCoefficients.open("AerodynamicCoefficients.dat");
 
-    if (AerodynamicCoefficients.fail())
+    if (!AerodynamicCoefficients.is_open())
     {
       // TODO throw exception
       cerr << "Fail opening file AerodynamicCoefficients.dat" << endl;
@@ -525,9 +529,10 @@ void OutputTecplot::printRestartFile(Block* block)
   std::stringstream ss;
   ss << std::setw(OUTPUT_ZERO_PADDING) << std::setfill('0') << block->block_id_;
   std::string filename = "RestartFile" + ss.str() + ".dat";
+  std::ofstream RestartFile;
   RestartFile.open(filename);
 
-    if (RestartFile.fail())
+    if (!RestartFile.is_open())
     {
       // TODO throw exception
       cerr << "Fail opening file " << filename << endl;
