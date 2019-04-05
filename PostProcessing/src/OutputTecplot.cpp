@@ -50,6 +50,8 @@ void OutputTecplot::printFlowData(Block* block)
 
     if (FlowData.fail())
     {
+      cout << process_id_ << " fucked uuuuuuuuuuuuup opening its file." << endl; // REMOVE
+
       // TODO throw exception
       cerr << "Fail opening file " << filename << endl;
       //return;
