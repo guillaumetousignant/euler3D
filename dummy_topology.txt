@@ -1,7 +1,7 @@
 nb of blocks
 4
 names of block files
-../naca0012_periodic_65x5x65_4B_block00.su2
-../naca0012_periodic_65x5x65_4B_block01.su2
-../naca0012_periodic_65x5x65_4B_block02.su2
-../naca0012_periodic_65x5x65_4B_block03.su2
+../naca0012_periodic_65x5x65_4B_block0.su2
+../naca0012_periodic_65x5x65_4B_block1.su2
+../naca0012_periodic_65x5x65_4B_block2.su2
+../naca0012_periodic_65x5x65_4B_block3.su2

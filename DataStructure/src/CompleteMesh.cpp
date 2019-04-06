@@ -49,7 +49,7 @@ void CompleteMesh::InitializeMyBlocks(Interface* interface)
 	// Block* new_block;
 	// int block_id;
 
-	// for(int i=0;i<(all_blocks_-n_blocks_in_process_);i++)
+	// for(int i=0;i<(n_blocks_in_process_);i++)
 	// {
 	// 	block_id = my_blocks_[i];
 
@@ -75,9 +75,10 @@ void CompleteMesh::InitializeMyBlocks(Interface* interface)
 	for(int i=0;i<n_blocks_in_process_;i++)
 	{
 		std::string block_file;
+		std::cout<<"demoooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo"<<my_blocks_[i]<<std::endl;
 		int block_id = my_blocks_[i];
 
-		// std::cout<<block_id<<std::endl;
+		std::cout<<"demooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooid"<<block_id<<std::endl;
 
 		std::string block_id_string = std::to_string(block_id);
 		// block_file = "../naca0012_coarse_nosidewall.su2";
@@ -152,6 +153,117 @@ void CompleteMesh::InitializeMyBlocks(Interface* interface)
 	}
 }
 
+void CompleteMesh::dummyInitializeMyBlocks(Interface* interface)
+{
+	// std::string block_id_string;
+	// std::string block_file;
+	// Block* new_block;
+	// int block_id;
+
+	// for(int i=0;i<(all_blocks_-n_blocks_in_process_);i++)
+	// {
+	// 	block_id = my_blocks_[i];
+
+	// 	// std::cout<<block_id<<std::endl;
+
+	// 	block_id_string = std::to_string(block_id);
+	// 	// block_file = "../naca0012_coarse_nosidewall.su2";
+	// 	block_file = topology_file_name_;
+	// 	ConcreteBlockBuilder block_builder=ConcreteBlockBuilder(block_file);
+	// 	new_block = all_blocks_[i];
+
+	// 	//std::cout<<new_block -> block_id_<<std::endl;
+
+	// 	block_builder.preReadMyBlock(new_block);
+	// 	block_builder.readMyBlock(new_block);
+
+	// 	block_builder.createMyFaces(new_block);
+
+	// 	block_builder.setConnectivity(new_block);
+	// }
+
+	//#pragma omp parallel for schedule(guided)
+	for(int i=0;i<n_blocks_;i++)
+	{
+		std::string block_file;
+		std::cout<<"demoooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo"<<(all_blocks_[i]->block_id_)<<std::endl;
+		int block_id = all_blocks_[i]->block_id_;
+
+		// std::cout<<block_id<<std::endl;
+
+		std::string block_id_string = std::to_string(block_id);
+		// block_file = "../naca0012_coarse_nosidewall.su2";
+		std::size_t found = topology_file_name_.find_last_of(".");
+  		if (found!=std::string::npos){
+			block_file = topology_file_name_.substr(0, found) + block_id_string + topology_file_name_.substr(found);
+		}
+		else{
+			block_file = topology_file_name_ + block_id_string;
+		}
+		ConcreteBlockBuilder block_builder=ConcreteBlockBuilder(block_file);
+		Block* new_block = all_blocks_[block_id];
+
+		//std::cout<<new_block -> block_id_<<std::endl;
+
+		block_builder.preReadMyBlock(new_block);
+		block_builder.readMyBlock(new_block);
+
+		block_builder.createMyFaces(new_block);
+
+		block_builder.setConnectivity(new_block);
+
+		// cout<<"Cellules\n";
+		Cell* test_cell;
+		for(int i=0;i<new_block->n_real_cells_in_block_;i++)
+		{
+			test_cell = new_block ->block_cells_[i];
+			// cout<<"cell_id_\t"<<test_cell->cell_id_<<endl;
+			// cout<<"cell_2_nodes_connectivity_\t"<<test_cell->cell_2_nodes_connectivity_[0]<<"\t"<<test_cell->cell_2_nodes_connectivity_[1]<<"\t"<<test_cell->cell_2_nodes_connectivity_[2]<<"\t"<<test_cell->cell_2_nodes_connectivity_[3]<<"\t"<<test_cell->cell_2_nodes_connectivity_[4]<<"\t"<<test_cell->cell_2_nodes_connectivity_[5]<<"\t"<<test_cell->cell_2_nodes_connectivity_[6]<<"\t"<<test_cell->cell_2_nodes_connectivity_[7]<<endl;
+			// cout<<"n_nodes_per_cell_\t"<<test_cell->n_nodes_per_cell_<<endl;
+			// cout<<"n_faces_per_cell_\t"<<test_cell->n_faces_per_cell_<<endl;
+			// cout<<"block_id_\t"<<test_cell->block_id_<<endl;
+		}
+
+		for(int i=new_block->n_real_cells_in_block_;i<new_block->n_all_cells_in_block_;i++)
+		{
+			test_cell = new_block ->block_cells_[i];
+			// cout<<"cell_id_\t"<<test_cell->cell_id_<<endl;
+			// cout<<"cell_2_nodes_connectivity_\t"<<test_cell->cell_2_nodes_connectivity_[0]<<"\t"<<test_cell->cell_2_nodes_connectivity_[1]<<"\t"<<test_cell->cell_2_nodes_connectivity_[2]<<"\t"<<test_cell->cell_2_nodes_connectivity_[3]<<endl;
+			// cout<<"n_nodes_per_cell_\t"<<test_cell->n_nodes_per_cell_<<endl;
+			// cout<<"n_faces_per_cell_\t"<<test_cell->n_faces_per_cell_<<endl;
+			// cout<<"block_id_\t"<<test_cell->block_id_<<endl;
+		}
+
+		// test_cell = new_block ->block_cells_[12];
+		// cout<<test_cell->cell_2_nodes_connectivity_[1]<<endl;
+		// cout<<"Noeuds\n";
+		Node* test_node;
+		for(int i=0;i<new_block->n_nodes_in_block_;i++)
+		{
+			test_node = new_block ->block_nodes_[i];
+			// cout<<"node_id_\t"<<test_node->node_id_<<endl;
+			// cout<<"node_coordinates_\t"<<test_node->node_coordinates_[0]<<"\t"<<test_node->node_coordinates_[1]<<"\t"<<test_node->node_coordinates_[2]<<endl;
+			// cout<<"block_id_\t"<<test_node->block_id_<<endl;
+		}
+		// test_node = new_block ->block_nodes_[12];
+		// cout<<test_node->node_coordinates_[1]<<endl;
+		// cout<<test_node->node_coordinates_[2]<<endl;
+
+
+		// cout << "In MetricsInitializer........." << endl;
+		// MetricsInitializer metricsInit(new_block);
+		// metricsInit.doInit();
+
+		// cout << "In calculateFreeVariables........." << endl;
+		// new_block->block_primitive_variables_->calculateFreeVariables(interface->gamma_interface_, interface->aoa_deg_interface_, interface->mach_aircraft_interface_);
+
+		// cout << "In initializeFlowField........." << endl;
+		// new_block->block_primitive_variables_->initializeFlowField(new_block->n_all_cells_in_block_);
+
+		// cout << "In Solver........." << endl;
+	}
+}
+
 void CompleteMesh::InitializeMPIboundaries()
 {
 	std::string block_id_string;
@@ -190,13 +302,15 @@ void CompleteMesh::InitializeMPIboundaries()
 			{
 				getline(myblockfile, line);
 				getline(myblockfile, line);
+				getline(myblockfile, line);
 				sscanf (line.c_str(), "%s %d",str_temp,&n_nodes_temp);
-				std::cout<<"premier test"<<line<<std::endl;
+				//std::cout<<"premier test"<<line<<std::endl;
 
 				for( int node_id = 0; node_id < n_nodes_temp; node_id++)
 				{
 					getline(myblockfile, line);
 				}
+				getline(myblockfile, line);
 				getline(myblockfile, line);
 				sscanf (line.c_str(), "%s %d",str_temp,&n_real_cells_temp);
 				for(int n_elem_temp=0 ; n_elem_temp < n_real_cells_temp; n_elem_temp++)
@@ -207,6 +321,7 @@ void CompleteMesh::InitializeMPIboundaries()
 				}
 
 
+				getline(myblockfile, line);
 				getline(myblockfile, line);
 				std::cout<<"TEEEEEEEEEEEEEEEEEEEST LECTURE"<< line<<std::endl;
 				sscanf (line.c_str(), "%s %i",str_temp,&n_boundaries_temp);	
@@ -307,5 +422,39 @@ void CompleteMesh::InitializeMPIboundaries()
 
 
 }
+
+// void fillboundaryconnection(ConnexionCellIds* boundary, std::string other_file, std::string inputline, int owner, int other)
+// {
+// 	char str_temp[200];
+// 	std::string line;
+
+// 	std::string owner_id_string = std::to_string(owner);
+// 	std::string other_id_string = std::to_string(other);
+// 	// block_file = "../naca0012_coarse_nosidewall.su2";
+// 	std::size_t found = topology_file_name_.find(".");
+//   	if (found!=std::string::npos){
+// 		block_file = topology_file_name_.substr(0, found) + block_id_string + topology_file_name_.substr(found);
+// 	}		std::string block_id_string = std::to_string(block_id);
+// 	// block_file = "../naca0012_coarse_nosidewall.su2";
+// 	std::size_t foundline = topology_file_name_.find_last_of(".");
+//   	if (foundline!=std::string::npos){
+// 		block_file = topology_file_name_.substr(0, found) + block_id_string + topology_file_name_.substr(found);
+// 	}
+// 	inputline=
+
+// 		std::ifstream myfile(other_file);
+// 		if (myfile.is_open())
+// 		{
+// 			getline(myfile, line);
+// 			std::size_t foundline=line.find(inputline);
+// 			while(foundline=std::string::npos)
+// 			{
+// 				getline(myfile, line);
+// 				foundline=line.find(inputline);
+// 			}
+
+// 		}
+
+// }
 
 #endif

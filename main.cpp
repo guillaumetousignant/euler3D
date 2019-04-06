@@ -57,7 +57,7 @@ int main(int argc, char* argv[])
 
 	int n_blocks_in_process;
     int* my_blocks;
-    int n_blocks = 1;
+    int n_blocks = 2;
 
 	BlockCommunicator* communicator = new BlockCommunicator(n_blocks);
     communicator->getMyBlocks(n_blocks_in_process, my_blocks);
@@ -66,26 +66,26 @@ int main(int argc, char* argv[])
 
 	cout << "In CompleteMesh........." << endl;
 	CompleteMesh* complete_mesh = new CompleteMesh(n_blocks, n_blocks_in_process, my_blocks, interface->topology_file_name_interface_);
-	complete_mesh->InitializeMyBlocks();
+	complete_mesh->InitializeMyBlocks(interface);
 
-	for (int i = 0; i < complete_mesh->n_blocks_in_process_; i++){
-		Block* new_block = complete_mesh->all_blocks_[complete_mesh->my_blocks_[i]];
+	// for (int i = 0; i < complete_mesh->n_blocks_in_process_; i++){
+	// 	Block* new_block = complete_mesh->all_blocks_[complete_mesh->my_blocks_[i]];
 
-		cout << "In MetricsInitializer........." << endl;
-		MetricsInitializer metricsInit(new_block);
-		metricsInit.doInit();
+	// 	cout << "In MetricsInitializer........." << endl;
+	// 	MetricsInitializer metricsInit(new_block);
+	// 	metricsInit.doInit();
 
-		cout << "In calculateFreeVariables........." << endl;
-		new_block->block_primitive_variables_->calculateFreeVariables(interface->gamma_interface_, interface->aoa_deg_interface_, interface->mach_aircraft_interface_);
+	// 	cout << "In calculateFreeVariables........." << endl;
+	// 	new_block->block_primitive_variables_->calculateFreeVariables(interface->gamma_interface_, interface->aoa_deg_interface_, interface->mach_aircraft_interface_);
 
-		cout << "In initializeFlowField........." << endl;
-		new_block->block_primitive_variables_->initializeFlowField(new_block->n_all_cells_in_block_);
+	// 	cout << "In initializeFlowField........." << endl;
+	// 	new_block->block_primitive_variables_->initializeFlowField(new_block->n_all_cells_in_block_);
 
 
 		
-	}
-	cout<< "In MPI Boundaries initialization"<< endl;
-	complete_mesh->InitializeMPIboundaries();
+	// }
+	//cout<< "In MPI Boundaries initialization"<< endl;
+	//complete_mesh->InitializeMPIboundaries();
 
 	cout << "In Solver........." << endl;	
 

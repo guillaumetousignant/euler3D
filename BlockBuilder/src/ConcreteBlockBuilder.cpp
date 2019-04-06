@@ -107,7 +107,9 @@ void ConcreteBlockBuilder::preReadMyBlock(Block* block)
 		{
 			getline(myfile, line);
 			sscanf (line.c_str(), "%s %s",str_temp,boundary_type_temp);
+			std::string boundary_type_temp_str(boundary_type_temp);
 			boundary_type = boundary_type_temp;
+			std::size_t found=boundary_type_temp_str.find("Block_");
 
 			getline(myfile, line);
 			sscanf (line.c_str(), "%s %d",str_temp,&n_elements_in_boundary);
@@ -135,7 +137,7 @@ void ConcreteBlockBuilder::preReadMyBlock(Block* block)
 			}
 
 
-			if(boundary_type=="CONNECTION")
+			if(found!=std::string::npos)
 			{
 				//std::cout<<"on a une boundary connection"<<std::endl;
 				faces_sum_in_boundaries+=n_elements_in_boundary;
@@ -340,6 +342,7 @@ void ConcreteBlockBuilder::readMyBlock(Block* block)
 			getline(myfile, line);
 			sscanf (line.c_str(), "%s %s",str_temp,boundary_type_temp);
 			std::string boundary_type_temp_str(boundary_type_temp);
+			std::size_t found=boundary_type_temp_str.find("Block_");
 			getline(myfile, line);
 			sscanf (line.c_str(), "%s %i",str_temp,&n_ghost_cells_temp);
 
@@ -383,7 +386,7 @@ void ConcreteBlockBuilder::readMyBlock(Block* block)
 					real_boundary_id=real_boundary_id+1;
 
 				}
-				else if (boundary_type_temp_str == "CONNECTION") //Connection inter-bloc
+				else if (found!=std::string::npos) //Connection inter-bloc
 				{
 					//block->n_real_boundaries_in_block_=(block->n_real_boundaries_in_block_)-1;
 
@@ -429,7 +432,7 @@ void ConcreteBlockBuilder::readMyBlock(Block* block)
 					// note: cell_id is actually added here instead of face_id. this is normal and the corresponding face_id will replace cell_id during the run of connectivity
 
 				}
-				else if (boundary_type_temp_str == "CONNECTION") //Connection inter-bloc
+				else if (found!=std::string::npos) //Connection inter-bloc
 				{
 
 				}

@@ -20,6 +20,8 @@ public:
 	~CompleteMesh();
 	void InitializeMPIboundaries();
 	void InitializeMyBlocks(Interface* interface);
+	void dummyInitializeMyBlocks(Interface* interface);
+	//void fillboundaryconnection(ConnexionCellIds* boundary, std::string other_file, std::string inputline, int owner, int other);
 
 };
 

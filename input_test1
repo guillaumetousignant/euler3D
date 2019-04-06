@@ -1,6 +1,6 @@
 MESH
 topologyfilename
-../naca0012_coarse.su2
+../naca0012_periodic_65x5x65_4A_block.su2
 INPUT
 cfl gamma angleattackdeg
 0.5 1.4 1.25
