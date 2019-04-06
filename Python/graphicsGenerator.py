@@ -1,4 +1,5 @@
 import tecplot
+import os
 import numpy as np
 import math
 import string
@@ -19,6 +20,20 @@ class graphicsGenerator(object):
     #Initialize booleans
     def __init__(self, myInterfaceFile, myFlowFile, mySurfaceFlowFile, myConvergenceFile, myAerodynamicFile):
         print("Initialize graphicsGenerator....................................")
+
+        # Create directories
+        os.chdir("../Python");
+
+        if not os.path.isdir(".png"):
+            os.mkdir(".png");
+            print(".png created")
+
+        if not os.path.isdir(".lay"):
+            os.mkdir(".lay");
+            print(".lay created")
+
+        # Change directory
+        os.chdir("../bin");
 
         #Indicators
         self.ClAlpha_Indicator_ = False;

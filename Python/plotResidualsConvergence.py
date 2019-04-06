@@ -21,7 +21,7 @@ class plotResidualsConvergence(object):
         fig = plt.plot(self.Iterations_, self.VvResiduals_, label = 'Vv Residuals');
         fig = plt.plot(self.Iterations_, self.WwResiduals_, label = 'Ww Residuals');
         fig = plt.plot(self.Iterations_, self.PpResiduals_, label = 'Pressure Residuals');
-        
+
         plt.title('Residuals Convergence')
         plt.xlabel('Iterations');
         plt.ylabel('Residuals');
@@ -29,7 +29,7 @@ class plotResidualsConvergence(object):
         plt.legend();
 
         print("Save ResidualsConvergence.png...................................");
-        plt.savefig('.png/ResidualsConvergence.png');
+        plt.savefig('../Python/.png/ResidualsConvergence.png');
         print("Save ResidualsConvergence.png...............................DONE");
 
         print("plotResidualsConvergence....................................DONE");

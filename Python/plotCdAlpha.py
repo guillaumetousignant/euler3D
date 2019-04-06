@@ -18,8 +18,9 @@ class plotCdAlpha(object):
         plt.xlabel('Angle of Attack (deg)');
         plt.ylabel('Drag Coefficient (Cd)');
 
+
         print("Save CdvsAlpha.png..............................................");
-        plt.savefig('.png/CdvsAlpha.png');
+        plt.savefig('../Python/.png/CdvsAlpha.png');
         print("Save CdvsAlpha.png..........................................DONE");
 
         print("plotCdAlpha.................................................DONE");

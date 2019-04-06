@@ -35,12 +35,12 @@ class plotSurfaceCpContour(object):
 
         # Save layout for Tecplot
         print("Save CpContour_fullbody.lay.....................................");
-        tecplot.save_layout('.lay/CpContour_fullbody.lay');
+        tecplot.save_layout('../Python/.lay/CpContour_fullbody.lay');
         print("Save CpContour_fullbody.lay.................................DONE");
 
         # export image of full body
         print("Save CpContour_fullbody.png.....................................");
-        tecplot.export.save_png('.png/CpContour_fullbody.png', 2000, supersample=3);
+        tecplot.export.save_png('../Python/.png/CpContour_fullbody.png', 2000, supersample=3);
         print("Save CpContour_fullbody.png.................................DONE");
 
         plot = frame.plot(PlotType.Cartesian2D)
@@ -57,12 +57,12 @@ class plotSurfaceCpContour(object):
 
         # Save layout for Tecplot
         print("Save CpContour_wing.lay.........................................");
-        tecplot.save_layout('.lay/CpContour_wing.lay');
+        tecplot.save_layout('../Python/.lay/CpContour_wing.lay');
         print("Save CpContour_wing.lay.....................................DONE");
 
         # export image of wing
         print("Save CpContour_wing.png.........................................");
-        tecplot.export.save_png('.png/CpContour_wing.png', 2000, supersample=3);
+        tecplot.export.save_png('../Python/.png/CpContour_wing.png', 2000, supersample=3);
         print("Save CpContour_wing.png.....................................DONE");
 
         print("plotCpContour...............................................DONE");

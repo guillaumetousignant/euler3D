@@ -19,7 +19,7 @@ class plotClAlpha(object):
         plt.ylabel('Lift Coefficient (Cl)');
 
         print("Save ClvsAlpha.png..............................................");
-        plt.savefig('.png/ClvsAlpha.png');
+        plt.savefig('../Python/.png/ClvsAlpha.png');
         print("Save ClvsAlpha.png..........................................DONE");
 
         print("plotClAlpha.................................................DONE");

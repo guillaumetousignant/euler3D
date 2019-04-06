@@ -11,10 +11,12 @@ from tecplot.exception import *
 from tecplot.constant import *
 
 def postProcessingEuler():
+    # Python directory to bin directory
+    os.chdir("../bin");
 
     # Merge Files
-    myFlowFiles_ = glob.glob('FlowData_Block*.dat');
-    mySurfaceFiles_ = glob.glob('SurfaceFlowData_Block*.dat');
+    myFlowFiles_ = glob.glob("FlowData_Block*.dat");
+    mySurfaceFiles_ = glob.glob("SurfaceFlowData_Block*.dat");
 
     if len(myFlowFiles_) != 0:
         print("Merging Flow Files..............................................")
@@ -45,6 +47,7 @@ def postProcessingEuler():
             myPp_ = myDataset_.variable(7).values(0).as_numpy_array();
             myCp_ = myDataset_.variable(8).values(0).as_numpy_array();
             myMach_ = myDataset_.variable(9).values(0).as_numpy_array();
+
 
             # Number of Elements
             string, string1, string2 = myHeader_[3].split(", ");
@@ -110,12 +113,16 @@ def postProcessingEuler():
                 tecplot.data.save_tecplot_szl(myNewFileName_ + ".szplt", dataset=myDataset_);
 
                 # Delete .dat file
-                os.remove(myNewFileName_ + ".dat");
+                print("Deleting FlowData_Block*.dat files..............................")
+                os.remove( myNewFileName_ + ".dat");
 
+                # Delete FlowDataBlock*.dat for each block
                 for i in range(0,len(myFlowFiles_)):
                     os.remove(myFlowFiles_[i]);
 
+                print("Deleting FlowData_Block*.dat files..........................DONE")
                 print("Merging Flow Files..........................................DONE")
+
 
     if len(mySurfaceFiles_) != 0:
         print("Merging Surface Flow Files......................................")
@@ -211,11 +218,14 @@ def postProcessingEuler():
                 tecplot.data.save_tecplot_szl(myNewSurfaceFileName_ + ".szplt", dataset=myDataset_);
 
                 # Delete .dat file
+                print("Deleting SurfaceFlowData_Block*.dat files.......................")
                 os.remove(myNewSurfaceFileName_ + ".dat");
-
+                
+                # Delete SurfaceFlowDataBlock*.dat for each block
                 for i in range(0,len(mySurfaceFiles_)):
                     os.remove(mySurfaceFiles_[i]);
 
+                print("Deleting SurfaceFlowData_Block*.dat files...................DONE")
                 print("Merging Surface Flow Files..................................DONE")
 
 
