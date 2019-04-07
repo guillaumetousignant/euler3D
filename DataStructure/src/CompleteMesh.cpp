@@ -82,10 +82,12 @@ void CompleteMesh::InitializeMyBlocks(Interface* interface, BlockCommunicator* c
 	// #pragma omp parallel for num_threads(8) // DECOMMENTER POUR AVOIR OPENMP
 	for(int i=0;i<n_blocks_in_process_;i++)
 	{
+
 		std::string block_file_name;
 		int block_id = my_blocks_[i];
 		block_file_name=getBlockFileName(block_id);
-		
+
+		cout << "Initialize block number: "<<block_id<<endl;
 		
 		ConcreteBlockBuilder block_builder=ConcreteBlockBuilder(block_file_name, topology_file_name_);
 		Block* new_block = all_blocks_[block_id];

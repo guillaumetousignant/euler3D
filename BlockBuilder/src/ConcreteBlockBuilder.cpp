@@ -391,23 +391,23 @@ void ConcreteBlockBuilder::readMyBlock(Block* block, BlockCommunicator* communic
 				{
 					//block->n_real_boundaries_in_block_=(block->n_real_boundaries_in_block_)-1;
 
-					setTopology(block, communicator, count_connexions);
 				}
+
 
 
 			//std::cout<<"test type bound: "<< boundary_type_temp <<std::endl;
 			//std::cout<<"test nbcell in bound: "<< n_ghost_cells_temp <<std::endl;
 			//std::cout<<"test la ou on est: "<< cell_id <<std::endl;
-			int cond=n_ghost_cells_temp+cell_id;
+				int cond=n_ghost_cells_temp+cell_id;
 			//std::cout<<"limite boucle test: "<< cond <<std::endl;
-			for( ; cell_id < (cond); cell_id++)
-			{
-				getline(myfile, line);
-				sscanf (line.c_str(), "%s",str_temp);
-				ghost_cell_type_temp = str_temp;
-				ghost_cell_2_nodes_connectivity_temp =line;
+				for( ; cell_id < (cond); cell_id++)
+				{
+					getline(myfile, line);
+					sscanf (line.c_str(), "%s",str_temp);
+					ghost_cell_type_temp = str_temp;
+					ghost_cell_2_nodes_connectivity_temp =line;
 
-				new_cell = buildCell(cell_id, "ghost", ghost_cell_2_nodes_connectivity_temp, cell_creators, ghost_cell_type_temp);
+					new_cell = buildCell(cell_id, "ghost", ghost_cell_2_nodes_connectivity_temp, cell_creators, ghost_cell_type_temp);
 				new_cell -> block_id_ = block_id; //necessary?
 				block ->addCell(new_cell);
 				//std::cout<< "comparaison: "<< "WALL" << boundary_type_temp <<std::endl;
@@ -443,6 +443,9 @@ void ConcreteBlockBuilder::readMyBlock(Block* block, BlockCommunicator* communic
 			}
 
 		}
+
+		setTopology(block, communicator, count_connexions);
+
 	} else{
 		//warning that file was not opened!
 		std::cout<<"WARNING! BLOCK FILE WAS NOT CORRECTLY OPENED IN READ FUNCTION. ERRATIC BEHAVIOR MAY APPEAR!"<<std::endl;
@@ -478,18 +481,18 @@ void ConcreteBlockBuilder::createMyFaces(Block* block)
 	int** possible_combinaisons=nullptr;
 
 	int possible_combinaisons_4_quad[24][4] =
-				{
-				{1,2,3,4},{1,2,4,3},{1,3,2,4},{1,3,4,2},{1,4,2,3},{1,4,3,2},
-				{2,1,3,4},{2,1,4,3},{2,3,1,4},{2,3,4,1},{2,4,1,3},{2,4,3,1},
-				{3,1,2,4},{3,1,4,2},{3,2,1,4},{3,2,4,1},{3,4,1,2},{3,4,2,1},
-				{4,1,2,3},{4,1,3,2},{4,2,1,3},{4,2,3,1},{4,3,1,2},{4,3,2,1}
-				};
+	{
+		{1,2,3,4},{1,2,4,3},{1,3,2,4},{1,3,4,2},{1,4,2,3},{1,4,3,2},
+		{2,1,3,4},{2,1,4,3},{2,3,1,4},{2,3,4,1},{2,4,1,3},{2,4,3,1},
+		{3,1,2,4},{3,1,4,2},{3,2,1,4},{3,2,4,1},{3,4,1,2},{3,4,2,1},
+		{4,1,2,3},{4,1,3,2},{4,2,1,3},{4,2,3,1},{4,3,1,2},{4,3,2,1}
+	};
 	int possible_combinaisons_4_triangle[6][3] =
-				{
-				{1,2,3},{1,3,2},
-				{2,1,3},{2,3,1},
-				{3,1,2},{3,2,1}
-				};
+	{
+		{1,2,3},{1,3,2},
+		{2,1,3},{2,3,1},
+		{3,1,2},{3,2,1}
+	};
 
 
 
@@ -708,24 +711,29 @@ void ConcreteBlockBuilder::setTopology(Block* block, BlockCommunicator* block_co
 
 	int block_id=block->block_id_;
 
+	cout<<"Début Set Topology............ "<<endl;
 
 	if (myfile.is_open())
 	{
 	// Find current block
 		getline(myfile, line);
 		sscanf (line.c_str(), "%s %d",str_temp,&n_blocks);
+		cout<<"N blocks: "<<n_blocks<<endl;
 
 	// Skip block file names
 		for(i=0;i<n_blocks;i++)
 		{
-			getline(myfile, line);
+			myfile.ignore(256, '\n');
+			//cout<<"Ignore Line"<<endl;
 		}
 
 
 		for(i=0;i<n_blocks;i++)
 		{
 			// Get block idx
+			getline(myfile, line);
 			sscanf (line.c_str(), "%s %d",str_temp,&block_idx);
+			//cout<<"Block idx read: "<<block_idx<<endl;
 			// Current block found
 			if(block_idx==block->block_id_) 
 			{
@@ -738,7 +746,7 @@ void ConcreteBlockBuilder::setTopology(Block* block, BlockCommunicator* block_co
 				for(j=0;j<n_boundaries;j++)
 				{
 
-					ConnexionCellIds* block_connexion_boundary_cell_ids = new ConnexionCellIds[n_boundaries];
+					ConnexionCellIds *block_connexion_boundary_cell_ids = new ConnexionCellIds();
 
 					getline(myfile, line);
 					sscanf (line.c_str(), "%s %d",str_temp,&block_origin_temp); 
@@ -748,31 +756,31 @@ void ConcreteBlockBuilder::setTopology(Block* block, BlockCommunicator* block_co
 					cout<<"Number of elements: "<<n_elems<<endl;
 
 
-        		
-					block_connexion_boundary_cell_ids[j].block_destination_=block_id;
-					block_connexion_boundary_cell_ids[j].block_destination_=block_origin_temp;
-					block_connexion_boundary_cell_ids[j].n_cell_in_boundary_=n_elems;
-					block_connexion_boundary_cell_ids[j].cell_ids_in_boundary_other_block_=new int[n_elems]();
-					block_connexion_boundary_cell_ids[j].cell_ids_in_boundary_=new int[n_elems]();
-					block_connexion_boundary_cell_ids[j].owner_block_=block;
-
-
+        			
+					block_connexion_boundary_cell_ids->block_destination_=block_id;
+					block_connexion_boundary_cell_ids->block_origin_=block_origin_temp;
+					block_connexion_boundary_cell_ids->n_cell_in_boundary_=n_elems;
+					block_connexion_boundary_cell_ids->cell_ids_in_boundary_other_block_=new int[n_elems]();
+					block_connexion_boundary_cell_ids->cell_ids_in_boundary_=new int[n_elems]();
+					block_connexion_boundary_cell_ids->owner_block_=block;
+					
 
 					for(k=0;k<n_elems;k++)
 					{
 						getline(myfile, line);
 						sscanf (line.c_str(), "%d",&elem_id_destination_temp); 
 
-						block_connexion_boundary_cell_ids[j].cell_ids_in_boundary_[k]=count_connexions;
+						block_connexion_boundary_cell_ids->cell_ids_in_boundary_[k]=count_connexions;
 						count_connexions+=1;
 
-						block_connexion_boundary_cell_ids[j].cell_ids_in_boundary_other_block_[k]=elem_id_destination_temp;
+						block_connexion_boundary_cell_ids->cell_ids_in_boundary_other_block_[k]=elem_id_destination_temp;
 
 					}
 
-					*block_connexion_boundary_cell_ids[j].cell_count_= count_connexions;
+					block_connexion_boundary_cell_ids->cell_count_= &count_connexions;
 
-					block_communicator->addCellIdInConnexion(block_connexion_boundary_cell_ids[j]);
+					block_communicator->addCellIdInConnexion(block_connexion_boundary_cell_ids);
+
 
 				}
 
@@ -806,5 +814,23 @@ void ConcreteBlockBuilder::setTopology(Block* block, BlockCommunicator* block_co
 		}
 	}
 	myfile.close();
+
+
+	cout<<"----------------VÉRIFICATION CONNECTION AU MPI-----------------"<<endl;
+	int n_inter_block_boundaries=block_communicator->n_inter_block_boundaries_;
+
+	for (i=0;i<n_inter_block_boundaries;i++)
+	{
+		cout<<"Boundary number: "<<i<<endl;
+		cout<<"Block destination: "<<block_communicator->inter_block_boundaries_[i]->block_destination_<<" Block origin: "<<block_communicator->inter_block_boundaries_[i]->block_origin_<<" Number of cells in boundary: "<<block_communicator->inter_block_boundaries_[i]->n_cell_in_boundary_<<endl;
+		cout<<"Cell ids in boundary\tCell ids in other boundary"<<endl;
+		for (j=0;j<block_communicator->inter_block_boundaries_[i]->n_cell_in_boundary_;j++)
+		{
+			cout<<block_communicator->inter_block_boundaries_[i]->cell_ids_in_boundary_[j]<<"\t\t\t\t"<<block_communicator->inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]<<endl;
+		}
+		cout<<endl;
+		
+	}
+	cout<<"Fin Set Topology............ "<<endl;
 }
 #endif
