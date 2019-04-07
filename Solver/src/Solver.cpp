@@ -49,11 +49,11 @@ void Solver::solve(CompleteMesh* complete_mesh, BlockCommunicator* communicator)
 
 	while(!post_processing_->stop_solver_)
 	{
-		
+
 		//post_processing_->process(block, complete_mesh); //PARTIE QUI CALCULE LES SOMMES, PRENDS LES DÉCISIONS ET PUBLISH
 		/// FIN DES TRUCS MPI
 		
-		//#pragma omp parallel for schedule(guided)
+		// #pragma omp parallel for num_threads(8) // DECOMMENTER POUR AVOIR OPENMP
 		for	(int i=0;i<n_blocks_in_process;i++)
 		{
 			Block* current_block=all_blocks[my_blocks[i]];

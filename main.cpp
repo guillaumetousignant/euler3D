@@ -5,6 +5,7 @@
 #include <iostream>
 #include <string>
 #include <chrono>
+//#include <omp.h>  // not needed for pragma, and adds dependency
 #ifdef HAVE_MPI
 #include <mpi.h>
 #endif
