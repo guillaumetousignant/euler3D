@@ -1,6 +1,8 @@
 #include "Initializer.h"
 #include "Interface.h"
 #include "Solver.h"
+#include "BlockCommunicator.h"
+#include "CompleteMesh.h"
 
 #include <iostream>
 #include <string>
@@ -9,10 +11,6 @@
 #ifdef HAVE_MPI
 #include <mpi.h>
 #endif
-#include "Block.h"
-#include "ConcreteBlockBuilder.h"
-#include "BlockCommunicator.h"
-#include "CompleteMesh.h"
 
 using namespace std;
 
