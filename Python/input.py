@@ -12,7 +12,7 @@ class Input():
         self.master = master
 
         # SECTION 1.1: GEOMETRY AND MESH
-        title_section_1_1 = LabelFrame(master, text="1.1 Geometry and mesh", labelanchor=N, height=230, width=396)
+        title_section_1_1 = LabelFrame(master, text="1.1 Geometry and mesh", labelanchor=N, height=250, width=396)
         title_section_1_1.grid(row=0, column=0, columnspan=3)
         title_section_1_1.grid_propagate(False)
         title_section_1_1.grid_columnconfigure(0, weight=1)
@@ -34,8 +34,11 @@ class Input():
         show_resulting_mesh = Button(title_section_1_1, text="Show resulting\nmesh", command=self.showResultingMesh, anchor=CENTER, takefocus=0)
         show_resulting_mesh.grid(row=2, column=1, sticky=NSEW, padx=2, pady=2)
 
+        ttk.Label(title_section_1_1, text="\nResulting mesh or topology file name:").grid(row=3, column=0, columnspan=3, sticky=NSEW, padx=2, pady=2)
+        ttk.Label(title_section_1_1, text="", relief="solid", width=60).grid(row=4, column=0, columnspan=3, padx=2, pady=2)
+
         # SECTION 1.2: INPUT VALUES
-        title_section_1_2 = ttk.LabelFrame(master, text="1.2 Input parameters", labelanchor=N, height=230, width=396)
+        title_section_1_2 = ttk.LabelFrame(master, text="1.2 Input parameters", labelanchor=N, height=210, width=396)
         title_section_1_2.grid(row=1, column=0, columnspan=3)
         title_section_1_2.grid_propagate(False)
         title_section_1_2.grid_columnconfigure(1, weight=1)
@@ -85,9 +88,11 @@ class Input():
         self.rk_label.grid(row=3, column=2, sticky=NSEW, padx=2, pady=2)
         self.rk_entry = ttk.Entry(title_section_1_2, textvariable=self.rk, justify=CENTER, takefocus=0)
         self.rk_entry.grid(row=3, column=3, sticky=NSEW, padx=2, pady=2)
-
-        self.filename_mesh = "void"
-        self.filename_geometry = "void"
+        
+        self.filename_mesh = StringVar()
+        self.filename_mesh.set("void")
+        self.filename_geometry = StringVar()
+        self.filename_geometry.set("void")
  
     # METHODS
     def importMesh(self):
@@ -102,10 +107,11 @@ class Input():
         select_file_button = ttk.Button(self.mesh_window, text="Select a file", command=self.meshFileDialog)
         select_file_button.grid(row=1, column=0, padx=2)
         
-        self.filename_label_mesh = ttk.Label(self.mesh_window, text="", relief="solid", width=60)
+        self.filename_label_mesh = ttk.Label(self.mesh_window, text=self.filename_mesh.get(), relief="solid", width=60)
         self.filename_label_mesh.grid(row=1, column=1, columnspan=3, padx=2)
-        if self.filename_mesh != "void":
-            self.filename_label_mesh.configure(text=self.filename_mesh)
+
+        if self.filename_mesh.get() != "void":
+            self.filename_label_mesh.configure(text=self.filename_mesh.get())
         else:
             self.filename_label_mesh.configure(text="")
         
@@ -116,16 +122,16 @@ class Input():
         cancel_button.grid(row=2, column=2, pady=5)
 
     def meshFileDialog(self):
-        self.filename_mesh = filedialog.askopenfilename(initialdir="/home/etudiant/", title="Select a file", filetypes=(("SU2", "*.su2"),("All Files", "*.*")))
+        self.filename_mesh.set(filedialog.askopenfilename(initialdir="/home/etudiant/", title="Select a file", filetypes=(("SU2", "*.su2"),("All Files", "*.*"))))
 
-        if self.filename_mesh=="void":
+        if self.filename_mesh.get() == "":
             self.filename_label_mesh.configure(text="")
         
-        elif self.filename_mesh.endswith('.su2'):
-            self.filename_label_mesh.configure(text=self.filename_mesh)
+        elif self.filename_mesh.get().endswith('.su2'):
+            self.filename_label_mesh.configure(text=self.filename_mesh.get())
         else:
             messagebox.showwarning("Warning", "Chosen mesh file must be a SU2 file!")
-            self.filename_label_mesh.configure(text=self.filename_mesh)
+            self.filename_label_mesh.configure(text=self.filename_mesh.get())
         
         self.mesh_window.lift()
         
@@ -143,17 +149,17 @@ class Input():
         
         self.filename_label_geometry = ttk.Label(self.geometry_window, text="", relief="solid", width=60)
         self.filename_label_geometry.grid(row=1, column=1, columnspan=3, padx=2)
-        if self.filename_geometry != "void":
-            self.filename_label_geometry.configure(text=self.filename_geometry)
+        if self.filename_geometry.get() != "void":
+            self.filename_label_geometry.configure(text=self.filename_geometry.get())
         else:
             self.filename_label_geometry.configure(text="")
 
-        self.number_blocks = IntVar()
-        self.number_blocks.set(3)
-        self.number_blocks_label = ttk.Label(self.geometry_window, text="Number of blocks", borderwidth=2, relief="groove", anchor=CENTER)
-        self.number_blocks_label.grid(row=2, column=1, sticky=NSEW, pady=5)
-        self.number_blocks_entry = ttk.Entry(self.geometry_window, width=15, textvariable=self.number_blocks, justify=CENTER)
-        self.number_blocks_entry.grid(row=2, column=2, pady=5)
+        # self.number_blocks = IntVar()
+        # self.number_blocks.set(3)
+        # self.number_blocks_label = ttk.Label(self.geometry_window, text="Number of blocks", borderwidth=2, relief="groove", anchor=CENTER)
+        # self.number_blocks_label.grid(row=2, column=1, sticky=NSEW, pady=5)
+        # self.number_blocks_entry = ttk.Entry(self.geometry_window, width=15, textvariable=self.number_blocks, justify=CENTER)
+        # self.number_blocks_entry.grid(row=2, column=2, pady=5)
 
         ok_button = ttk.Button(self.geometry_window, text="Ok", command=self.geometry_window.destroy)
         ok_button.grid(row=3, column=1, pady=5)
@@ -161,17 +167,17 @@ class Input():
         cancel_button.grid(row=3, column=2, pady=5)
 
     def geometryFileDialog(self):
-        self.filename_geometry = filedialog.askopenfilename(initialdir="/home/etudiant/", title="Select a file", filetypes=(("csm", "*.csm"),("All Files", "*.*")))
+        self.filename_geometry.set(filedialog.askopenfilename(initialdir="/home/etudiant/", title="Select a file", filetypes=(("csm", "*.csm"),("All Files", "*.*"))))
         
-        if self.filename_geometry=="void":
+        if self.filename_geometry.get() == "":
             self.filename_label_geometry.configure(text="")
         
-        elif self.filename_geometry.endswith('.csm'):
-            self.filename_label_geometry.configure(text=self.filename_geometry)
+        elif self.filename_geometry.get().endswith('.csm'):
+            self.filename_label_geometry.configure(text=self.filename_geometry.get())
         
         else:
             messagebox.showwarning("Warning", "Chosen geometry file must be a csm file!")
-            self.filename_label_geometry.configure(text=self.filename_geometry)
+            self.filename_label_geometry.configure(text=self.filename_geometry.get())
 
         self.geometry_window.lift()
 
@@ -303,30 +309,6 @@ class Input():
 
         file = open(complete_file_name,"w")
 
-        # file.write("# ../data/NACA_test_3.csm written by ocsmSave (v1.14)\n\n" + (
-        #             "# Constant, Design, and Output Parameters:\n") + (
-        #             "despmtr   series_w    " + first_digit + second_digit + third_fourth_digit + ".00000\n") + (
-        #             "dimension wing   3   5   1\n") + (
-        #             "despmtr   wing[1,:]   \"     4.00000;     0.00000;     0.20000;     6.00000;     0.00000;\"\n") + (
-        #             "despmtr   wing[2,:]   \"     7.00000;     1.00000;     0.20000;     3.00000;     0.00000;\"\n") + (
-        #             "despmtr   wing[3,:]   \"     0.00000;     " + span + "000;     0.00000;     " + corde_ratio + "0000;     270.00000;\"\n\n") + (
-        #             "# Global Attributes:\n\n") + (
-        #             "# Branches:\n") + (
-        #             "mark\n") + (
-        #             "udprim    naca   Series   series_w\n") + (
-        #             "rotatez   -wing[3,5]   0   0\n") + (
-        #             "rotatex   90   0   0\n") + (
-        #             "scale     wing[3,4]   0   0   0\n") + (
-        #             "translate wing[3,1]   -wing[3,2]   wing[3,3]\n\n") + (
-        #             "udprim    naca   Series   series_w\n") + (
-        #             "rotatez   -wing[3,5]   0   0\n") + (
-        #             "rotatex   90   0   0\n") + (
-        #             "#scale     wing[3,4]   0   0   0\n") + (
-        #             "#translate wing[3,1]   +wing[3,2]   wing[3,3]\n") + (
-        #             "rule      0\n\n") + (
-        #             "DUMP $/" + mesh_file_name + " 0 0\n") + (
-        #             "end"))
-
         file.write("despmtr   series_w    " + first_digit + second_digit + third_fourth_digit + ".00000\n" + (
                     "dimension wing   3   5   1\n") + (
                     "despmtr   wing[3,:]   \"     0.00000;     " + span + "000;     0.00000;     " + corde_ratio + "0000;     180.00000;\"\n\n") + (
@@ -344,7 +326,6 @@ class Input():
                     "end"))
         
         file.close()
-
         
         self.geometry_generation_window.destroy()
 
@@ -361,28 +342,42 @@ class Input():
     def saveAndDestroyWindow(self):
         self.writePartialOutputMesh()
         
-        self.partition_window = Toplevel(self.master)
-        self.partition_window.title("Mesh Partitionning?")
-        self.partition_window.resizable(0,0)
-        self.partition_window.lift()
+        if self.filename_mesh.get() != "void":
+            self.partition_window = Toplevel(self.master)
+            self.partition_window.title("Mesh Partitionning?")
+            self.partition_window.resizable(0,0)
+            self.partition_window.lift()
 
-        ttk.Label(self.partition_window, text="Do you want to partition your mesh?").grid(row=0, column=0, columnspan=4)
+            ttk.Label(self.partition_window, text="Do you want to partition your mesh?").grid(row=0, column=0, columnspan=4)
 
-        self.partition = IntVar()
-        self.partition.set(0)
-        self.partition_yes = Radiobutton(self.partition_window, text="Yes", value=1, variable=self.partition, relief="groove", borderwidth=2, width=5, anchor=W, takefocus=0)
-        self.partition_yes.grid(row=1, column=1, columnspan=2, padx=2, pady=2)
-        self.partition_no = Radiobutton(self.partition_window, text="No", value=0, variable=self.partition, relief="groove", borderwidth=2, width=5, anchor=W, takefocus=0)
-        self.partition_no.grid(row=2, column=1, columnspan=2, padx=2, pady=2)
+            self.partition = IntVar()
+            self.partition.set(0)
+            self.partition_yes = Radiobutton(self.partition_window, text="Yes", value=1, variable=self.partition, command=self.activateNumberBlocks, relief="groove", borderwidth=2, width=5, anchor=W, takefocus=0, padx=2, pady=2)
+            self.partition_yes.grid(row=1, column=1, columnspan=2, padx=2, pady=2)
+            self.partition_no = Radiobutton(self.partition_window, text="No", value=0, variable=self.partition, command=self.activateNumberBlocks, relief="groove", borderwidth=2, width=5, anchor=W, takefocus=0)
+            self.partition_no.grid(row=2, column=1, columnspan=2, padx=2, pady=2)
 
-        ok_button = ttk.Button(self.partition_window, text="Ok", command=lambda:[self.partition_window.destroy(),self.mesh_window.destroy()])
-        ok_button.grid(row=3, column=1, pady=5)
-        cancel_button = ttk.Button(self.partition_window, text="Cancel", command=self.partition_window.destroy)
-        cancel_button.grid(row=3, column=2, pady=5)
+            self.number_blocks = IntVar()
+            self.number_blocks.set(3)
+            self.number_blocks_label = ttk.Label(self.partition_window, text="Number of blocks", state="disabled", borderwidth=2, relief="groove", anchor=CENTER, width=15)
+            self.number_blocks_label.grid(row=3, column=1, padx=2, pady=2)
+            self.number_blocks_entry = ttk.Entry(self.partition_window, textvariable=self.number_blocks, state="disabled", justify=CENTER, takefocus=0, width=15)
+            self.number_blocks_entry.grid(row=3, column=2, padx=2, pady=2)
+
+            ok_button = ttk.Button(self.partition_window, text="Ok", command=lambda:[self.partition_window.destroy(),self.mesh_window.destroy()])
+            ok_button.grid(row=4, column=1, pady=5)
+            cancel_button = ttk.Button(self.partition_window, text="Cancel", command=self.partition_window.destroy)
+            cancel_button.grid(row=4, column=2, pady=5)
 
         # self.mesh_window.destroy()
 
-
+    def activateNumberBlocks(self):
+        if self.partition.get() == 1:
+            self.number_blocks_label.configure(state="normal")
+            self.number_blocks_entry.configure(state="normal")
+        elif self.partition.get() == 0:
+            self.number_blocks_label.configure(state="disabled")
+            self.number_blocks_entry.configure(state="disabled")
 
     def clearAllPages(self):
         self.cfl.set(0.0)
@@ -402,7 +397,7 @@ class Input():
 
     def writePartialOutputMesh(self):
         
-        self.partial_output_mesh = "MESH\ntopologyfilename\n" + self.filename_mesh
+        self.partial_output_mesh = "MESH\ntopologyfilename\n" + str(self.filename_mesh.get())
 
         return self.partial_output_mesh
 
@@ -422,7 +417,7 @@ class Input():
                              rk_str+" "+mach_str+" "+cmac_str)                        
         else:
             partial_output = "MESH\ntopologyfilename\n"+(
-                             self.filename_mesh)+(
+                             str(self.filename_mesh.get()))+(
                              "\nINPUT\ncfl gamma angleattackdeg\n")+(
                              cfl_str+" "+gamma_str+" "+angle_attack_str)+(
                              "\nrkstage mach cmac\n")+(
@@ -431,7 +426,7 @@ class Input():
         return partial_output
 
     def saveImportedData(self, filename_var, cfl_var, gamma_var, angle_attack_var, rk_var, mach_var, cmac_var):
-        self.filename_mesh = filename_var
+        self.filename_mesh.set(filename_var)
         self.cfl.set(cfl_var)
         self.gamma.set(gamma_var)
         self.angle_attack.set(angle_attack_var)

@@ -97,19 +97,33 @@ class Interface(Input, Solver, Output):
         solver_option = self.solver_.solver_option.get()
         
         if solver_option == 1:
-            command = "make"
+            self.command = "make"
 
         elif solver_option == 2:
             # nb_process_str = str(self.solver.nb_process.get())
             # command = "mpiexec -n " + nb_process_str + " ./bin/euler3D ./bin/output_interface"
-            command = "./bin/euler3D ./bin/output_interface"
+            self.command = "./bin/euler3D ./bin/output_interface"
 
         elif solver_option == 3:
-            command = "make clean; make; ./bin/euler3D ./bin/output_interface"
+            self.command = "make clean; make; ./bin/euler3D ./bin/output_interface"
         
         self.saveEntries()
+
+    #     root.after(1000, self.stopButton)
         root.destroy()
-        os.system(command)
+        os.system(self.command)
+
+
+    # def stopButton(self):
+    #     self.stop_window = Toplevel()
+    #     self.stop_window.title("Stop")
+    #     self.stop_window.resizable(0,0)
+    #     Button(self.stop_window, text="STOP", command=root.destroy).grid(row=0, column=0)
+        
+    #     self.callCommand()
+
+    # def callCommand(self):
+    #     os.system(self.command)
 
     def saveEntries(self):
 

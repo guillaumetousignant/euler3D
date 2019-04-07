@@ -21,9 +21,9 @@ class Output():
 
         self.files_type_ = IntVar()
         self.files_type_.set(1)
-        files_type_euler = Radiobutton(title_section_3_1, text="Euler", value=0, variable=self.files_type_, relief="groove", width=10, borderwidth=2, anchor=W, takefocus=0)
+        files_type_euler = Radiobutton(title_section_3_1, text="Developped software", value=0, variable=self.files_type_, relief="groove", width=17, borderwidth=2, anchor=W, takefocus=0)
         files_type_euler.grid(row=1, column=0, columnspan=2, sticky=N, padx=2, pady=2)
-        files_type_su2 = Radiobutton(title_section_3_1, text="SU2", value=1, variable=self.files_type_, relief="groove", width=10, borderwidth=2, anchor=W, takefocus=0)
+        files_type_su2 = Radiobutton(title_section_3_1, text="SU2", value=1, variable=self.files_type_, relief="groove", width=17, borderwidth=2, anchor=W, takefocus=0)
         files_type_su2.grid(row=2, column=0, columnspan=2, sticky=N, padx=2, pady=2)
 
         # SECTION 3.2: GRAPHS

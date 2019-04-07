@@ -157,7 +157,7 @@ class Solver():
             self.flux_scheme.set("Ausm")
         self.flux_scheme_label = ttk.Label(self.flux_scheme_window, text="Flux scheme:", anchor=CENTER)
         self.flux_scheme_label.grid(row=1, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
-        self.flux_scheme_entry = ttk.Combobox(self.flux_scheme_window, values=("Roe", "Ausm"), width=15, textvariable=self.flux_scheme, justify=CENTER)
+        self.flux_scheme_entry = ttk.Combobox(self.flux_scheme_window, values=("Roe", "Ausm"), width=15, textvariable=self.flux_scheme, justify=CENTER, takefocus=0)
         self.flux_scheme_entry.grid(row=2, column=1, columnspan=2, pady=2)
         
 
@@ -167,7 +167,7 @@ class Solver():
             self.scheme_order.set("2")
         self.scheme_order_label = ttk.Label(self.flux_scheme_window, text="Scheme order:", anchor=CENTER)
         self.scheme_order_label.grid(row=3, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
-        self.scheme_order_entry = ttk.Combobox(self.flux_scheme_window, values=("1", "2"), width=15, textvariable=self.scheme_order, justify=CENTER)
+        self.scheme_order_entry = ttk.Combobox(self.flux_scheme_window, values=("1", "2"), width=15, textvariable=self.scheme_order, justify=CENTER, takefocus=0)
         self.scheme_order_entry.grid(row=4, column=1, columnspan=2, pady=2)
         self.scheme_order_entry.bind('<<ComboboxSelected>>', self.activateGradientAndLimiter)
 
@@ -178,7 +178,7 @@ class Solver():
             self.gradient.set("Least Squares")
         self.gradient_label = ttk.Label(self.flux_scheme_window, text="Gradient:", anchor=CENTER, state="disabled")
         self.gradient_label.grid(row=5, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
-        self.gradient_entry = ttk.Combobox(self.flux_scheme_window, values=("Green Gauss", "Least Squares"), width=15, state="disabled", textvariable=self.gradient, justify=CENTER)
+        self.gradient_entry = ttk.Combobox(self.flux_scheme_window, values=("Green Gauss", "Least Squares"), width=15, state="disabled", textvariable=self.gradient, justify=CENTER, takefocus=0)
         self.gradient_entry.grid(row=6, column=1, columnspan=2, pady=2)
         if self.scheme_order.get() == "2":
             self.gradient_label.configure(state="normal")
@@ -194,7 +194,7 @@ class Solver():
             self.limiter.set("Venkatakrishnan")
         self.limiter_label = ttk.Label(self.flux_scheme_window, text="Limiter:", anchor=CENTER, state="disabled")
         self.limiter_label.grid(row=7, column=1, columnspan=2, padx=2, pady=2, sticky=NSEW)
-        self.limiter_entry = ttk.Combobox(self.flux_scheme_window, values=("Barth Jespersen", "Venkatakrishnan"), width=15, state="disabled", textvariable=self.limiter, justify=CENTER)
+        self.limiter_entry = ttk.Combobox(self.flux_scheme_window, values=("Barth Jespersen", "Venkatakrishnan"), width=15, state="disabled", textvariable=self.limiter, justify=CENTER, takefocus=0)
         self.limiter_entry.grid(row=8, column=1, columnspan=2, pady=2)
         self.limiter_entry.bind('<<ComboboxSelected>>', self.activateOmegaOrK)
         if self.scheme_order.get() == "2":
@@ -211,7 +211,7 @@ class Solver():
             self.omega.set(self.omega.get())
         self.omega_label = ttk.Label(self.flux_scheme_window, text="Omega power\n(1.0eX)", width=13, anchor=CENTER, borderwidth=2, relief="groove", state="disabled")
         self.omega_label.grid(row=9, column=0, padx=2, pady=7)
-        self.omega_entry = ttk.Entry(self.flux_scheme_window, textvariable=self.omega, width=10, state="disabled", justify=CENTER)
+        self.omega_entry = ttk.Entry(self.flux_scheme_window, textvariable=self.omega, width=10, state="disabled", justify=CENTER, takefocus=0)
         self.omega_entry.grid(row=9, column=1, padx=2, pady=10)
         if self.scheme_order.get() == "2" and self.limiter.get() == "Barth Jespersen":
             self.omega_label.configure(state="normal")
@@ -227,7 +227,7 @@ class Solver():
             self.k.set(self.k.get())
         self.k_label = ttk.Label(self.flux_scheme_window, text="k", width=13, anchor=CENTER, borderwidth=2, relief="groove", state="disabled")
         self.k_label.grid(row=9, column=2, padx=2, pady=7)
-        self.k_entry = ttk.Entry(self.flux_scheme_window, textvariable=self.k, width=10, state="disabled", justify=CENTER)
+        self.k_entry = ttk.Entry(self.flux_scheme_window, textvariable=self.k, width=10, state="disabled", justify=CENTER, takefocus=0)
         self.k_entry.grid(row=9, column=3, padx=2, pady=10)
         if self.scheme_order.get() == "2" and self.limiter.get() == "Venkatakrishnan":
             self.k_label.configure(state="normal")
@@ -244,10 +244,10 @@ class Solver():
         self.smoothing_label = ttk.Label(self.flux_scheme_window, text="Residual smoothing?", anchor=CENTER)
         self.smoothing_label.grid(row=10, column=1, columnspan=2, padx=2)
         
-        self.smoothing_yes = Radiobutton(self.flux_scheme_window, text="Yes", value=1, variable=self.smoothing, relief="groove", borderwidth=2, width=8, anchor=W)
+        self.smoothing_yes = Radiobutton(self.flux_scheme_window, text="Yes", value=1, variable=self.smoothing, relief="groove", borderwidth=2, width=8, anchor=W, takefocus=0)
         self.smoothing_yes.grid(row=11, column=1, columnspan=2, padx=2, pady=2)
 
-        self.smoothing_no = Radiobutton(self.flux_scheme_window, text="No", value=0, variable=self.smoothing, relief="groove", borderwidth=2, width=8, anchor=W)
+        self.smoothing_no = Radiobutton(self.flux_scheme_window, text="No", value=0, variable=self.smoothing, relief="groove", borderwidth=2, width=8, anchor=W, takefocus=0)
         self.smoothing_no.grid(row=12, column=1, columnspan=2, padx=2, pady=2)
 
         ok_button = ttk.Button(self.flux_scheme_window, text="Ok", command=self.saveAndDestroyWindow)
