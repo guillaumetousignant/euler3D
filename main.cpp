@@ -4,30 +4,18 @@
 #include "Interface.h"
 #include "Solver.h"
 #include "MetisMesh.h"
-
 #include "ReconstructFaces.h"
 
 #include <iostream>
 #include <string>
 #ifdef HAVE_MPI
 #include <mpi.h>
-<<<<<<< HEAD
 #endif
-=======
-
->>>>>>> origin/structure_donnees_helene
 #include "Block.h"
 #include "ConcreteBlockBuilder.h"
 #include "BlockCommunicator.h"
 #include "CompleteMesh.h"
-<<<<<<< HEAD
 #include "MetricsInitializer.h"
-
-=======
-#include "Metrics/src/MetricsInitializer.h"
-#include <metis.h>
-#include <vector>
->>>>>>> origin/structure_donnees_helene
 
 using namespace std;
 
