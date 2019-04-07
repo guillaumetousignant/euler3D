@@ -20,6 +20,7 @@
 #include "FarfieldCellIds.h"
 #include "WallCellIds.h"
 #include "SymmetryCellIds.h"
+#include "ConnexionBlockCellIds.h"
 
 
 #include "BlockCommunicator.h"

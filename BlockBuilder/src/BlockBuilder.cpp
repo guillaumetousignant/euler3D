@@ -415,6 +415,19 @@ for(i=0;i < block->n_symmetry_faces_ ;i++)
 	block ->addFaceIdInSymmetry(symmetry_face_id,symmetry_face_count);
 
 }
+
+std::cout<<"Remplissage de l'array face_ids_in_connexion"<<std::endl;
+int temp_connexion_face_count=0;
+int* connexion_face_count;
+connexion_face_count=&temp_connexion_face_count;
+int connexion_face_id, connexion_cell_id;
+for(i=0;i < block->n_connexion_faces_ ;i++)
+{
+	connexion_cell_id=(block->block_connexion_face_ids_[i]);
+	connexion_face_id=(block->block_cells_[connexion_cell_id])->cell_2_faces_connectivity_[0];
+	block ->addFaceIdInConnexionBlock(connexion_face_id,connexion_face_count);
+
+}
 //std::cout<<"TEEEEEEEST WALLLLLL FAAAAAAACE IIIIIIIIDS FIIIIIIIIIIIIIIIIINAL: "<< *wall_face_count<<std::endl;
 
 

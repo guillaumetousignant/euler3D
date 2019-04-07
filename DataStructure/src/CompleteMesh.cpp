@@ -45,7 +45,6 @@ CompleteMesh::~CompleteMesh()
 string CompleteMesh::getBlockFileName(int block_id)
 {
 	string line_in_file;
-	char str_temp[200];
 	ifstream topology_file(topology_file_name_);
 	string block_file_name;
 

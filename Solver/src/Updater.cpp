@@ -63,7 +63,7 @@ void Updater::updateInternalBlock(Block* block)
 		ww= rw_new/ro_new;
 		pp=(gamma_-1.0)*(re_new-0.5*(ru_new*ru_new+rv_new*rv_new+rw_new*rw_new)/ro_new);
 
-		//cout<<"cell_idx: "<<cell_idx<<" ro_0: "<<ro_0<<" ro_new: "<<ro_new<<endl;
+		//cout<<"block_id: "<< block->block_id_<<" cell_idx: "<<cell_idx<<" ro_0: "<<ro_0<<" ro_new: "<<ro_new<<endl;
 		//cout<<"dt: "<<dt<<" cell_volume: "<<cell_volume<<" res_ro_conv-res_ro_diss: "<<res_ro_conv-res_ro_diss<<" alpha_rk_[current_stage_]: "<<alpha_rk_[current_stage_]<<endl;
 		//cout<<"cell_idx: "<<cell_idx<<" ri_1: "<<(res_ro_conv-res_ro_diss)<<" ri_2: "<<(res_uu_conv-res_uu_diss)<<" ri_3: "<<(res_vv_conv-res_vv_diss)<<" ri_5: "<<(res_pp_conv-res_pp_diss)<<endl;
 
