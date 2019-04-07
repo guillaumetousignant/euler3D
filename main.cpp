@@ -7,7 +7,7 @@
 
 #include <iostream>
 #include <string>
-#include <omp.h>
+//#include <omp.h>  // not needed for pragma, and adds dependency
 #ifdef HAVE_MPI
 #include <mpi.h>
 #endif
