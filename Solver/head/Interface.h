@@ -72,7 +72,7 @@ class Interface
 
 
 
-		int n_blocks_interface_; // RÉGLER CE PROBLÈME LÀ
+		int n_blocks_interface_; 
 
 
 		Interface(char* argv);

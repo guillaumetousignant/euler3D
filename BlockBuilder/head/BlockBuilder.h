@@ -10,6 +10,9 @@
 #include "Block.h"
 #include <fstream>
 
+#include "BlockCommunicator.h"
+
+
 class BlockBuilder
 {
 public:
@@ -20,7 +23,7 @@ public:
 	BlockBuilder(std::string block_file, std::string topology_file);
 	~BlockBuilder();
 
-	virtual void readMyBlock(Block* block) = 0;
+	virtual void readMyBlock(Block* block, BlockCommunicator* block_communicator) = 0;
 	virtual void createMyFaces(Block* block) = 0;
 
 	Cell* buildCell(int cell_id, std::string cell_type, std::string cell_2_nodes_connectivity_temp, CellCreator* creators,std::string ghost_cell_type /*= ""*/);

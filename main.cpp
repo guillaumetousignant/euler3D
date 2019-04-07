@@ -51,9 +51,8 @@ int main(int argc, char* argv[])
 	Initializer* initializer= new Initializer();
 
 	int n_blocks=interface->n_blocks_interface_;
-	cout<<"N BLOCKS: "<<n_blocks<<endl;
 
-	
+
 	int n_blocks_in_process;
     int* my_blocks;
 
@@ -64,7 +63,7 @@ int main(int argc, char* argv[])
 
 	cout << "In CompleteMesh........." << endl;
 	CompleteMesh* complete_mesh = new CompleteMesh(n_blocks, n_blocks_in_process, my_blocks, interface->topology_file_name_interface_);
-	complete_mesh->InitializeMyBlocks(interface);
+	complete_mesh->InitializeMyBlocks(interface, communicator);
 
 	Solver *solver=initializer->initializeSolver(interface);
 

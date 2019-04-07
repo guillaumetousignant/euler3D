@@ -3,9 +3,11 @@
 
 #include <string>
 #include "Block.h"
+#include "BlockCommunicator.h"
 using namespace std;
 
 class Interface;
+class BlockCommunicator;
 
 class CompleteMesh
 {
@@ -18,7 +20,7 @@ public:
 
 	CompleteMesh(int n_blocks, int n_block_in_process, int* my_blocks, string topology_file_name);
 	~CompleteMesh();
-	void InitializeMyBlocks(Interface* interface);
+	void InitializeMyBlocks(Interface* interface, BlockCommunicator* communicator);
 
 	string getBlockFileName(int block_id);
 

@@ -72,7 +72,7 @@ string CompleteMesh::getBlockFileName(int block_id)
 }
 
 
-void CompleteMesh::InitializeMyBlocks(Interface* interface)
+void CompleteMesh::InitializeMyBlocks(Interface* interface, BlockCommunicator* communicator)
 {
 	//std::string block_id_string;
 	//std::string block_file;
@@ -87,13 +87,13 @@ void CompleteMesh::InitializeMyBlocks(Interface* interface)
 		block_file_name=getBlockFileName(block_id);
 		
 		
-		ConcreteBlockBuilder block_builder=ConcreteBlockBuilder(block_file_name);
+		ConcreteBlockBuilder block_builder=ConcreteBlockBuilder(block_file_name, topology_file_name_);
 		Block* new_block = all_blocks_[block_id];
 
 		//std::cout<<new_block -> block_id_<<std::endl;
 
 		block_builder.preReadMyBlock(new_block);
-		block_builder.readMyBlock(new_block);
+		block_builder.readMyBlock(new_block, communicator);
 
 		block_builder.createMyFaces(new_block);
 

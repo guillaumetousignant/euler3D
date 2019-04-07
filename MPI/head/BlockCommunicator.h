@@ -5,6 +5,7 @@
 #include "ConnexionCellIds.h"
 
 class PostProcessing;
+class CompleteMesh;
 
 class BlockCommunicator {
     public:
