@@ -115,7 +115,7 @@ class Input():
         else:
             self.filename_label_mesh.configure(text="")
         
-        ok_button = ttk.Button(self.mesh_window, text="Ok", command=self.saveAndDestroyWindow)
+        ok_button = ttk.Button(self.mesh_window, text="Ok", command=self.saveAndDestroyMeshWindow)
         ok_button.grid(row=2, column=1, pady=5)
 
         cancel_button = ttk.Button(self.mesh_window, text="Cancel", command=self.mesh_window.destroy)
@@ -154,17 +154,12 @@ class Input():
         else:
             self.filename_label_geometry.configure(text="")
 
-        # self.number_blocks = IntVar()
-        # self.number_blocks.set(3)
-        # self.number_blocks_label = ttk.Label(self.geometry_window, text="Number of blocks", borderwidth=2, relief="groove", anchor=CENTER)
-        # self.number_blocks_label.grid(row=2, column=1, sticky=NSEW, pady=5)
-        # self.number_blocks_entry = ttk.Entry(self.geometry_window, width=15, textvariable=self.number_blocks, justify=CENTER)
-        # self.number_blocks_entry.grid(row=2, column=2, pady=5)
-
-        ok_button = ttk.Button(self.geometry_window, text="Ok", command=self.geometry_window.destroy)
+        ok_button = ttk.Button(self.geometry_window, text="Ok", command=self.saveImportedGeometry)
         ok_button.grid(row=3, column=1, pady=5)
         cancel_button = ttk.Button(self.geometry_window, text="Cancel", command=self.geometry_window.destroy)
         cancel_button.grid(row=3, column=2, pady=5)
+
+        self.geometry_window.lift()
 
     def geometryFileDialog(self):
         self.filename_geometry.set(filedialog.askopenfilename(initialdir="/home/etudiant/", title="Select a file", filetypes=(("csm", "*.csm"),("All Files", "*.*"))))
@@ -178,6 +173,21 @@ class Input():
         else:
             messagebox.showwarning("Warning", "Chosen geometry file must be a csm file!")
             self.filename_label_geometry.configure(text=self.filename_geometry.get())
+
+        self.geometry_window.lift()
+    
+    def saveImportedGeometry(self):
+        if self.filename_geometry.get() == "":
+            messagebox.showwarning("Warning", "Please import a geometry file.")
+        
+        elif self.filename_geometry.get() == "void":
+            messagebox.showwarning("Warning", "Please import a geometry file.")
+
+        else:
+            self.geometry_window.destroy()
+            info = "Pointwise will open momentarily. Please be sure to know where you save your mesh file. You will have to import it in the software to solve it."
+            messagebox.showinfo("Ready for meshing", info)
+            os.system("pointwise")
 
         self.geometry_window.lift()
 
@@ -260,7 +270,7 @@ class Input():
         self.show_geometry_no = Radiobutton(self.geometry_generation_window, text="No", value=0, variable=self.show_geometry, relief="groove", borderwidth=2, width=8, anchor=W)
         self.show_geometry_no.grid(row=16, column=0, padx=2, pady=2, sticky=NSEW)
 
-        ok_button = ttk.Button(self.geometry_generation_window, text="Ok", command=self.saveGeometry)
+        ok_button = ttk.Button(self.geometry_generation_window, text="Ok", command=self.saveGeneratedGeometry)
         ok_button.grid(row=17, column=1, pady=5)
         cancel_button = ttk.Button(self.geometry_generation_window, text="Cancel", command=self.geometry_generation_window.destroy)
         cancel_button.grid(row=17, column=2, pady=5)
@@ -282,7 +292,7 @@ class Input():
         naca_result_text = "NACA " + first_digit + second_digit + third_fourth_digit
         self.naca_result.configure(text=naca_result_text)
     
-    def saveGeometry(self):
+    def saveGeneratedGeometry(self):
         first_digit = str(self.max_camber.get())
         second_digit = str(self.max_camber_position.get())
         third_fourth_digit = str(self.thickness.get())
@@ -300,7 +310,7 @@ class Input():
             mesh_type = ".step"
 
         mesh_file_name = "NACA" + first_digit + second_digit + third_fourth_digit + "_S" + span + "_CR" + corde_ratio + mesh_type
-        info =  mesh_file_name + " has been created."
+        info =  mesh_file_name + " has been created. Pointwise will open momentarily. Please be sure to know where you save your mesh file. You will have to import it in the software to solve it."
 
         file_path = '../euler3D/'
         file_name = "NACA_ESP.csm"
@@ -330,19 +340,21 @@ class Input():
         self.geometry_generation_window.destroy()
 
         if self.show_geometry.get() == 0:
-            os.system("serveCSM -batch ~/Documents/EulerFred/euler3D/NACA_ESP")
+            os.system("serveCSM -batch ~/Documents/Euler/euler3D/NACA_ESP")
         elif self.show_geometry.get() == 1:
-            os.system("serveCSM ~/Documents/EulerFred/euler3D/NACA_ESP")
+            os.system("serveCSM ~/Documents/Euler/euler3D/NACA_ESP")
 
         messagebox.showinfo("Ready for meshing", info)
+
+        os.system("pointwise")
 
     def showResultingMesh(self):
         messagebox.showinfo('Resulting Mesh')
 
-    def saveAndDestroyWindow(self):
+    def saveAndDestroyMeshWindow(self):
         self.writePartialOutputMesh()
         
-        if self.filename_mesh.get() != "void":
+        if self.filename_mesh.get() != "void" and self.filename_mesh.get() != "":
             self.partition_window = Toplevel(self.master)
             self.partition_window.title("Mesh Partitionning?")
             self.partition_window.resizable(0,0)
@@ -364,13 +376,23 @@ class Input():
             self.number_blocks_entry = ttk.Entry(self.partition_window, textvariable=self.number_blocks, state="disabled", justify=CENTER, takefocus=0, width=15)
             self.number_blocks_entry.grid(row=3, column=2, padx=2, pady=2)
 
-            ok_button = ttk.Button(self.partition_window, text="Ok", command=lambda:[self.partition_window.destroy(),self.mesh_window.destroy()])
+            ok_button = ttk.Button(self.partition_window, text="Ok", command=self.callPartitioningScript)
             ok_button.grid(row=4, column=1, pady=5)
             cancel_button = ttk.Button(self.partition_window, text="Cancel", command=self.partition_window.destroy)
             cancel_button.grid(row=4, column=2, pady=5)
+        
+        else:
+            messagebox.showwarning("Warning", "Please import a mesh file.")
+            self.mesh_window.lift()
 
-        # self.mesh_window.destroy()
-
+    def callPartitioningScript(self):
+        self.partition_window.destroy()
+        self.mesh_window.destroy()
+      
+        if self.partition.get() == 1:            
+            command = "make -j4 ./bin/Mesh_Partitioning " + str(self.filename_mesh.get()) + " " + str(self.number_blocks.get()) + " " + str(self.filename_mesh.get()) + " topology_file"
+            os.system(command)
+            
     def activateNumberBlocks(self):
         if self.partition.get() == 1:
             self.number_blocks_label.configure(state="normal")

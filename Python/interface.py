@@ -108,22 +108,12 @@ class Interface(Input, Solver, Output):
             self.command = "make clean; make; ./bin/euler3D ./bin/output_interface"
         
         self.saveEntries()
-
-    #     root.after(1000, self.stopButton)
         root.destroy()
+        #self.stop_window = Toplevel()
+        #self.stop_window.title("Stop")
+        #self.stop_window.resizable(0,0)
+        #Button(self.stop_window, text="STOP", command=root.destroy).grid(row=0, column=0)
         os.system(self.command)
-
-
-    # def stopButton(self):
-    #     self.stop_window = Toplevel()
-    #     self.stop_window.title("Stop")
-    #     self.stop_window.resizable(0,0)
-    #     Button(self.stop_window, text="STOP", command=root.destroy).grid(row=0, column=0)
-        
-    #     self.callCommand()
-
-    # def callCommand(self):
-    #     os.system(self.command)
 
     def saveEntries(self):
 
