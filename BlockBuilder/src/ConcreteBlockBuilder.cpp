@@ -185,9 +185,12 @@ void ConcreteBlockBuilder::preReadMyBlock(Block* block)
 		std::cout<<"Pre-Reading block............  "<<std::endl;
 
 		std::cout<<n_faces<<std::endl;
+		std::cout<<"N_wall N_farfield N_symmetry N_connexion"<<std::endl;
 		std::cout<<n_faces_in_wall<<" "<<n_faces_in_farfield<<" "<<n_faces_in_symmetry<<" "<<n_faces_in_connexion<<std::endl;
-		std::cout<<block->n_real_cells_in_block_<<std::endl;
-		std::cout<<block->n_all_cells_in_block_<<std::endl;
+		std::cout<<"N_real_boundaries: "<<block->n_real_boundaries_in_block_<<std::endl;
+		std::cout<<"N_all_boundaries: "<<block->n_all_boundaries_in_block_<<std::endl;
+		std::cout<<"N real cells in block: "<<block->n_real_cells_in_block_<<std::endl;
+		std::cout<<"N all cells in block: "<<block->n_all_cells_in_block_<<std::endl;
 
 		PrimitiveVariables* prim= new PrimitiveVariables(block->n_all_cells_in_block_);
 		block->block_primitive_variables_=prim;
@@ -408,7 +411,9 @@ void ConcreteBlockBuilder::readMyBlock(Block* block, BlockCommunicator* communic
 					*((block->block_boundary_cell_ids_[real_boundary_id])->cell_count_)=0;
 					(block->block_boundary_cell_ids_[real_boundary_id])->owner_block_=block;
 					real_boundary_id=real_boundary_id+1;
-					count_connexions+=n_ghost_cells_temp;
+					
+
+					//count_connexions+=n_ghost_cells_temp;
 					
 					//block->n_real_boundaries_in_block_=(block->n_real_boundaries_in_block_)-1;
 
