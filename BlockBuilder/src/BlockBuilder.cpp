@@ -13,9 +13,10 @@
 #include <string>
 #include <vector>
 
-BlockBuilder::BlockBuilder(std::string block_file)
+BlockBuilder::BlockBuilder(std::string block_file, std::string topology_file)
 {
 	block_file_ = block_file;
+	topology_file_ = topology_file;
 	face_count_ = 0;
 
 }

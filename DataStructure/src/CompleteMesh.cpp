@@ -14,6 +14,7 @@ using namespace std;
 CompleteMesh::CompleteMesh(int n_blocks, int n_blocks_in_process, int* my_blocks, string topology_file_name) : n_blocks_(0), n_blocks_in_process_(0), my_blocks_(nullptr), all_blocks_(nullptr)
 
 {
+
 	n_blocks_=n_blocks;
 	n_blocks_in_process_=n_blocks_in_process;
 
@@ -41,6 +42,36 @@ CompleteMesh::~CompleteMesh()
 
 }
 
+string CompleteMesh::getBlockFileName(int block_id)
+{
+	string line_in_file;
+	char str_temp[200];
+	ifstream topology_file(topology_file_name_);
+	string block_file_name;
+
+	if (topology_file.is_open())
+	{
+		topology_file.ignore(256, '\n');
+		for(int i=0;i<block_id;i++)
+		{
+			//Skip n_blocks_
+			getline(topology_file, line_in_file);
+		}
+		// Reading NBlocks
+		topology_file >> block_file_name;
+		block_file_name="../"+block_file_name;
+		cout<<"Block File Name is: "<<block_file_name<<endl;
+		
+	}
+	else
+	{
+		cout << "Opening File Failure..."<<endl;
+	}
+	topology_file.close();
+	return block_file_name;
+}
+
+
 void CompleteMesh::InitializeMyBlocks(Interface* interface)
 {
 	//std::string block_id_string;
@@ -51,21 +82,12 @@ void CompleteMesh::InitializeMyBlocks(Interface* interface)
 	// #pragma omp parallel for num_threads(8) // DECOMMENTER POUR AVOIR OPENMP
 	for(int i=0;i<n_blocks_in_process_;i++)
 	{
-		std::string block_file;
+		std::string block_file_name;
 		int block_id = my_blocks_[i];
-
-		// std::cout<<block_id<<std::endl;
-
-		std::string block_id_string = std::to_string(block_id);
-		// block_file = "../naca0012_coarse_nosidewall.su2";
-		std::size_t found = topology_file_name_.find_last_of(".");
-  		if (found!=std::string::npos){
-			block_file = topology_file_name_.substr(0, found) + block_id_string + topology_file_name_.substr(found);
-		}
-		else{
-			block_file = topology_file_name_ + block_id_string;
-		}
-		ConcreteBlockBuilder block_builder=ConcreteBlockBuilder(block_file);
+		block_file_name=getBlockFileName(block_id);
+		
+		
+		ConcreteBlockBuilder block_builder=ConcreteBlockBuilder(block_file_name);
 		Block* new_block = all_blocks_[block_id];
 
 		//std::cout<<new_block -> block_id_<<std::endl;

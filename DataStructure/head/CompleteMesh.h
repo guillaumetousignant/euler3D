@@ -20,6 +20,8 @@ public:
 	~CompleteMesh();
 	void InitializeMyBlocks(Interface* interface);
 
+	string getBlockFileName(int block_id);
+
 };
 
 #endif

@@ -50,9 +50,12 @@ int main(int argc, char* argv[])
 	Interface* interface= new Interface(argv[1]);
 	Initializer* initializer= new Initializer();
 
+	int n_blocks=interface->n_blocks_interface_;
+	cout<<"N BLOCKS: "<<n_blocks<<endl;
+
+	
 	int n_blocks_in_process;
     int* my_blocks;
-    int n_blocks = 2;
 
 	BlockCommunicator* communicator = new BlockCommunicator(n_blocks);
     communicator->getMyBlocks(n_blocks_in_process, my_blocks);

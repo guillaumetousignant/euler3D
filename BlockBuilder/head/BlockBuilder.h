@@ -14,9 +14,10 @@ class BlockBuilder
 {
 public:
 	std::string block_file_;
+	std::string topology_file_;
 	int face_count_;
 
-	BlockBuilder(std::string block_file);
+	BlockBuilder(std::string block_file, std::string topology_file);
 	~BlockBuilder();
 
 	virtual void readMyBlock(Block* block) = 0;

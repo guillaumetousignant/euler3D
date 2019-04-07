@@ -20,6 +20,7 @@
 #include "FarfieldCellIds.h"
 #include "WallCellIds.h"
 #include "SymmetryCellIds.h"
+#include "BlockCommunicator.h"
 
 
 
@@ -29,12 +30,13 @@
 class ConcreteBlockBuilder:public BlockBuilder
 {
 public:
-	ConcreteBlockBuilder(std::string block_file);
+	ConcreteBlockBuilder(std::string block_file, std::string topology_file);
 	~ConcreteBlockBuilder();
 
 	void preReadMyBlock(Block* block);
 	void readMyBlock(Block* block);
 	void createMyFaces(Block* block);
+	void setTopology(Block* block, BlockCommunicator* block_communicator);
 
 
 };

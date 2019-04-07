@@ -13,6 +13,7 @@ class Interface
 	public:
 
 		void readInputFile(string input_file_name);
+		void readNBlocks();
 
 		// MESH
 		string topology_file_name_interface_;
