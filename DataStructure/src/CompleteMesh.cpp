@@ -42,7 +42,7 @@ CompleteMesh::~CompleteMesh()
 
 string CompleteMesh::preReadTopology(Block* block)
 {
-std::ifstream myfile(Topology);
+std::ifstream myfile(topology.topo);
 char str_temp[200];
 std::string block_file_;
 int n_blocks
@@ -79,7 +79,7 @@ cerr << "fail opening topology file " << meshFileName << endl;
 
 void CompleteMesh::readTopology(Block* block, int& count)
 {
-std::ifstream myfile(Topology);
+std::ifstream myfile(topology.topo);
 char str_temp[200];
 std::string line;
 int i,j,k;
@@ -114,7 +114,7 @@ if (myfile.is_open())
         scanf (line.c_str(), "%s %d",str_temp,n_elems); 
         
 
-        count=0;
+        //count=0;
         block_connexion_boundary_cell_ids_[j]->block_origin_=i;
         block_connexion_boundary_cell_ids_[j]->block_destination_=block_destination_temp;
         block_connexion_boundary_cell_ids_[j]->n_cell_in_boundary_=n_elems;
@@ -130,7 +130,7 @@ if (myfile.is_open())
           scanf (line.c_str(), "%s %d",str_temp,elem_id_destination_temp); 
 
           block_connexion_boundary_cell_ids_[j]->cell_ids_in_boundary_[k]=count;
-          count=+1;
+          count+=1;
           *(block->block_connexion_boundary_cell_ids_[j]->cell_count_)+=1;
 
           block_connexion_boundary_cell_ids_[j]->cell_ids_in_boundary_other_block_=elem_id_destination_temp;
@@ -158,7 +158,7 @@ if (myfile.is_open())
         scanf (line.c_str(), "%s %d",str_temp,n_elems); 
         
 
-        count=0;
+        //count=0;
         block_connexion_boundary_cell_ids_[j]->block_origin_=i;
         block_connexion_boundary_cell_ids_[j]->block_destination_=block_destination_temp;
         block_connexion_boundary_cell_ids_[j]->n_cell_in_boundary_=n_elems;
