@@ -78,7 +78,7 @@ void CompleteMesh::InitializeMyBlocks(Interface* interface)
 		block_builder.setConnectivity(new_block);
 
 		// cout<<"Cellules\n";
-		Cell* test_cell;
+		/*Cell* test_cell;
 		for(int i=0;i<new_block->n_real_cells_in_block_;i++)
 		{
 			test_cell = new_block ->block_cells_[i];
@@ -97,12 +97,12 @@ void CompleteMesh::InitializeMyBlocks(Interface* interface)
 			// cout<<"n_nodes_per_cell_\t"<<test_cell->n_nodes_per_cell_<<endl;
 			// cout<<"n_faces_per_cell_\t"<<test_cell->n_faces_per_cell_<<endl;
 			// cout<<"block_id_\t"<<test_cell->block_id_<<endl;
-		}
+		}*/
 
 		// test_cell = new_block ->block_cells_[12];
 		// cout<<test_cell->cell_2_nodes_connectivity_[1]<<endl;
 		// cout<<"Noeuds\n";
-		Node* test_node;
+		/*Node* test_node;
 		for(int i=0;i<new_block->n_nodes_in_block_;i++)
 		{
 			test_node = new_block ->block_nodes_[i];
@@ -113,7 +113,7 @@ void CompleteMesh::InitializeMyBlocks(Interface* interface)
 		// test_node = new_block ->block_nodes_[12];
 		// cout<<test_node->node_coordinates_[1]<<endl;
 		// cout<<test_node->node_coordinates_[2]<<endl;
-
+		*/
 
 		cout << "In MetricsInitializer........." << endl;
 		MetricsInitializer metricsInit(new_block);

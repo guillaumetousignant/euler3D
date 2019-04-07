@@ -145,7 +145,7 @@ Face* BlockBuilder::buildFace(int face_id, int n_nodes_per_face,FaceCreator* fac
 
 void BlockBuilder::setConnectivity(Block* block)
 {
-	int i,j,k,idx,node_0,node_1,node_2,n_cells_linked;
+	int i,j,k,idx,node_0,node_1,node_2; //,n_cells_linked;
 	int *idx_node,*idx_cell_2_faces,*idx_cell_2_cells;
 
 
