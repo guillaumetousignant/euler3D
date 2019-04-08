@@ -18,7 +18,7 @@ class BlockCommunicator {
         int* block_process_id_;
         int n_blocks_;
         int n_inter_block_boundaries_;
-        ConnexionCellIds** inter_block_boundaries_;
+        ConnexionCellIds** inter_block_boundaries_; // make list?
 
         void updateBoundaries(CompleteMesh* mesh) const;
         void addCellIdInConnexion(ConnexionCellIds* boundary);
