@@ -87,19 +87,19 @@ void BlockCommunicator::updateBoundaries(CompleteMesh* mesh) const {
             MPI_Request send_request[N_VARIABLES];
             for (unsigned int j = 0; j < N_VARIABLES; j++){
                 MPI_Isend(buffers[i][j], inter_block_boundaries_[i]->n_cell_in_boundary_, MPI_DOUBLE, block_process_id_[inter_block_boundaries_[i]->block_destination_], N_VARIABLES*i+j, MPI_COMM_WORLD, &send_request[j]);
-                if ((inter_block_boundaries_[i]->block_origin_ == 2) && (inter_block_boundaries_[i]->block_destination_ == 0)) {
+                /*if ((inter_block_boundaries_[i]->block_origin_ == 2) && (inter_block_boundaries_[i]->block_destination_ == 0)) {
                     std::cout << "MPI_Isend(buffers[" << i << "][" << j << "], inter_block_boundaries_[" << i << "]->n_cell_in_boundary_, MPI_DOUBLE, block_process_id_[" << inter_block_boundaries_[i]->block_destination_ << "], " << N_VARIABLES*i+j << ", MPI_COMM_WORLD, send_request[" << j << "]);" << std::endl; // REMOVE
                     std::cout << "MPI_Isend(" << buffers[i][j] << ", " << inter_block_boundaries_[i]->n_cell_in_boundary_ << ", " << MPI_DOUBLE << ", " << block_process_id_[inter_block_boundaries_[i]->block_destination_] << ", " << N_VARIABLES*i+j << ", " << MPI_COMM_WORLD << ", " << send_request[j] << ");" << std::endl; // REMOVE
-                }
+                }*/
             }
 
-            if ((inter_block_boundaries_[i]->block_origin_ == 2) && (inter_block_boundaries_[i]->block_destination_ == 0)) {
+            /*if ((inter_block_boundaries_[i]->block_origin_ == 2) && (inter_block_boundaries_[i]->block_destination_ == 0)) {
                 std::cout << "Process " << process_id_ << " sent to " << inter_block_boundaries_[i]->block_destination_ << " with id " << N_VARIABLES*i << std::endl; // REMOVE
                 std::cout << "Ids block 0  Ids block 2  rho  rho_buffer" << std::endl; // REMOVE
                 for (int j = 0; j < inter_block_boundaries_[i]->n_cell_in_boundary_; j++){
                     std::cout << inter_block_boundaries_[i]->cell_ids_in_boundary_[j] << "     " << inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j] << "     " << mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]] << "     " << buffers[i][0][j] << std::endl; // REMOVE
                 }
-            }
+            }*/
         }
 
         // If this process is receiver
@@ -111,10 +111,10 @@ void BlockCommunicator::updateBoundaries(CompleteMesh* mesh) const {
             MPI_Request receive_request[N_VARIABLES];
             for (unsigned int j = 0; j < N_VARIABLES; j++){
                 MPI_Irecv(buffers[i][j+N_VARIABLES], inter_block_boundaries_[i]->n_cell_in_boundary_, MPI_DOUBLE, block_process_id_[inter_block_boundaries_[i]->block_origin_], N_VARIABLES*i+j, MPI_COMM_WORLD, &receive_request[j]);
-                if ((inter_block_boundaries_[i]->block_origin_ == 2) && (inter_block_boundaries_[i]->block_destination_ == 0)) {
+                /*if ((inter_block_boundaries_[i]->block_origin_ == 2) && (inter_block_boundaries_[i]->block_destination_ == 0)) {
                     std::cout << "MPI_Irecv(buffers[" << i << "][" << j+N_VARIABLES << "], inter_block_boundaries_[" << i << "]->n_cell_in_boundary_, MPI_DOUBLE, block_process_id_[" << inter_block_boundaries_[i]->block_origin_ <<  "], " << N_VARIABLES*i+j << ", MPI_COMM_WORLD, receive_request[" << j << "]);" << std::endl; // REMOVE
                     std::cout << "MPI_Irecv(" << buffers[i][j+N_VARIABLES] << ", " << inter_block_boundaries_[i]->n_cell_in_boundary_ << ", " << MPI_DOUBLE << ", " << block_process_id_[inter_block_boundaries_[i]->block_origin_] << ", " << N_VARIABLES*i+j << ", " << MPI_COMM_WORLD << ", " << receive_request[j] << ");" << std::endl; // REMOVE
-                }
+                }*/
             }
         }
     }
@@ -147,13 +147,13 @@ void BlockCommunicator::updateBoundaries(CompleteMesh* mesh) const {
                 mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->re_0_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]] = buffers[i][N_VARIABLES+19][j];
             }
 
-            if ((inter_block_boundaries_[i]->block_origin_ == 2) && (inter_block_boundaries_[i]->block_destination_ == 0)) {
+            /*if ((inter_block_boundaries_[i]->block_origin_ == 2) && (inter_block_boundaries_[i]->block_destination_ == 0)) {
                 std::cout << "Process " << process_id_ << " receiving from " << inter_block_boundaries_[i]->block_origin_ << " with id " << N_VARIABLES*i << std::endl; // REMOVE
                 std::cout << "Ids block 0  Ids block 2  rho  rho_buffer" << std::endl; // REMOVE
                 for (int j = 0; j < inter_block_boundaries_[i]->n_cell_in_boundary_; j++){
                     std::cout << inter_block_boundaries_[i]->cell_ids_in_boundary_[j] << "     " << inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j] << "     " << mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]] << "     " << buffers[i][N_VARIABLES][j] << std::endl; // REMOVE
                 }
-            }
+            }*/
         }
     }
 
@@ -382,7 +382,7 @@ void BlockCommunicator::createBoundaries(std::string  &topology_filename){
 
 			boundary = new ConnexionCellIds();
 			boundary->cell_count_ = nullptr;
-            std::cout << "Process " << process_id_ << " writes block destination " << block_destination << " and block origin " << block_origin << std::endl; // REMOVE
+            //std::cout << "Process " << process_id_ << " writes block destination " << block_destination << " and block origin " << block_origin << std::endl; // REMOVE
 			boundary->block_destination_ = block_destination;
 			boundary->block_origin_ = block_origin;
 			boundary->n_cell_in_boundary_ = n_cells;
