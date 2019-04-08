@@ -56,7 +56,7 @@ void BlockCommunicator::updateBoundaries(CompleteMesh* mesh) const {
     for (int i = 0; i < n_inter_block_boundaries_; i++){
         // If this process is sender
         if (process_id_ == block_process_id_[inter_block_boundaries_[i]->block_origin_]){
-            if (process_id_ == 2){
+            if ((inter_block_boundaries_[i]->block_origin_ == 2) && (inter_block_boundaries_[i]->block_destination_ == 0)) {
                 std::cout << "Process " << process_id_ << " sending to " << inter_block_boundaries_[i]->block_destination_ << std::endl; // REMOVE
             }
 
@@ -96,8 +96,12 @@ void BlockCommunicator::updateBoundaries(CompleteMesh* mesh) const {
 
         // If this process is receiver
         if (process_id_ == block_process_id_[inter_block_boundaries_[i]->block_destination_]){
-            if (process_id_ == 0){
+            if ((inter_block_boundaries_[i]->block_origin_ == 2) && (inter_block_boundaries_[i]->block_destination_ == 0)) {
                 std::cout << "Process " << process_id_ << " receiving from " << inter_block_boundaries_[i]->block_origin_ << std::endl; // REMOVE
+                std::cout << "Ids block 0      Ids block 2" << std::endl; // REMOVE
+                for (int j = 0; j < inter_block_boundaries_[i]->n_cell_in_boundary_; j++){
+                    std::cout << inter_block_boundaries_[i]->cell_ids_in_boundary_[j] << " " << inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j] << std::endl; // REMOVE
+                }
             }
             
             for (unsigned int j = N_VARIABLES; j < N_VARIABLES*2; j++){
@@ -197,10 +201,6 @@ void BlockCommunicator::getMyBlocks(int& n_blocks_in_process, int* &my_blocks) c
     int remainder = n_blocks_%number_of_processes_; 
     int index_start = process_id_ * n + std::min(process_id_, remainder);
     n_blocks_in_process = n + (process_id_ < remainder);
-
-    /*if (mesh->my_blocks_ != nullptr){
-        delete [] mesh->my_blocks_;
-    }*/
 
     my_blocks = new int[n_blocks_in_process];
     for (int i = 0; i < n_blocks_in_process; i++){
@@ -404,9 +404,9 @@ void BlockCommunicator::createBoundaries(std::string  &topology_filename){
 
 	topo.close();
 
-    if (process_id_ == 2){
+    if (process_id_ == 0){
     std::cout<<"----------------VÉRIFICATION CONNECTION AU MPI-----------------"<<std::endl;
-    std::cout<<"Number of boundarier: "<<n_inter_block_boundaries_<<std::endl;
+    std::cout<<"Number of boundaries: "<<n_inter_block_boundaries_<<std::endl;
     for (int i=0;i<n_inter_block_boundaries_;i++)
     {
         std::cout<<"Boundary number: "<<i<<std::endl;
