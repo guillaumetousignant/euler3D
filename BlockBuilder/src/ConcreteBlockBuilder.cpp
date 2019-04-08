@@ -471,7 +471,7 @@ void ConcreteBlockBuilder::readMyBlock(Block* block, BlockCommunicator* communic
 
 		}
 
-		setTopology(block, communicator, count_connexions);
+		//setTopology(block, communicator, count_connexions);
 
 	} else{
 		//warning that file was not opened!

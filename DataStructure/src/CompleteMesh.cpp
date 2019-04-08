@@ -98,7 +98,7 @@ void CompleteMesh::InitializeMyBlocks(Interface* interface, BlockCommunicator* c
 
 		block_builder.createMyFaces(new_block);
 
-		//block_builder.setConnectivity(new_block);
+		block_builder.setConnectivity(new_block);
 
 		// cout<<"Cellules\n";
 		/*Cell* test_cell;
