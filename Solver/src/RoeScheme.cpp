@@ -254,7 +254,7 @@ void RoeScheme::computeFluxDiss(Block* block)
 		flux_5_dissipative = 0.5*(A_roe_energy)*normal_norm;
 		
 
-
+		/*
 		if ((left_cell>=block->n_real_cells_in_block_)&&(block->block_id_==0))
 		{
 			cout<<"Flux 1 left diss cell 266: "<< left_cell<<" "<<rho_L<<" "<< u_L<<" "<< v_L<<" "<<w_L<<" "<<p_L<<endl;
@@ -263,7 +263,7 @@ void RoeScheme::computeFluxDiss(Block* block)
 		{
 			cout<<"Flux 1 left diss cell 266: "<< right_cell<<" "<<rho_R<<" "<< u_R<<" "<< v_R<<" "<<w_R<<" "<<p_R<<endl;
 		}
-
+		*/
 
 		//if (fabs(normalized_z)<0.5)
 		//{

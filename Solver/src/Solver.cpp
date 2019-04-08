@@ -162,15 +162,19 @@ void Solver::saveW0(Block* block)
 
 	}
 
-	/* Vérification
-	for (cell_idx=0;cell_idx<nb_real_cells;cell_idx++) //BOUCLER SUR LES CELLULES INTÉRIEURS PLUTÔT? VA DÉPENDRE DE updateSolution
+	// Vérification
+	if (block->block_id_==0)
 	{
-		cout<<"Cellule: "<<cell_idx<<" ro_0_: "<<block->block_primitive_variables_->ro_0_[cell_idx]<<endl;
-		cout<<"Cellule: "<<cell_idx<<" ru_0_: "<<block->block_primitive_variables_->ru_0_[cell_idx]<<endl;
-		cout<<"Cellule: "<<cell_idx<<" rv_0_: "<<block->block_primitive_variables_->rv_0_[cell_idx]<<endl;
-		cout<<"Cellule: "<<cell_idx<<" re_0_: "<<block->block_primitive_variables_->re_0_[cell_idx]<<endl;
+		for (cell_idx=0;cell_idx<block->n_all_cells_in_block_;cell_idx++) //BOUCLER SUR LES CELLULES INTÉRIEURS PLUTÔT? VA DÉPENDRE DE updateSolution
+		{
+			cout<<"Cellule: "<<cell_idx<<" ro_0_: "<<block->block_primitive_variables_->ro_[cell_idx]<<endl;
+			cout<<"Cellule: "<<cell_idx<<" ru_0_: "<<block->block_primitive_variables_->uu_[cell_idx]<<endl;
+			cout<<"Cellule: "<<cell_idx<<" rv_0_: "<<block->block_primitive_variables_->vv_[cell_idx]<<endl;
+			cout<<"Cellule: "<<cell_idx<<" re_0_: "<<block->block_primitive_variables_->pp_[cell_idx]<<endl;
+		}
 	}
-	*/
+
+	
 
 
 }

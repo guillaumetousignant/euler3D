@@ -83,7 +83,7 @@ void BlockCommunicator::updateBoundaries(CompleteMesh* mesh) const {
 
             MPI_Request send_request[N_VARIABLES];
             for (unsigned int j = 0; j < N_VARIABLES; j++){
-                MPI_Isend(buffers[i][j], inter_block_boundaries_[i]->n_cell_in_boundary_, MPI_INT, block_process_id_[inter_block_boundaries_[i]->block_destination_], N_VARIABLES*i+j, MPI_COMM_WORLD, &send_request[j]);
+                MPI_Isend(buffers[i][j], inter_block_boundaries_[i]->n_cell_in_boundary_, MPI_DOUBLE, block_process_id_[inter_block_boundaries_[i]->block_destination_], N_VARIABLES*i+j, MPI_COMM_WORLD, &send_request[j]);
             }
         }
 
@@ -95,7 +95,7 @@ void BlockCommunicator::updateBoundaries(CompleteMesh* mesh) const {
 
             MPI_Request receive_request[N_VARIABLES];
             for (unsigned int j = N_VARIABLES; j < N_VARIABLES*2; j++){
-                MPI_Irecv(buffers[i][j], inter_block_boundaries_[i]->n_cell_in_boundary_, MPI_INT, block_process_id_[inter_block_boundaries_[i]->block_origin_], N_VARIABLES*i+j, MPI_COMM_WORLD, &receive_request[j-N_VARIABLES]);
+                MPI_Irecv(buffers[i][j], inter_block_boundaries_[i]->n_cell_in_boundary_, MPI_DOUBLE, block_process_id_[inter_block_boundaries_[i]->block_origin_], N_VARIABLES*i+j, MPI_COMM_WORLD, &receive_request[j-N_VARIABLES]);
             }
         }
     }
