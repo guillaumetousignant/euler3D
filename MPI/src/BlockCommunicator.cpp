@@ -334,6 +334,7 @@ void BlockCommunicator::createBoundaries(std::string  &topology_filename){
 		}
 		else if (marker == "Block="){
             liness >> block_destination;
+            //std::cout << "Process " << process_id_ << " reads block destination " << block_destination << std::endl; // REMOVE
             if (boundary_started){
                 save = true;
 				boundary_started = false;
@@ -368,6 +369,7 @@ void BlockCommunicator::createBoundaries(std::string  &topology_filename){
 
 			boundary = new ConnexionCellIds();
 			boundary->cell_count_ = nullptr;
+            std::cout << "Process " << process_id_ << " writes block destination " << block_destination << " and block origin " << block_origin << std::endl; // REMOVE
 			boundary->block_destination_ = block_destination;
 			boundary->block_origin_ = block_origin;
 			boundary->n_cell_in_boundary_ = n_cells;
@@ -384,46 +386,34 @@ void BlockCommunicator::createBoundaries(std::string  &topology_filename){
             addCellIdInConnexion(boundary);
 
             if (cell_ids != nullptr){
-                delete [] cell_ids;
                 cell_ids = nullptr;
             }
             if (ghost_ids != nullptr){
-                delete [] ghost_ids;
                 ghost_ids = nullptr;
             }
         }
 	}
 
-	if (save){
-        save = false;
+	if (boundary_started){
         boundary->cell_ids_in_boundary_other_block_ = cell_ids;
         boundary->cell_ids_in_boundary_ = ghost_ids;
 
         addCellIdInConnexion(boundary);
-
-        if (cell_ids != nullptr){
-            delete [] cell_ids;
-            cell_ids = nullptr;
-        }
-        if (ghost_ids != nullptr){
-            delete [] ghost_ids;
-            ghost_ids = nullptr;
-        }
     }
 
 	topo.close();
 
     std::cout<<"----------------VÉRIFICATION CONNECTION AU MPI-----------------"<<std::endl;
-	
-	for (int i=0;i<n_inter_block_boundaries_;i++)
-	{
-		std::cout<<"Boundary number: "<<i<<std::endl;
-		std::cout<<"Block destination: "<<inter_block_boundaries_[i]->block_destination_<<" Block origin: "<<inter_block_boundaries_[i]->block_origin_<<" Number of cells in boundary: "<<inter_block_boundaries_[i]->n_cell_in_boundary_<<std::endl;
-		std::cout<<"Cell ids in boundary\tCell ids in other boundary"<<std::endl;
-		for (int j=0;j<inter_block_boundaries_[i]->n_cell_in_boundary_;j++)
-		{
-			std::cout<<inter_block_boundaries_[i]->cell_ids_in_boundary_[j]<<"\t\t\t\t"<<inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]<<std::endl;
-		}
-		std::cout<<endl;		
-	}
+    std::cout<<"Number of boundarier: "<<n_inter_block_boundaries_<<std::endl;
+    for (int i=0;i<n_inter_block_boundaries_;i++)
+    {
+        std::cout<<"Boundary number: "<<i<<std::endl;
+        std::cout<<"Block destination: "<<inter_block_boundaries_[i]->block_destination_<<" Block origin: "<<inter_block_boundaries_[i]->block_origin_<<" Number of cells in boundary: "<<inter_block_boundaries_[i]->n_cell_in_boundary_<<std::endl;
+        std::cout<<"Cell ids in boundary\tCell ids in other boundary"<<std::endl;
+        for (int j=0;j<inter_block_boundaries_[i]->n_cell_in_boundary_;j++)
+        {
+            std::cout<<inter_block_boundaries_[i]->cell_ids_in_boundary_[j]<<"\t\t\t\t"<<inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]<<std::endl;
+        }
+        std::cout<<endl;		
+    }
 }
