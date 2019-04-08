@@ -3,6 +3,7 @@
 
 #include "CompleteMesh.h"
 #include "ConnexionCellIds.h"
+#include <string>
 
 class PostProcessing;
 class CompleteMesh;
@@ -24,6 +25,7 @@ class BlockCommunicator {
         void getMyBlocks(int& n_blocks_in_process, int* &my_blocks) const;
         void initialize();
         void getGlobal(CompleteMesh* mesh, PostProcessing* postprocess);
+        void createBoundaries(std::string  &topology_filename);
 
         void setBoundaryOffset();
 };

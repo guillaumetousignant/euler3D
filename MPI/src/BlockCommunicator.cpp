@@ -4,6 +4,9 @@
 #endif
 #include <algorithm>
 #include "PostProcessing.h"
+#include <iostream>
+#include <string>
+#include <sstream>
 
 #define N_VARIABLES 20
 
@@ -53,6 +56,10 @@ void BlockCommunicator::updateBoundaries(CompleteMesh* mesh) const {
     for (int i = 0; i < n_inter_block_boundaries_; i++){
         // If this process is sender
         if (process_id_ == block_process_id_[inter_block_boundaries_[i]->block_origin_]){
+            if (process_id_ == 2){
+                std::cout << "Process " << process_id_ << " sending to " << inter_block_boundaries_[i]->block_destination_ << std::endl; // REMOVE
+            }
+
             for (unsigned int j = 0; j < N_VARIABLES; j++){
                 buffers[i][j] = new double[inter_block_boundaries_[i]->n_cell_in_boundary_]; // Move to constructor?
             }
@@ -89,6 +96,10 @@ void BlockCommunicator::updateBoundaries(CompleteMesh* mesh) const {
 
         // If this process is receiver
         if (process_id_ == block_process_id_[inter_block_boundaries_[i]->block_destination_]){
+            if (process_id_ == 0){
+                std::cout << "Process " << process_id_ << " receiving from " << inter_block_boundaries_[i]->block_origin_ << std::endl; // REMOVE
+            }
+            
             for (unsigned int j = N_VARIABLES; j < N_VARIABLES*2; j++){
                 buffers[i][j] = new double[inter_block_boundaries_[i]->n_cell_in_boundary_]; // Move to constructor?
             }
@@ -275,4 +286,144 @@ void BlockCommunicator::getGlobal(CompleteMesh* mesh, PostProcessing* postproces
 
 void BlockCommunicator::setBoundaryOffset(){
 
+}
+
+void BlockCommunicator::createBoundaries(std::string  &topology_filename){
+	std::ifstream topo(topology_filename);
+
+	if (!topo.is_open()){
+		std::cout << "ERROR: Topology file '" << topology_filename << "' not opened, exiting." << std::endl;
+		return;
+	}
+
+	std::string line;
+	std::string marker;
+	bool boundary_started = false;
+    bool save = false;
+	int boundary_index = 0;
+    int ghost_index = 0;
+	int n_blocks;
+	int block_origin;
+	int n_cells;
+	int block_destination;
+	int* cell_ids = nullptr;
+    int* ghost_ids = nullptr;
+	ConnexionCellIds *boundary = nullptr;
+
+
+	while (std::getline(topo, line)){
+		std::istringstream liness(line);
+        liness >> marker;
+
+		if (marker == "Nmark="){
+			liness >> block_origin;
+			if (boundary_started){
+                save = true;
+				boundary_started = false;
+			}	
+		}
+		else if (marker == "NBLOCK="){
+			liness >> n_blocks;
+			for (int i = 0; i < n_blocks; i++){
+				std::getline(topo, line);
+			}
+            if (boundary_started){
+                save = true;
+				boundary_started = false;
+			}			
+		}
+		else if (marker == "Block="){
+            liness >> block_destination;
+            if (boundary_started){
+                save = true;
+				boundary_started = false;
+			}				
+		}
+		else if (marker == "Nconnexion="){
+            if (boundary_started){
+                save = true;
+				boundary_started = false;
+			}
+		}
+        else if (marker == "GhostCount"){
+            liness >> ghost_index;
+            if (boundary_started){
+                save = true;
+				boundary_started = false;
+			}
+        }
+
+		if (boundary_started){
+			liness >> cell_ids[boundary_index];
+            ghost_ids[boundary_index] = ghost_index + boundary_index;
+			boundary_index ++;
+		}
+
+		if (marker == "Nelems="){
+			boundary_started = true;
+			liness >> n_cells;
+
+			cell_ids = new int[n_cells];
+            ghost_ids = new int[n_cells];
+
+			boundary = new ConnexionCellIds();
+			boundary->cell_count_ = nullptr;
+			boundary->block_destination_ = block_destination;
+			boundary->block_origin_ = block_origin;
+			boundary->n_cell_in_boundary_ = n_cells;
+			boundary->cell_ids_in_boundary_ = nullptr;
+			boundary->cell_ids_in_boundary_other_block_ = nullptr;
+			boundary->owner_block_ = nullptr;
+		}
+
+        if (save){
+            save = false;
+            boundary->cell_ids_in_boundary_other_block_ = cell_ids;
+            boundary->cell_ids_in_boundary_ = ghost_ids;
+
+            addCellIdInConnexion(boundary);
+
+            if (cell_ids != nullptr){
+                delete [] cell_ids;
+                cell_ids = nullptr;
+            }
+            if (ghost_ids != nullptr){
+                delete [] ghost_ids;
+                ghost_ids = nullptr;
+            }
+        }
+	}
+
+	if (save){
+        save = false;
+        boundary->cell_ids_in_boundary_other_block_ = cell_ids;
+        boundary->cell_ids_in_boundary_ = ghost_ids;
+
+        addCellIdInConnexion(boundary);
+
+        if (cell_ids != nullptr){
+            delete [] cell_ids;
+            cell_ids = nullptr;
+        }
+        if (ghost_ids != nullptr){
+            delete [] ghost_ids;
+            ghost_ids = nullptr;
+        }
+    }
+
+	topo.close();
+
+    std::cout<<"----------------VÉRIFICATION CONNECTION AU MPI-----------------"<<std::endl;
+	
+	for (int i=0;i<n_inter_block_boundaries_;i++)
+	{
+		std::cout<<"Boundary number: "<<i<<std::endl;
+		std::cout<<"Block destination: "<<inter_block_boundaries_[i]->block_destination_<<" Block origin: "<<inter_block_boundaries_[i]->block_origin_<<" Number of cells in boundary: "<<inter_block_boundaries_[i]->n_cell_in_boundary_<<std::endl;
+		std::cout<<"Cell ids in boundary\tCell ids in other boundary"<<std::endl;
+		for (int j=0;j<inter_block_boundaries_[i]->n_cell_in_boundary_;j++)
+		{
+			std::cout<<inter_block_boundaries_[i]->cell_ids_in_boundary_[j]<<"\t\t\t\t"<<inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]<<std::endl;
+		}
+		std::cout<<endl;		
+	}
 }
