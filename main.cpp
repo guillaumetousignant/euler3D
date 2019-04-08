@@ -65,6 +65,8 @@ int main(int argc, char* argv[])
 	CompleteMesh* complete_mesh = new CompleteMesh(n_blocks, n_blocks_in_process, my_blocks, interface->topology_file_name_interface_);
 	complete_mesh->InitializeMyBlocks(interface, communicator);
 
+	communicator->createBoundaries(complete_mesh->topology_file_name_);
+
 	Solver *solver=initializer->initializeSolver(interface);
 
 	auto t_start = std::chrono::high_resolution_clock::now();
