@@ -40,62 +40,64 @@ BlockCommunicator::~BlockCommunicator(){
         delete [] inter_block_boundaries_;
     }
 
-    // Delete buffers
-    if (buffers != nullptr){
+    // Delete buffers_
+    if (buffers_ != nullptr){
         for (int i = 0; i < n_inter_block_boundaries_; i++){
-            for (int j = 0; j < N_VARIABLES*2; j++){
-                if (buffers[i][j] != nullptr){
-                    delete [] buffers[i][j];
+            if (buffers_[i] != nullptr){
+                for (int j = 0; j < N_VARIABLES*2; j++){
+                    if (buffers_[i][j] != nullptr){
+                        delete [] buffers_[i][j];
+                    }
                 }
+                delete [] buffers_[i];
             }
-            delete [] buffers[i];
         }
-        delete [] buffers; // This line throws "munmap_chunk(): invalid pointer" on process 3 when there are 6 blocks and 6 processes. wtf
+        delete [] buffers_; // This line throws "munmap_chunk(): invalid pointer" on process 3 when there are 6 blocks and 6 processes. wtf
     }
 }
 
 void BlockCommunicator::updateBoundaries(CompleteMesh* mesh) const {
     //std::cout << "Process " << process_id_ << " in update boundaries" << std::endl; // REMOVE
     #ifdef HAVE_MPI
-    //double *** buffers;
+    //double *** buffers_;
 
     for (int i = 0; i < n_inter_block_boundaries_; i++){
         // If this process is sender
         if (process_id_ == block_process_id_[inter_block_boundaries_[i]->block_origin_]){
             for (unsigned int j = 0; j < N_VARIABLES; j++){
-                buffers[i][j] = new double[inter_block_boundaries_[i]->n_cell_in_boundary_]; // Move to constructor?
+                buffers_[i][j] = new double[inter_block_boundaries_[i]->n_cell_in_boundary_]; // Move to constructor?
             }
 
             // Filling send buffer            
             for (int k = 0; k < inter_block_boundaries_[i]->n_cell_in_boundary_; k++){
-                buffers[i][0][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]]; 
-                buffers[i][1][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->uu_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]];
-                buffers[i][2][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->vv_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]];
-                buffers[i][3][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->ww_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]];
-                buffers[i][4][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->pp_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]];
-                buffers[i][5][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->conv_res_ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]]; 
-                buffers[i][6][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->conv_res_uu_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]];
-                buffers[i][7][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->conv_res_vv_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]];
-                buffers[i][8][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->conv_res_ww_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]];
-                buffers[i][9][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->conv_res_pp_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]];
-                buffers[i][10][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->diss_res_ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]]; 
-                buffers[i][11][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->diss_res_uu_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]];
-                buffers[i][12][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->diss_res_vv_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]];
-                buffers[i][13][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->diss_res_ww_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]];
-                buffers[i][14][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->diss_res_pp_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]];
-                buffers[i][15][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->ro_0_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]]; 
-                buffers[i][16][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->ru_0_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]];
-                buffers[i][17][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->rv_0_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]];
-                buffers[i][18][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->rw_0_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]];
-                buffers[i][19][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->re_0_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]];
+                buffers_[i][0][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]]; 
+                buffers_[i][1][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->uu_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]];
+                buffers_[i][2][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->vv_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]];
+                buffers_[i][3][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->ww_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]];
+                buffers_[i][4][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->pp_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]];
+                buffers_[i][5][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->conv_res_ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]]; 
+                buffers_[i][6][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->conv_res_uu_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]];
+                buffers_[i][7][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->conv_res_vv_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]];
+                buffers_[i][8][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->conv_res_ww_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]];
+                buffers_[i][9][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->conv_res_pp_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]];
+                buffers_[i][10][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->diss_res_ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]]; 
+                buffers_[i][11][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->diss_res_uu_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]];
+                buffers_[i][12][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->diss_res_vv_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]];
+                buffers_[i][13][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->diss_res_ww_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]];
+                buffers_[i][14][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->diss_res_pp_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]];
+                buffers_[i][15][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->ro_0_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]]; 
+                buffers_[i][16][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->ru_0_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]];
+                buffers_[i][17][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->rv_0_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]];
+                buffers_[i][18][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->rw_0_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]];
+                buffers_[i][19][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->re_0_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]];
             }
 
             MPI_Request send_request[N_VARIABLES];
             for (unsigned int j = 0; j < N_VARIABLES; j++){
-                MPI_Isend(buffers[i][j], inter_block_boundaries_[i]->n_cell_in_boundary_, MPI_DOUBLE, block_process_id_[inter_block_boundaries_[i]->block_destination_], N_VARIABLES*i+j, MPI_COMM_WORLD, &send_request[j]);
+                MPI_Isend(buffers_[i][j], inter_block_boundaries_[i]->n_cell_in_boundary_, MPI_DOUBLE, block_process_id_[inter_block_boundaries_[i]->block_destination_], N_VARIABLES*i+j, MPI_COMM_WORLD, &send_request[j]);
                 /*if ((inter_block_boundaries_[i]->block_origin_ == 2) && (inter_block_boundaries_[i]->block_destination_ == 0)) {
-                    std::cout << "MPI_Isend(buffers[" << i << "][" << j << "], inter_block_boundaries_[" << i << "]->n_cell_in_boundary_, MPI_DOUBLE, block_process_id_[" << inter_block_boundaries_[i]->block_destination_ << "], " << N_VARIABLES*i+j << ", MPI_COMM_WORLD, send_request[" << j << "]);" << std::endl; // REMOVE
-                    std::cout << "MPI_Isend(" << buffers[i][j] << ", " << inter_block_boundaries_[i]->n_cell_in_boundary_ << ", " << MPI_DOUBLE << ", " << block_process_id_[inter_block_boundaries_[i]->block_destination_] << ", " << N_VARIABLES*i+j << ", " << MPI_COMM_WORLD << ", " << send_request[j] << ");" << std::endl; // REMOVE
+                    std::cout << "MPI_Isend(buffers_[" << i << "][" << j << "], inter_block_boundaries_[" << i << "]->n_cell_in_boundary_, MPI_DOUBLE, block_process_id_[" << inter_block_boundaries_[i]->block_destination_ << "], " << N_VARIABLES*i+j << ", MPI_COMM_WORLD, send_request[" << j << "]);" << std::endl; // REMOVE
+                    std::cout << "MPI_Isend(" << buffers_[i][j] << ", " << inter_block_boundaries_[i]->n_cell_in_boundary_ << ", " << MPI_DOUBLE << ", " << block_process_id_[inter_block_boundaries_[i]->block_destination_] << ", " << N_VARIABLES*i+j << ", " << MPI_COMM_WORLD << ", " << send_request[j] << ");" << std::endl; // REMOVE
                 }*/
             }
 
@@ -103,7 +105,7 @@ void BlockCommunicator::updateBoundaries(CompleteMesh* mesh) const {
                 std::cout << "Process " << process_id_ << " sent to " << inter_block_boundaries_[i]->block_destination_ << " with id " << N_VARIABLES*i << std::endl; // REMOVE
                 std::cout << "Ids block 0  Ids block 2  rho  rho_buffer" << std::endl; // REMOVE
                 for (int j = 0; j < inter_block_boundaries_[i]->n_cell_in_boundary_; j++){
-                    std::cout << inter_block_boundaries_[i]->cell_ids_in_boundary_[j] << "     " << inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j] << "     " << mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]] << "     " << buffers[i][0][j] << std::endl; // REMOVE
+                    std::cout << inter_block_boundaries_[i]->cell_ids_in_boundary_[j] << "     " << inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j] << "     " << mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]] << "     " << buffers_[i][0][j] << std::endl; // REMOVE
                 }
             }*/
         }
@@ -111,15 +113,15 @@ void BlockCommunicator::updateBoundaries(CompleteMesh* mesh) const {
         // If this process is receiver
         if (process_id_ == block_process_id_[inter_block_boundaries_[i]->block_destination_]){           
             for (unsigned int j = N_VARIABLES; j < N_VARIABLES*2; j++){
-                buffers[i][j] = new double[inter_block_boundaries_[i]->n_cell_in_boundary_]; // Move to constructor?
+                buffers_[i][j] = new double[inter_block_boundaries_[i]->n_cell_in_boundary_]; // Move to constructor?
             }
 
             MPI_Request receive_request[N_VARIABLES];
             for (unsigned int j = 0; j < N_VARIABLES; j++){
-                MPI_Irecv(buffers[i][j+N_VARIABLES], inter_block_boundaries_[i]->n_cell_in_boundary_, MPI_DOUBLE, block_process_id_[inter_block_boundaries_[i]->block_origin_], N_VARIABLES*i+j, MPI_COMM_WORLD, &receive_request[j]);
+                MPI_Irecv(buffers_[i][j+N_VARIABLES], inter_block_boundaries_[i]->n_cell_in_boundary_, MPI_DOUBLE, block_process_id_[inter_block_boundaries_[i]->block_origin_], N_VARIABLES*i+j, MPI_COMM_WORLD, &receive_request[j]);
                 /*if ((inter_block_boundaries_[i]->block_origin_ == 2) && (inter_block_boundaries_[i]->block_destination_ == 0)) {
-                    std::cout << "MPI_Irecv(buffers[" << i << "][" << j+N_VARIABLES << "], inter_block_boundaries_[" << i << "]->n_cell_in_boundary_, MPI_DOUBLE, block_process_id_[" << inter_block_boundaries_[i]->block_origin_ <<  "], " << N_VARIABLES*i+j << ", MPI_COMM_WORLD, receive_request[" << j << "]);" << std::endl; // REMOVE
-                    std::cout << "MPI_Irecv(" << buffers[i][j+N_VARIABLES] << ", " << inter_block_boundaries_[i]->n_cell_in_boundary_ << ", " << MPI_DOUBLE << ", " << block_process_id_[inter_block_boundaries_[i]->block_origin_] << ", " << N_VARIABLES*i+j << ", " << MPI_COMM_WORLD << ", " << receive_request[j] << ");" << std::endl; // REMOVE
+                    std::cout << "MPI_Irecv(buffers_[" << i << "][" << j+N_VARIABLES << "], inter_block_boundaries_[" << i << "]->n_cell_in_boundary_, MPI_DOUBLE, block_process_id_[" << inter_block_boundaries_[i]->block_origin_ <<  "], " << N_VARIABLES*i+j << ", MPI_COMM_WORLD, receive_request[" << j << "]);" << std::endl; // REMOVE
+                    std::cout << "MPI_Irecv(" << buffers_[i][j+N_VARIABLES] << ", " << inter_block_boundaries_[i]->n_cell_in_boundary_ << ", " << MPI_DOUBLE << ", " << block_process_id_[inter_block_boundaries_[i]->block_origin_] << ", " << N_VARIABLES*i+j << ", " << MPI_COMM_WORLD << ", " << receive_request[j] << ");" << std::endl; // REMOVE
                 }*/
             }
         }
@@ -131,33 +133,33 @@ void BlockCommunicator::updateBoundaries(CompleteMesh* mesh) const {
     for (int i = 0; i < n_inter_block_boundaries_; i++){
         if (process_id_ == block_process_id_[inter_block_boundaries_[i]->block_destination_]){            
             for (int k = 0; k < inter_block_boundaries_[i]->n_cell_in_boundary_; k++){
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers[i][N_VARIABLES][k];
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->uu_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers[i][N_VARIABLES+1][k];
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->vv_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers[i][N_VARIABLES+2][k];
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->ww_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers[i][N_VARIABLES+3][k];
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->pp_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers[i][N_VARIABLES+4][k];
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->conv_res_ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers[i][N_VARIABLES+5][k];
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->conv_res_uu_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers[i][N_VARIABLES+6][k];
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->conv_res_vv_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers[i][N_VARIABLES+7][k];
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->conv_res_ww_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers[i][N_VARIABLES+8][k];
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->conv_res_pp_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers[i][N_VARIABLES+9][k];
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->diss_res_ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers[i][N_VARIABLES+10][k];
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->diss_res_uu_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers[i][N_VARIABLES+11][k];
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->diss_res_vv_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers[i][N_VARIABLES+12][k];
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->diss_res_ww_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers[i][N_VARIABLES+13][k];
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->diss_res_pp_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers[i][N_VARIABLES+14][k];
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->ro_0_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers[i][N_VARIABLES+15][k];
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->ru_0_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers[i][N_VARIABLES+16][k];
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->rv_0_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers[i][N_VARIABLES+17][k];
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->rw_0_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers[i][N_VARIABLES+18][k];
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->re_0_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers[i][N_VARIABLES+19][k];
+                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers_[i][N_VARIABLES][k];
+                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->uu_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers_[i][N_VARIABLES+1][k];
+                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->vv_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers_[i][N_VARIABLES+2][k];
+                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->ww_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers_[i][N_VARIABLES+3][k];
+                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->pp_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers_[i][N_VARIABLES+4][k];
+                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->conv_res_ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers_[i][N_VARIABLES+5][k];
+                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->conv_res_uu_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers_[i][N_VARIABLES+6][k];
+                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->conv_res_vv_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers_[i][N_VARIABLES+7][k];
+                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->conv_res_ww_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers_[i][N_VARIABLES+8][k];
+                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->conv_res_pp_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers_[i][N_VARIABLES+9][k];
+                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->diss_res_ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers_[i][N_VARIABLES+10][k];
+                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->diss_res_uu_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers_[i][N_VARIABLES+11][k];
+                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->diss_res_vv_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers_[i][N_VARIABLES+12][k];
+                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->diss_res_ww_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers_[i][N_VARIABLES+13][k];
+                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->diss_res_pp_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers_[i][N_VARIABLES+14][k];
+                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->ro_0_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers_[i][N_VARIABLES+15][k];
+                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->ru_0_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers_[i][N_VARIABLES+16][k];
+                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->rv_0_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers_[i][N_VARIABLES+17][k];
+                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->rw_0_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers_[i][N_VARIABLES+18][k];
+                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->re_0_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers_[i][N_VARIABLES+19][k];
             }
 
             /*if ((inter_block_boundaries_[i]->block_origin_ == 2) && (inter_block_boundaries_[i]->block_destination_ == 0)) {
                 std::cout << "Process " << process_id_ << " receiving from " << inter_block_boundaries_[i]->block_origin_ << " with id " << N_VARIABLES*i << std::endl; // REMOVE
                 std::cout << "Ids block 0  Ids block 2  rho  rho_buffer" << std::endl; // REMOVE
                 for (int j = 0; j < inter_block_boundaries_[i]->n_cell_in_boundary_; j++){
-                    std::cout << inter_block_boundaries_[i]->cell_ids_in_boundary_[j] << "     " << inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j] << "     " << mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]] << "     " << buffers[i][N_VARIABLES][j] << std::endl; // REMOVE
+                    std::cout << inter_block_boundaries_[i]->cell_ids_in_boundary_[j] << "     " << inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j] << "     " << mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]] << "     " << buffers_[i][N_VARIABLES][j] << std::endl; // REMOVE
                 }
             }*/
         }
@@ -430,23 +432,38 @@ void BlockCommunicator::createBoundaries(std::string  &topology_filename){
 }
 
 void BlockCommunicator::initializeBuffers(){
-    buffers = new double**[n_inter_block_boundaries_];
+    // Delete buffers_
+    if (buffers_ != nullptr){
+        for (int i = 0; i < n_inter_block_boundaries_; i++){
+            if (buffers_[i] != nullptr){
+                for (int j = 0; j < N_VARIABLES*2; j++){
+                    if (buffers_[i][j] != nullptr){
+                        delete [] buffers_[i][j];
+                    }
+                }
+                delete [] buffers_[i];
+            }
+        }
+        delete [] buffers_; // This line throws "munmap_chunk(): invalid pointer" on process 3 when there are 6 blocks and 6 processes. wtf
+    }
+
+    buffers_ = new double**[n_inter_block_boundaries_];
     for (int i = 0; i < n_inter_block_boundaries_; i++){
-        buffers[i] = new double*[N_VARIABLES*2];
+        buffers_[i] = new double*[N_VARIABLES*2];
         for (unsigned int j = 0; j < N_VARIABLES*2; j++){
-            buffers[i][j] = nullptr;
+            buffers_[i][j] = nullptr;
         }
     }
 
     for (int i = 0; i < n_inter_block_boundaries_; i++){
         if (process_id_ == block_process_id_[inter_block_boundaries_[i]->block_origin_]){
             for (unsigned int j = 0; j < N_VARIABLES; j++){
-                buffers[i][j] = new double[inter_block_boundaries_[i]->n_cell_in_boundary_];
+                buffers_[i][j] = new double[inter_block_boundaries_[i]->n_cell_in_boundary_];
             }
         }
         if (process_id_ == block_process_id_[inter_block_boundaries_[i]->block_destination_]){           
             for (unsigned int j = N_VARIABLES; j < N_VARIABLES*2; j++){
-                buffers[i][j] = new double[inter_block_boundaries_[i]->n_cell_in_boundary_];
+                buffers_[i][j] = new double[inter_block_boundaries_[i]->n_cell_in_boundary_];
             }
         }
     }

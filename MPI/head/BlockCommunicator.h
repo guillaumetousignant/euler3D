@@ -20,7 +20,7 @@ class BlockCommunicator {
         int n_inter_block_boundaries_;
         ConnexionCellIds** inter_block_boundaries_; // make list?
 
-        double *** buffers;
+        double *** buffers_;
 
         void updateBoundaries(CompleteMesh* mesh) const;
         void addCellIdInConnexion(ConnexionCellIds* boundary);
