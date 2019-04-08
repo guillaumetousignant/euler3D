@@ -7,6 +7,7 @@
 using namespace std;
 
 Block::Block(int block_id)
+: block_cells_(nullptr), block_nodes_(nullptr), block_faces_(nullptr), block_time_variables_(nullptr), block_primitive_variables_(nullptr), block_interpolation_variables_(nullptr)
 {
 	block_id_=block_id;
 }
