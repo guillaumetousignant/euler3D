@@ -163,7 +163,7 @@ void Solver::saveW0(Block* block)
 	}
 
 	// Vérification
-	if (block->block_id_==0)
+	/*if (block->block_id_==0)
 	{
 		for (cell_idx=0;cell_idx<block->n_all_cells_in_block_;cell_idx++) //BOUCLER SUR LES CELLULES INTÉRIEURS PLUTÔT? VA DÉPENDRE DE updateSolution
 		{
@@ -172,7 +172,7 @@ void Solver::saveW0(Block* block)
 			cout<<"Cellule: "<<cell_idx<<" rv_0_: "<<block->block_primitive_variables_->vv_[cell_idx]<<endl;
 			cout<<"Cellule: "<<cell_idx<<" re_0_: "<<block->block_primitive_variables_->pp_[cell_idx]<<endl;
 		}
-	}
+	}*/
 
 	
 
