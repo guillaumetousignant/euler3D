@@ -20,6 +20,8 @@ class BlockCommunicator {
         int n_inter_block_boundaries_;
         ConnexionCellIds** inter_block_boundaries_; // make list?
 
+        double *** buffers;
+
         void updateBoundaries(CompleteMesh* mesh) const;
         void addCellIdInConnexion(ConnexionCellIds* boundary);
         void getMyBlocks(int& n_blocks_in_process, int* &my_blocks) const;
@@ -28,5 +30,6 @@ class BlockCommunicator {
         void createBoundaries(std::string  &topology_filename);
 
         void setBoundaryOffset();
+        void initializeBuffers();
 };
 #endif

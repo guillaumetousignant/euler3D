@@ -66,6 +66,7 @@ int main(int argc, char* argv[])
 	complete_mesh->InitializeMyBlocks(interface, communicator);
 
 	communicator->createBoundaries(complete_mesh->topology_file_name_);
+	communicator->initializeBuffers();
 
 	Solver *solver=initializer->initializeSolver(interface);
 

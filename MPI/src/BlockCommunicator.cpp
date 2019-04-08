@@ -39,20 +39,25 @@ BlockCommunicator::~BlockCommunicator(){
     if (inter_block_boundaries_ != nullptr){
         delete [] inter_block_boundaries_;
     }
+
+    // Delete buffers
+    if (buffers != nullptr){
+        for (int i = 0; i < n_inter_block_boundaries_; i++){
+            for (int j = 0; j < N_VARIABLES*2; j++){
+                if (buffers[i][j] != nullptr){
+                    delete [] buffers[i][j];
+                }
+            }
+            delete [] buffers[i];
+        }
+        delete [] buffers; // This line throws "munmap_chunk(): invalid pointer" on process 3 when there are 6 blocks and 6 processes. wtf
+    }
 }
 
 void BlockCommunicator::updateBoundaries(CompleteMesh* mesh) const {
     //std::cout << "Process " << process_id_ << " in update boundaries" << std::endl; // REMOVE
     #ifdef HAVE_MPI
-    double *** buffers;
-
-    buffers = new double**[n_inter_block_boundaries_];
-    for (int i = 0; i < n_inter_block_boundaries_; i++){ // Move ton constructor?
-        buffers[i] = new double*[N_VARIABLES*2];
-        for (unsigned int j = 0; j < N_VARIABLES*2; j++){
-            buffers[i][j] = nullptr;
-        }
-    }
+    //double *** buffers;
 
     for (int i = 0; i < n_inter_block_boundaries_; i++){
         // If this process is sender
@@ -157,17 +162,6 @@ void BlockCommunicator::updateBoundaries(CompleteMesh* mesh) const {
             }*/
         }
     }
-
-    // Delete buffers
-    for (int i = 0; i < n_inter_block_boundaries_; i++){
-        for (int j = 0; j < N_VARIABLES*2; j++){
-            if (buffers[i][j] != nullptr){
-                delete [] buffers[i][j];
-            }
-        }
-        delete [] buffers[i];
-    }
-    delete [] buffers; // This line throws "munmap_chunk(): invalid pointer" on process 3 when there are 6 blocks and 6 processes. wtf
 
     #else
     for (int i = 0; i < n_inter_block_boundaries_; i++){
@@ -433,4 +427,27 @@ void BlockCommunicator::createBoundaries(std::string  &topology_filename){
         std::cout<<endl;		
     }
     }*/
+}
+
+void BlockCommunicator::initializeBuffers(){
+    buffers = new double**[n_inter_block_boundaries_];
+    for (int i = 0; i < n_inter_block_boundaries_; i++){
+        buffers[i] = new double*[N_VARIABLES*2];
+        for (unsigned int j = 0; j < N_VARIABLES*2; j++){
+            buffers[i][j] = nullptr;
+        }
+    }
+
+    for (int i = 0; i < n_inter_block_boundaries_; i++){
+        if (process_id_ == block_process_id_[inter_block_boundaries_[i]->block_origin_]){
+            for (unsigned int j = 0; j < N_VARIABLES; j++){
+                buffers[i][j] = new double[inter_block_boundaries_[i]->n_cell_in_boundary_];
+            }
+        }
+        if (process_id_ == block_process_id_[inter_block_boundaries_[i]->block_destination_]){           
+            for (unsigned int j = N_VARIABLES; j < N_VARIABLES*2; j++){
+                buffers[i][j] = new double[inter_block_boundaries_[i]->n_cell_in_boundary_];
+            }
+        }
+    }
 }
