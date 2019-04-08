@@ -346,7 +346,7 @@ void BlockCommunicator::createBoundaries(std::string  &topology_filename){
 				boundary_started = false;
 			}
 		}
-        else if (marker == "GhostCount"){
+        else if (marker == "GhostCount="){
             liness >> ghost_index;
             if (boundary_started){
                 save = true;
@@ -355,7 +355,7 @@ void BlockCommunicator::createBoundaries(std::string  &topology_filename){
         }
 
 		if (boundary_started){
-			liness >> cell_ids[boundary_index];
+            cell_ids[boundary_index] = std::stoi(marker);
             ghost_ids[boundary_index] = ghost_index + boundary_index;
 			boundary_index ++;
 		}
@@ -366,6 +366,7 @@ void BlockCommunicator::createBoundaries(std::string  &topology_filename){
 
 			cell_ids = new int[n_cells];
             ghost_ids = new int[n_cells];
+            boundary_index = 0;
 
 			boundary = new ConnexionCellIds();
 			boundary->cell_count_ = nullptr;
@@ -403,6 +404,7 @@ void BlockCommunicator::createBoundaries(std::string  &topology_filename){
 
 	topo.close();
 
+    if (process_id_ == 2){
     std::cout<<"----------------VÉRIFICATION CONNECTION AU MPI-----------------"<<std::endl;
     std::cout<<"Number of boundarier: "<<n_inter_block_boundaries_<<std::endl;
     for (int i=0;i<n_inter_block_boundaries_;i++)
@@ -415,5 +417,6 @@ void BlockCommunicator::createBoundaries(std::string  &topology_filename){
             std::cout<<inter_block_boundaries_[i]->cell_ids_in_boundary_[j]<<"\t\t\t\t"<<inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]<<std::endl;
         }
         std::cout<<endl;		
+    }
     }
 }
