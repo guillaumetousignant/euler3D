@@ -253,7 +253,7 @@ void Interface::readNBlocks()
 }
 
 
-Interface::Interface(char* argv)
+Interface::Interface(char* argv) : n_blocks_interface_(0)
 {
 	string input_file_name;
 	input_file_name=argv;
