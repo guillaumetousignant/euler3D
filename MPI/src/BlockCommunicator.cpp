@@ -10,7 +10,7 @@
 
 #define N_VARIABLES 20
 
-BlockCommunicator::BlockCommunicator(int nblocks): n_blocks_(nblocks), n_inter_block_boundaries_(0), inter_block_boundaries_(nullptr) {
+BlockCommunicator::BlockCommunicator(int nblocks): n_blocks_(nblocks), n_inter_block_boundaries_(0), inter_block_boundaries_(nullptr), buffers_(nullptr) {
     #ifdef HAVE_MPI
     MPI_Comm_size(MPI_COMM_WORLD, &number_of_processes_);
     MPI_Comm_rank(MPI_COMM_WORLD, &process_id_);
@@ -64,9 +64,6 @@ void BlockCommunicator::updateBoundaries(CompleteMesh* mesh) const {
     for (int i = 0; i < n_inter_block_boundaries_; i++){
         // If this process is sender
         if (process_id_ == block_process_id_[inter_block_boundaries_[i]->block_origin_]){
-            for (unsigned int j = 0; j < N_VARIABLES; j++){
-                buffers_[i][j] = new double[inter_block_boundaries_[i]->n_cell_in_boundary_]; // Move to constructor?
-            }
 
             // Filling send buffer            
             for (int k = 0; k < inter_block_boundaries_[i]->n_cell_in_boundary_; k++){
@@ -112,9 +109,6 @@ void BlockCommunicator::updateBoundaries(CompleteMesh* mesh) const {
 
         // If this process is receiver
         if (process_id_ == block_process_id_[inter_block_boundaries_[i]->block_destination_]){           
-            for (unsigned int j = N_VARIABLES; j < N_VARIABLES*2; j++){
-                buffers_[i][j] = new double[inter_block_boundaries_[i]->n_cell_in_boundary_]; // Move to constructor?
-            }
 
             MPI_Request receive_request[N_VARIABLES];
             for (unsigned int j = 0; j < N_VARIABLES; j++){
