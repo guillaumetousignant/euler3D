@@ -44,7 +44,7 @@ PostProcessing::PostProcessing(int n_blocks, int max_iter, double convergence_cr
   convergence_ = new Convergence();
   output_tecplot_ = new OutputTecplot(mach_aircraft, aoa_deg, gamma);
 
-  cout << "Initialize PostProcessing............................................DONE" << endl;
+  cout << "Initialize PostProcessing........................................DONE" << endl;
 }
 
 PostProcessing::~PostProcessing()
