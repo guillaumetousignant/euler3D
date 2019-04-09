@@ -1,10 +1,9 @@
 NBLOCK= 4
-naca0012_coarse0.su2
-naca0012_coarse1.su2
-naca0012_coarse2.su2
-naca0012_coarse3.su2
+./Meshes/naca0012_coarse0.su2
+./Meshes/naca0012_coarse1.su2
+./Meshes/naca0012_coarse2.su2
+./Meshes/naca0012_coarse3.su2
 Block= 0
-GhostCount= 3403
 Nconnexion= 3
 Nmark= 1
 Nelems= 55
@@ -112,7 +111,6 @@ Nelems= 35
 1099
 1100
 Block= 1
-GhostCount= 3371
 Nconnexion= 3
 Nmark= 0
 Nelems= 55
@@ -226,7 +224,6 @@ Nelems= 14
 1103
 1104
 Block= 2
-GhostCount= 3373
 Nconnexion= 3
 Nmark= 0
 Nelems= 9
@@ -339,7 +336,6 @@ Nelems= 59
 963
 1000
 Block= 3
-GhostCount= 3347
 Nconnexion= 3
 Nmark= 0
 Nelems= 35
