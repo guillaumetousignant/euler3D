@@ -1,0 +1,13 @@
+NBLOCK= 4
+local_mesh_B0.su2
+local_mesh_B1.su2
+local_mesh_B2.su2
+local_mesh_B3.su2
+Block= 0
+Nconnexion= 0
+Block= 1
+Nconnexion= 0
+Block= 2
+Nconnexion= 0
+Block= 3
+Nconnexion= 0

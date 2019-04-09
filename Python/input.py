@@ -5,6 +5,7 @@ from tkinter import messagebox
 from tkinter import filedialog
 import os
 import os.path
+import shutil
 
 
 class Input():
@@ -90,6 +91,8 @@ class Input():
         self.filename_mesh.set("void")
         self.filename_geometry = StringVar()
         self.filename_geometry.set("void")
+        self.filename_topology = StringVar()
+        self.filename_topology.set("void")
  
     # METHODS
     def importMesh(self):
@@ -387,8 +390,12 @@ class Input():
         self.mesh_window.destroy()
       
         if self.partition.get() == 1:            
-            command = "make -j4 ./bin/Mesh_Partitioning " + str(self.filename_mesh.get()) + " " + str(self.number_blocks.get()) + " " + str(self.filename_mesh.get()) + " topology_file"
+            command = "Mesh_Partitioning " + str(self.filename_mesh.get()) + " " + str(self.number_blocks.get()) + " local_mesh_B topology.top"
             os.system(command)
+            self.filename_topology.set("topology.top")
+        else:
+            shutil.copyfile(self.filename_mesh.get(), "single_block.su2")
+            self.filename_topology.set("single_block.top")
             
     def activateNumberBlocks(self):
         if self.partition.get() == 1:
@@ -416,7 +423,7 @@ class Input():
 
     def writePartialOutputMesh(self):
         
-        self.partial_output_mesh = "MESH\ntopologyfilename\n" + str(self.filename_mesh.get())
+        self.partial_output_mesh = "MESH\ntopologyfilename\n" + str(self.filename_topology.get())
 
         return self.partial_output_mesh
 
@@ -436,7 +443,7 @@ class Input():
                              rk_str+" "+mach_str+" "+cmac_str)                        
         else:
             partial_output = "MESH\ntopologyfilename\n"+(
-                             str(self.filename_mesh.get()))+(
+                             str(self.filename_topology.get()))+(
                              "\nINPUT\ncfl gamma angleattackdeg\n")+(
                              cfl_str+" "+gamma_str+" "+angle_attack_str)+(
                              "\nrkstage mach cmac\n")+(
