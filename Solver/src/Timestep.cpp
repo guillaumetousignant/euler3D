@@ -114,7 +114,7 @@ void Timestep::computeSpectralRadius(Block* block)
 
 			
 		}
-		//cout << "Cell idx: "<<cell_idx<<" tot spectral_radius cell = " << spectral_radius[cell_idx] << endl;
+		//cout << "Block id: "<<block->block_id_<<" Cell idx: "<<cell_idx<<" tot spectral_radius cell = " << spectral_radius[cell_idx] << endl;
 		
 	}
 

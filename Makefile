@@ -132,20 +132,20 @@ release : .release begun $(ReleaseObjectFiles) $(ExecutableReleaseObjectFile)
 
 mpidebug : .mpidebug  begun $(MPIDebugObjectFiles) $(ExecutableMPIDebugObjectFile)
 	@printf '   Linking MpiDebug...'
-	@$(MPICXX) $(CXXFLAGS) $(DEBUGFLAGS) $(MPIDebugObjectFiles) $(ExecutableMPIDebugObjectFile) -o $(addprefix bin/,$(Executable)) $(METISLIBS)
+	@$(MPICXX) $(CXXFLAGS) $(DEBUGFLAGS) $(MPIDebugObjectFiles) $(ExecutableMPIDebugObjectFile) -o $(addprefix bin/,$(Executable)) $(METISLIBS) -D HAVE_MPI
 	@printf 'Done'
 	@printf '\n'
 
 mpirelease : .mpirelease begun $(MPIReleaseObjectFiles) $(ExecutableMPIReleaseObjectFile)
 	@printf '   Linking MpiRelease...'
-	@$(MPICXX) $(CXXFLAGS) $(RELEASEFLAGS) $(MPIReleaseObjectFiles) $(ExecutableMPIReleaseObjectFile) -o $(addprefix bin/,$(Executable)) $(METISLIBS)
+	@$(MPICXX) $(CXXFLAGS) $(RELEASEFLAGS) $(MPIReleaseObjectFiles) $(ExecutableMPIReleaseObjectFile) -o $(addprefix bin/,$(Executable)) $(METISLIBS) -D HAVE_MPI
 	@printf 'Done'
 	@printf '\n'
 
 reset : clean
 	@$(shell reset)
 
-verify : mpidebug $(MPIDebugObjectFiles)
+verify : mpirelease $(MPIReleaseObjectFiles)
 
 #---------------------------------------------------------------------------------------------------+
 #---------------------------------------------------------------------------------------+
@@ -160,18 +160,18 @@ verify : mpidebug $(MPIDebugObjectFiles)
 	@echo '   Pattern Rule | Compiling | '$(CXXFLAGS) $(RELEASEFLAGS) ' | ' $<' ... Done '
 
 .mpidebug/%.o : %.cpp
-	@$(MPICXX) -c $(CXXFLAGS) $(DEBUGFLAGS)  -I$(subst $(space), -I,$(AllDirs)) -I$(METIS_INCLUDE_PATH) $< -o $@
+	@$(MPICXX) -c $(CXXFLAGS) $(DEBUGFLAGS)  -I$(subst $(space), -I,$(AllDirs)) -I$(METIS_INCLUDE_PATH) -D HAVE_MPI $< -o $@
 	@echo '   Pattern Rule | Compiling | '$(CXXFLAGS) $(DEBUGFLAGS) ' | ' $<' ... Done'
 
 .mpirelease/%.o : %.cpp
-	@$(MPICXX) -c $(CXXFLAGS) $(RELEASEFLAGS)  -I$(subst $(space), -I,$(AllDirs)) -I$(METIS_INCLUDE_PATH) $< -o $@
+	@$(MPICXX) -c $(CXXFLAGS) $(RELEASEFLAGS)  -I$(subst $(space), -I,$(AllDirs)) -I$(METIS_INCLUDE_PATH) -D HAVE_MPI $< -o $@
 	@echo '   Pattern Rule | Compiling | '$(CXXFLAGS) $(RELEASEFLAGS) ' | ' $<' ... Done '
 
 #---------------------------------------------------------------------------------------+
 #--------------------------------------------------------------------------------+
 # Phony Targets
 
-.PHONY : clean cleandebug cleanrelease begin end
+.PHONY : clean cleandebug cleanrelease cleanmpidebug cleanmpirelease begin end
 
 begun :
 

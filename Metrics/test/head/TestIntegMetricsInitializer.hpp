@@ -4,7 +4,7 @@
 
 //Project files
 #include "Block.h"
-#include "Metrics/src/MetricsInitializer.h"
+#include "MetricsInitializer.h"
 #include "Block.h"
 #include "ConcreteBlockBuilder.h"
 
@@ -12,14 +12,14 @@
 //STL
 #include <vector>
 
-using namespace std;
+//using namespace std;
 
 typedef unsigned int uint;
 
 void buildConnectivityInteg(Block *new_block)
 {
     
-    string block_file ="UnstructuredMesh5x5.su2";
+    std::string block_file ="UnstructuredMesh5x5.su2";
 
     ConcreteBlockBuilder concrete_block_builder = ConcreteBlockBuilder(block_file);
     concrete_block_builder.preReadMyBlock(new_block);
@@ -48,6 +48,7 @@ TEST_CASE("Test computation of center cell", "")
     centerCell[1] = 0.5;
     centerCell[2] = 0.5;
 
+/* In comment because the method of computing center cell has change
     //Check center cell of cellID
     for(int i(0);i < dimension;i++)
     {
@@ -78,7 +79,7 @@ TEST_CASE("Test computation of center cell", "")
         REQUIRE(centerCellLeft == centerGhost);
 
     }
-
+*/
 
     delete blockData;
     blockData = nullptr;
@@ -166,6 +167,10 @@ TEST_CASE("Compute areas", "")
         REQUIRE(area == result);
     }
 
+       
+    delete blockData;
+    blockData = nullptr;
+
 }
 
 TEST_CASE("Compute Volume", "")
@@ -194,7 +199,78 @@ TEST_CASE("Compute Volume", "")
         REQUIRE(volumeGhost <= 1.01);
     }
 
-   
+      
+    delete blockData;
+    blockData = nullptr;
 
 }
+
+
+TEST_CASE("Compute weight least squares with cell #20")
+{
+
+    //1. Get neighbors of cell reference
+    Block *blockData = new Block(0);
+    buildConnectivityInteg(blockData);
+
+    //Cell ID is 20
+    uint cellID = 20;
+    const uint nbFaces = 6;
+
+    std::vector<double> cellCenter(3);
+
+    std::vector<uint> cellNeighbors;
+
+    for(uint i(0);i < nbFaces;i++)
+    {
+        cellNeighbors.push_back(blockData->block_cells_[cellID]->cell_2_cells_connectivity_[i]);
+
+        cellCenter[0] = blockData->block_cells_[20]->cell_coordinates_[0];
+        cellCenter[1] = blockData->block_cells_[20]->cell_coordinates_[1];
+        cellCenter[2] = blockData->block_cells_[20]->cell_coordinates_[2];
+
+        const uint X = 0;
+        const uint Y = 1;
+        const uint Z = 2;
+
+        double result[3] = {0.0, 0.0, 0.0};
+
+        result[X] = blockData->block_cells_[20]->cell_weights_[0][X];
+        result[Y] = blockData->block_cells_[20]->cell_weights_[0][Y];
+        result[Z] = blockData->block_cells_[20]->cell_weights_[0][Z];
+
+        //Evaluate weigthts between cell 20 and 15
+
+        double eps = 0.01;
+
+        REQUIRE(result[X] == 0.0);
+        REQUIRE(result[Y] >= -0.51);
+        REQUIRE(result[Y] <= -0.49);
+        REQUIRE(result[Z] == 0.0);
+
+        
+        result[X] = blockData->block_cells_[20]->cell_weights_[2][X];
+        result[Y] = blockData->block_cells_[20]->cell_weights_[2][Y];
+        result[Z] = blockData->block_cells_[20]->cell_weights_[2][Z];
+
+        //Evaluate weigthts between cell 20 and 21
+        REQUIRE(result[X] >= 0.49);
+        REQUIRE(result[X] <= 0.51);
+        REQUIRE(result[Y] == 0);
+        REQUIRE(result[Z] == 0);
+
+    }
+
+
+
+       
+    delete blockData;
+    blockData = nullptr;
+
+
+}
+
+
+
+
 

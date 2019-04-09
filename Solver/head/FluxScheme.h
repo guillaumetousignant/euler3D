@@ -14,10 +14,10 @@ class FluxScheme
 		double current_beta_;
 
 		FluxScheme();
-		~FluxScheme();
+		virtual ~FluxScheme();
 
 		virtual void computeFluxDiss(Block* block)=0;
-		void computeFluxConv(Block* block);
+		virtual void computeFluxConv(Block* block);
 
 
 };

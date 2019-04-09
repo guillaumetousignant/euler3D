@@ -19,14 +19,14 @@ using namespace std;
 
 void SecondOrder::computeInterpolation(Block* block)
 {
-	cout<<"\t\t\t\tExécution computeInterpolation: SecondOrder: "<<endl;
+	//cout<<"\t\t\t\tExécution computeInterpolation: SecondOrder: "<<endl;
 
-	cout<<endl<<"\t\t\t\tDans Gradient"<<endl;
+	//cout<<endl<<"\t\t\t\tDans Gradient"<<endl;
 	gradient_->computeGradients(block);
-	cout<<"\t\t\t\tFin Gradient"<<endl;
-	cout<<endl<<"\t\t\t\tDans Limiter"<<endl;
+	//cout<<"\t\t\t\tFin Gradient"<<endl;
+	//cout<<endl<<"\t\t\t\tDans Limiter"<<endl;
 	limiter_->computeLimiters(block);
-	cout<<"\t\t\t\tFin Limiter"<<endl;
+	//cout<<"\t\t\t\tFin Limiter"<<endl;
 }
 
 void SecondOrder::setGradient(string gradient_choice)

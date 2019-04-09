@@ -5,15 +5,19 @@
 #include <stdio.h>
 #include <string>
 #include <iostream>
+#include <sys/stat.h>
 
 #include "PostProcessing.h"
+#include "BlockCommunicator.h"
 
 using namespace std;
+
 
 PostProcessing::PostProcessing(int n_blocks, int max_iter, double convergence_criterion, double cmac, double mach_aircraft, double aoa_deg, double gamma)
 {
   cout << "Initialize PostProcessing............................................DONE" << endl;
 
+  stop_file_name_="STOP";
   current_iter_=0;
   max_iter_=max_iter;
   iteration_interval_=1;
@@ -65,38 +69,31 @@ void PostProcessing::checkStopSolver()
 
 
 
+  // Check if STOP file exists
+  struct stat buffer;   
+  bool file_exist_flag=(stat (stop_file_name_.c_str(), &buffer) == 0); 
+
   // EN ATTENDANT
-  if(current_iter_+1 == max_iter_)
+  if((current_iter_+1 == max_iter_)|| (ro_convergence_ <= convergence_criterion_)||(file_exist_flag))
   {
     stop_solver_= true;
+    remove( stop_file_name_.c_str() );
   }
   //cout << "Ending checkStopSolver..............................................." << endl;
 
 }
 
-void PostProcessing::convergenceSum0(CompleteMesh* complete_mesh)
+void PostProcessing::convergenceSum0()
 {
 
   // EN ATTENDANT
   //cout << "Starting convergenceSum.............................................." << endl;
 
-  int i;
-
-  ro_rms0_mesh_=0.0;
-  uu_rms0_mesh_=0.0;
-  vv_rms0_mesh_=0.0;
-  ww_rms0_mesh_=0.0;
-  pp_rms0_mesh_=0.0;
-
-  for(i=0;i<complete_mesh->n_blocks_;i++)
-  {
-    // Convergence data
-    ro_rms0_mesh_ += ro_rms_blocks_[i];
-    uu_rms0_mesh_ += uu_rms_blocks_[i];
-    vv_rms0_mesh_ += vv_rms_blocks_[i];
-    ww_rms0_mesh_ += ww_rms_blocks_[i];
-    pp_rms0_mesh_ += pp_rms_blocks_[i];
-  }
+  ro_rms0_mesh_=ro_rms_mesh_;
+  uu_rms0_mesh_=uu_rms_mesh_;
+  vv_rms0_mesh_=vv_rms_mesh_;
+  ww_rms0_mesh_=ww_rms_mesh_;
+  pp_rms0_mesh_=pp_rms_mesh_;
 
   //cout << "Ending convergenceSum................................................" << endl;
 }
@@ -221,19 +218,29 @@ void PostProcessing::computeFlowData(Block* block)
 }
 
 
-void PostProcessing::process(Block* block, CompleteMesh* complete_mesh)
+void PostProcessing::process(CompleteMesh* complete_mesh, BlockCommunicator* communicator)
 {
+
   //cout << "Starting process....................................................." << endl;
   if (current_iter_%iteration_interval_==0||current_iter_+1==max_iter_)
   {
 
+    int i;
+    int n_blocks_in_process;
+    int* my_blocks;
+    Block** all_blocks;
+    Block* current_block;
+
+    n_blocks_in_process=complete_mesh->n_blocks_in_process_;
+    my_blocks=complete_mesh->my_blocks_;
+    all_blocks=complete_mesh->all_blocks_;
+
     // Sum aerodynamic parameters and convergence for each block
-    coefficientsSum(complete_mesh);
     // Sum convergence for each block
-    convergenceSum(complete_mesh);
+    communicator->getGlobal(complete_mesh, this);
     if (current_iter_==0)
     {
-      convergenceSum0(complete_mesh);
+      convergenceSum0();
     }
 
 
@@ -254,17 +261,33 @@ void PostProcessing::process(Block* block, CompleteMesh* complete_mesh)
     cout<<"Iter: "<<current_iter_<<" Convergence Ro: "<<ro_convergence_<<" cl: "<<cl_geometry_mesh_<<" cd: "<<cd_geometry_mesh_<<endl;
 
     // Save and print flow data into binary files
-    output_tecplot_->printConvergence(current_iter_, cl_geometry_mesh_, cd_geometry_mesh_, cmx_geometry_mesh_, cmy_geometry_mesh_, cmz_geometry_mesh_, ro_convergence_, uu_convergence_, vv_convergence_, ww_convergence_, pp_convergence_);
 
+    // Pour le complete mesh seulement
+    if (communicator->process_id_ == 0){
+      output_tecplot_->printConvergence(current_iter_, cl_geometry_mesh_, cd_geometry_mesh_, cmx_geometry_mesh_, cmy_geometry_mesh_, cmz_geometry_mesh_, ro_convergence_, uu_convergence_, vv_convergence_, ww_convergence_, pp_convergence_);
+    }
+    
     if (stop_solver_==true)
     {
       cout << "Writing Solution......................................................" << endl;
-      output_tecplot_->printFlowData(block);
-      output_tecplot_->printSurfaceFlowData(block);
-      output_tecplot_->printAerodynamicCoefficients(cl_geometry_mesh_, cd_geometry_mesh_, cmx_geometry_mesh_, cmy_geometry_mesh_, cmz_geometry_mesh_);
-      output_tecplot_->printRestartFile(block);
+      // Pour chaque block
+      // SINON ON PEUT FAIRE PAR EXEMPLE printFlowData(complete_mesh), pis c'est le printFlowData qui gère la patente
+      for (i=0;i<n_blocks_in_process;i++)
+      {
+        /// ATTENTION NE GÈRE PAS LES NOMS DES BLOCKS DIFFÉRENTS PRESENTEMENT
+        current_block=all_blocks[my_blocks[i]];
+        output_tecplot_->printFlowData(current_block);
+        output_tecplot_->printSurfaceFlowData(current_block);
+        output_tecplot_->printRestartFile(current_block);//PARTIE QUI FAIT JUSTE CALCULER LES CL ET CONVERGENCE PARTIELLE
+      }
+      
+      // Pour le complete mesh seulement
+      if (communicator->process_id_ == 0){
+        output_tecplot_->printAerodynamicCoefficients(cl_geometry_mesh_, cd_geometry_mesh_, cmx_geometry_mesh_, cmy_geometry_mesh_, cmz_geometry_mesh_);
+      }
       cout << "========================END OF PROGRAM========================" << endl;
-      exit(0);
+
+      //exit(0);
     }
 
   }
@@ -275,5 +298,7 @@ void PostProcessing::process(Block* block, CompleteMesh* complete_mesh)
 
   //cout << "Ending process......................................................" << endl;
 }
+
+
 
 #endif

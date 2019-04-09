@@ -73,6 +73,7 @@ CompleteMesh* Initializer::InitializeMesh(Interface* interface)
 
 	return new CompleteMesh(int n_blocks, int n_blocks_in_process, int* my_blocks[], Block* all_blocks_[]);
 */
+	return nullptr;
 }
 
 

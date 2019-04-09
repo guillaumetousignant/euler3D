@@ -1,26 +1,25 @@
-#ifndef SOLVERSKELETON_SRC_TESTMAIN_CPP
-#define SOLVERSKELETON_SRC_TESTMAIN_CPP
-
-#include "Block.h"
-
 #include "Initializer.h"
 #include "Interface.h"
 #include "Solver.h"
-
+#include "BlockCommunicator.h"
+#include "CompleteMesh.h"
 
 #include <iostream>
 #include <string>
+#include <chrono>
+//#include <omp.h>  // not needed for pragma, and adds dependency
+#ifdef HAVE_MPI
 #include <mpi.h>
-#include "Block.h"
-#include "ConcreteBlockBuilder.h"
-#include "CompleteMesh.h"
-#include "Metrics/src/MetricsInitializer.h"
-
+#endif
 
 using namespace std;
 
 int main(int argc, char* argv[])
 {
+	#ifdef HAVE_MPI
+	MPI_Init(NULL, NULL);
+	#endif
+
 	cout << "========================STARTING PROGRAM========================" << endl;
 
 	cout << R"(
@@ -42,38 +41,43 @@ int main(int argc, char* argv[])
 	else
 	{
 		cout << "ERROR: No input file" << endl;
-		exit(0);
+		#ifdef HAVE_MPI
+		MPI_Finalize();
+		#endif
+		exit(-1);
 	}
-
-	MPI_Init(NULL, NULL);
-
-	MPI_Finalize();
 
 	Interface* interface= new Interface(argv[1]);
 	Initializer* initializer= new Initializer();
 
-	int* my_blocks = new int[1];
-	my_blocks[0] = 0;
+	int n_blocks=interface->n_blocks_interface_;
+
+
+	int n_blocks_in_process;
+    int* my_blocks;
+
+	BlockCommunicator* communicator = new BlockCommunicator(n_blocks);
+    communicator->getMyBlocks(n_blocks_in_process, my_blocks);
+
+	cout << "I am process " << communicator->process_id_ << " and I have " << n_blocks_in_process << " blocks." << endl;
 
 	cout << "In CompleteMesh........." << endl;
-	CompleteMesh* complete_mesh = new CompleteMesh(1,1,my_blocks, interface->topology_file_name_interface_);
-	complete_mesh->InitializeMyBlocks();
-	Block* new_block = complete_mesh->all_blocks_[0];
+	CompleteMesh* complete_mesh = new CompleteMesh(n_blocks, n_blocks_in_process, my_blocks, interface->topology_file_name_interface_);
+	complete_mesh->InitializeMyBlocks(interface, communicator);
 
-	cout << "In MetricsInitializer........." << endl;
-	MetricsInitializer metricsInit(new_block);
-	metricsInit.doInit();
+	//communicator->createBoundaries(complete_mesh->topology_file_name_);
+	communicator->initializeBuffers();
 
-	cout << "In calculateFreeVariables........." << endl;
-	new_block->block_primitive_variables_->calculateFreeVariables(interface->gamma_interface_, interface->aoa_deg_interface_, interface->mach_aircraft_interface_);
-
-	cout << "In initializeFlowField........." << endl;
-	new_block->block_primitive_variables_->initializeFlowField(new_block->n_all_cells_in_block_);
-
-	cout << "In Solver........." << endl;
 	Solver *solver=initializer->initializeSolver(interface);
-	solver->solve(new_block, complete_mesh);
+
+	auto t_start = std::chrono::high_resolution_clock::now();
+    solver->solve(complete_mesh, communicator);
+    auto t_end = std::chrono::high_resolution_clock::now();
+    std::cout << "Time elapsed solving: " 
+            << std::chrono::duration<double, std::milli>(t_end-t_start).count()/1000.0 
+            << "s." << std::endl;
+
+	#ifdef HAVE_MPI
+	MPI_Finalize();
+	#endif
 }
-
-
-#endif
