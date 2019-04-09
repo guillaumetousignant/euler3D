@@ -13,7 +13,7 @@ residual smoothing (0-no 1-yes)
 fluxscheme schemeorder
 roe 2
 gradient limiter
-greengauss venkatakrishnan
+leastsquares barthjespersen
 omega k
 2.16-16 5.00
 EXECUTABLE (0-no 1-yes)
