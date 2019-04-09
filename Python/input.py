@@ -12,7 +12,7 @@ class Input():
         self.master = master
 
         # SECTION 1.1: GEOMETRY AND MESH
-        title_section_1_1 = LabelFrame(master, text="1.1 Geometry and mesh", labelanchor=N, height=250, width=396)
+        title_section_1_1 = LabelFrame(master, text="1.1 Geometry and mesh", labelanchor=N, height=230, width=396)
         title_section_1_1.grid(row=0, column=0, columnspan=3)
         title_section_1_1.grid_propagate(False)
         title_section_1_1.grid_columnconfigure(0, weight=1)
@@ -34,11 +34,8 @@ class Input():
         show_resulting_mesh = Button(title_section_1_1, text="Show resulting\nmesh", command=self.showResultingMesh, anchor=CENTER, takefocus=0)
         show_resulting_mesh.grid(row=2, column=1, sticky=NSEW, padx=2, pady=2)
 
-        ttk.Label(title_section_1_1, text="\nResulting mesh or topology file name:").grid(row=3, column=0, columnspan=3, sticky=NSEW, padx=2, pady=2)
-        ttk.Label(title_section_1_1, text="", relief="solid", width=60).grid(row=4, column=0, columnspan=3, padx=2, pady=2)
-
         # SECTION 1.2: INPUT VALUES
-        title_section_1_2 = ttk.LabelFrame(master, text="1.2 Input parameters", labelanchor=N, height=210, width=396)
+        title_section_1_2 = ttk.LabelFrame(master, text="1.2 Input parameters", labelanchor=N, height=230, width=396)
         title_section_1_2.grid(row=1, column=0, columnspan=3)
         title_section_1_2.grid_propagate(False)
         title_section_1_2.grid_columnconfigure(1, weight=1)
