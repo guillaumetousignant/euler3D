@@ -1,6 +1,6 @@
 MESH
 topologyfilename
-topology_count.top
+./Meshes/topology_count.top
 INPUT
 cfl gamma angleattackdeg
 1.5 1.4 1.25

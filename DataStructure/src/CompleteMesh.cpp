@@ -207,10 +207,10 @@ void CompleteMesh::InitializeMyBlocks(Interface* interface, BlockCommunicator* c
 
 						getline(myfile, line);
 						sscanf (line.c_str(), "%s %d",str_temp,&block_origin_temp); 
-						cout<<"Source block: "<<block_origin_temp<<endl;
+						//cout<<"Source block: "<<block_origin_temp<<endl;
 						getline(myfile, line);
 						sscanf (line.c_str(), "%s %d",str_temp,&n_elems); 
-						cout<<"Number of elements: "<<n_elems<<endl;
+						//cout<<"Number of elements: "<<n_elems<<endl;
 
 
 

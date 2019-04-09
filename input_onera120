@@ -1,13 +1,13 @@
 MESH
 topologyfilename
-./Meshes/topology_onera_16B.top
+./Meshes/oneraM6_120B.top
 INPUT
 cfl gamma angleattackdeg
 1.5 1.4 1.25
 rkstage mach cmac
 5 0.80 1.00
 nbitermax convcriterion
-100000 -12
+100000 -15
 residual smoothing (0-no 1-yes)
 0
 fluxscheme schemeorder
