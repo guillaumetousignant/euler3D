@@ -3,7 +3,7 @@ topologyfilename
 topology_count.top
 INPUT
 cfl gamma angleattackdeg
-1.5 1.4 1.75
+1.5 1.4 1.25
 rkstage mach cmac
 5 0.80 1.00
 nbitermax convcriterion
@@ -13,7 +13,7 @@ residual smoothing (0-no 1-yes)
 fluxscheme schemeorder
 roe 2
 gradient limiter
-leastsquares barthjespersen
+greengauss venkatakrishnan
 omega k
 2.16-16 5.00
 EXECUTABLE (0-no 1-yes)
