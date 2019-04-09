@@ -21,6 +21,7 @@ class plotSurfaceCpContour(object):
         plot = frame.plot(PlotType.Cartesian3D)
         plot.activate()
         plot.show_contour = True;
+        plot.use_lighting_effect = False;
 
         if self.type_ == 0: #EULER
             plot.contour(0).variable = dataset.variable(8);
@@ -46,6 +47,7 @@ class plotSurfaceCpContour(object):
         plot = frame.plot(PlotType.Cartesian2D)
         plot.activate()
         plot.show_contour = True;
+        plot.use_lighting_effect = False;
 
         if self.type_ == 0: #EULER
             plot.contour(0).variable = dataset.variable(8);
