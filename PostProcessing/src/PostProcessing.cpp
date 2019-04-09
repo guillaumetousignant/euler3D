@@ -15,7 +15,7 @@ using namespace std;
 
 PostProcessing::PostProcessing(int n_blocks, int max_iter, double convergence_criterion, double cmac, double mach_aircraft, double aoa_deg, double gamma)
 {
-  cout << "Initialize PostProcessing............................................DONE" << endl;
+  cout << "Initialize PostProcessing............................................" << endl;
 
   stop_file_name_="STOP";
   current_iter_=0;
