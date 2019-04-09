@@ -10,7 +10,7 @@ class Interpolation
 	public:
 		
 		Interpolation();
-		~Interpolation();
+		virtual ~Interpolation();
 
 		virtual void computeInterpolation(Block* block)=0;
 

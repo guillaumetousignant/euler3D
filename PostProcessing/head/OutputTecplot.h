@@ -23,11 +23,12 @@ double mach_aircraft_;
 double aoa_deg_;
 double gamma_;
 
-std::ofstream FlowData;
-std::ofstream SurfaceFlowData;
-std::ofstream Convergence;
-std::ofstream AerodynamicCoefficients;
-std::ofstream RestartFile;
+// oh my god that's it wow, that can't work
+//std::ofstream FlowData;
+//std::ofstream SurfaceFlowData;
+//std::ofstream Convergence;
+//std::ofstream AerodynamicCoefficients;
+//std::ofstream RestartFile;
 
   // Methods
 

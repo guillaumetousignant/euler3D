@@ -39,7 +39,7 @@ void MetricsInitializer::doInit()
     
     computeCenterFaces(iNFaces, iFaces, iNodes);
 
-    computeNormalFaces(iNFaces, iFaces, iNodes);
+    computeNormalFaces(iNFaces, iFaces, iCells, iNodes);
 
     computeAreaFaces(iNFaces, iFaces);
 
@@ -82,9 +82,9 @@ void MetricsInitializer::MetricsInitializer::computeCenterCells(uint iNCells, ui
         }
 
         //3. Output mapping
-        iCells[i]->cell_coordinates_[0] = nodeCoord_x / nbCell2Node;
-        iCells[i]->cell_coordinates_[1] = nodeCoord_y / nbCell2Node;
-        iCells[i]->cell_coordinates_[2] = nodeCoord_z / nbCell2Node;
+        iCells[i]->cell_coordinates_[X] = nodeCoord_x / nbCell2Node;
+        iCells[i]->cell_coordinates_[Y] = nodeCoord_y / nbCell2Node;
+        iCells[i]->cell_coordinates_[Z] = nodeCoord_z / nbCell2Node;
     }
 
     for(uint i(iNCells);i < iNCellsTot;i++)
@@ -100,14 +100,18 @@ void MetricsInitializer::MetricsInitializer::computeCenterCells(uint iNCells, ui
         nodeCoord_y = iCells[leftCellID]->cell_coordinates_[Y];
         nodeCoord_z = iCells[leftCellID]->cell_coordinates_[Z];
 
-        iCells[i]->cell_coordinates_[0] = nodeCoord_x;
-        iCells[i]->cell_coordinates_[1] = nodeCoord_y;
-        iCells[i]->cell_coordinates_[2] = nodeCoord_z;
+        iCells[i]->cell_coordinates_[X] = nodeCoord_x;
+        iCells[i]->cell_coordinates_[Y] = nodeCoord_y;
+        iCells[i]->cell_coordinates_[Z] = nodeCoord_z;
     }
 }
 
 void MetricsInitializer::computeCenterFaces(uint iNFaces, Face** iFaces, Node** iNodes)
 {
+
+    int const X = 0;
+    int const Y = 1;
+    int const Z = 2;
     
     for(uint i(0);i < iNFaces;i++)
     {
@@ -124,29 +128,34 @@ void MetricsInitializer::computeCenterFaces(uint iNFaces, Face** iFaces, Node** 
             //1. Get coordinates of nodes on face.
             int nodeID = iFaces[i]->face_2_nodes_connectivity_[j];
 
-            nodeCoord_x += iNodes[nodeID]->node_coordinates_[0];
-            nodeCoord_y += iNodes[nodeID]->node_coordinates_[1];
-            nodeCoord_z += iNodes[nodeID]->node_coordinates_[2];
+            nodeCoord_x += iNodes[nodeID]->node_coordinates_[X];
+            nodeCoord_y += iNodes[nodeID]->node_coordinates_[Y];
+            nodeCoord_z += iNodes[nodeID]->node_coordinates_[Z];
             
         }
 
         //3. Output Mapping
-        iFaces[i]->face_center_[0] = nodeCoord_x / nbFace2Nodes;
-        iFaces[i]->face_center_[1] = nodeCoord_y / nbFace2Nodes;
-        iFaces[i]->face_center_[2] = nodeCoord_z / nbFace2Nodes;
+        iFaces[i]->face_center_[X] = nodeCoord_x / nbFace2Nodes;
+        iFaces[i]->face_center_[Y] = nodeCoord_y / nbFace2Nodes;
+        iFaces[i]->face_center_[Z] = nodeCoord_z / nbFace2Nodes;
 
     }
 }
 
 
 
-void MetricsInitializer::computeNormalFaces(uint iNFaces, Face** iFaces, Node** iNodes)
+void MetricsInitializer::computeNormalFaces(uint iNFaces, Face** iFaces, Cell** iCells, Node** iNodes)
 {
 
     const uint vec3DSize = 3;
     std::vector<double> centerLeftCell(vec3DSize);
     std::vector<double> faceCenter(vec3DSize);
     std::vector<double> centerConnecVec(vec3DSize);
+    std::vector<double> centerFace(vec3DSize);
+
+    const uint X = 0;
+    const uint Y = 1;
+    const uint Z = 2;
 
     for(uint i = 0; i < iNFaces;i++)
     {
@@ -156,25 +165,21 @@ void MetricsInitializer::computeNormalFaces(uint iNFaces, Face** iFaces, Node** 
         {
             uint nodeID = iFaces[i]->face_2_nodes_connectivity_[j];
 
-            double node_x = iNodes[nodeID]->node_coordinates_[0];
-            double node_y = iNodes[nodeID]->node_coordinates_[1];
-            double node_z = iNodes[nodeID]->node_coordinates_[2];
+            double node_x = iNodes[nodeID]->node_coordinates_[X];
+            double node_y = iNodes[nodeID]->node_coordinates_[Y];
+            double node_z = iNodes[nodeID]->node_coordinates_[Z];
 
             nodeCoord[j].push_back(3);
 
-            nodeCoord[j][0] = node_x;
-            nodeCoord[j][1] = node_y;
-            nodeCoord[j][2] = node_z;
+            nodeCoord[j][X] = node_x;
+            nodeCoord[j][Y] = node_y;
+            nodeCoord[j][Z] = node_z;
 
         }
 
         double s_x = 0.0;
         double s_y = 0.0;
         double s_z = 0.0;
-
-        const uint X = 0;
-        const uint Y = 1;
-        const uint Z = 2;
 
         double dxyA, dxyB, dxyC;
         double dyzA, dyzB, dyzC;
@@ -192,7 +197,10 @@ void MetricsInitializer::computeNormalFaces(uint iNFaces, Face** iFaces, Node** 
         double y5,y6,y7,y8;
         double z5,z6,z7,z8;
 
-        if(iFaces[i]->n_nodes_per_face_ == 3)   
+        const uint nbNodesTriangle = 3;
+        const uint nbNodesQuad = 4;
+
+        if(iFaces[i]->n_nodes_per_face_ == nbNodesTriangle)   
         {
             //Triangular face
             
@@ -225,7 +233,7 @@ void MetricsInitializer::computeNormalFaces(uint iNFaces, Face** iFaces, Node** 
                 s_z = 0.5*(dxyA + dxyB + dxyC);
 
         }   
-        else if(iFaces[i]->n_nodes_per_face_ == 4)
+        else if(iFaces[i]->n_nodes_per_face_ == nbNodesQuad)
         {
 
             //Quadrilateral case
@@ -265,20 +273,20 @@ void MetricsInitializer::computeNormalFaces(uint iNFaces, Face** iFaces, Node** 
         }
 
         //Adjust orientation of vector to obey left to right rule for cells
-        uint leftCellID = blockData_->block_faces_[i]->face_2_cells_connectivity_[0];
-        
+        uint leftCellID = iFaces[i]->face_2_cells_connectivity_[0];
 
-        centerLeftCell[X] = blockData_->block_cells_[leftCellID]->cell_coordinates_[X];
-        centerLeftCell[Y] = blockData_->block_cells_[leftCellID]->cell_coordinates_[Y];
-        centerLeftCell[Z] = blockData_->block_cells_[leftCellID]->cell_coordinates_[Z];
+        centerLeftCell[X] = iCells[leftCellID]->cell_coordinates_[X];
+        centerLeftCell[Y] = iCells[leftCellID]->cell_coordinates_[Y];
+        centerLeftCell[Z] = iCells[leftCellID]->cell_coordinates_[Z];
 
-        faceCenter[X] = iFaces[i]->face_center_[X];
-        faceCenter[Y] = iFaces[i]->face_center_[Y];
-        faceCenter[Z] = iFaces[i]->face_center_[Z];
+        uint faceID = i;
+        centerFace[X] = iFaces[faceID]->face_center_[X];
+        centerFace[Y] = iFaces[faceID]->face_center_[Y];
+        centerFace[Z] = iFaces[faceID]->face_center_[Z];
 
-        centerConnecVec[X] = faceCenter[X] - centerLeftCell[X];
-        centerConnecVec[Y] = faceCenter[Y] - centerLeftCell[Y];
-        centerConnecVec[Z] = faceCenter[Z] - centerLeftCell[Z];
+        centerConnecVec[X] = centerFace[X] - centerLeftCell[X];
+        centerConnecVec[Y] = centerFace[Y] - centerLeftCell[Y];
+        centerConnecVec[Z] = centerFace[Z] - centerLeftCell[Z];
 
         double dotProduct = centerConnecVec[X]*s_x + centerConnecVec[Y]*s_y + centerConnecVec[Z]*s_z;
 
@@ -290,9 +298,9 @@ void MetricsInitializer::computeNormalFaces(uint iNFaces, Face** iFaces, Node** 
             s_z *= -1.0;
         }
 
-        iFaces[i]->face_normals_[0] = s_x;
-        iFaces[i]->face_normals_[1] = s_y;
-        iFaces[i]->face_normals_[2] = s_z;
+        iFaces[i]->face_normals_[X] = s_x;
+        iFaces[i]->face_normals_[Y] = s_y;
+        iFaces[i]->face_normals_[Z] = s_z;
 
     }
 
@@ -313,9 +321,9 @@ void MetricsInitializer::computeInterpVect(uint iNCells, uint iNCellsTot, uint i
         //Get center of face
         double centerFace[3];
 
-        centerFace[X] = iFaces[i]->face_center_[0];
-        centerFace[Y] = iFaces[i]->face_center_[1];
-        centerFace[Z] = iFaces[i]->face_center_[2];
+        centerFace[X] = iFaces[i]->face_center_[X];
+        centerFace[Y] = iFaces[i]->face_center_[Y];
+        centerFace[Z] = iFaces[i]->face_center_[Z];
 
         //Get center coordinates from neighbor's cells
         uint leftCellID = iFaces[i]->face_2_cells_connectivity_[LEFT];
@@ -599,17 +607,16 @@ void MetricsInitializer::computeWLS(uint iNCells, Cell** iCells)
 
             double beta = (r12*r23 - r13*r22)/(r11*r22);
 
-            //cout<<"Cell idx: "<<i<<" r: "<<r11<<" "<<r12<<" "<<r13<<" "<<r22<<" "<<r23<<" "<<r33<<endl;
-            
-
-            //std::vector<std::vector<double>> weightLeastSquared(nbCellsNeighbor);
             const uint vector3DSize = 3;
 
+
+            //Charles: Should be moved in DataStrutre when instanciating Cell Objects
             double **weightLeastSquared = new double*[nbCellsNeighbor];
-            for(uint j (0); j < nbCellsNeighbor; j++) {
+            for(uint j (0); j < nbCellsNeighbor; j++) 
+            {
                 weightLeastSquared[j] = new double[vector3DSize];
             }
-
+            // **********************************************************************
             
 
             for(uint j(0);j < nbCellsNeighbor;j++)

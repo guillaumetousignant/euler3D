@@ -1,4 +1,5 @@
 import tecplot
+import os
 import numpy as np
 import math
 import string
@@ -33,7 +34,11 @@ class plotCpXc(object):
 
         #Processing
         # Graphic
-        dataset = tecplot.data.load_tecplot(self.mySurfaceFlowFile_, read_data_option=2);
+
+        if self.type_ == 0: #EULER
+            dataset = tecplot.data.load_tecplot_szl(self.mySurfaceFlowFile_, read_data_option=2);
+        elif self.type_ == 1: #SU2
+            dataset = tecplot.data.load_tecplot(self.mySurfaceFlowFile_, read_data_option=2);
 
         frame = tecplot.active_frame()
         frame.plot_type = PlotType.Cartesian3D
@@ -79,9 +84,12 @@ class plotCpXc(object):
         plot.axes.x_axis(0).title.text = 'x/c';
         plot.view.fit();
 
+        # Bin directory to Python directory
+        os.chdir("../Python");
+
         # export image of pressure coefficient as a function of x
         graphName = "CpXc_{:.2f}_{:.2f}_{:.2f}.png".format(self.origin_x, self.origin_y, self.origin_z);
         print("Save {}....................................".format(graphName));
-        tecplot.export.save_png(graphName, 2000, supersample=3)
+        tecplot.export.save_png('../Python/png/'+graphName, 2000, supersample=3)
         print("Save {}................................DONE".format(graphName));
         print("plotCpXc....................................................DONE");

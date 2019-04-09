@@ -56,7 +56,7 @@ void ResidualCalculator::setFluxScheme(double gamma, string flux_scheme_choice)
 	if (flux_scheme_choice=="roe")
 		flux_scheme_=new RoeScheme(gamma);
 	else if (flux_scheme_choice=="ausm")
-		flux_scheme_=new AusmScheme();
+		flux_scheme_=new AusmScheme(gamma);
 }
 
 void ResidualCalculator::setResidualSmoother(bool residual_smoother_choice)
@@ -83,7 +83,7 @@ ResidualCalculator::ResidualCalculator(double gamma, std::vector<double> beta_rk
 	if (flux_scheme_choice=="roe")
 		flux_scheme_=new RoeScheme(gamma);
 	else if (flux_scheme_choice=="ausm")
-		flux_scheme_=new AusmScheme();
+		flux_scheme_=new AusmScheme(gamma);
 	else
 		flux_scheme_= NULL;
 

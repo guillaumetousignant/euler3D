@@ -3,3 +3,7 @@
 /core.*
 /*.log
 /*.png
+/*.lay
+/*.txt
+/*.szplt
+/*pycache*

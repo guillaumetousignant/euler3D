@@ -7,6 +7,7 @@
 using namespace std;
 
 Block::Block(int block_id)
+: block_cells_(nullptr), block_nodes_(nullptr), block_faces_(nullptr), block_time_variables_(nullptr), block_primitive_variables_(nullptr), block_interpolation_variables_(nullptr)
 {
 	block_id_=block_id;
 }
@@ -69,6 +70,15 @@ void Block::addFaceIdInSymmetry(int face_id, int* face_count)
 	//std::cout<<"numero de facecount:"<< *face_count <<std::endl;
 	//std::cout<<"numero de faceid:"<< face_id <<std::endl;
 	block_symmetry_face_ids_[*face_count] = face_id;
+	*face_count += 1;
+
+}
+
+void Block::addFaceIdInConnexionBlock(int face_id,int* face_count)
+{
+	//std::cout<<"numero de facecount:"<< *face_count <<std::endl;
+	//std::cout<<"numero de faceid:"<< face_id <<std::endl;
+	block_connexion_face_ids_[*face_count] = face_id;
 	*face_count += 1;
 
 }

@@ -1,4 +1,5 @@
 import tecplot
+import os
 import numpy as np
 import math
 import string
@@ -20,6 +21,20 @@ class graphicsGenerator(object):
     def __init__(self, myInterfaceFile, myFlowFile, mySurfaceFlowFile, myConvergenceFile, myAerodynamicFile):
         print("Initialize graphicsGenerator....................................")
 
+        # Create directories
+        os.chdir("../Python");
+
+        if not os.path.isdir("png"):
+            os.mkdir("png");
+            print("png created")
+
+        if not os.path.isdir("lay"):
+            os.mkdir("lay");
+            print("lay created")
+
+        # Change directory
+        os.chdir("../bin");
+
         #Indicators
         self.ClAlpha_Indicator_ = False;
         self.CdAlpha_Indicator_ = False;
@@ -40,7 +55,7 @@ class graphicsGenerator(object):
         self.myAerodynamicFile_ = myAerodynamicFile;
 
         #Attributes
-        self.Axis_ = "x";
+        self.CpAxis_ = "x";
         self.XCoordinate_ = 0.;
         self.YCoordinate_ = 0.;
         self.ZCoordinate_ = 0.;
@@ -79,7 +94,6 @@ class graphicsGenerator(object):
         string3 = userCommands[startReading+8].rstrip();
         string4 = userCommands[startReading+10].rstrip();
         string5 = userCommands[startReading+12].rstrip();
-        print(self.type_)
 
         #Put values into attributes
         ClAlpha, CdAlpha, CmAlpha = string.split(" ");
@@ -87,14 +101,22 @@ class graphicsGenerator(object):
         CpXc, SurfaceMachContour, SurfaceCpContour, MachIsosurface = string2.split(" ");
         SlicesCp = string3;
         Axis, XCoordinate, YCoordinate, ZCoordinate = string4.split(" ");
-        firstCoordinate, lastCoordinate, numberOfSlices = string5.split(" ");
 
         if Axis == "x":
-            self.Axis_ = 1;
+            self.CpAxis_ = 1;
         elif Axis == "y":
-            self.Axis_ = 2;
+            self.CpAxis_ = 2;
         elif Axis == "z":
-            self.Axis_ = 3;
+            self.CpAxis_ = 3;
+
+        Axis, firstCoordinate, lastCoordinate, numberOfSlices = string5.split(" ");
+
+        if Axis == "x":
+            self.SliceAxis_ = 1;
+        elif Axis == "y":
+            self.SliceAxis_ = 2;
+        elif Axis == "z":
+            self.SliceAxis_ = 3;
 
         # String to float
         self.XCoordinate_ = float(XCoordinate);
@@ -207,7 +229,6 @@ class graphicsGenerator(object):
 
         # Processing files
         if self.CoefficientsConvergence_Indicator_ or self.ResidualsConvergence_Indicator_:
-            print(self.myConvergenceFile_)
             npIterations_, npConvergenceCl_, npConvergenceCd_, npConverenceCmx_, npConverenceCmy_, npConverenceCmz_, npRoResiduals_, npUuResiduals_, npVvResiduals_, npWwResiduals_, npPpResiduals_ = self.processingConvergenceFile(self.myConvergenceFile_);
 
         if self.ClAlpha_Indicator_ or self.CdAlpha_Indicator_ or self.CmAlpha_Indicator_:
@@ -230,10 +251,10 @@ class graphicsGenerator(object):
             plotresidualsconvergence_ = plotResidualsConvergence(npIterations_, npRoResiduals_, npUuResiduals_, npVvResiduals_, npWwResiduals_, npPpResiduals_);
 
         if self.SlicesCp_Indicator_:
-            plotslicescp_ = plotSlicesCp(self.mySurfaceFlowFile_, self.type_, self.Axis_, self.firstCoordinate_, self.lastCoordinate_, self.numberOfSlices_);
+            plotslicescp_ = plotSlicesCp(self.mySurfaceFlowFile_, self.type_, self.SliceAxis_, self.firstCoordinate_, self.lastCoordinate_, self.numberOfSlices_);
 
         if self.CpXc_Indicator_:
-            plotcpxc_ = plotCpXc(self.mySurfaceFlowFile_, self.type_, self.Axis_, self.XCoordinate_, self.YCoordinate_, self.ZCoordinate_);
+            plotcpxc_ = plotCpXc(self.mySurfaceFlowFile_, self.type_, self.CpAxis_, self.XCoordinate_, self.YCoordinate_, self.ZCoordinate_);
 
         if self.SurfaceCpContour_Indicator_:
             plotsurfacecpcontour_ = plotSurfaceCpContour(self.mySurfaceFlowFile_, self.type_);
@@ -243,4 +264,5 @@ class graphicsGenerator(object):
 
         if self.MachIsosurface_Indicator_:
             plotmachisosurface_ = plotMachIsosurface(self.myFlowFile_, self.type_);
+
         print("computeGraphics.............................................DONE")
