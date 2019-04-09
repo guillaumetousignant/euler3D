@@ -738,7 +738,7 @@ void ConcreteBlockBuilder::setTopology(Block* block, BlockCommunicator* block_co
 
 	int block_id=block->block_id_;
 
-	cout<<"Début Set Topology............ "<<endl;
+	//cout<<"Début Set Topology............ "<<endl;
 
 	if (myfile.is_open())
 	{

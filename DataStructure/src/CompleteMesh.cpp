@@ -163,7 +163,7 @@ void CompleteMesh::InitializeMyBlocks(Interface* interface, BlockCommunicator* c
 		int n_blocks,block_idx,n_boundaries,n_elems,block_origin_temp,elem_id_destination_temp,count_connexions;
 
 
-		cout<<"Début Set Topology............ "<<endl;
+		//cout<<"Début Set Topology............ "<<endl;
 
 		if (myfile.is_open())
 		{
