@@ -340,9 +340,9 @@ class Input():
         self.geometry_generation_window.destroy()
 
         if self.show_geometry.get() == 0:
-            os.system("serveCSM -batch ~/Documents/Euler/euler3D/NACA_ESP")
+            os.system("serveCSM -batch ~/Documents/EulerFred/euler3D/NACA_ESP")
         elif self.show_geometry.get() == 1:
-            os.system("serveCSM ~/Documents/Euler/euler3D/NACA_ESP")
+            os.system("serveCSM ~/Documents/EulerFred/euler3D/NACA_ESP")
 
         messagebox.showinfo("Ready for meshing", info)
 
