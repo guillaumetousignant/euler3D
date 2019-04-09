@@ -10,7 +10,7 @@ class Gradient
 	public:
 		
 		Gradient();
-		~Gradient();
+		virtual ~Gradient();
 
 		virtual void computeGradients(Block* block)=0;
 

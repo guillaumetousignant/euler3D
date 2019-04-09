@@ -230,19 +230,35 @@ void Interface::readInputFile(string input_file_name)
 
 }
 
+void Interface::readNBlocks()
+{
+	// READ N BLOCKS
+	string line_in_file;
+	char str_temp[200];
+	ifstream topology_file(topology_file_name_interface_);
+	cout << "Reading Topology File: "<<topology_file_name_interface_<<endl;
+	
+	if (topology_file.is_open())
+	{
+		// Reading NBlocks
+		getline(topology_file, line_in_file);
+		sscanf (line_in_file.c_str(), "%s %d",str_temp,&n_blocks_interface_);
+		cout<<"Number of blocks is: "<<n_blocks_interface_<<endl;
+	}
+	else
+	{
+		cout << "Opening File Failure..."<<endl;
+	}
+	topology_file.close();
+}
 
 
-Interface::Interface(char* argv)
+Interface::Interface(char* argv) : n_blocks_interface_(0)
 {
 	string input_file_name;
 	input_file_name=argv;
 	readInputFile(input_file_name);
-
-
-	// À RÉGLER
-	n_blocks_interface_=1;
-
-
+	readNBlocks();
 }
 
 Interface::~Interface()

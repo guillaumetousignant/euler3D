@@ -64,10 +64,14 @@ class plotSlicesCp(object):
                 self.originZ_.append(self.slice_);
 
                 self.slice_ += self.interval_;
-                
+
         #PROCESSING
         # Graphics
-        dataset = tecplot.data.load_tecplot(self.mySurfaceFlowFile_, read_data_option=2);
+
+        if self.type_ == 0: #EULER
+            dataset = tecplot.data.load_tecplot_szl(self.mySurfaceFlowFile_, read_data_option=2);
+        elif self.type_ == 1: #SU2
+            dataset = tecplot.data.load_tecplot(self.mySurfaceFlowFile_, read_data_option=2);
 
         # Extract slice using user commands
         for i in range(0, self.numberOfSlices_):
@@ -113,10 +117,11 @@ class plotSlicesCp(object):
             plot.axes.x_axis(0).title.text = 'x/c';
             plot.view.fit();
 
+
             # export image of pressure coefficient as a function of x
             graphName = "SliceCp_{:.2f}_{:.2f}_{:.2f}.png".format(self.originX_[i], self.originY_[i], self.originZ_[i]);
             print("Save {}.................................".format(graphName));
-            tecplot.export.save_png(graphName, 2000, supersample=3)
+            tecplot.export.save_png('../Python/png/'+ graphName, 2000, supersample=3)
             print("Save {}.............................DONE".format(graphName));
 
         print("plotSlicesCp................................................DONE");

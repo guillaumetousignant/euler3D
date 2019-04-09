@@ -13,6 +13,7 @@ class Interface
 	public:
 
 		void readInputFile(string input_file_name);
+		void readNBlocks();
 
 		// MESH
 		string topology_file_name_interface_;
@@ -71,7 +72,7 @@ class Interface
 
 
 
-		int n_blocks_interface_; // RÉGLER CE PROBLÈME LÀ
+		int n_blocks_interface_; 
 
 
 		Interface(char* argv);

@@ -1,6 +1,8 @@
 #ifndef DATASTRUCTURE_HEAD_CELL_H
 #define DATASTRUCTURE_HEAD_CELL_H
 
+#include <vector>
+
 class Cell
 {
 public:

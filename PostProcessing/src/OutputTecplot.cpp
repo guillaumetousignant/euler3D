@@ -6,8 +6,12 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <sstream>
+#include <iomanip>
 
 #include "OutputTecplot.h"
+
+#define OUTPUT_ZERO_PADDING 6
 
 using namespace std;
 
@@ -30,17 +34,20 @@ void OutputTecplot::printFlowData(Block* block)
   int i;
 
   cout << "Starting printFlowData..............................................." << endl;
-
+  
   //FlowData.open("FlowData.plt", ios::binary);
-  FlowData.open("FlowData.dat");
+  std::stringstream ss;
+  ss << std::setw(OUTPUT_ZERO_PADDING) << std::setfill('0') << block->block_id_;
+  std::string filename = "FlowData" + ss.str() + ".dat";
+  std::ofstream FlowData;
+  FlowData.open(filename);
 
-    if (FlowData.fail())
-    {
-      // TODO throw exception
-      cerr << "Fail opening file FlowData.plt" << endl;
-      //return;
-    }
-
+  if (!FlowData.is_open())
+  {
+    // TODO throw exception
+    cerr << "Failed opening file " << filename << endl;
+    //return;
+  }
 
   FlowData << "TTILE = \"Vizualisation of the volumetric solution\""<<endl;
   FlowData << "VARIABLES=\"X\",\"Y\",\"Z\",\"RO\",\"UU\",\"VV\",\"WW\",\"PP\",\"CP\",\"MACH\"" << endl;
@@ -57,7 +64,7 @@ void OutputTecplot::printFlowData(Block* block)
 
     FlowData << x_node << endl;
   }
-
+  
   double y_node;
   // Print Y coordinate for each node
   for(i=0; i < block->n_nodes_in_block_; i++)
@@ -121,7 +128,6 @@ void OutputTecplot::printFlowData(Block* block)
     FlowData << pp_cell << endl;
   }
 
-
   double dyn_head;
   double cp_cell;
   // Print pressure coefficient for each cell
@@ -161,7 +167,6 @@ void OutputTecplot::printFlowData(Block* block)
     FlowData << mach_cell << endl;
   }
 
-
   int j;
   for(i=0;i < block->n_real_cells_in_block_; i++)
   {
@@ -183,7 +188,6 @@ void OutputTecplot::printFlowData(Block* block)
   FlowData.close();
 
   cout << "Ending printFlowData..............................................." << endl;
-
 }
 
 void OutputTecplot::printSurfaceFlowData(Block* block)
@@ -191,12 +195,16 @@ void OutputTecplot::printSurfaceFlowData(Block* block)
   cout << "Starting printSurfaceFlowData........................................" << endl;
 
   //SurfaceFlowData.open("SurfaceFlowData.plt", ios::binary);
-  SurfaceFlowData.open("SurfaceFlowData.dat");
+  std::stringstream ss;
+  ss << std::setw(OUTPUT_ZERO_PADDING) << std::setfill('0') << block->block_id_;
+  std::string filename = "SurfaceFlowData" + ss.str() + ".dat";
+  std::ofstream SurfaceFlowData;
+  SurfaceFlowData.open(filename);
 
-    if (SurfaceFlowData.fail())
+    if (!SurfaceFlowData.is_open())
     {
       // TODO throw exception
-      cerr << "Fail opening file SurfaceFlowData.plt" << endl;
+      cerr << "Failed opening file " << filename << endl;
       //return;
     }
 
@@ -380,7 +388,7 @@ void OutputTecplot::printSurfaceFlowData(Block* block)
     for(i=0;i < block->n_wall_faces_; i++)
     {
       wall_face_id = block->block_wall_face_ids_[i];
-      
+
       for(j=0; j < block->block_faces_[wall_face_id]->n_nodes_per_face_; j++)
       {
          node = block->block_faces_[wall_face_id]->face_2_nodes_connectivity_[j];
@@ -406,6 +414,7 @@ void OutputTecplot::printConvergence(int iter, double cl, double cd, double cmx,
   //cout << "Starting printConvergence............................................" << endl;
 
   //Convergence.open("Convergence.plt", ios::binary);
+  std::ofstream Convergence;
   if(iter == 0)
   {
     Convergence.open("Convergence.dat");
@@ -416,10 +425,10 @@ void OutputTecplot::printConvergence(int iter, double cl, double cd, double cmx,
   }
 
 
-    if (Convergence.fail())
+    if (!Convergence.is_open())
     {
       // TODO throw exception
-      cerr << "Fail opening file Convergence.plt" << endl;
+      cerr << "Failed opening file Convergence.plt" << endl;
       //return;
     }
 
@@ -440,12 +449,13 @@ void OutputTecplot::printAerodynamicCoefficients(double cl, double cd, double cm
   cout << "Starting printAerodynamicCoefficients................................" << endl;
 
   //AerodynamicCoefficients.open("AerodynamicCoefficients.plt", ios::binary);
+  std::ofstream AerodynamicCoefficients;
   AerodynamicCoefficients.open("AerodynamicCoefficients.dat");
 
-    if (AerodynamicCoefficients.fail())
+    if (!AerodynamicCoefficients.is_open())
     {
       // TODO throw exception
-      cerr << "Fail opening file AerodynamicCoefficients.dat" << endl;
+      cerr << "Failed opening file AerodynamicCoefficients.dat" << endl;
       //return;
     }
 
@@ -465,12 +475,16 @@ void OutputTecplot::printRestartFile(Block* block)
 {
   cout << "Starting printRestartFile............................................" << endl;
 
-  RestartFile.open("RestartFile.dat");
+  std::stringstream ss;
+  ss << std::setw(OUTPUT_ZERO_PADDING) << std::setfill('0') << block->block_id_;
+  std::string filename = "RestartFile" + ss.str() + ".dat";
+  std::ofstream RestartFile;
+  RestartFile.open(filename);
 
-    if (RestartFile.fail())
+    if (!RestartFile.is_open())
     {
       // TODO throw exception
-      cerr << "Fail opening file RestartFile.dat" << endl;
+      cerr << "Failed opening file " << filename << endl;
       //return;
     }
 

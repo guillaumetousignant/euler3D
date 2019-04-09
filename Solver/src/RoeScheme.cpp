@@ -254,6 +254,17 @@ void RoeScheme::computeFluxDiss(Block* block)
 		flux_5_dissipative = 0.5*(A_roe_energy)*normal_norm;
 		
 
+		/*
+		if ((left_cell>=block->n_real_cells_in_block_)&&(block->block_id_==0))
+		{
+			cout<<"Flux 1 left diss cell 266: "<< left_cell<<" "<<rho_L<<" "<< u_L<<" "<< v_L<<" "<<w_L<<" "<<p_L<<endl;
+		}
+		if ((right_cell>=block->n_real_cells_in_block_)&&(block->block_id_==0))
+		{
+			cout<<"Flux 1 left diss cell 266: "<< right_cell<<" "<<rho_R<<" "<< u_R<<" "<< v_R<<" "<<w_R<<" "<<p_R<<endl;
+		}
+		*/
+
 		//if (fabs(normalized_z)<0.5)
 		//{
 			//cout<<"fluxes: "<<face_idx<<" "<<normalized_x<<" "<<normalized_y<<" "<<normal_norm<<endl;
@@ -279,33 +290,23 @@ void RoeScheme::computeFluxDiss(Block* block)
 		
 	}
 
-	// EST-CE QU'ON DIVISE 2 FOIS??
-	
+
+	/*
 	for (int cell_idx=0; cell_idx<ncell; cell_idx++)
 	{
-		//cout << "=================================================" << endl;
-		//cout << "Cellule id=" << cell_idx << endl;
-		/*
-		my_cell = block -> block_cells_[cell_idx];
-		cell_volume  = my_cell -> cell_volume_;
-
-		my_diss_res_ro[cell_idx] /= cell_volume;
-		my_diss_res_uu[cell_idx] /= cell_volume;
-		my_diss_res_ww[cell_idx] /= cell_volume;
-		my_diss_res_vv[cell_idx] /= cell_volume;
-		my_diss_res_pp[cell_idx] /= cell_volume;
-		*/
-
-		/*
+		cout << "=================================================" << endl;
+		cout << "Block id: "<<block->block_id_<<" Cellule id=" << cell_idx << endl;
+		
+		
 		cout << "diss_res_ro= " << my_diss_res_ro[cell_idx] << endl;
 		cout << "diss_res_uu= " << my_diss_res_uu[cell_idx] << endl;
 		cout << "diss_res_vv= " << my_diss_res_vv[cell_idx] << endl;
 		cout << "diss_res_ww= " << my_diss_res_ww[cell_idx] << endl;
 		cout << "diss_res_pp= " << my_diss_res_pp[cell_idx] << endl;
-		*/
+		
 
 	}
-	
+	*/
 
 }
 
