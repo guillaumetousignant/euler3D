@@ -3,7 +3,7 @@ topologyfilename
 topology_count.top
 INPUT
 cfl gamma angleattackdeg
-0.5 1.4 3.00
+2 1.4 3.00
 rkstage mach cmac
 5 0.60 1.00
 nbitermax convcriterion
@@ -11,7 +11,7 @@ nbitermax convcriterion
 residual smoothing (0-no 1-yes)
 0
 fluxscheme schemeorder
-roe 1
+roe 2
 gradient limiter
 leastsquares barthjespersen
 omega k
