@@ -8,7 +8,7 @@
 #include <string>
 #include <sstream>
 
-#define N_VARIABLES 25
+#define N_VARIABLES 40
 
 BlockCommunicator::BlockCommunicator(int nblocks): n_blocks_(nblocks), n_inter_block_boundaries_(0), inter_block_boundaries_(nullptr), buffers_(nullptr) {
     #ifdef HAVE_MPI
@@ -57,9 +57,7 @@ BlockCommunicator::~BlockCommunicator(){
 }
 
 void BlockCommunicator::updateBoundaries(CompleteMesh* mesh) const {
-    //std::cout << "Process " << process_id_ << " in update boundaries" << std::endl; // REMOVE
     #ifdef HAVE_MPI
-    //double *** buffers_;
 
     for (int i = 0; i < n_inter_block_boundaries_; i++){
         // If this process is sender
@@ -94,24 +92,27 @@ void BlockCommunicator::updateBoundaries(CompleteMesh* mesh) const {
                 buffers_[i][23][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->limiter_ww_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]];
                 buffers_[i][24][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->limiter_pp_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]];
             
+                buffers_[i][25][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]][0];
+                buffers_[i][26][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]][1];
+                buffers_[i][27][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]][2];
+                buffers_[i][28][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_uu_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]][0];
+                buffers_[i][29][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_uu_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]][1];
+                buffers_[i][30][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_uu_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]][2];
+                buffers_[i][31][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_vv_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]][0];
+                buffers_[i][32][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_vv_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]][1];
+                buffers_[i][33][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_vv_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]][2];
+                buffers_[i][34][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_ww_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]][0];
+                buffers_[i][35][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_ww_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]][1];
+                buffers_[i][36][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_ww_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]][2];
+                buffers_[i][37][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_pp_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]][0];
+                buffers_[i][38][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_pp_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]][1];
+                buffers_[i][39][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_pp_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]][2];
             }
 
             MPI_Request send_request[N_VARIABLES];
             for (unsigned int j = 0; j < N_VARIABLES; j++){
                 MPI_Isend(buffers_[i][j], inter_block_boundaries_[i]->n_cell_in_boundary_, MPI_DOUBLE, block_process_id_[inter_block_boundaries_[i]->block_destination_], N_VARIABLES*i+j, MPI_COMM_WORLD, &send_request[j]);
-                /*if ((inter_block_boundaries_[i]->block_origin_ == 2) && (inter_block_boundaries_[i]->block_destination_ == 0)) {
-                    std::cout << "MPI_Isend(buffers_[" << i << "][" << j << "], inter_block_boundaries_[" << i << "]->n_cell_in_boundary_, MPI_DOUBLE, block_process_id_[" << inter_block_boundaries_[i]->block_destination_ << "], " << N_VARIABLES*i+j << ", MPI_COMM_WORLD, send_request[" << j << "]);" << std::endl; // REMOVE
-                    std::cout << "MPI_Isend(" << buffers_[i][j] << ", " << inter_block_boundaries_[i]->n_cell_in_boundary_ << ", " << MPI_DOUBLE << ", " << block_process_id_[inter_block_boundaries_[i]->block_destination_] << ", " << N_VARIABLES*i+j << ", " << MPI_COMM_WORLD << ", " << send_request[j] << ");" << std::endl; // REMOVE
-                }*/
             }
-
-            /*if ((inter_block_boundaries_[i]->block_origin_ == 2) && (inter_block_boundaries_[i]->block_destination_ == 0)) {
-                std::cout << "Process " << process_id_ << " sent to " << inter_block_boundaries_[i]->block_destination_ << " with id " << N_VARIABLES*i << std::endl; // REMOVE
-                std::cout << "Ids block 0  Ids block 2  rho  rho_buffer" << std::endl; // REMOVE
-                for (int j = 0; j < inter_block_boundaries_[i]->n_cell_in_boundary_; j++){
-                    std::cout << inter_block_boundaries_[i]->cell_ids_in_boundary_[j] << "     " << inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j] << "     " << mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]] << "     " << buffers_[i][0][j] << std::endl; // REMOVE
-                }
-            }*/
         }
 
         // If this process is receiver
@@ -120,10 +121,6 @@ void BlockCommunicator::updateBoundaries(CompleteMesh* mesh) const {
             MPI_Request receive_request[N_VARIABLES];
             for (unsigned int j = 0; j < N_VARIABLES; j++){
                 MPI_Irecv(buffers_[i][j+N_VARIABLES], inter_block_boundaries_[i]->n_cell_in_boundary_, MPI_DOUBLE, block_process_id_[inter_block_boundaries_[i]->block_origin_], N_VARIABLES*i+j, MPI_COMM_WORLD, &receive_request[j]);
-                /*if ((inter_block_boundaries_[i]->block_origin_ == 2) && (inter_block_boundaries_[i]->block_destination_ == 0)) {
-                    std::cout << "MPI_Irecv(buffers_[" << i << "][" << j+N_VARIABLES << "], inter_block_boundaries_[" << i << "]->n_cell_in_boundary_, MPI_DOUBLE, block_process_id_[" << inter_block_boundaries_[i]->block_origin_ <<  "], " << N_VARIABLES*i+j << ", MPI_COMM_WORLD, receive_request[" << j << "]);" << std::endl; // REMOVE
-                    std::cout << "MPI_Irecv(" << buffers_[i][j+N_VARIABLES] << ", " << inter_block_boundaries_[i]->n_cell_in_boundary_ << ", " << MPI_DOUBLE << ", " << block_process_id_[inter_block_boundaries_[i]->block_origin_] << ", " << N_VARIABLES*i+j << ", " << MPI_COMM_WORLD << ", " << receive_request[j] << ");" << std::endl; // REMOVE
-                }*/
             }
         }
     }
@@ -160,15 +157,23 @@ void BlockCommunicator::updateBoundaries(CompleteMesh* mesh) const {
                 mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->limiter_vv_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers_[i][N_VARIABLES+22][k];
                 mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->limiter_ww_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers_[i][N_VARIABLES+23][k];
                 mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->limiter_pp_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers_[i][N_VARIABLES+24][k];
-            }
 
-            /*if ((inter_block_boundaries_[i]->block_origin_ == 2) && (inter_block_boundaries_[i]->block_destination_ == 0)) {
-                std::cout << "Process " << process_id_ << " receiving from " << inter_block_boundaries_[i]->block_origin_ << " with id " << N_VARIABLES*i << std::endl; // REMOVE
-                std::cout << "Ids block 0  Ids block 2  rho  rho_buffer" << std::endl; // REMOVE
-                for (int j = 0; j < inter_block_boundaries_[i]->n_cell_in_boundary_; j++){
-                    std::cout << inter_block_boundaries_[i]->cell_ids_in_boundary_[j] << "     " << inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j] << "     " << mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]] << "     " << buffers_[i][N_VARIABLES][j] << std::endl; // REMOVE
-                }
-            }*/
+                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]][0] = buffers_[i][N_VARIABLES+25][k];
+                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]][1] = buffers_[i][N_VARIABLES+26][k];
+                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]][2] = buffers_[i][N_VARIABLES+27][k];
+                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_uu_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]][0] = buffers_[i][N_VARIABLES+28][k];
+                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_uu_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]][1] = buffers_[i][N_VARIABLES+29][k];
+                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_uu_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]][2] = buffers_[i][N_VARIABLES+30][k];
+                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_vv_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]][0] = buffers_[i][N_VARIABLES+31][k];
+                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_vv_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]][1] = buffers_[i][N_VARIABLES+32][k];
+                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_vv_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]][2] = buffers_[i][N_VARIABLES+33][k];
+                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_ww_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]][0] = buffers_[i][N_VARIABLES+34][k];
+                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_ww_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]][1] = buffers_[i][N_VARIABLES+35][k];
+                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_ww_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]][2] = buffers_[i][N_VARIABLES+36][k];
+                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_pp_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]][0] = buffers_[i][N_VARIABLES+37][k];
+                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_pp_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]][1] = buffers_[i][N_VARIABLES+38][k];
+                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_pp_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]][2] = buffers_[i][N_VARIABLES+39][k];
+            }
         }
     }
 
@@ -201,10 +206,25 @@ void BlockCommunicator::updateBoundaries(CompleteMesh* mesh) const {
             mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->limiter_vv_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->limiter_vv_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]];
             mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->limiter_ww_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->limiter_ww_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]];
             mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->limiter_pp_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->limiter_pp_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]];
+
+            mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]][0] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]][0];
+            mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]][1] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]][1];
+            mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]][2] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]][2];
+            mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_uu_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]][0] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_uu_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]][0];
+            mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_uu_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]][1] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_uu_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]][1];
+            mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_uu_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]][2] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_uu_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]][2];
+            mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_vv_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]][0] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_vv_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]][0];
+            mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_vv_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]][1] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_vv_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]][1];
+            mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_vv_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]][2] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_vv_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]][2];
+            mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_ww_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]][0] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_ww_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]][0];
+            mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_ww_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]][1] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_ww_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]][1];
+            mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_ww_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]][2] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_ww_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]][2];
+            mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_pp_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]][0] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_pp_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]][0];
+            mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_pp_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]][1] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_pp_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]][1];
+            mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_pp_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]][2] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_pp_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]][2];
         }
     }
     #endif
-    //std::cout << "Process " << process_id_ << " out of update boundaries" << std::endl; // REMOVE
 }
 
 void BlockCommunicator::addCellIdInConnexion(ConnexionCellIds* boundary){
