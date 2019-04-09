@@ -199,7 +199,7 @@ void ConcreteBlockBuilder::preReadMyBlock(Block* block)
 		block->block_time_variables_=tim;
 
 
-		
+
 
 		InterpolationVariables* inpvar= new InterpolationVariables(block->n_all_cells_in_block_);
 		block->block_interpolation_variables_=inpvar;

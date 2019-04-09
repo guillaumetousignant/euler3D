@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import math
 import string
@@ -10,12 +11,15 @@ class plotClAlpha(object):
         print("plotClAlpha.....................................................");
         self.AngleOfAttack_ = npAngleOfAttack;
         self.AerodynamicCl_ = npAerodynamicCl;
+
         plt.figure()
         fig = plt.plot(self.AngleOfAttack_, self.AerodynamicCl_);
         plt.title('Lift Coefficient vs Angle of Attack')
         plt.xlabel('Angle of Attack (deg)');
         plt.ylabel('Lift Coefficient (Cl)');
+
         print("Save ClvsAlpha.png..............................................");
-        plt.savefig('ClvsAlpha.png');
+        plt.savefig('../Python/.png/ClvsAlpha.png');
         print("Save ClvsAlpha.png..........................................DONE");
+
         print("plotClAlpha.................................................DONE");
