@@ -60,67 +60,77 @@ void BlockCommunicator::updateBoundaries(CompleteMesh* mesh) const {
     #ifdef HAVE_MPI
 
     for (int i = 0; i < n_inter_block_boundaries_; i++){
+        ConnexionCellIds* boundary = inter_block_boundaries_[i];
+        int block_id_origin = boundary->block_origin_;
+        int block_id_destination = boundary->block_destination_;
+        int n_cells = boundary->n_cell_in_boundary_;
+        Block* block_origin = mesh->all_blocks_[block_id_origin];
+        int origin_process_id = block_process_id_[block_id_origin];
+        int destination_process_id = block_process_id_[block_id_destination];
+
         // If this process is sender
-        if (process_id_ == block_process_id_[inter_block_boundaries_[i]->block_origin_]){
+        if (process_id_ == origin_process_id){
 
             // Filling send buffer            
-            for (int k = 0; k < inter_block_boundaries_[i]->n_cell_in_boundary_; k++){
-                buffers_[i][0][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]]; 
-                buffers_[i][1][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->uu_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]];
-                buffers_[i][2][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->vv_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]];
-                buffers_[i][3][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->ww_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]];
-                buffers_[i][4][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->pp_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]];
-                buffers_[i][5][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->conv_res_ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]]; 
-                buffers_[i][6][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->conv_res_uu_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]];
-                buffers_[i][7][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->conv_res_vv_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]];
-                buffers_[i][8][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->conv_res_ww_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]];
-                buffers_[i][9][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->conv_res_pp_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]];
-                buffers_[i][10][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->diss_res_ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]]; 
-                buffers_[i][11][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->diss_res_uu_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]];
-                buffers_[i][12][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->diss_res_vv_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]];
-                buffers_[i][13][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->diss_res_ww_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]];
-                buffers_[i][14][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->diss_res_pp_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]];
-                buffers_[i][15][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->ro_0_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]]; 
-                buffers_[i][16][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->ru_0_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]];
-                buffers_[i][17][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->rv_0_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]];
-                buffers_[i][18][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->rw_0_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]];
-                buffers_[i][19][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->re_0_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]];
+            for (int k = 0; k < n_cells; k++){
+                int cell_id_origin = boundary->cell_ids_in_boundary_other_block_[k];
+
+                buffers_[i][0][k] = block_origin->block_primitive_variables_->ro_[cell_id_origin]; 
+                buffers_[i][1][k] = block_origin->block_primitive_variables_->uu_[cell_id_origin];
+                buffers_[i][2][k] = block_origin->block_primitive_variables_->vv_[cell_id_origin];
+                buffers_[i][3][k] = block_origin->block_primitive_variables_->ww_[cell_id_origin];
+                buffers_[i][4][k] = block_origin->block_primitive_variables_->pp_[cell_id_origin];
+                buffers_[i][5][k] = block_origin->block_primitive_variables_->conv_res_ro_[cell_id_origin]; 
+                buffers_[i][6][k] = block_origin->block_primitive_variables_->conv_res_uu_[cell_id_origin];
+                buffers_[i][7][k] = block_origin->block_primitive_variables_->conv_res_vv_[cell_id_origin];
+                buffers_[i][8][k] = block_origin->block_primitive_variables_->conv_res_ww_[cell_id_origin];
+                buffers_[i][9][k] = block_origin->block_primitive_variables_->conv_res_pp_[cell_id_origin];
+                buffers_[i][10][k] = block_origin->block_primitive_variables_->diss_res_ro_[cell_id_origin]; 
+                buffers_[i][11][k] = block_origin->block_primitive_variables_->diss_res_uu_[cell_id_origin];
+                buffers_[i][12][k] = block_origin->block_primitive_variables_->diss_res_vv_[cell_id_origin];
+                buffers_[i][13][k] = block_origin->block_primitive_variables_->diss_res_ww_[cell_id_origin];
+                buffers_[i][14][k] = block_origin->block_primitive_variables_->diss_res_pp_[cell_id_origin];
+                buffers_[i][15][k] = block_origin->block_primitive_variables_->ro_0_[cell_id_origin]; 
+                buffers_[i][16][k] = block_origin->block_primitive_variables_->ru_0_[cell_id_origin];
+                buffers_[i][17][k] = block_origin->block_primitive_variables_->rv_0_[cell_id_origin];
+                buffers_[i][18][k] = block_origin->block_primitive_variables_->rw_0_[cell_id_origin];
+                buffers_[i][19][k] = block_origin->block_primitive_variables_->re_0_[cell_id_origin];
             
-                buffers_[i][20][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->limiter_ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]];
-                buffers_[i][21][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->limiter_uu_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]];
-                buffers_[i][22][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->limiter_vv_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]];
-                buffers_[i][23][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->limiter_ww_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]];
-                buffers_[i][24][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->limiter_pp_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]];
+                buffers_[i][20][k] = block_origin->block_interpolation_variables_->limiter_ro_[cell_id_origin];
+                buffers_[i][21][k] = block_origin->block_interpolation_variables_->limiter_uu_[cell_id_origin];
+                buffers_[i][22][k] = block_origin->block_interpolation_variables_->limiter_vv_[cell_id_origin];
+                buffers_[i][23][k] = block_origin->block_interpolation_variables_->limiter_ww_[cell_id_origin];
+                buffers_[i][24][k] = block_origin->block_interpolation_variables_->limiter_pp_[cell_id_origin];
             
-                buffers_[i][25][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]][0];
-                buffers_[i][26][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]][1];
-                buffers_[i][27][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]][2];
-                buffers_[i][28][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_uu_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]][0];
-                buffers_[i][29][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_uu_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]][1];
-                buffers_[i][30][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_uu_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]][2];
-                buffers_[i][31][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_vv_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]][0];
-                buffers_[i][32][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_vv_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]][1];
-                buffers_[i][33][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_vv_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]][2];
-                buffers_[i][34][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_ww_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]][0];
-                buffers_[i][35][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_ww_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]][1];
-                buffers_[i][36][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_ww_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]][2];
-                buffers_[i][37][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_pp_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]][0];
-                buffers_[i][38][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_pp_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]][1];
-                buffers_[i][39][k] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_pp_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[k]][2];
+                buffers_[i][25][k] = block_origin->block_interpolation_variables_->grad_ro_[cell_id_origin][0];
+                buffers_[i][26][k] = block_origin->block_interpolation_variables_->grad_ro_[cell_id_origin][1];
+                buffers_[i][27][k] = block_origin->block_interpolation_variables_->grad_ro_[cell_id_origin][2];
+                buffers_[i][28][k] = block_origin->block_interpolation_variables_->grad_uu_[cell_id_origin][0];
+                buffers_[i][29][k] = block_origin->block_interpolation_variables_->grad_uu_[cell_id_origin][1];
+                buffers_[i][30][k] = block_origin->block_interpolation_variables_->grad_uu_[cell_id_origin][2];
+                buffers_[i][31][k] = block_origin->block_interpolation_variables_->grad_vv_[cell_id_origin][0];
+                buffers_[i][32][k] = block_origin->block_interpolation_variables_->grad_vv_[cell_id_origin][1];
+                buffers_[i][33][k] = block_origin->block_interpolation_variables_->grad_vv_[cell_id_origin][2];
+                buffers_[i][34][k] = block_origin->block_interpolation_variables_->grad_ww_[cell_id_origin][0];
+                buffers_[i][35][k] = block_origin->block_interpolation_variables_->grad_ww_[cell_id_origin][1];
+                buffers_[i][36][k] = block_origin->block_interpolation_variables_->grad_ww_[cell_id_origin][2];
+                buffers_[i][37][k] = block_origin->block_interpolation_variables_->grad_pp_[cell_id_origin][0];
+                buffers_[i][38][k] = block_origin->block_interpolation_variables_->grad_pp_[cell_id_origin][1];
+                buffers_[i][39][k] = block_origin->block_interpolation_variables_->grad_pp_[cell_id_origin][2];
             }
 
             MPI_Request send_request[N_VARIABLES];
             for (unsigned int j = 0; j < N_VARIABLES; j++){
-                MPI_Isend(buffers_[i][j], inter_block_boundaries_[i]->n_cell_in_boundary_, MPI_DOUBLE, block_process_id_[inter_block_boundaries_[i]->block_destination_], N_VARIABLES*i+j, MPI_COMM_WORLD, &send_request[j]);
+                MPI_Isend(buffers_[i][j], n_cells, MPI_DOUBLE, destination_process_id, N_VARIABLES*i+j, MPI_COMM_WORLD, &send_request[j]);
             }
         }
 
         // If this process is receiver
-        if (process_id_ == block_process_id_[inter_block_boundaries_[i]->block_destination_]){           
+        if (process_id_ == destination_process_id){           
 
             MPI_Request receive_request[N_VARIABLES];
             for (unsigned int j = 0; j < N_VARIABLES; j++){
-                MPI_Irecv(buffers_[i][j+N_VARIABLES], inter_block_boundaries_[i]->n_cell_in_boundary_, MPI_DOUBLE, block_process_id_[inter_block_boundaries_[i]->block_origin_], N_VARIABLES*i+j, MPI_COMM_WORLD, &receive_request[j]);
+                MPI_Irecv(buffers_[i][j+N_VARIABLES], n_cells, MPI_DOUBLE, origin_process_id, N_VARIABLES*i+j, MPI_COMM_WORLD, &receive_request[j]);
             }
         }
     }
@@ -129,99 +139,117 @@ void BlockCommunicator::updateBoundaries(CompleteMesh* mesh) const {
 
     // Put in blocks
     for (int i = 0; i < n_inter_block_boundaries_; i++){
-        if (process_id_ == block_process_id_[inter_block_boundaries_[i]->block_destination_]){            
-            for (int k = 0; k < inter_block_boundaries_[i]->n_cell_in_boundary_; k++){
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers_[i][N_VARIABLES][k];
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->uu_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers_[i][N_VARIABLES+1][k];
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->vv_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers_[i][N_VARIABLES+2][k];
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->ww_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers_[i][N_VARIABLES+3][k];
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->pp_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers_[i][N_VARIABLES+4][k];
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->conv_res_ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers_[i][N_VARIABLES+5][k];
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->conv_res_uu_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers_[i][N_VARIABLES+6][k];
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->conv_res_vv_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers_[i][N_VARIABLES+7][k];
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->conv_res_ww_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers_[i][N_VARIABLES+8][k];
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->conv_res_pp_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers_[i][N_VARIABLES+9][k];
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->diss_res_ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers_[i][N_VARIABLES+10][k];
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->diss_res_uu_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers_[i][N_VARIABLES+11][k];
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->diss_res_vv_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers_[i][N_VARIABLES+12][k];
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->diss_res_ww_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers_[i][N_VARIABLES+13][k];
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->diss_res_pp_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers_[i][N_VARIABLES+14][k];
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->ro_0_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers_[i][N_VARIABLES+15][k];
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->ru_0_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers_[i][N_VARIABLES+16][k];
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->rv_0_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers_[i][N_VARIABLES+17][k];
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->rw_0_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers_[i][N_VARIABLES+18][k];
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->re_0_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers_[i][N_VARIABLES+19][k];
+        ConnexionCellIds* boundary = inter_block_boundaries_[i];
+        int block_id_destination = boundary->block_destination_;
+        int n_cells = boundary->n_cell_in_boundary_;
+        Block* block_destination = mesh->all_blocks_[block_id_destination];
+        int destination_process_id = block_process_id_[block_id_destination];
+        
+        if (process_id_ == destination_process_id){            
+            for (int k = 0; k < n_cells; k++){
+                int cell_id_destination = boundary->cell_ids_in_boundary_[k];
+                
+                block_destination->block_primitive_variables_->ro_[cell_id_destination] = buffers_[i][N_VARIABLES][k];
+                block_destination->block_primitive_variables_->uu_[cell_id_destination] = buffers_[i][N_VARIABLES+1][k];
+                block_destination->block_primitive_variables_->vv_[cell_id_destination] = buffers_[i][N_VARIABLES+2][k];
+                block_destination->block_primitive_variables_->ww_[cell_id_destination] = buffers_[i][N_VARIABLES+3][k];
+                block_destination->block_primitive_variables_->pp_[cell_id_destination] = buffers_[i][N_VARIABLES+4][k];
+                block_destination->block_primitive_variables_->conv_res_ro_[cell_id_destination] = buffers_[i][N_VARIABLES+5][k];
+                block_destination->block_primitive_variables_->conv_res_uu_[cell_id_destination] = buffers_[i][N_VARIABLES+6][k];
+                block_destination->block_primitive_variables_->conv_res_vv_[cell_id_destination] = buffers_[i][N_VARIABLES+7][k];
+                block_destination->block_primitive_variables_->conv_res_ww_[cell_id_destination] = buffers_[i][N_VARIABLES+8][k];
+                block_destination->block_primitive_variables_->conv_res_pp_[cell_id_destination] = buffers_[i][N_VARIABLES+9][k];
+                block_destination->block_primitive_variables_->diss_res_ro_[cell_id_destination] = buffers_[i][N_VARIABLES+10][k];
+                block_destination->block_primitive_variables_->diss_res_uu_[cell_id_destination] = buffers_[i][N_VARIABLES+11][k];
+                block_destination->block_primitive_variables_->diss_res_vv_[cell_id_destination] = buffers_[i][N_VARIABLES+12][k];
+                block_destination->block_primitive_variables_->diss_res_ww_[cell_id_destination] = buffers_[i][N_VARIABLES+13][k];
+                block_destination->block_primitive_variables_->diss_res_pp_[cell_id_destination] = buffers_[i][N_VARIABLES+14][k];
+                block_destination->block_primitive_variables_->ro_0_[cell_id_destination] = buffers_[i][N_VARIABLES+15][k];
+                block_destination->block_primitive_variables_->ru_0_[cell_id_destination] = buffers_[i][N_VARIABLES+16][k];
+                block_destination->block_primitive_variables_->rv_0_[cell_id_destination] = buffers_[i][N_VARIABLES+17][k];
+                block_destination->block_primitive_variables_->rw_0_[cell_id_destination] = buffers_[i][N_VARIABLES+18][k];
+                block_destination->block_primitive_variables_->re_0_[cell_id_destination] = buffers_[i][N_VARIABLES+19][k];
             
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->limiter_ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers_[i][N_VARIABLES+20][k];
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->limiter_uu_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers_[i][N_VARIABLES+21][k];
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->limiter_vv_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers_[i][N_VARIABLES+22][k];
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->limiter_ww_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers_[i][N_VARIABLES+23][k];
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->limiter_pp_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]] = buffers_[i][N_VARIABLES+24][k];
+                block_destination->block_interpolation_variables_->limiter_ro_[cell_id_destination] = buffers_[i][N_VARIABLES+20][k];
+                block_destination->block_interpolation_variables_->limiter_uu_[cell_id_destination] = buffers_[i][N_VARIABLES+21][k];
+                block_destination->block_interpolation_variables_->limiter_vv_[cell_id_destination] = buffers_[i][N_VARIABLES+22][k];
+                block_destination->block_interpolation_variables_->limiter_ww_[cell_id_destination] = buffers_[i][N_VARIABLES+23][k];
+                block_destination->block_interpolation_variables_->limiter_pp_[cell_id_destination] = buffers_[i][N_VARIABLES+24][k];
 
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]][0] = buffers_[i][N_VARIABLES+25][k];
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]][1] = buffers_[i][N_VARIABLES+26][k];
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]][2] = buffers_[i][N_VARIABLES+27][k];
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_uu_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]][0] = buffers_[i][N_VARIABLES+28][k];
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_uu_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]][1] = buffers_[i][N_VARIABLES+29][k];
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_uu_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]][2] = buffers_[i][N_VARIABLES+30][k];
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_vv_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]][0] = buffers_[i][N_VARIABLES+31][k];
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_vv_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]][1] = buffers_[i][N_VARIABLES+32][k];
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_vv_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]][2] = buffers_[i][N_VARIABLES+33][k];
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_ww_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]][0] = buffers_[i][N_VARIABLES+34][k];
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_ww_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]][1] = buffers_[i][N_VARIABLES+35][k];
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_ww_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]][2] = buffers_[i][N_VARIABLES+36][k];
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_pp_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]][0] = buffers_[i][N_VARIABLES+37][k];
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_pp_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]][1] = buffers_[i][N_VARIABLES+38][k];
-                mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_pp_[inter_block_boundaries_[i]->cell_ids_in_boundary_[k]][2] = buffers_[i][N_VARIABLES+39][k];
+                block_destination->block_interpolation_variables_->grad_ro_[cell_id_destination][0] = buffers_[i][N_VARIABLES+25][k];
+                block_destination->block_interpolation_variables_->grad_ro_[cell_id_destination][1] = buffers_[i][N_VARIABLES+26][k];
+                block_destination->block_interpolation_variables_->grad_ro_[cell_id_destination][2] = buffers_[i][N_VARIABLES+27][k];
+                block_destination->block_interpolation_variables_->grad_uu_[cell_id_destination][0] = buffers_[i][N_VARIABLES+28][k];
+                block_destination->block_interpolation_variables_->grad_uu_[cell_id_destination][1] = buffers_[i][N_VARIABLES+29][k];
+                block_destination->block_interpolation_variables_->grad_uu_[cell_id_destination][2] = buffers_[i][N_VARIABLES+30][k];
+                block_destination->block_interpolation_variables_->grad_vv_[cell_id_destination][0] = buffers_[i][N_VARIABLES+31][k];
+                block_destination->block_interpolation_variables_->grad_vv_[cell_id_destination][1] = buffers_[i][N_VARIABLES+32][k];
+                block_destination->block_interpolation_variables_->grad_vv_[cell_id_destination][2] = buffers_[i][N_VARIABLES+33][k];
+                block_destination->block_interpolation_variables_->grad_ww_[cell_id_destination][0] = buffers_[i][N_VARIABLES+34][k];
+                block_destination->block_interpolation_variables_->grad_ww_[cell_id_destination][1] = buffers_[i][N_VARIABLES+35][k];
+                block_destination->block_interpolation_variables_->grad_ww_[cell_id_destination][2] = buffers_[i][N_VARIABLES+36][k];
+                block_destination->block_interpolation_variables_->grad_pp_[cell_id_destination][0] = buffers_[i][N_VARIABLES+37][k];
+                block_destination->block_interpolation_variables_->grad_pp_[cell_id_destination][1] = buffers_[i][N_VARIABLES+38][k];
+                block_destination->block_interpolation_variables_->grad_pp_[cell_id_destination][2] = buffers_[i][N_VARIABLES+39][k];
             }
         }
     }
 
     #else
     for (int i = 0; i < n_inter_block_boundaries_; i++){
-        for (int j = 0; j < inter_block_boundaries_[i]->n_cell_in_boundary_; j++){
-            mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]];
-            mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->uu_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->uu_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]];
-            mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->vv_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->vv_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]];
-            mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->ww_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->ww_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]];
-            mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->pp_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->pp_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]];
-            mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->conv_res_ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->conv_res_ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]];
-            mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->conv_res_uu_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->conv_res_uu_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]];
-            mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->conv_res_vv_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->conv_res_vv_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]];
-            mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->conv_res_ww_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->conv_res_ww_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]];
-            mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->conv_res_pp_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->conv_res_pp_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]];
-            mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->diss_res_ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->diss_res_ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]];
-            mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->diss_res_uu_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->diss_res_uu_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]];
-            mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->diss_res_vv_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->diss_res_vv_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]];
-            mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->diss_res_ww_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->diss_res_ww_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]];
-            mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->diss_res_pp_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->diss_res_pp_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]];
-            mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->ro_0_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->ro_0_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]];
-            mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->ru_0_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->ru_0_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]];
-            mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->rv_0_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->rv_0_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]];
-            mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->rw_0_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->rw_0_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]];
-            mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_primitive_variables_->re_0_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_primitive_variables_->re_0_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]];
+        ConnexionCellIds* boundary = inter_block_boundaries_[i];
+        int block_id_origin = boundary->block_origin_;
+        int block_id_destination = boundary->block_destination_;
+        int n_cells = boundary->n_cell_in_boundary_;
+        Block* block_origin = mesh->all_blocks_[block_id_origin];
+        Block* block_destination = mesh->all_blocks_[block_id_destination];
         
-            mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->limiter_ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->limiter_ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]];
-            mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->limiter_uu_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->limiter_uu_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]];
-            mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->limiter_vv_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->limiter_vv_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]];
-            mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->limiter_ww_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->limiter_ww_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]];
-            mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->limiter_pp_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->limiter_pp_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]];
+        for (int j = 0; j < n_cells; j++){
+            int cell_id_origin = boundary->cell_ids_in_boundary_other_block_[j];
+            int cell_id_destination = boundary->cell_ids_in_boundary_[j];
 
-            mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]][0] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]][0];
-            mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]][1] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]][1];
-            mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]][2] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_ro_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]][2];
-            mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_uu_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]][0] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_uu_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]][0];
-            mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_uu_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]][1] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_uu_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]][1];
-            mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_uu_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]][2] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_uu_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]][2];
-            mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_vv_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]][0] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_vv_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]][0];
-            mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_vv_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]][1] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_vv_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]][1];
-            mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_vv_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]][2] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_vv_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]][2];
-            mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_ww_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]][0] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_ww_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]][0];
-            mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_ww_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]][1] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_ww_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]][1];
-            mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_ww_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]][2] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_ww_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]][2];
-            mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_pp_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]][0] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_pp_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]][0];
-            mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_pp_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]][1] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_pp_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]][1];
-            mesh->all_blocks_[inter_block_boundaries_[i]->block_destination_]->block_interpolation_variables_->grad_pp_[inter_block_boundaries_[i]->cell_ids_in_boundary_[j]][2] = mesh->all_blocks_[inter_block_boundaries_[i]->block_origin_]->block_interpolation_variables_->grad_pp_[inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]][2];
+            block_destination->block_primitive_variables_->ro_[cell_id_destination] = block_origin->block_primitive_variables_->ro_[cell_id_origin];
+            block_destination->block_primitive_variables_->uu_[cell_id_destination] = block_origin->block_primitive_variables_->uu_[cell_id_origin];
+            block_destination->block_primitive_variables_->vv_[cell_id_destination] = block_origin->block_primitive_variables_->vv_[cell_id_origin];
+            block_destination->block_primitive_variables_->ww_[cell_id_destination] = block_origin->block_primitive_variables_->ww_[cell_id_origin];
+            block_destination->block_primitive_variables_->pp_[cell_id_destination] = block_origin->block_primitive_variables_->pp_[cell_id_origin];
+            block_destination->block_primitive_variables_->conv_res_ro_[cell_id_destination] = block_origin->block_primitive_variables_->conv_res_ro_[cell_id_origin];
+            block_destination->block_primitive_variables_->conv_res_uu_[cell_id_destination] = block_origin->block_primitive_variables_->conv_res_uu_[cell_id_origin];
+            block_destination->block_primitive_variables_->conv_res_vv_[cell_id_destination] = block_origin->block_primitive_variables_->conv_res_vv_[cell_id_origin];
+            block_destination->block_primitive_variables_->conv_res_ww_[cell_id_destination] = block_origin->block_primitive_variables_->conv_res_ww_[cell_id_origin];
+            block_destination->block_primitive_variables_->conv_res_pp_[cell_id_destination] = block_origin->block_primitive_variables_->conv_res_pp_[cell_id_origin];
+            block_destination->block_primitive_variables_->diss_res_ro_[cell_id_destination] = block_origin->block_primitive_variables_->diss_res_ro_[cell_id_origin];
+            block_destination->block_primitive_variables_->diss_res_uu_[cell_id_destination] = block_origin->block_primitive_variables_->diss_res_uu_[cell_id_origin];
+            block_destination->block_primitive_variables_->diss_res_vv_[cell_id_destination] = block_origin->block_primitive_variables_->diss_res_vv_[cell_id_origin];
+            block_destination->block_primitive_variables_->diss_res_ww_[cell_id_destination] = block_origin->block_primitive_variables_->diss_res_ww_[cell_id_origin];
+            block_destination->block_primitive_variables_->diss_res_pp_[cell_id_destination] = block_origin->block_primitive_variables_->diss_res_pp_[cell_id_origin];
+            block_destination->block_primitive_variables_->ro_0_[cell_id_destination] = block_origin->block_primitive_variables_->ro_0_[cell_id_origin];
+            block_destination->block_primitive_variables_->ru_0_[cell_id_destination] = block_origin->block_primitive_variables_->ru_0_[cell_id_origin];
+            block_destination->block_primitive_variables_->rv_0_[cell_id_destination] = block_origin->block_primitive_variables_->rv_0_[cell_id_origin];
+            block_destination->block_primitive_variables_->rw_0_[cell_id_destination] = block_origin->block_primitive_variables_->rw_0_[cell_id_origin];
+            block_destination->block_primitive_variables_->re_0_[cell_id_destination] = block_origin->block_primitive_variables_->re_0_[cell_id_origin];
+        
+            block_destination->block_interpolation_variables_->limiter_ro_[cell_id_destination] = block_origin->block_interpolation_variables_->limiter_ro_[cell_id_origin];
+            block_destination->block_interpolation_variables_->limiter_uu_[cell_id_destination] = block_origin->block_interpolation_variables_->limiter_uu_[cell_id_origin];
+            block_destination->block_interpolation_variables_->limiter_vv_[cell_id_destination] = block_origin->block_interpolation_variables_->limiter_vv_[cell_id_origin];
+            block_destination->block_interpolation_variables_->limiter_ww_[cell_id_destination] = block_origin->block_interpolation_variables_->limiter_ww_[cell_id_origin];
+            block_destination->block_interpolation_variables_->limiter_pp_[cell_id_destination] = block_origin->block_interpolation_variables_->limiter_pp_[cell_id_origin];
+
+            block_destination->block_interpolation_variables_->grad_ro_[cell_id_destination][0] = block_origin->block_interpolation_variables_->grad_ro_[cell_id_origin][0];
+            block_destination->block_interpolation_variables_->grad_ro_[cell_id_destination][1] = block_origin->block_interpolation_variables_->grad_ro_[cell_id_origin][1];
+            block_destination->block_interpolation_variables_->grad_ro_[cell_id_destination][2] = block_origin->block_interpolation_variables_->grad_ro_[cell_id_origin][2];
+            block_destination->block_interpolation_variables_->grad_uu_[cell_id_destination][0] = block_origin->block_interpolation_variables_->grad_uu_[cell_id_origin][0];
+            block_destination->block_interpolation_variables_->grad_uu_[cell_id_destination][1] = block_origin->block_interpolation_variables_->grad_uu_[cell_id_origin][1];
+            block_destination->block_interpolation_variables_->grad_uu_[cell_id_destination][2] = block_origin->block_interpolation_variables_->grad_uu_[cell_id_origin][2];
+            block_destination->block_interpolation_variables_->grad_vv_[cell_id_destination][0] = block_origin->block_interpolation_variables_->grad_vv_[cell_id_origin][0];
+            block_destination->block_interpolation_variables_->grad_vv_[cell_id_destination][1] = block_origin->block_interpolation_variables_->grad_vv_[cell_id_origin][1];
+            block_destination->block_interpolation_variables_->grad_vv_[cell_id_destination][2] = block_origin->block_interpolation_variables_->grad_vv_[cell_id_origin][2];
+            block_destination->block_interpolation_variables_->grad_ww_[cell_id_destination][0] = block_origin->block_interpolation_variables_->grad_ww_[cell_id_origin][0];
+            block_destination->block_interpolation_variables_->grad_ww_[cell_id_destination][1] = block_origin->block_interpolation_variables_->grad_ww_[cell_id_origin][1];
+            block_destination->block_interpolation_variables_->grad_ww_[cell_id_destination][2] = block_origin->block_interpolation_variables_->grad_ww_[cell_id_origin][2];
+            block_destination->block_interpolation_variables_->grad_pp_[cell_id_destination][0] = block_origin->block_interpolation_variables_->grad_pp_[cell_id_origin][0];
+            block_destination->block_interpolation_variables_->grad_pp_[cell_id_destination][1] = block_origin->block_interpolation_variables_->grad_pp_[cell_id_origin][1];
+            block_destination->block_interpolation_variables_->grad_pp_[cell_id_destination][2] = block_origin->block_interpolation_variables_->grad_pp_[cell_id_origin][2];
         }
     }
     #endif
@@ -457,7 +485,7 @@ void BlockCommunicator::createBoundaries(std::string  &topology_filename){
         std::cout<<"Cell ids in boundary\tCell ids in other boundary"<<std::endl;
         for (int j=0;j<inter_block_boundaries_[i]->n_cell_in_boundary_;j++)
         {
-            std::cout<<inter_block_boundaries_[i]->cell_ids_in_boundary_[j]<<"\t\t\t\t"<<inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]<<std::endl;
+            std::cout<<cell_id_destination<<"\t\t\t\t"<<cell_id_origin<<std::endl;
         }
         std::cout<<endl;		
     }
