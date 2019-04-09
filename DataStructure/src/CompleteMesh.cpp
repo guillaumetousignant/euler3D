@@ -150,6 +150,138 @@ void CompleteMesh::InitializeMyBlocks(Interface* interface, BlockCommunicator* c
 
 		cout << "In Solver........." << endl;
 	}
+
+
+	for(int block_id=0;block_id<n_blocks_;block_id++)
+	{
+
+		
+		std::ifstream myfile(topology_file_name_);
+		char str_temp[200];
+		std::string line;
+		int i,j,k;
+		int n_blocks,block_idx,n_boundaries,n_elems,block_origin_temp,elem_id_destination_temp,count_connexions;
+
+
+		cout<<"Début Set Topology............ "<<endl;
+
+		if (myfile.is_open())
+		{
+				// Find current block
+			getline(myfile, line);
+			sscanf (line.c_str(), "%s %d",str_temp,&n_blocks);
+			cout<<"N blocks: "<<n_blocks<<endl;
+
+				// Skip block file names
+			for(i=0;i<n_blocks;i++)
+			{
+				myfile.ignore(256, '\n');
+					//cout<<"Ignore Line"<<endl;
+			}
+
+
+			for(i=0;i<n_blocks;i++)
+			{
+					// Get block idx
+				getline(myfile, line);
+				sscanf (line.c_str(), "%s %d",str_temp,&block_idx);
+					//cout<<"Block idx read: "<<block_idx<<endl;
+					// Current block found
+				if(block_idx==block_id) 
+				{
+					cout<<"Block Found: "<<block_idx<<endl;
+					
+					// Read Count Connexions
+					getline(myfile, line);
+					sscanf (line.c_str(), "%s %d",str_temp,&count_connexions);
+
+					getline(myfile, line);
+					sscanf (line.c_str(), "%s %d",str_temp,&n_boundaries);
+
+					cout<<"Number of boundaries: "<<n_boundaries<<endl;
+						// Create Connexion object for n_boundaries
+					for(j=0;j<n_boundaries;j++)
+					{
+
+						ConnexionCellIds *block_connexion_boundary_cell_ids = new ConnexionCellIds();
+
+						getline(myfile, line);
+						sscanf (line.c_str(), "%s %d",str_temp,&block_origin_temp); 
+						cout<<"Source block: "<<block_origin_temp<<endl;
+						getline(myfile, line);
+						sscanf (line.c_str(), "%s %d",str_temp,&n_elems); 
+						cout<<"Number of elements: "<<n_elems<<endl;
+
+
+
+						block_connexion_boundary_cell_ids->block_destination_=block_id;
+						block_connexion_boundary_cell_ids->block_origin_=block_origin_temp;
+						block_connexion_boundary_cell_ids->n_cell_in_boundary_=n_elems;
+						block_connexion_boundary_cell_ids->cell_ids_in_boundary_other_block_=new int[n_elems]();
+						block_connexion_boundary_cell_ids->cell_ids_in_boundary_=new int[n_elems]();
+						block_connexion_boundary_cell_ids->owner_block_=nullptr;
+
+
+						for(k=0;k<n_elems;k++)
+						{
+							getline(myfile, line);
+							sscanf (line.c_str(), "%d",&elem_id_destination_temp); 
+
+							block_connexion_boundary_cell_ids->cell_ids_in_boundary_[k]=count_connexions;
+							count_connexions+=1;
+
+							block_connexion_boundary_cell_ids->cell_ids_in_boundary_other_block_[k]=elem_id_destination_temp;
+
+						}
+
+						block_connexion_boundary_cell_ids->cell_count_= &count_connexions;
+
+						communicator->addCellIdInConnexion(block_connexion_boundary_cell_ids);
+
+
+					}
+
+				}
+					// Current block not found
+				else
+				{
+						// Skip block
+
+						// Skip Count Connexions
+					getline(myfile, line);
+					sscanf (line.c_str(), "%s %d",str_temp,&count_connexions);
+					
+					getline(myfile, line);
+					sscanf (line.c_str(), "%s %d",str_temp,&n_boundaries);
+
+					
+
+					for(j=0;j<n_boundaries;j++)
+					{
+
+						getline(myfile, line);
+						sscanf (line.c_str(), "%s %d",str_temp,&block_origin_temp); 
+						getline(myfile, line);
+						sscanf (line.c_str(), "%s %d",str_temp,&n_elems); 
+
+						for(k=0;k<n_elems;k++)
+						{
+							getline(myfile, line);
+							sscanf (line.c_str(), "%s %d",str_temp,&elem_id_destination_temp); 
+						}
+
+					}
+
+
+				}
+
+			}
+		}
+		myfile.close();
+
+
+		
+	}
 }
 
 #endif

@@ -75,7 +75,9 @@ void BlockCommunicator::updateBoundaries(CompleteMesh* mesh) const {
             for (int k = 0; k < n_cells; k++){
                 int cell_id_origin = boundary->cell_ids_in_boundary_other_block_[k];
 
-                buffers_[i][0][k] = block_origin->block_primitive_variables_->ro_[cell_id_origin]; 
+                //double cell_id_origin_double=cell_id_origin; // Pour debug le transfert MPI
+
+                buffers_[i][0][k] = block_origin->block_primitive_variables_->ro_[cell_id_origin]; // cell_id_origin_double; //Pour debug le transfert MPI
                 buffers_[i][1][k] = block_origin->block_primitive_variables_->uu_[cell_id_origin];
                 buffers_[i][2][k] = block_origin->block_primitive_variables_->vv_[cell_id_origin];
                 buffers_[i][3][k] = block_origin->block_primitive_variables_->ww_[cell_id_origin];

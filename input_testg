@@ -7,15 +7,15 @@ cfl gamma angleattackdeg
 rkstage mach cmac
 5 0.80 1.00
 nbitermax convcriterion
-100000 -15
+1500 -15
 residual smoothing (0-no 1-yes)
 0
 fluxscheme schemeorder
 roe 2
 gradient limiter
-leastsquares barthjespersen
+leastsquares venkatakrishnan
 omega k
-2.16-16 5.00
+2.16e-16 5.00
 EXECUTABLE (0-no 1-yes)
 build execute
 1 1

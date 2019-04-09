@@ -47,9 +47,35 @@ void Solver::solve(CompleteMesh* complete_mesh, BlockCommunicator* communicator)
 
 	communicator->updateBoundaries(complete_mesh);
 
+	/* Pour debug le transfert MPI
+	for	(int i=0;i<n_blocks_in_process;i++)
+	{
+		Block* current_block=all_blocks[my_blocks[i]];
+
+		int n_connexion_faces=current_block->n_connexion_faces_;
+		int j;
+		int connexion_face_idx;
+
+		for(j=0;j<n_connexion_faces;j++)
+		{
+			connexion_face_idx=current_block -> block_connexion_face_ids_[j];
+
+			int int_cell_idx=current_block->block_faces_[connexion_face_idx]->face_2_cells_connectivity_[0];
+			int ext_cell_idx=current_block->block_faces_[connexion_face_idx]->face_2_cells_connectivity_[1];
+
+			double ro_ext=current_block->block_primitive_variables_->ro_[ext_cell_idx];
+
+			current_block->block_primitive_variables_->ro_[int_cell_idx]=ro_ext;
+
+		}
+			
+	}
+	*/
+
+	
 	while(!post_processing_->stop_solver_)
 	{
-
+		
 		//post_processing_->process(block, complete_mesh); //PARTIE QUI CALCULE LES SOMMES, PRENDS LES DÉCISIONS ET PUBLISH
 		/// FIN DES TRUCS MPI
 		
@@ -66,9 +92,13 @@ void Solver::solve(CompleteMesh* complete_mesh, BlockCommunicator* communicator)
 
 		///INSÉRER LES TRUCS DE MPI ICI JE CROIS
 		communicator->updateBoundaries(complete_mesh);
+		
 		post_processing_->process(complete_mesh, communicator);
 
 	}
+	
+
+
 
 
 	/*
