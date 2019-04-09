@@ -777,10 +777,10 @@ void ConcreteBlockBuilder::setTopology(Block* block, BlockCommunicator* block_co
 
 					getline(myfile, line);
 					sscanf (line.c_str(), "%s %d",str_temp,&block_origin_temp); 
-					cout<<"Source block: "<<block_origin_temp<<endl;
+					//cout<<"Source block: "<<block_origin_temp<<endl;
 					getline(myfile, line);
 					sscanf (line.c_str(), "%s %d",str_temp,&n_elems); 
-					cout<<"Number of elements: "<<n_elems<<endl;
+					//cout<<"Number of elements: "<<n_elems<<endl;
 
 
         			
@@ -843,7 +843,7 @@ void ConcreteBlockBuilder::setTopology(Block* block, BlockCommunicator* block_co
 	myfile.close();
 
 
-	cout<<"----------------VÉRIFICATION CONNECTION AU MPI-----------------"<<endl;
+	/*cout<<"----------------VÉRIFICATION CONNECTION AU MPI-----------------"<<endl;
 	int n_inter_block_boundaries=block_communicator->n_inter_block_boundaries_;
 
 	for (i=0;i<n_inter_block_boundaries;i++)
@@ -857,7 +857,7 @@ void ConcreteBlockBuilder::setTopology(Block* block, BlockCommunicator* block_co
 		}
 		cout<<endl;
 		
-	}
+	}*/
 	cout<<"Fin Set Topology............ "<<endl;
 }
 #endif
