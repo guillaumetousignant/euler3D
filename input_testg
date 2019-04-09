@@ -3,9 +3,9 @@ topologyfilename
 topology_count.top
 INPUT
 cfl gamma angleattackdeg
-1.5 1.4 3.00
+1.5 1.4 1.75
 rkstage mach cmac
-5 0.60 1.00
+5 0.80 1.00
 nbitermax convcriterion
 100000 -15
 residual smoothing (0-no 1-yes)
