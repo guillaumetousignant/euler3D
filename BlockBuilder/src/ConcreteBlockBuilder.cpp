@@ -745,7 +745,7 @@ void ConcreteBlockBuilder::setTopology(Block* block, BlockCommunicator* block_co
 	// Find current block
 		getline(myfile, line);
 		sscanf (line.c_str(), "%s %d",str_temp,&n_blocks);
-		cout<<"N blocks: "<<n_blocks<<endl;
+		//cout<<"N blocks: "<<n_blocks<<endl;
 
 	// Skip block file names
 		for(i=0;i<n_blocks;i++)
@@ -764,11 +764,11 @@ void ConcreteBlockBuilder::setTopology(Block* block, BlockCommunicator* block_co
 			// Current block found
 			if(block_idx==block->block_id_) 
 			{
-				cout<<"Block Found: "<<block_idx<<endl;
+				//cout<<"Block Found: "<<block_idx<<endl;
 				getline(myfile, line);
 				sscanf (line.c_str(), "%s %d",str_temp,&n_boundaries);
 
-				cout<<"Number of boundaries: "<<n_boundaries<<endl;
+				//cout<<"Number of boundaries: "<<n_boundaries<<endl;
 				// Create Connexion object for n_boundaries
 				for(j=0;j<n_boundaries;j++)
 				{
