@@ -12,7 +12,8 @@ void FarfieldCellIds::updateBoundary()
 	//cout<<"Farfield cells updating \n";
 	Block* block=owner_block_;
 
-	int nb_farfield_faces=block->n_farfield_faces_;
+	//int nb_farfield_faces=block->n_farfield_faces_;
+	int nb_farfield_faces = n_cell_in_boundary_;
 	//cout<<"Nb farfield faces: "<<nb_farfield_faces<<endl;
 
 	// FARFIELD  !!!ATTENTION!!! VÉRIFIER SENS DES NORMALES
@@ -24,8 +25,12 @@ void FarfieldCellIds::updateBoundary()
 	double ww_free=block->block_primitive_variables_->ww_free_;
 	double pp_free=block->block_primitive_variables_->pp_free_;
 
+	std::cout << "Farfield got variables" << std::endl; // REMOVE
+
 	for(int i=0;i<nb_farfield_faces;i++)
 	{
+		std::cout << "Farfield updating face " << i << std::endl; // REMOVE
+
 		farfield_face_idx=block -> block_cells_[cell_ids_in_boundary_[i]]->cell_2_faces_connectivity_[0];
 		//block -> cell_ids_in_boundary_[i];
 		//cout<<"Face numéro: "<<i<<" Id: "<<farfield_face_idx<<endl;
@@ -110,8 +115,11 @@ void FarfieldCellIds::updateBoundary()
 				block->block_primitive_variables_->pp_[ext_cell_idx]=2.0*pp_bc-pp_int;
 			}
 		}
+		std::cout << "Farfield done with face " << i << std::endl; // REMOVE
 
 	}
+
+	std::cout << "Farfield done" << std::endl; // REMOVE
 
 
 	// // FARFIELD  !!!ATTENTION!!! VÉRIFIER SENS DES NORMALES
