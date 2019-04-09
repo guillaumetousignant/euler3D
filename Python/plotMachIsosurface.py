@@ -58,12 +58,12 @@ class plotMachIsosurface(object):
 
         # Save layout for Tecplot
         print("Save MachIsosurface_wing.lay....................................");
-        tecplot.save_layout('../Python/.lay/MachIsosurface_wing.lay');
+        tecplot.save_layout('../Python/lay/MachIsosurface_wing.lay');
         print("Save MachIsosurface_wing.lay................................DONE");
 
         # export image of wing
         print("Save MachIsosurface_wing.png....................................");
-        tecplot.export.save_png('../Python/.png/MachIsosurface_wing.png', 2000, supersample=3)
+        tecplot.export.save_png('../Python/png/MachIsosurface_wing.png', 2000, supersample=3)
         print("Save MachIsosurface_wing.png................................DONE");
 
         print("plotMachIsosurface..........................................DONE");

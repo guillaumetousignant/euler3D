@@ -116,14 +116,14 @@ def postProcessingEuler():
                 tecplot.data.save_tecplot_szl(myNewFileName_ + ".szplt", dataset=myDataset_);
 
                 # Delete .dat file
-                #print("Deleting FlowData_Block*.dat files..............................")
-                #os.remove( myNewFileName_ + ".dat");
+                print("Deleting FlowData_Block*.dat files..............................")
+                os.remove( myNewFileName_ + ".dat");
 
                 # Delete FlowDataBlock*.dat for each block
-                #for i in range(0,len(myFlowFiles_)):
-                    #os.remove(myFlowFiles_[i]);
+                for i in range(0,len(myFlowFiles_)):
+                    os.remove(myFlowFiles_[i]);
 
-                #print("Deleting FlowData_Block*.dat files..........................DONE")
+                print("Deleting FlowData_Block*.dat files..........................DONE")
                 print("Merging Flow Files..........................................DONE")
 
 
@@ -224,20 +224,20 @@ def postProcessingEuler():
                 tecplot.data.save_tecplot_szl(myNewSurfaceFileName_ + ".szplt", dataset=myDataset_);
 
                 # Delete .dat file
-                #print("Deleting SurfaceFlowData_Block*.dat files.......................")
-                #os.remove(myNewSurfaceFileName_ + ".dat");
+                print("Deleting SurfaceFlowData_Block*.dat files.......................")
+                os.remove(myNewSurfaceFileName_ + ".dat");
 
                 # Delete SurfaceFlowDataBlock*.dat for each block
-                #for i in range(0,len(mySurfaceFiles_)):
-                    #os.remove(mySurfaceFiles_[i]);
+                for i in range(0,len(mySurfaceFiles_)):
+                    os.remove(mySurfaceFiles_[i]);
 
-                #print("Deleting SurfaceFlowData_Block*.dat files...................DONE")
+                print("Deleting SurfaceFlowData_Block*.dat files...................DONE")
                 print("Merging Surface Flow Files..................................DONE")
 
 
     if len(myFlowFiles_) >= 1 and len(mySurfaceFiles_) >= 1:
         # Euler Files
-        myInterfaceFile_ = "input_testg.txt";
+        myInterfaceFile_ = "Interface_NACA0012.txt";
         myFlowFile_ = myNewFileName_ + ".szplt";
         mySurfaceFlowFile_ = myNewSurfaceFileName_ + ".szplt";
         myConvergenceFile_ = "Convergence.dat";

@@ -24,13 +24,13 @@ class graphicsGenerator(object):
         # Create directories
         os.chdir("../Python");
 
-        if not os.path.isdir(".png"):
-            os.mkdir(".png");
-            print(".png created")
+        if not os.path.isdir("png"):
+            os.mkdir("png");
+            print("png created")
 
-        if not os.path.isdir(".lay"):
-            os.mkdir(".lay");
-            print(".lay created")
+        if not os.path.isdir("lay"):
+            os.mkdir("lay");
+            print("lay created")
 
         # Change directory
         os.chdir("../bin");
