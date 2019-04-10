@@ -1,0 +1,9 @@
+NBLOCK= 2
+local_mesh_B0.su2
+local_mesh_B1.su2
+Block= 0
+GhostCount= 0
+Nconnexion= 0
+Block= 1
+GhostCount= 0
+Nconnexion= 0
