@@ -24,7 +24,7 @@ class plotCmAlpha(object):
         plt.legend();
 
         print("Save CmvsAlpha.png..............................................");
-        plt.savefig('../Python/.png/CmvsAlpha.png');
+        plt.savefig('../Python/png/CmvsAlpha.png');
         print("Save CmvsAlpha.png..........................................DONE");
 
         print("plotCmAlpha.................................................DONE");

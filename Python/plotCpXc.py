@@ -1,5 +1,4 @@
 import tecplot
-import os
 import numpy as np
 import math
 import string
@@ -75,6 +74,9 @@ class plotCpXc(object):
                 x=dataset.variable(0),
                 y=dataset.variable(10))
 
+        # CSV
+        #cp = dataset.variable(8).values(0).as_numpy_array();
+        #np.savetxt("resultat1.csv", zip(xc,cp), delimiter=",", fmt="%f");
 
         # Set graph parameters
         cp_linemap.line.color = tecplot.constant.Color.Blue;
@@ -84,12 +86,11 @@ class plotCpXc(object):
         plot.axes.x_axis(0).title.text = 'x/c';
         plot.view.fit();
 
-        # Bin directory to Python directory
-        os.chdir("../Python");
-
         # export image of pressure coefficient as a function of x
         graphName = "CpXc_{:.2f}_{:.2f}_{:.2f}.png".format(self.origin_x, self.origin_y, self.origin_z);
         print("Save {}....................................".format(graphName));
         tecplot.export.save_png('../Python/png/'+graphName, 2000, supersample=3)
         print("Save {}................................DONE".format(graphName));
+
+
         print("plotCpXc....................................................DONE");

@@ -7,7 +7,7 @@ cfl gamma angleattackdeg
 rkstage mach cmac
 5 0.80 1.00
 nbitermax convcriterion
-100 -15
+10000 -15
 residual smoothing (0-no 1-yes)
 0
 fluxscheme schemeorder
@@ -21,7 +21,7 @@ build execute
 1 1
 OUTPUT (0-no 1-yes)
 clalpha cdalpha cmalpha
-1 1 1
+0 0 0
 coefficientsconv  residualconv
 1 1
 cpxc machcontour cpcontour machisosurface
@@ -29,4 +29,6 @@ cpxc machcontour cpcontour machisosurface
 slicecp
 1
 axis xcoord ycoord zcoord
-x 1.00 1.00 1.00
+z 0.00 0.00 0.20
+axis fcoord lcoord nbslices
+z 0.10 0.50 5

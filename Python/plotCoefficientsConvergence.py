@@ -27,6 +27,6 @@ class plotCoefficientsConvergence(object):
         plt.legend();
 
         print("Save CoefficientsConvergence.png................................");
-        plt.savefig('../Python/.png/CoefficientsConvergence.png');
+        plt.savefig('../Python/png/CoefficientsConvergence.png');
         print("Save CoefficientsConvergence.png............................DONE");
         print("plotCoefficientsConvergence.................................DONE");

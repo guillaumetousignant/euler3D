@@ -49,11 +49,11 @@ class plotMachIsosurface(object):
 
         cont.legend.show = False
 
-        plot.view.width = 2.058;
-        plot.view.alpha = 0;
-        plot.view.theta = 159.61;
-        plot.view.psi = 52.79;
-        plot.view.position = (-1.91333,6.93022,5.17559);
+        plot.view.width = 1.91291;
+        plot.view.alpha = -47.73;
+        plot.view.theta = 137.32;
+        plot.view.psi = 136.51;
+        plot.view.position = (-6.57402, 7.48889, -10.3657);
 
 
         # Save layout for Tecplot

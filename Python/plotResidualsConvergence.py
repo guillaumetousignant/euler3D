@@ -29,7 +29,7 @@ class plotResidualsConvergence(object):
         plt.legend();
 
         print("Save ResidualsConvergence.png...................................");
-        plt.savefig('../Python/.png/ResidualsConvergence.png');
+        plt.savefig('../Python/png/ResidualsConvergence.png');
         print("Save ResidualsConvergence.png...............................DONE");
 
         print("plotResidualsConvergence....................................DONE");
