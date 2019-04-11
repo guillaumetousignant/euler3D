@@ -20,7 +20,7 @@ class plotCdAlpha(object):
 
 
         print("Save CdvsAlpha.png..............................................");
-        plt.savefig('../Python/.png/CdvsAlpha.png');
+        plt.savefig('../Python/png/CdvsAlpha.png');
         print("Save CdvsAlpha.png..........................................DONE");
 
         print("plotCdAlpha.................................................DONE");

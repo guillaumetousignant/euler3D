@@ -28,11 +28,15 @@ class plotSurfaceCpContour(object):
         elif self.type_ == 1: #SU2
             plot.contour(0).variable = dataset.variable(10);
 
-        plot.view.width = 1.62571;
-        plot.view.alpha = 0;
-        plot.view.theta = 240;
-        plot.view.psi = 60;
-        plot.view.position = (6.9746, 4.3061, 4.26909);
+        # Set Rainbow
+        plot.contour(0).colormap_name = 'Small Rainbow';
+
+        # Set View
+        plot.view.width = 1.91291;
+        plot.view.alpha = -47.73;
+        plot.view.theta = 137.32;
+        plot.view.psi = 136.51;
+        plot.view.position = (-6.57402, 7.48889, -10.3657);
 
         # Save layout for Tecplot
         print("Save CpContour_fullbody.lay.....................................");
@@ -47,7 +51,6 @@ class plotSurfaceCpContour(object):
         plot = frame.plot(PlotType.Cartesian2D)
         plot.activate()
         plot.show_contour = True;
-        plot.use_lighting_effect = False;
 
         if self.type_ == 0: #EULER
             plot.contour(0).variable = dataset.variable(8);

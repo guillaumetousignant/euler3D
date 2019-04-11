@@ -399,7 +399,7 @@ class Input():
             self.filename_topology.set("/home/etudiant/Documents/Euler3D/euler3D/topology.top")
         else:
             shutil.copyfile(self.filename_mesh.get(), "single_block.su2")
-            self.filename_topology.set("home/etudiant//Documents/Euler3D/euler3D/single_block.top")
+            self.filename_topology.set("single_block.top")#home/etudiant//Documents/Euler3D/euler3D/
             
     def activateNumberBlocks(self):
         if self.partition.get() == 1:
