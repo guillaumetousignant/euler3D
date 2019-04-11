@@ -349,8 +349,11 @@ class Input():
         os.system("pointwise")
 
     def showResultingMesh(self):
-        messagebox.showinfo('Resulting Mesh')
-        os.system("./renderer 600 400 "+ str(self.filename_mesh.get()))
+        
+        if self.filename_mesh.get() == "void" or self.filename_mesh.get() == "":
+            messagebox.showwarning("Warning", "No mesh to show. Please import a mesh file.")
+        else:
+            os.system("./renderer 600 400 "+ str(self.filename_mesh.get()))
 
     def saveAndDestroyMeshWindow(self):
         self.writePartialOutputMesh()
