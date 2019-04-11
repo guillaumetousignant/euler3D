@@ -237,7 +237,7 @@ def postProcessingEuler():
 
     if len(myFlowFiles_) >= 1 and len(mySurfaceFiles_) >= 1:
         # Euler Files
-        myInterfaceFile_ = "Interface_NACA0012.txt";
+        myInterfaceFile_ = "output_interface.txt";
         myFlowFile_ = myNewFileName_ + ".szplt";
         mySurfaceFlowFile_ = myNewSurfaceFileName_ + ".szplt";
         myConvergenceFile_ = "Convergence.dat";
