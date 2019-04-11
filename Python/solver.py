@@ -70,7 +70,7 @@ class Solver():
         label_void_5.grid(row=1, column=0)
         
         self.nb_process = IntVar()
-        self.nb_process.set(1)
+        self.nb_process.set(4)
         self.nb_process_label = ttk.Label(title_section_2_3, text="Number of process", relief="groove", borderwidth=2, anchor=CENTER, width=22)
         self.nb_process_label.grid(row=1, column=1, columnspan=2, sticky=NSEW, padx=2, pady=2)
         self.nb_process_entry = ttk.Entry(title_section_2_3, textvariable=self.nb_process, width=15, justify=CENTER, takefocus=0)

@@ -46,7 +46,7 @@ class Input():
         text_section_1_2.grid(row=0, column=0, columnspan=4, sticky=NSEW, padx=2)
 
         self.cfl = DoubleVar()
-        self.cfl.set(7.5)
+        self.cfl.set(1.5)
         self.cfl_label = ttk.Label(title_section_1_2, text="     cfl     ", borderwidth=2, relief="groove", anchor=CENTER)
         self.cfl_label.grid(row=1, column=0, sticky=NSEW, padx=2, pady=2)
         self.cfl_entry = ttk.Entry(title_section_1_2, textvariable=self.cfl, justify=CENTER, takefocus=0)
@@ -340,9 +340,9 @@ class Input():
         self.geometry_generation_window.destroy()
 
         if self.show_geometry.get() == 0:
-            os.system("serveCSM -batch ~/Documents/EulerFred/euler3D/NACA_ESP")
+            os.system("serveCSM -batch ~/Documents/Euler/euler3D/NACA_ESP")
         elif self.show_geometry.get() == 1:
-            os.system("serveCSM ~/Documents/EulerFred/euler3D/NACA_ESP")
+            os.system("serveCSM ~/Documents/Euler/euler3D/NACA_ESP")
 
         messagebox.showinfo("Ready for meshing", info)
 
@@ -370,7 +370,7 @@ class Input():
             self.partition_no.grid(row=2, column=1, columnspan=2, padx=2, pady=2)
 
             self.number_blocks = IntVar()
-            self.number_blocks.set(3)
+            self.number_blocks.set(4)
             self.number_blocks_label = ttk.Label(self.partition_window, text="Number of blocks", state="disabled", borderwidth=2, relief="groove", anchor=CENTER, width=15)
             self.number_blocks_label.grid(row=3, column=1, padx=2, pady=2)
             self.number_blocks_entry = ttk.Entry(self.partition_window, textvariable=self.number_blocks, state="disabled", justify=CENTER, takefocus=0, width=15)

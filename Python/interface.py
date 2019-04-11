@@ -9,7 +9,7 @@ import subprocess
 from input import Input
 from solver import Solver
 from output import Output
-
+# from runPostProcessing import *
 
 class Interface(Input, Solver, Output):
     def __init__(self, master): # Initialize the class
@@ -100,12 +100,20 @@ class Interface(Input, Solver, Output):
             self.command = "make"
 
         elif solver_option == 2:
+            ## TO RUN WITH MPI: ##
             nb_process_str = str(self.solver_.nb_process.get())
             self.command = "mpiexec -n " + nb_process_str + " ./bin/euler3D ./bin/output_interface"
+
+            ## TO RUN WHITOUT MPI: ##
             #self.command = "./bin/euler3D ./bin/output_interface"
 
         elif solver_option == 3:
-            self.command = "make clean; make; ./bin/euler3D ./bin/output_interface"
+            ## TO RUN WITH MPI: ##
+            nb_process_str = str(self.solver_.nb_process.get())
+            self.command = "make clean; make; mpiexec -n " + nb_process_str + " ./bin/euler3D ./bin/output_interface"
+            
+            ## TO RUN WHITOUT MPI: ##
+            # self.command = "make clean; make; ./bin/euler3D ./bin/output_interface"
         
         self.saveEntries()
         root.destroy()
