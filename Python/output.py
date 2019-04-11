@@ -20,7 +20,7 @@ class Output():
         text_section_3_1.grid(row=0, column=0, sticky=NSEW)
 
         self.files_type_ = IntVar()
-        self.files_type_.set(1)
+        self.files_type_.set(0)
         files_type_euler = Radiobutton(title_section_3_1, text="Developped software", value=0, variable=self.files_type_, relief="groove", width=17, borderwidth=2, anchor=W, takefocus=0)
         files_type_euler.grid(row=1, column=0, columnspan=2, sticky=N, padx=2, pady=2)
         files_type_su2 = Radiobutton(title_section_3_1, text="SU2", value=1, variable=self.files_type_, relief="groove", width=17, borderwidth=2, anchor=W, takefocus=0)
@@ -208,7 +208,7 @@ class Output():
         self.first_coord_.set(0.0)
         self.last_coord_.set(0.0)
         self.nb_slices_.set(0)
-        self.files_type_.set(1)
+        self.files_type_.set(0)
 
         self.axis_cut_cp_xc_label_.configure(state="disabled")
         self.axis_cut_cp_xc_entry_.configure(state="disabled")
