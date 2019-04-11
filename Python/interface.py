@@ -100,9 +100,9 @@ class Interface(Input, Solver, Output):
             self.command = "make"
 
         elif solver_option == 2:
-            # nb_process_str = str(self.solver.nb_process.get())
-            # command = "mpiexec -n " + nb_process_str + " ./bin/euler3D ./bin/output_interface"
-            self.command = "./bin/euler3D ./bin/output_interface"
+            nb_process_str = str(self.solver_.nb_process.get())
+            self.command = "mpiexec -n " + nb_process_str + " ./bin/euler3D ./bin/output_interface"
+            #self.command = "./bin/euler3D ./bin/output_interface"
 
         elif solver_option == 3:
             self.command = "make clean; make; ./bin/euler3D ./bin/output_interface"
