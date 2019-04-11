@@ -390,7 +390,7 @@ class Input():
         self.mesh_window.destroy()
       
         if self.partition.get() == 1:            
-            command = "Mesh_Partitioning " + str(self.filename_mesh.get()) + " " + str(self.number_blocks.get()) + " local_mesh_B topology.top"
+            command = "./MeshPartitioning/Mesh_Partitioning " + str(self.filename_mesh.get()) + " " + str(self.number_blocks.get()) + " local_mesh_B topology.top"
             os.system(command)
             self.filename_topology.set("topology.top")
         else:
