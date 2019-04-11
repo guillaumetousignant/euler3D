@@ -163,14 +163,14 @@ void CompleteMesh::InitializeMyBlocks(Interface* interface, BlockCommunicator* c
 		int n_blocks,block_idx,n_boundaries,n_elems,block_origin_temp,elem_id_destination_temp,count_connexions;
 
 
-		cout<<"Début Set Topology............ "<<endl;
+		//cout<<"Début Set Topology............ "<<endl;
 
 		if (myfile.is_open())
 		{
 				// Find current block
 			getline(myfile, line);
 			sscanf (line.c_str(), "%s %d",str_temp,&n_blocks);
-			cout<<"N blocks: "<<n_blocks<<endl;
+			//cout<<"N blocks: "<<n_blocks<<endl;
 
 				// Skip block file names
 			for(i=0;i<n_blocks;i++)
@@ -189,7 +189,7 @@ void CompleteMesh::InitializeMyBlocks(Interface* interface, BlockCommunicator* c
 					// Current block found
 				if(block_idx==block_id) 
 				{
-					cout<<"Block Found: "<<block_idx<<endl;
+					//cout<<"Block Found: "<<block_idx<<endl;
 					
 					// Read Count Connexions
 					getline(myfile, line);
@@ -198,7 +198,7 @@ void CompleteMesh::InitializeMyBlocks(Interface* interface, BlockCommunicator* c
 					getline(myfile, line);
 					sscanf (line.c_str(), "%s %d",str_temp,&n_boundaries);
 
-					cout<<"Number of boundaries: "<<n_boundaries<<endl;
+					//cout<<"Number of boundaries: "<<n_boundaries<<endl;
 						// Create Connexion object for n_boundaries
 					for(j=0;j<n_boundaries;j++)
 					{
@@ -207,10 +207,10 @@ void CompleteMesh::InitializeMyBlocks(Interface* interface, BlockCommunicator* c
 
 						getline(myfile, line);
 						sscanf (line.c_str(), "%s %d",str_temp,&block_origin_temp); 
-						cout<<"Source block: "<<block_origin_temp<<endl;
+						//cout<<"Source block: "<<block_origin_temp<<endl;
 						getline(myfile, line);
 						sscanf (line.c_str(), "%s %d",str_temp,&n_elems); 
-						cout<<"Number of elements: "<<n_elems<<endl;
+						//cout<<"Number of elements: "<<n_elems<<endl;
 
 
 
