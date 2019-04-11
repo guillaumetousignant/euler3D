@@ -9,6 +9,7 @@ import subprocess
 from input import Input
 from solver import Solver
 from output import Output
+import subprocess
 # from runPostProcessing import *
 
 class Interface(Input, Solver, Output):
@@ -114,7 +115,7 @@ class Interface(Input, Solver, Output):
             
             ## TO RUN WHITOUT MPI: ##
             # self.command = "make clean; make; ./bin/euler3D ./bin/output_interface"
-        
+        command_post = './Python/runPostProcessing.sh'
         self.saveEntries()
         root.destroy()
         #self.stop_window = Toplevel()
@@ -122,6 +123,9 @@ class Interface(Input, Solver, Output):
         #self.stop_window.resizable(0,0)
         #Button(self.stop_window, text="STOP", command=root.destroy).grid(row=0, column=0)
         os.system(self.command)
+        os.chdir('./Python')
+        subprocess.call(['./runPostProcessing.sh'])
+        os.chdir('..')
 
     def saveEntries(self):
 
