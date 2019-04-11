@@ -51,7 +51,7 @@ void OutputTecplot::printFlowData(Block* block)
   FlowData << "TTILE = \"Vizualisation of the volumetric solution\""<<endl;
   FlowData << "VARIABLES=\"X\",\"Y\",\"Z\",\"RO\",\"UU\",\"VV\",\"WW\",\"PP\",\"CP\",\"MACH\"" << endl;
   FlowData << "ZONE T=\"FLOW_FIELD\"" << endl;
-  FlowData << "Nodes=" << block->n_nodes_in_block_ << ", " << "Elements=" << block->n_real_cells_in_block_ << ", " << "ZONETYPE=FEBRICK" << endl;
+  FlowData << "Nodes=" << block->n_nodes_in_block_ << ", " << "Elements=" << block->n_real_cells_in_block_ << ", " << "ZONETYPE=FETETRAHEDRON" << endl;
   FlowData << "DATAPACKING=BLOCK" << endl;
   FlowData << "VARLOCATION=([4,5,6,7,8,9,10]=CELLCENTERED)" << endl;
 

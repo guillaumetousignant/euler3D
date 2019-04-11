@@ -1,0 +1,32 @@
+MESH
+topologyfilename
+./Meshes/naca0012_tetrahedes/topology.top
+INPUT
+cfl gamma angleattackdeg
+0.5 1.4 3.06
+rkstage mach cmac
+5 0.8395 1.00
+nbitermax convcriterion
+280 -15
+residual smoothing (0-no 1-yes)
+0
+fluxscheme schemeorder
+roe 1
+gradient limiter
+greengauss barthjespersen
+omega k
+1.0e6 5.00
+EXECUTABLE (0-no 1-yes)
+build execute
+1 1
+OUTPUT (0-no 1-yes)
+clalpha cdalpha cmalpha
+1 1 1
+coefficientsconv  residualconv
+1 1
+cpxc machcontour cpcontour machisosurface
+1 1 1 0
+slicecp
+1
+axis xcoord ycoord zcoord
+x 1.00 1.00 1.00

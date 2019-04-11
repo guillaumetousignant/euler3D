@@ -1,12 +1,12 @@
 /**
  * @file MetricsInitializer.cpp
  * @author your name (Patrick Deschambault)
- * @brief 
+ * @brief
  * @version 0.1
  * @date 2019-02-08
- * 
+ *
  * @copyright Copyright (c) 2019
- * 
+ *
  */
 
 #include "MetricsInitializer.h"
@@ -30,13 +30,13 @@ void MetricsInitializer::doInit()
     uint iNCells = blockData_->n_real_cells_in_block_;
     uint iNCellsTot = blockData_->n_all_cells_in_block_;
     uint iNFaces = blockData_->n_faces_in_block_;
-    
+
     Cell** iCells = blockData_->block_cells_;
     Face** iFaces = blockData_->block_faces_;
     Node** iNodes = blockData_->block_nodes_;
 
     computeCenterCells(iNCells, iNCellsTot, iCells, iNodes);
-    
+
     computeCenterFaces(iNFaces, iFaces, iNodes);
 
     computeNormalFaces(iNFaces, iFaces, iCells, iNodes);
@@ -48,7 +48,7 @@ void MetricsInitializer::doInit()
     computeInterpVect(iNCells, iNCellsTot,iNFaces, iCells, iFaces);
 
     computeCenterGhostCells(iNCells, iNCellsTot, iCells, iFaces);
-    
+
     computeWLS(iNCells, iCells);
 
 }
@@ -68,7 +68,7 @@ void MetricsInitializer::MetricsInitializer::computeCenterCells(uint iNCells, ui
         double nodeCoord_z = 0.0;
 
         uint nbCell2Node = iCells[i]->n_nodes_per_cell_;
-        
+
         for(uint j(0);j < nbCell2Node;j++)
         {
             //1. Get nodes coordinates of current cell
@@ -112,7 +112,7 @@ void MetricsInitializer::computeCenterFaces(uint iNFaces, Face** iFaces, Node** 
     int const X = 0;
     int const Y = 1;
     int const Z = 2;
-    
+
     for(uint i(0);i < iNFaces;i++)
     {
 
@@ -131,7 +131,7 @@ void MetricsInitializer::computeCenterFaces(uint iNFaces, Face** iFaces, Node** 
             nodeCoord_x += iNodes[nodeID]->node_coordinates_[X];
             nodeCoord_y += iNodes[nodeID]->node_coordinates_[Y];
             nodeCoord_z += iNodes[nodeID]->node_coordinates_[Z];
-            
+
         }
 
         //3. Output Mapping
@@ -163,13 +163,18 @@ void MetricsInitializer::computeNormalFaces(uint iNFaces, Face** iFaces, Cell** 
 
         for(int j = 0;j < iFaces[i]->n_nodes_per_face_;j++)
         {
+          nodeCoord[j].resize(3);
+        }
+
+        for(int j = 0;j < iFaces[i]->n_nodes_per_face_;j++)
+        {
             uint nodeID = iFaces[i]->face_2_nodes_connectivity_[j];
 
             double node_x = iNodes[nodeID]->node_coordinates_[X];
             double node_y = iNodes[nodeID]->node_coordinates_[Y];
             double node_z = iNodes[nodeID]->node_coordinates_[Z];
 
-            nodeCoord[j].push_back(3);
+            // nodeCoord[j].push_back(3);
 
             nodeCoord[j][X] = node_x;
             nodeCoord[j][Y] = node_y;
@@ -192,7 +197,7 @@ void MetricsInitializer::computeNormalFaces(uint iNFaces, Face** iFaces, Cell** 
         double x1, x2, x3;
         double y1, y2, y3;
         double z1, z2, z3;
-        
+
         double x5,x6,x7,x8;
         double y5,y6,y7,y8;
         double z5,z6,z7,z8;
@@ -200,10 +205,10 @@ void MetricsInitializer::computeNormalFaces(uint iNFaces, Face** iFaces, Cell** 
         const uint nbNodesTriangle = 3;
         const uint nbNodesQuad = 4;
 
-        if(iFaces[i]->n_nodes_per_face_ == nbNodesTriangle)   
+        if(iFaces[i]->n_nodes_per_face_ == nbNodesTriangle)
         {
             //Triangular face
-            
+
                 x1 = nodeCoord[0][X];
                 x2 = nodeCoord[1][X];
                 x3 = nodeCoord[2][X];
@@ -232,12 +237,12 @@ void MetricsInitializer::computeNormalFaces(uint iNFaces, Face** iFaces, Cell** 
                 s_y = 0.5*(dzxA + dzxB + dzxC);
                 s_z = 0.5*(dxyA + dxyB + dxyC);
 
-        }   
+        }
         else if(iFaces[i]->n_nodes_per_face_ == nbNodesQuad)
         {
 
             //Quadrilateral case
-            
+
                 x5 = nodeCoord[0][X];
                 x6 = nodeCoord[1][X];
                 x7 = nodeCoord[2][X];
@@ -269,7 +274,7 @@ void MetricsInitializer::computeNormalFaces(uint iNFaces, Face** iFaces, Cell** 
         {
             s_x = 0.0;
             s_y = 0.0;
-            s_z = 0.0; 
+            s_z = 0.0;
         }
 
         //Adjust orientation of vector to obey left to right rule for cells
@@ -290,7 +295,7 @@ void MetricsInitializer::computeNormalFaces(uint iNFaces, Face** iFaces, Cell** 
 
         double dotProduct = centerConnecVec[X]*s_x + centerConnecVec[Y]*s_y + centerConnecVec[Z]*s_z;
 
-        
+
         if(dotProduct < 0)
         {
             s_x *= -1.0;
@@ -315,7 +320,7 @@ void MetricsInitializer::computeInterpVect(uint iNCells, uint iNCellsTot, uint i
 
     const uint LEFT = 0;
     const uint RIGHT = 1;
-    
+
     for(uint i(0);i < iNFaces;i++)
     {
         //Get center of face
@@ -416,11 +421,11 @@ void MetricsInitializer::computeAreaFaces(uint iNFaces, Face** iFaces)
 
         iFaces[i]->face_area_ = area;
         // Normalize normals
-        
-    }
-}   
 
-  
+    }
+}
+
+
 void MetricsInitializer::computeVolumeCells(uint iNCells, uint iNCellsTot, Cell** iCells, Face** iFaces)
 {
     const int X = 0;
@@ -430,7 +435,7 @@ void MetricsInitializer::computeVolumeCells(uint iNCells, uint iNCellsTot, Cell*
     double volume = 0.0;
     const uint vector3DSize = 3;
     std::vector<double > connectVector(vector3DSize); // Vector from center of cell to center of face.
-    
+
     for(uint i(0); i < iNCells; i++)
     {
         int nbFaceOfCell = iCells[i]->n_faces_per_cell_;
@@ -466,7 +471,7 @@ void MetricsInitializer::computeVolumeCells(uint iNCells, uint iNCellsTot, Cell*
             double dotProduct = 0.0;
 
             dotProduct = connectVector[0]*s_x + connectVector[1]*s_y + connectVector[2]*s_z;
-            
+
             if(dotProduct < 0)
             {
                 s_x *= -1.0;
@@ -475,10 +480,10 @@ void MetricsInitializer::computeVolumeCells(uint iNCells, uint iNCellsTot, Cell*
             }
 
             volume += (cellCenter[X]*s_x + cellCenter[Y]*s_y + cellCenter[Z]*s_z)/3;
-            
-        }   
 
-        iCells[i]->cell_volume_ = volume; 
+        }
+
+        iCells[i]->cell_volume_ = volume;
         volume = 0.0;
     }
 
@@ -517,18 +522,18 @@ void MetricsInitializer::computeCenterGhostCells(uint iNCells, uint iNCellsTot, 
         r_z = iFaces[faceID]->left_cell_r_vector_[Z];
 
         // Ghost Cell Center equals the real cell Center so
-        
+
 
         iCells[i]->cell_coordinates_[0] += 2.0*r_x;
         iCells[i]->cell_coordinates_[1] += 2.0*r_y;
         iCells[i]->cell_coordinates_[2] += 2.0*r_z;
 
-        
+
 
     }
 
 }
-    
+
 void MetricsInitializer::computeWLS(uint iNCells, Cell** iCells)
 {
     if( iNCells > 1)
@@ -603,7 +608,7 @@ void MetricsInitializer::computeWLS(uint iNCells, Cell** iCells)
                 sumdzijSquare_minus_r13Square_minusr23Square += dzij[j]*dzij[j] ;
             }
 
-            double r33 = sqrt(sumdzijSquare_minus_r13Square_minusr23Square- (r13*r13 + r23*r23));    
+            double r33 = sqrt(sumdzijSquare_minus_r13Square_minusr23Square- (r13*r13 + r23*r23));
 
             double beta = (r12*r23 - r13*r22)/(r11*r22);
 
@@ -612,12 +617,12 @@ void MetricsInitializer::computeWLS(uint iNCells, Cell** iCells)
 
             //Charles: Should be moved in DataStrutre when instanciating Cell Objects
             double **weightLeastSquared = new double*[nbCellsNeighbor];
-            for(uint j (0); j < nbCellsNeighbor; j++) 
+            for(uint j (0); j < nbCellsNeighbor; j++)
             {
                 weightLeastSquared[j] = new double[vector3DSize];
             }
             // **********************************************************************
-            
+
 
             for(uint j(0);j < nbCellsNeighbor;j++)
             {
@@ -633,7 +638,7 @@ void MetricsInitializer::computeWLS(uint iNCells, Cell** iCells)
                 double weight3 = alpha3;
 
                // cout<<"Cell idx: "<<i<<" "<<j<<" Weight: "<<weight1<<" "<<weight2<<" "<<weight3<<endl;
-               
+
 
                 weightLeastSquared[j][0] = weight1;
                 weightLeastSquared[j][1] = weight2;

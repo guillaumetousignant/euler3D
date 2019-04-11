@@ -83,10 +83,10 @@ void RoeScheme::computeFluxDiss(Block* block)
 	// my_cells = block -> block_cells_;
 	int ncell; // my_cell;
 	ncell = block -> n_real_cells_in_block_;
-	
+
 	for (int cell_idx=0; cell_idx<ncell; cell_idx++)
 	{
-		
+
 		my_diss_res_ro[cell_idx] *=(1.0-current_beta_);
 		my_diss_res_uu[cell_idx] *=(1.0-current_beta_);
 		my_diss_res_vv[cell_idx] *=(1.0-current_beta_);
@@ -94,8 +94,8 @@ void RoeScheme::computeFluxDiss(Block* block)
 		my_diss_res_pp[cell_idx] *=(1.0-current_beta_);
 
 	}
-	
-	
+
+
 
 	int nface, left_cell, right_cell; // my_face,
 	int* neighboor_cells;
@@ -142,7 +142,7 @@ void RoeScheme::computeFluxDiss(Block* block)
 			w_L+=my_ww_limiters[left_cell]*my_grad_ww_array[left_cell][dim_idx]*left_cell_r_vector[dim_idx];
 			p_L+=my_pp_limiters[left_cell]*my_grad_pp_array[left_cell][dim_idx]*left_cell_r_vector[dim_idx];
 		}
-		
+
 
 		qq_L = u_L*u_L+v_L*v_L+w_L*w_L;
 		H_L = (0.5*qq_L+gamma_/(gamma_-1.0)*p_L/rho_L);
@@ -165,7 +165,7 @@ void RoeScheme::computeFluxDiss(Block* block)
 			w_R+=my_ww_limiters[right_cell]*my_grad_ww_array[right_cell][dim_idx]*right_cell_r_vector[dim_idx];
 			p_R+=my_pp_limiters[right_cell]*my_grad_pp_array[right_cell][dim_idx]*right_cell_r_vector[dim_idx];
 		}
-		
+
 
 		qq_R = u_R*u_R+v_R*v_R+w_R*w_R;
 		H_R = (0.5*qq_R+gamma_/(gamma_-1.0)*p_R/rho_R);
@@ -252,7 +252,7 @@ void RoeScheme::computeFluxDiss(Block* block)
 		flux_3_dissipative = 0.5*(A_roe_v)*normal_norm;
 		flux_4_dissipative = 0.5*(A_roe_w)*normal_norm;
 		flux_5_dissipative = 0.5*(A_roe_energy)*normal_norm;
-		
+
 
 		/*
 		if ((left_cell>=block->n_real_cells_in_block_)&&(block->block_id_==0))
@@ -286,27 +286,27 @@ void RoeScheme::computeFluxDiss(Block* block)
 			my_diss_res_ww[right_cell] -= flux_4_dissipative*current_beta_;
 			my_diss_res_pp[right_cell] -= flux_5_dissipative*current_beta_;
 		//}
-		
-		
+
+
 	}
 
 
-	
-	for (int cell_idx=0; cell_idx<ncell; cell_idx++)
-	{
-		cout << "=================================================" << endl;
-		cout << "Block id: "<<block->block_id_<<" Cellule id=" << cell_idx << endl;
-		
-		
-		//cout << "diss_res_ro= " << my_diss_res_ro[cell_idx] << endl;
-		//cout << "diss_res_uu= " << my_diss_res_uu[cell_idx] << endl;
-		//cout << "diss_res_vv= " << my_diss_res_vv[cell_idx] << endl;
-		//cout << "diss_res_ww= " << my_diss_res_ww[cell_idx] << endl;
-		cout << "diss_res_pp= " << my_diss_res_pp[cell_idx] << endl;
-		
 
-	}
-	
+	// for (int cell_idx=0; cell_idx<ncell; cell_idx++)
+	// {
+	// 	cout << "=================================================" << endl;
+	// 	cout << "Block id: "<<block->block_id_<<" Cellule id=" << cell_idx << endl;
+	//
+	//
+	// 	//cout << "diss_res_ro= " << my_diss_res_ro[cell_idx] << endl;
+	// 	//cout << "diss_res_uu= " << my_diss_res_uu[cell_idx] << endl;
+	// 	//cout << "diss_res_vv= " << my_diss_res_vv[cell_idx] << endl;
+	// 	//cout << "diss_res_ww= " << my_diss_res_ww[cell_idx] << endl;
+	// 	cout << "diss_res_pp= " << my_diss_res_pp[cell_idx] << endl;
+	//
+	//
+	// }
+
 
 }
 
