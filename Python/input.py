@@ -350,7 +350,7 @@ class Input():
 
     def showResultingMesh(self):
         messagebox.showinfo('Resulting Mesh')
-        os.system("renderer 600 400 "+ str(self.filename_mesh.get()))
+        os.system("./renderer 600 400 "+ str(self.filename_mesh.get()))
 
     def saveAndDestroyMeshWindow(self):
         self.writePartialOutputMesh()
