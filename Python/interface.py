@@ -17,12 +17,7 @@ class Interface(Input, Solver, Output):
         master.title("GRAPHICAL USER INTERFACE")
         master.geometry("397x515")
         master.resizable(0,0)
-        master.grid_columnconfigure(0, weight=1)
-        master.grid_columnconfigure(1, weight=1)
-        master.grid_columnconfigure(2, weight=1)
-        master.grid_rowconfigure(0, weight=1)
-        master.grid_rowconfigure(1, weight=1)
-        master.grid_rowconfigure(2, weight=1)
+        # master.grid_propagate(False)
         
         # TABS OF THE MAIN WINDOW
         tabControl = ttk.Notebook(master)
@@ -63,31 +58,38 @@ class Interface(Input, Solver, Output):
 
         # GENERAL BUTTONS
         clear_all_button_intput = ttk.Button(tab1, text="Clear All", command=self.clearAllPages)
-        clear_all_button_intput.grid(row=2, column=0, padx=2, pady=2)
+        clear_all_button_intput.grid(row=3, column=0, padx=2, pady=2)
 
         clear_all_button_solver = ttk.Button(tab2, text="Clear All", command=self.clearAllPages)
-        clear_all_button_solver.grid(row=3, column=0, padx=2, pady=2)
+        clear_all_button_solver.grid(row=4, column=0, padx=2, pady=2)
 
         clear_all_button_output = ttk.Button(tab3, text="Clear All", command=self.clearAllPages)
-        clear_all_button_output.grid(row=2, column=0, padx=2, pady=2)
+        clear_all_button_output.grid(row=3, column=0, padx=2, pady=2)
 
         clear_button_input = ttk.Button(tab1, text="Clear this page", command=self.input_.clearPage)
-        clear_button_input.grid(row=2, column=1, padx=2, pady=2)
+        clear_button_input.grid(row=3, column=1, padx=2, pady=2)
 
         clear_button_solver = ttk.Button(tab2, text="Clear this page", command=self.solver_.clearPage)
-        clear_button_solver.grid(row=3, column=1, padx=2, pady=2)
+        clear_button_solver.grid(row=4, column=1, padx=2, pady=2)
 
         clear_button_output = ttk.Button(tab3, text="Clear this page", command=self.output_.clearPage)
-        clear_button_output.grid(row=2, column=1, padx=2, pady=2)
+        clear_button_output.grid(row=3, column=1, padx=2, pady=2)
 
         solve_button_input = ttk.Button(tab1, text="Solve", command=self.solveCode)
-        solve_button_input.grid(row=2, column=2, padx=2, pady=2)
+        solve_button_input.grid(row=3, column=2, padx=2, pady=2)
  
         solve_button_solver = ttk.Button(tab2, text="Solve", command=self.solveCode)
-        solve_button_solver.grid(row=3, column=2, padx=2, pady=2)
+        solve_button_solver.grid(row=4, column=2, padx=2, pady=2)
 
         solve_button_output = ttk.Button(tab3, text="Solve", command=self.solveCode)
-        solve_button_output.grid(row=2, column=2, padx=2, pady=2)
+        solve_button_output.grid(row=3, column=2, padx=2, pady=2)
+
+        tab1.grid_rowconfigure(4, weight=1)
+        tab2.grid_rowconfigure(5, weight=1)
+        tab3.grid_rowconfigure(4, weight=1)
+        ttk.Label(tab1, text="").grid(row=4, column=0, columnspan=3, sticky=NSEW)
+        ttk.Label(tab2, text="").grid(row=5, column=0, columnspan=3, sticky=NSEW)
+        ttk.Label(tab3, text="").grid(row=4, column=0, columnspan=3, sticky=NSEW)
    
     def clearAllPages(self):
         self.input_.clearPage()
