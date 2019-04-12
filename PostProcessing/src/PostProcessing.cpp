@@ -55,7 +55,7 @@ PostProcessing::~PostProcessing()
 }
 
 
-// ENLEVER DÃ‰PENDANCE SOLVER
+// ENLEVER DÉPENDANCE SOLVER
 void PostProcessing::checkStopSolver()
 {
   //cout << "Starting checkStopSolver............................................." << endl;
@@ -77,7 +77,6 @@ void PostProcessing::checkStopSolver()
   if((current_iter_+1 == max_iter_)|| (ro_convergence_ <= convergence_criterion_)||(file_exist_flag))
   {
     stop_solver_= true;
-    remove( stop_file_name_.c_str() );
   }
   //cout << "Ending checkStopSolver..............................................." << endl;
 
@@ -254,8 +253,10 @@ void PostProcessing::process(CompleteMesh* complete_mesh, BlockCommunicator* com
     checkStopSolver();
     if (stop_solver_==true)
     {
+      communicator->sync();
       if (communicator->process_id_ == 0){
         cout<<"STOP ACTIVATED"<<endl;
+        remove( stop_file_name_.c_str() );
       }
     }
 

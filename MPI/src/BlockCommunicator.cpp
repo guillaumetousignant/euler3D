@@ -543,3 +543,9 @@ void BlockCommunicator::initializeBuffers(){
         }
     }
 }
+
+void BlockCommunicator::sync(){
+    #ifdef HAVE_MPI
+    MPI_Barrier(MPI_COMM_WORLD);
+    #endif
+}
