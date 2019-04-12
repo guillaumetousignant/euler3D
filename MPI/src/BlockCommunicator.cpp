@@ -9,10 +9,13 @@
 #include <sstream>
 
 #define N_VARIABLES 40
+
+#ifdef HAVE_MPI
 #define  MAX_REQUESTS  15000
 MPI_Request       reqHdl[MAX_REQUESTS];
 MPI_Status        reqStat[MAX_REQUESTS];
 int               reqCount;
+#endif
 
 BlockCommunicator::BlockCommunicator(int nblocks): n_blocks_(nblocks), n_inter_block_boundaries_(0), inter_block_boundaries_(nullptr), buffers_(nullptr) {
     #ifdef HAVE_MPI
@@ -348,7 +351,7 @@ void BlockCommunicator::getGlobal(CompleteMesh* mesh, PostProcessing* postproces
     postprocess->cmy_geometry_mesh_=0.0;
     postprocess->cmz_geometry_mesh_=0.0;
 
-    for(i=0; i<complete_mesh->n_blocks_ ; i++) // For each block
+    for(int i=0; i<mesh->n_blocks_ ; i++) // For each block
     {
         // Convergence data
         postprocess->ro_rms_mesh_ += postprocess->ro_rms_blocks_[i];
