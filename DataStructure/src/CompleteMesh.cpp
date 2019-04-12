@@ -60,13 +60,16 @@ string CompleteMesh::getBlockFileName(int block_id)
 		topology_file >> block_file_name;
 		//block_file_name="../"+block_file_name; // why
 		cout<<"Block File Name is: "<<block_file_name<<endl;
-		
+		topology_file.close();
 	}
 	else
 	{
-		cout << "Opening File Failure..."<<endl;
+		cout << "Opening File'" << topology_file_name_ << "' Failure..."<<endl;
+		/*std::ofstream outfile ("STOP");
+		outfile.close();*/
+		exit(42);
 	}
-	topology_file.close();
+	
 	return block_file_name;
 }
 

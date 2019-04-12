@@ -21,7 +21,10 @@ void Interface::readInputFile(string input_file_name)
 	input_file.open(input_file_name);
 	if (input_file.fail())
 	{
-		cout << "Opening File Failure..."<<endl;
+		cout << "Opening File'" << input_file_name << "' Failure..."<<endl;
+		/*std::ofstream outfile ("STOP");
+		outfile.close();*/
+		exit(42);
 	}
 
 	// Skipping "MESH" Line
@@ -247,7 +250,10 @@ void Interface::readNBlocks()
 	}
 	else
 	{
-		cout << "Opening File Failure..."<<endl;
+		cout << "Opening File'" << topology_file_name_interface_ << "' Failure..."<<endl;
+		/*std::ofstream outfile ("STOP");
+		outfile.close();*/
+		exit(42);
 	}
 	topology_file.close();
 }

@@ -478,8 +478,8 @@ void ConcreteBlockBuilder::readMyBlock(Block* block, BlockCommunicator* communic
 		//warning that file was not opened!
 		std::cout<<"WARNING! BLOCK FILE '" << block_file_ << "' WAS NOT CORRECTLY OPENED IN READ FUNCTION. ERRATIC BEHAVIOR MAY APPEAR!"<<std::endl;
 		delete node_creator;
-		std::ofstream outfile ("STOP");
-		outfile.close();
+		/*std::ofstream outfile ("STOP");
+		outfile.close();*/
 		exit(42);
 	}
 	
