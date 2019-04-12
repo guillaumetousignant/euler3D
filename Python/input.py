@@ -441,6 +441,9 @@ class Input():
         self.cmac.set(0.0)
         self.angle_attack.set(0.0)
         self.rk.set(0)
+        self.filename_mesh.set("")
+        self.filename_topology.set("")
+
     
     def clearPage(self):
         self.cfl.set(0.0)
@@ -449,6 +452,8 @@ class Input():
         self.cmac.set(0.0)
         self.angle_attack.set(0.0)
         self.rk.set(0)
+        self.filename_mesh.set("")
+        self.filename_topology.set("")
 
     def writePartialOutputMesh(self):
         
