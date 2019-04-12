@@ -682,9 +682,13 @@ void MetricsInitializer::computeWLS(uint iNCells, Cell** iCells)
         {
             const uint nbCellsNeighbor = iCells[i]->n_faces_per_cell_;
 
-            double dxij[nbCellsNeighbor];
+            /*double dxij[nbCellsNeighbor];
             double dyij[nbCellsNeighbor];
-            double dzij[nbCellsNeighbor];
+            double dzij[nbCellsNeighbor];*/
+
+            double* dxij = new double[iCells[i]->n_faces_per_cell_];
+            double* dyij = new double[iCells[i]->n_faces_per_cell_];
+            double* dzij = new double[iCells[i]->n_faces_per_cell_];
 
             for(uint j(0);j < nbCellsNeighbor;j++)
             {
@@ -783,6 +787,10 @@ void MetricsInitializer::computeWLS(uint iNCells, Cell** iCells)
             }
 
             iCells[i]->cell_weights_=weightLeastSquared;
+
+            delete [] dxij;
+            delete [] dyij;
+            delete [] dzij;
 
         }
 
