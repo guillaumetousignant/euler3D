@@ -93,7 +93,7 @@ void buildConnectivity(Block *iBlock)
 
     iBlock->block_faces_[nbFacesTot - 1]->n_nodes_per_face_ = nbNodesSquare; //Square
 
-    int face2cells_[nbFacesTot][2];
+    int face2cells_[5][2]; // 5 is nbFacesTot
     face2cells_[0][0] = 0;
     face2cells_[0][1] = 1;
 
@@ -332,7 +332,7 @@ TEST_CASE("TestComputeCenterFaces", "Prove that center of faces are correct")
 }
 
 
-TEST_CASE( "TestComputeNormals", "Prove that normales of each faces are well defined" )
+TEST_CASE( "TestComputeNormals", "Prove that normals of each faces are well defined" )
 {
     
     int blockId = 0;
