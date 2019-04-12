@@ -103,6 +103,7 @@ class MetricsInitializer
          * @param iNodes 
          */
         void computeNormalFaces(uint iNFaces, Face** iFaces, Cell** iCells, Node** iNodes);
+        void computeNormalFaces2(uint iNFaces, Face** iFaces, Cell** iCells, Node** iNodes);
 
         /**
          * @brief 

@@ -142,9 +142,7 @@ void MetricsInitializer::computeCenterFaces(uint iNFaces, Face** iFaces, Node** 
     }
 }
 
-
-
-void MetricsInitializer::computeNormalFaces(uint iNFaces, Face** iFaces, Cell** iCells, Node** iNodes)
+void MetricsInitializer::computeNormalFaces2(uint iNFaces, Face** iFaces, Cell** iCells, Node** iNodes)
 {
 
     const uint vec3DSize = 3;
@@ -307,6 +305,148 @@ void MetricsInitializer::computeNormalFaces(uint iNFaces, Face** iFaces, Cell** 
 
 }
 
+void MetricsInitializer::computeNormalFaces(uint iNFaces, Face** iFaces, Cell** iCells, Node** iNodes)
+{
+    double centerLeftCell[3];
+    double faceCenter[3];
+    double centerConnecVec[3];
+    double centerFace[3];
+
+    double node_coord[12]; // Make bigger if we get faces with more than 4 corners
+
+    double s_x;
+    double s_y;
+    double s_z;
+
+    double dxyA, dxyB, dxyC;
+    double dyzA, dyzB, dyzC;
+    double dzxA, dzxB, dzxC;
+
+    double dxA, dxB;
+    double dyA, dyB;
+    double dzA, dzB;
+
+    double x1, x2, x3, x4;
+    double y1, y2, y3, y4;
+    double z1, z2, z3, z4;
+
+    int nodeID;
+    int leftCellID;
+    double dotProduct;
+
+    for(uint i = 0; i < iNFaces;i++)
+    {
+        for(int j = 0;j < iFaces[i]->n_nodes_per_face_;j++)
+        {
+            nodeID = iFaces[i]->face_2_nodes_connectivity_[j];
+
+            node_coord[3*j] =     iNodes[nodeID]->node_coordinates_[0];
+            node_coord[3*j + 1] = iNodes[nodeID]->node_coordinates_[1];
+            node_coord[3*j + 2] = iNodes[nodeID]->node_coordinates_[2];
+
+        }
+
+        if(iFaces[i]->n_nodes_per_face_ == 3)   
+        {
+            //Triangular face
+            
+                x1 = node_coord[0];
+                x2 = node_coord[3];
+                x3 = node_coord[6];
+
+                y1 = node_coord[1];
+                y2 = node_coord[4];
+                y3 = node_coord[7];
+
+                z1 = node_coord[2];
+                z2 = node_coord[5];
+                z3 = node_coord[8];
+
+                dxyA = (x1 - x2)*(y1 + y2);
+                dxyB = (x2 - x3)*(y2 + y3);
+                dxyC = (x3 - x1)*(y3 + y1);
+
+                dyzA = (y1 - y2)*(z1 + z2);
+                dyzB = (y2 - y3)*(z2 + z3);
+                dyzC = (y3 - y1)*(z3 + z1);
+
+                dzxA = (z1 - z2)*(x1 + x2);
+                dzxB = (z2 - z3)*(x2 + x3);
+                dzxC = (z3 - z1)*(x3 + x1);
+
+                s_x = 0.5*(dyzA + dyzB + dyzC);
+                s_y = 0.5*(dzxA + dzxB + dzxC);
+                s_z = 0.5*(dxyA + dxyB + dxyC);
+
+        }   
+        else if(iFaces[i]->n_nodes_per_face_ == 4)
+        {
+
+            //Quadrilateral case
+            
+                x1 = node_coord[0];
+                x2 = node_coord[3];
+                x3 = node_coord[6];
+                x4 = node_coord[9];
+
+                y1 = node_coord[1];
+                y2 = node_coord[4];
+                y3 = node_coord[7];
+                y4 = node_coord[10];
+
+                z1 = node_coord[2];
+                z2 = node_coord[5];
+                z3 = node_coord[8];
+                z4 = node_coord[11];
+
+                dxA = x4 - x2;
+                dxB = x3 - x1;
+                dyA = y4 - y2;
+                dyB = y3 - y1;
+                dzA = z4 - z2;
+                dzB = z3 - z1;
+
+                s_x = 0.5*(dyA*dzB - dzA*dyB);
+                s_y = 0.5*(dzA*dxB - dxA*dzB);
+                s_z = 0.5*(dxA*dyB - dyA*dxB);
+
+        }
+        else
+        {
+            s_x = 0.0;
+            s_y = 0.0;
+            s_z = 0.0; 
+        }
+
+        //Adjust orientation of vector to obey left to right rule for cells
+        leftCellID = iFaces[i]->face_2_cells_connectivity_[0];
+
+        centerLeftCell[0] = iCells[leftCellID]->cell_coordinates_[0];
+        centerLeftCell[1] = iCells[leftCellID]->cell_coordinates_[1];
+        centerLeftCell[2] = iCells[leftCellID]->cell_coordinates_[2];
+
+        centerFace[0] = iFaces[i]->face_center_[0];
+        centerFace[1] = iFaces[i]->face_center_[1];
+        centerFace[2] = iFaces[i]->face_center_[2];
+
+        centerConnecVec[0] = centerFace[0] - centerLeftCell[0];
+        centerConnecVec[1] = centerFace[1] - centerLeftCell[1];
+        centerConnecVec[2] = centerFace[2] - centerLeftCell[2];
+
+        dotProduct = centerConnecVec[0]*s_x + centerConnecVec[1]*s_y + centerConnecVec[2]*s_z;
+
+        if(dotProduct < 0)
+        {
+            s_x *= -1.0;
+            s_y *= -1.0;
+            s_z *= -1.0;
+        }
+
+        iFaces[i]->face_normals_[0] = s_x;
+        iFaces[i]->face_normals_[1] = s_y;
+        iFaces[i]->face_normals_[2] = s_z;
+    }
+}
 
 void MetricsInitializer::computeInterpVect(uint iNCells, uint iNCellsTot, uint iNFaces, Cell** iCells, Face** iFaces)
 {
