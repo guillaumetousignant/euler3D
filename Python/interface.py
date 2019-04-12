@@ -14,7 +14,7 @@ import subprocess
 
 class Interface(Input, Solver, Output):
     def __init__(self, master): # Initialize the class
-        master.title("GRAPHICAL USER INTERFACE")
+        master.title("LÉGEND'AIR")
         master.geometry("397x515")
         master.resizable(0,0)
         # master.grid_propagate(False)
