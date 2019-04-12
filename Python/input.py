@@ -312,6 +312,19 @@ class Input():
         corde_ratio = str(self.croot_ctip.get())
         mesh_type = str(self.mesh_type.get())
 
+        if first_digit == "0":
+            second_digit = "0"
+        
+        else:
+            if second_digit < 10:
+                second_digit = "1"
+            else:
+                second_digit = second_digit[0]
+        
+        third_fourth_digit = str(self.thickness.get())
+        naca_result_text = "NACA " + first_digit + second_digit + third_fourth_digit
+        self.naca_result.configure(text=naca_result_text)
+
         if mesh_type == "1":
             mesh_type = ".egads"
         
