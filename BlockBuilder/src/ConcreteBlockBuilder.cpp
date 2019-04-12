@@ -472,12 +472,17 @@ void ConcreteBlockBuilder::readMyBlock(Block* block, BlockCommunicator* communic
 		}
 
 		//setTopology(block, communicator, count_connexions);
+		myfile.close();
 
 	} else{
 		//warning that file was not opened!
-		std::cout<<"WARNING! BLOCK FILE WAS NOT CORRECTLY OPENED IN READ FUNCTION. ERRATIC BEHAVIOR MAY APPEAR!"<<std::endl;
+		std::cout<<"WARNING! BLOCK FILE '" << block_file_ << "' WAS NOT CORRECTLY OPENED IN READ FUNCTION. ERRATIC BEHAVIOR MAY APPEAR!"<<std::endl;
+		delete node_creator;
+		std::ofstream outfile ("STOP");
+		outfile.close();
+		exit(42);
 	}
-	myfile.close();
+	
 	delete node_creator;
 
 }
@@ -738,7 +743,7 @@ void ConcreteBlockBuilder::setTopology(Block* block, BlockCommunicator* block_co
 
 	int block_id=block->block_id_;
 
-	//cout<<"DÃ©but Set Topology............ "<<endl;
+	//cout<<"Début Set Topology............ "<<endl;
 
 	if (myfile.is_open())
 	{
