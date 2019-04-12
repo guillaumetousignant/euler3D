@@ -127,7 +127,7 @@ void BlockCommunicator::updateBoundaries(CompleteMesh* mesh) const {
                 buffers_[i][39][k] = block_origin->block_interpolation_variables_->grad_pp_[cell_id_origin][2];
             }
 
-            MPI_Request send_request[N_VARIABLES];
+            //MPI_Request send_request[N_VARIABLES];
             for (unsigned int j = 0; j < N_VARIABLES; j++){
                 MPI_Isend(buffers_[i][j], n_cells, MPI_DOUBLE, destination_process_id, N_VARIABLES*i+j, MPI_COMM_WORLD, &reqHdl[reqCount]);
                 reqCount++;
@@ -137,7 +137,7 @@ void BlockCommunicator::updateBoundaries(CompleteMesh* mesh) const {
         // If this process is receiver
         if (process_id_ == destination_process_id){
 
-            MPI_Request receive_request[N_VARIABLES];
+            //MPI_Request receive_request[N_VARIABLES];
             for (unsigned int j = 0; j < N_VARIABLES; j++){
                 MPI_Irecv(buffers_[i][j+N_VARIABLES], n_cells, MPI_DOUBLE, origin_process_id, N_VARIABLES*i+j, MPI_COMM_WORLD, &reqHdl[reqCount]);
                 reqCount++;
