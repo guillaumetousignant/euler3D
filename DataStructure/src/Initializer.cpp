@@ -24,7 +24,7 @@ Initializer::~Initializer()
 
 Solver* Initializer::initializeSolver(Interface* interface)
 {
-	cout<<"Initialisation du Solver"<<endl<<endl;
+	//cout<<"Initialisation du Solver"<<endl<<endl;
 
 	double gamma=interface->gamma_interface_;
 	double cfl=interface->cfl_interface_;

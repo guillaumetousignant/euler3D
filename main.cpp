@@ -82,7 +82,7 @@ int main(int argc, char* argv[])
 	communicator->initializeBuffers();
 
 	if (communicator->process_id_ == 0){
-		std::cout << "Initialisation du Solver" << std::endl;
+		std::cout << "Initialisation du Solver" << std::endl << std::endl;
 	}
 	Solver *solver=initializer->initializeSolver(interface);
 
