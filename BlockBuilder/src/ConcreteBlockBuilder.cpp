@@ -21,7 +21,9 @@ ConcreteBlockBuilder::~ConcreteBlockBuilder()
 
 void ConcreteBlockBuilder::preReadMyBlock(Block* block)
 {
+	if (block->block_id_ == 0){
 	std::cout << block_file_ << std::endl; // REMOVE
+	}
 	std::ifstream myfile(block_file_);
 
 	char str_temp[200];
@@ -182,6 +184,7 @@ void ConcreteBlockBuilder::preReadMyBlock(Block* block)
 		block->n_faces_in_block_ = n_faces;
 		// block->n_faces_in_block_ = 750;
 
+		if (block->block_id_ == 0){
 		std::cout<<"Pre-Reading block............  "<<std::endl;
 
 		std::cout<<n_faces<<std::endl;
@@ -191,6 +194,7 @@ void ConcreteBlockBuilder::preReadMyBlock(Block* block)
 		std::cout<<"N_all_boundaries: "<<block->n_all_boundaries_in_block_<<std::endl;
 		std::cout<<"N real cells in block: "<<block->n_real_cells_in_block_<<std::endl;
 		std::cout<<"N all cells in block: "<<block->n_all_cells_in_block_<<std::endl;
+		}
 
 		PrimitiveVariables* prim= new PrimitiveVariables(block->n_all_cells_in_block_);
 		block->block_primitive_variables_=prim;
@@ -204,17 +208,20 @@ void ConcreteBlockBuilder::preReadMyBlock(Block* block)
 		InterpolationVariables* inpvar= new InterpolationVariables(block->n_all_cells_in_block_);
 		block->block_interpolation_variables_=inpvar;
 
+		if (block->block_id_ == 0){
 		std::cout<<"Number of faces : "<<n_faces<<std::endl;
+		}
 
-
-
+		myfile.close();
 	}
 	else
 	{
 		//warning that file was not opened!
-		std::cout<<"WARNING! BLOCK FILE WAS NOT CORRECTLY OPENED IN PRE-READ FUNCTION. ERRATIC BEHAVIOR MAY APPEAR!"<<std::endl;
+		std::cout<<"WARNING! BLOCK FILE '" << block_file_ << "' WAS NOT CORRECTLY OPENED IN PRE-READ FUNCTION. ERRATIC BEHAVIOR MAY APPEAR!"<<std::endl;
+		/*std::ofstream outfile ("STOP");
+		outfile.close();*/
+		exit(42);	
 	}
-	myfile.close();
 }
 
 void ConcreteBlockBuilder::readMyBlock(Block* block, BlockCommunicator* communicator)
@@ -528,8 +535,9 @@ void ConcreteBlockBuilder::createMyFaces(Block* block)
 
 
 
-
+	if (block->block_id_ == 0){
 	std::cout<< "Creating Faces............"<< std::endl;
+	}
 	for(int i=0; i<block->n_real_cells_in_block_;i++)
 	{
 		Face** temp_face_array;
@@ -863,6 +871,8 @@ void ConcreteBlockBuilder::setTopology(Block* block, BlockCommunicator* block_co
 		cout<<endl;
 		
 	}*/
+	if (block_communicator->process_id_ == 0){
 	cout<<"Fin Set Topology............ "<<endl;
+	}
 }
 #endif

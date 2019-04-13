@@ -13,10 +13,10 @@ using namespace std;
 
 Convergence::Convergence()
 {
-  cout << "Initialize Convergence..............................................." << endl;
+  //cout << "Initialize Convergence..............................................." << endl;
 
 
-  cout << "Initialize Convergence...........................................DONE" << endl;
+  //cout << "Initialize Convergence...........................................DONE" << endl;
 }
 
 Convergence::~Convergence()

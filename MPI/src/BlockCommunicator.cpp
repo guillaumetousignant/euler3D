@@ -378,7 +378,9 @@ void BlockCommunicator::createBoundaries(std::string  &topology_filename){
 
 	if (!topo.is_open()){
 		std::cout << "ERROR: Topology file '" << topology_filename << "' not opened, exiting." << std::endl;
-		return;
+		/*std::ofstream outfile ("STOP");
+		outfile.close();*/
+		exit(42);
 	}
 
 	std::string line;

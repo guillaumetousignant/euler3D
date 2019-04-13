@@ -58,7 +58,7 @@ int main(int argc, char* argv[])
 		exit(-1);
 	}
 
-	Interface* interface= new Interface(argv[1]);
+	Interface* interface= new Interface(argv[1], (process_id_temp == 0));
 	Initializer* initializer= new Initializer();
 
 	int n_blocks=interface->n_blocks_interface_;
@@ -81,6 +81,9 @@ int main(int argc, char* argv[])
 	//communicator->createBoundaries(complete_mesh->topology_file_name_);
 	communicator->initializeBuffers();
 
+	if (communicator->process_id_ == 0){
+		std::cout << "Initialisation du Solver" << std::endl;
+	}
 	Solver *solver=initializer->initializeSolver(interface);
 
 	auto t_start = std::chrono::high_resolution_clock::now();

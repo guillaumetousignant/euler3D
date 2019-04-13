@@ -12,8 +12,8 @@ class Interface
 {
 	public:
 
-		void readInputFile(string input_file_name);
-		void readNBlocks();
+		void readInputFile(string input_file_name, bool i_write = false);
+		void readNBlocks(bool i_write = false);
 
 		// MESH
 		string topology_file_name_interface_;
@@ -75,7 +75,7 @@ class Interface
 		int n_blocks_interface_; 
 
 
-		Interface(char* argv);
+		Interface(char* argv, bool i_write);
 		~Interface();
 
 
