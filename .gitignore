@@ -12,3 +12,7 @@ output*.txt
 *.pyc
 *.log
 *.m
+*local_mesh_*
+*.png
+*.lay
+*core.*
