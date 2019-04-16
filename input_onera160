@@ -1,0 +1,32 @@
+MESH
+topologyfilename
+./Meshes/oneraM6_160B.top
+INPUT
+cfl gamma angleattackdeg
+1.5 1.4 4.25
+rkstage mach cmac
+5 0.65 1.00
+nbitermax convcriterion
+100000 -15
+residual smoothing (0-no 1-yes)
+0
+fluxscheme schemeorder
+roe 1
+gradient limiter
+leastsquares venkatakrishnan
+omega k
+2.16e-16 5.00
+EXECUTABLE (0-no 1-yes)
+build execute
+1 1
+OUTPUT (0-no 1-yes)
+clalpha cdalpha cmalpha
+1 1 1
+coefficientsconv  residualconv
+1 1
+cpxc machcontour cpcontour machisosurface
+1 1 1 0
+slicecp
+1
+axis xcoord ycoord zcoord
+x 1.00 1.00 1.00
