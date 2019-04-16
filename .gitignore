@@ -16,3 +16,4 @@ output*.txt
 *.png
 *.lay
 *core.*
+/results/*
