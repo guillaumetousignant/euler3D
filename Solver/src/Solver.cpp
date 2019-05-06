@@ -68,17 +68,17 @@ void Solver::solve(CompleteMesh* complete_mesh, BlockCommunicator* communicator)
 			current_block->block_primitive_variables_->ro_[int_cell_idx]=ro_ext;
 
 		}
-			
+
 	}
 	*/
 
-	
+
 	while(!post_processing_->stop_solver_)
 	{
-		
+
 		//post_processing_->process(block, complete_mesh); //PARTIE QUI CALCULE LES SOMMES, PRENDS LES DÉCISIONS ET PUBLISH
 		/// FIN DES TRUCS MPI
-		
+
 		// #pragma omp parallel for num_threads(8) // DECOMMENTER POUR AVOIR OPENMP
 		for	(int i=0;i<n_blocks_in_process;i++)
 		{
@@ -92,11 +92,11 @@ void Solver::solve(CompleteMesh* complete_mesh, BlockCommunicator* communicator)
 
 		///INSÉRER LES TRUCS DE MPI ICI JE CROIS
 		communicator->updateBoundaries(complete_mesh);
-		
+
 		post_processing_->process(complete_mesh, communicator);
 
 	}
-	
+
 
 
 
@@ -204,7 +204,7 @@ void Solver::saveW0(Block* block)
 		}
 	}*/
 
-	
+
 
 
 }

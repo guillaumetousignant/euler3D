@@ -64,7 +64,7 @@ int main(int argc, char* argv[])
 	cout << "In CompleteMesh........." << endl;
 	CompleteMesh* complete_mesh = new CompleteMesh(n_blocks, n_blocks_in_process, my_blocks, interface->topology_file_name_interface_);
 	complete_mesh->InitializeMyBlocks(interface, communicator);
-
+	// MPI_Barrier(MPI_COMM_WORLD);
 	//communicator->createBoundaries(complete_mesh->topology_file_name_);
 	communicator->initializeBuffers();
 
@@ -73,8 +73,8 @@ int main(int argc, char* argv[])
 	auto t_start = std::chrono::high_resolution_clock::now();
     solver->solve(complete_mesh, communicator);
     auto t_end = std::chrono::high_resolution_clock::now();
-    std::cout << "Time elapsed solving: " 
-            << std::chrono::duration<double, std::milli>(t_end-t_start).count()/1000.0 
+    std::cout << "Time elapsed solving: "
+            << std::chrono::duration<double, std::milli>(t_end-t_start).count()/1000.0
             << "s." << std::endl;
 
 	#ifdef HAVE_MPI

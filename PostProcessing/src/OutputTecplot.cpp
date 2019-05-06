@@ -39,7 +39,7 @@ void OutputTecplot::printFlowData(Block* block)
   ss << std::setw(OUTPUT_ZERO_PADDING) << std::setfill('0') << block->block_id_;
   std::string filename = "FlowData_Block" + ss.str() + ".dat";
   std::ofstream FlowData;
-  FlowData.open("./bin/" + filename);
+  FlowData.open("./" + filename);
 
   if (!FlowData.is_open())
   {
@@ -199,7 +199,7 @@ void OutputTecplot::printSurfaceFlowData(Block* block)
     ss << std::setw(OUTPUT_ZERO_PADDING) << std::setfill('0') << block->block_id_;
     std::string filename = "SurfaceFlowData_Block" + ss.str() + ".dat";
     std::ofstream SurfaceFlowData;
-    SurfaceFlowData.open("./bin/" + filename);
+    SurfaceFlowData.open("./" + filename);
 
       if (!SurfaceFlowData.is_open())
       {
@@ -369,10 +369,10 @@ void OutputTecplot::printSurfaceFlowData(Block* block)
 
         // Primitve variables
         pp_face = (block->block_primitive_variables_->pp_[cell] + block->block_primitive_variables_->pp_[cell1])*0.5;
-        ro_face = (block->block_primitive_variables_->pp_[cell] + block->block_primitive_variables_->ro_[cell1])*0.5;
-        uu_face = (block->block_primitive_variables_->pp_[cell] + block->block_primitive_variables_->uu_[cell1])*0.5;
-        vv_face = (block->block_primitive_variables_->pp_[cell] + block->block_primitive_variables_->vv_[cell1])*0.5;
-        ww_face = (block->block_primitive_variables_->pp_[cell] + block->block_primitive_variables_->ww_[cell1])*0.5;
+        ro_face = (block->block_primitive_variables_->ro_[cell] + block->block_primitive_variables_->ro_[cell1])*0.5;
+        uu_face = (block->block_primitive_variables_->uu_[cell] + block->block_primitive_variables_->uu_[cell1])*0.5;
+        vv_face = (block->block_primitive_variables_->vv_[cell] + block->block_primitive_variables_->vv_[cell1])*0.5;
+        ww_face = (block->block_primitive_variables_->ww_[cell] + block->block_primitive_variables_->ww_[cell1])*0.5;
 
         a_face = pow(gamma_*pp_face/ro_face, 0.5);
 
@@ -418,11 +418,11 @@ void OutputTecplot::printConvergence(int iter, double cl, double cd, double cmx,
   std::ofstream Convergence;
   if(iter == 0)
   {
-    Convergence.open("./bin/Convergence.dat");
+    Convergence.open("./Convergence.dat");
   }
   else
   {
-    Convergence.open("./bin/Convergence.dat", std::ios_base::app);
+    Convergence.open("./Convergence.dat", std::ios_base::app);
   }
 
 
@@ -451,7 +451,7 @@ void OutputTecplot::printAerodynamicCoefficients(double cl, double cd, double cm
 
   //AerodynamicCoefficients.open("AerodynamicCoefficients.plt", ios::binary);
   std::ofstream AerodynamicCoefficients;
-  AerodynamicCoefficients.open("./bin/AerodynamicCoefficients.dat");
+  AerodynamicCoefficients.open("./AerodynamicCoefficients.dat");
 
     if (!AerodynamicCoefficients.is_open())
     {
@@ -480,7 +480,7 @@ void OutputTecplot::printRestartFile(Block* block)
   ss << std::setw(OUTPUT_ZERO_PADDING) << std::setfill('0') << block->block_id_;
   std::string filename = "RestartFile" + ss.str() + ".dat";
   std::ofstream RestartFile;
-  RestartFile.open("./bin/" + filename);
+  RestartFile.open("./" + filename);
 
     if (!RestartFile.is_open())
     {

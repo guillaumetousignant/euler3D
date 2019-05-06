@@ -70,11 +70,11 @@ void PostProcessing::checkStopSolver()
 
 
   // Check if STOP file exists
-  struct stat buffer;   
-  bool file_exist_flag=(stat (stop_file_name_.c_str(), &buffer) == 0); 
+  struct stat buffer;
+  bool file_exist_flag=(stat (stop_file_name_.c_str(), &buffer) == 0);
 
   // EN ATTENDANT
-  if((current_iter_+1 == max_iter_)|| (ro_convergence_ <= convergence_criterion_)||(file_exist_flag))
+  if((current_iter_+1 >= max_iter_)|| (ro_convergence_ <= convergence_criterion_)||(file_exist_flag))
   {
     stop_solver_= true;
     remove( stop_file_name_.c_str() );
@@ -266,7 +266,7 @@ void PostProcessing::process(CompleteMesh* complete_mesh, BlockCommunicator* com
     if (communicator->process_id_ == 0){
       output_tecplot_->printConvergence(current_iter_, cl_geometry_mesh_, cd_geometry_mesh_, cmx_geometry_mesh_, cmy_geometry_mesh_, cmz_geometry_mesh_, ro_convergence_, uu_convergence_, vv_convergence_, ww_convergence_, pp_convergence_);
     }
-    
+
     if (stop_solver_==true)
     {
       cout << "Writing Solution......................................................" << endl;
@@ -280,7 +280,7 @@ void PostProcessing::process(CompleteMesh* complete_mesh, BlockCommunicator* com
         output_tecplot_->printSurfaceFlowData(current_block);
         output_tecplot_->printRestartFile(current_block);//PARTIE QUI FAIT JUSTE CALCULER LES CL ET CONVERGENCE PARTIELLE
       }
-      
+
       // Pour le complete mesh seulement
       if (communicator->process_id_ == 0){
         output_tecplot_->printAerodynamicCoefficients(cl_geometry_mesh_, cd_geometry_mesh_, cmx_geometry_mesh_, cmy_geometry_mesh_, cmz_geometry_mesh_);

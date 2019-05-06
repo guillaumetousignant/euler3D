@@ -57,6 +57,7 @@ void Updater::updateInternalBlock(Block* block)
 		rw_new=rw_0-(alpha_rk_[current_stage_]*dt/cell_volume)*(res_ww_conv-res_ww_diss);
 		re_new=re_0-(alpha_rk_[current_stage_]*dt/cell_volume)*(res_pp_conv-res_pp_diss);
 
+
 		ro=ro_new;
 		uu= ru_new/ro_new;
 		vv= rv_new/ro_new;
