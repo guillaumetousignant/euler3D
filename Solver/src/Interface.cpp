@@ -24,7 +24,7 @@ void Interface::readInputFile(string input_file_name, bool i_write /* = false */
 	input_file.open(input_file_name);
 	if (input_file.fail())
 	{
-		cout << "Opening File'" << input_file_name << "' Failure..."<<endl;
+		cout << "Opening File_test4'" << input_file_name << "' Failure..."<<endl;
 		/*std::ofstream outfile ("STOP");
 		outfile.close();*/
 		exit(42);
@@ -245,7 +245,7 @@ void Interface::readNBlocks(bool i_write)
 	if (i_write){
 	cout << "Reading Topology File: "<<topology_file_name_interface_<<endl;
 	}
-	
+
 	if (topology_file.is_open())
 	{
 		// Reading NBlocks
@@ -257,7 +257,7 @@ void Interface::readNBlocks(bool i_write)
 	}
 	else
 	{
-		cout << "Opening File'" << topology_file_name_interface_ << "' Failure..."<<endl;
+		cout << "Opening File_test5'" << topology_file_name_interface_ << "' Failure..."<<endl;
 		/*std::ofstream outfile ("STOP");
 		outfile.close();*/
 		exit(42);

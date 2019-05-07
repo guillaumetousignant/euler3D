@@ -1,8 +1,8 @@
 #!MC 1410
-$!VarSet |LFBD| = '/home/etudiant/Documents/Euler3D/euler3D/Python/lay'
+$!VarSet |LFBD| = '/home/apollon/vilig/PI4/euler3D/Python/lay'
 $!VarSet |LFDSRN1| = 'Tecplot Subzone Data Loader'
 $!VarSet |LFDSVL1| = ''
-$!VarSet |LFDSFN1| = '"STANDARDSYNTAX" "1.0" "FILENAME_FILE" "/home/etudiant/Documents/Euler3D/euler3D/bin/SurfaceFlowFile_AllBlocks.szplt"'
+$!VarSet |LFDSFN1| = '"STANDARDSYNTAX" "1.0" "FILENAME_FILE" "/home/apollon/vilig/PI4/euler3D/bin/SurfaceFlowFile_AllBlocks.szplt"'
 $!SetStyleBase Factory
 $!GlobalPaper 
   PaperSizeInfo
@@ -65,7 +65,7 @@ $!PlotType  = Cartesian3D
 $!FrameName  = 'Frame 001'
 $!GlobalTime 
   SolutionTime = 0
-$!ActiveFieldMaps  =  [1]
+$!ActiveFieldMaps  =  [1-7]
 $!GlobalRGB 
   RangeMin = 0
   RangeMax = 1
@@ -90,25 +90,18 @@ $!GlobalContour  1
 $!ContourLevels New
   ContourGroup = 1
   RawData
-18
--0.7
+11
 -0.6
--0.5
 -0.4
--0.3
 -0.2
--0.1
 0
-0.1
 0.2
-0.3
 0.4
-0.5
 0.6
-0.7
 0.8
-0.9
 1
+1.2
+1.4
 $!GlobalContour  2
   Legend
     {
@@ -241,7 +234,7 @@ $!GlobalScatter
     Color = Red
     FillColor = Red
     }
-$!FieldMap  [1]
+$!FieldMap  [1-7]
   Mesh
     {
     Color = Black
@@ -310,17 +303,17 @@ $!ThreeDAxis
     }
 $!View Fit
 $!ThreeDAxis 
-  AxisMode = XYDependent
+  AxisMode = XYZDependent
   XYDepXToYRatio = 1
   DepXToYRatio = 1
-  DepXToZRatio = 0.0138631272144
+  DepXToZRatio = 1
 $!ThreeDAxis 
   XDetail
     {
     ShowAxis = No
-    RangeMin = -78.768850708007818184
-    RangeMax = 79.711447143554693184
-    GRSpacing = 50
+    RangeMin = -0.074921561032533640079
+    RangeMax = 1.059934375435113818
+    GRSpacing = 0.2
     AxisLine
       {
       Edge = 2
@@ -330,9 +323,9 @@ $!ThreeDAxis
   YDetail
     {
     ShowAxis = No
-    RangeMin = -79.347176361083981533
-    RangeMax = 79.347176361083981533
-    GRSpacing = 50
+    RangeMin = -0.079701850935816762056
+    RangeMax = 0.089710253104567524995
+    GRSpacing = 0.2
     AxisLine
       {
       Edge = 3
@@ -572,12 +565,12 @@ $!GlobalThreeD
     {
     X = 1
     Y = 1
-    Z = 72.13379669189453
+    Z = 1
     }
   RotateOrigin
     {
-    X = 0.4712982177734375
-    Y = 0
+    X = 0.4925064072012901
+    Y = 0.005004201084375381
     Z = 0.5
     }
   LightSource

@@ -86,9 +86,14 @@ class plotSlicesCp(object):
 
             # Get x from slice
             slice_x = extracted_slice.values(0);
+            print("test2")
+            print(extracted_slice.values)
             x = slice_x.as_numpy_array();
 
             # Normalize x with aerodynamic chord
+            print("test1")
+            print(x.min())
+            print(x.max())
             xc = (x-x.min())/(x.max()-x.min());
             slice_x[:] = xc;
 
@@ -99,6 +104,9 @@ class plotSlicesCp(object):
 
             # Create Cp vs x/c 2D plot
             if self.type_ == 0: #EULER
+                print("test3")
+                #print(*dataset.variable(0).values(0))
+                print(*dataset.variable(8).values(0))
                 cp_linemap = plot.add_linemap(
                     zone=extracted_slice,
                     x=dataset.variable(0),

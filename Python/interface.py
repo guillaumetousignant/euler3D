@@ -14,11 +14,11 @@ import subprocess
 
 class Interface(Input, Solver, Output):
     def __init__(self, master): # Initialize the class
-        master.title("LÉGEND'AIR")
+        master.title("LEGEND'AIR")
         master.geometry("397x515")
         master.resizable(0,0)
         # master.grid_propagate(False)
-        
+
         # TABS OF THE MAIN WINDOW
         tabControl = ttk.Notebook(master)
         tabControl.grid(row=0, column=0, columnspan=10, sticky='NESW')
@@ -33,7 +33,7 @@ class Interface(Input, Solver, Output):
         tabControl.add(tab3, text="3. Output")
 
         tabControl.select(tab1)
-        
+
         # MENU BAR
         menubar = Menu(master)
         master.config(menu=menubar)
@@ -77,7 +77,7 @@ class Interface(Input, Solver, Output):
 
         solve_button_input = ttk.Button(tab1, text="Solve", command=self.solveCode)
         solve_button_input.grid(row=3, column=2, padx=2, pady=2)
- 
+
         solve_button_solver = ttk.Button(tab2, text="Solve", command=self.solveCode)
         solve_button_solver.grid(row=4, column=2, padx=2, pady=2)
 
@@ -90,15 +90,15 @@ class Interface(Input, Solver, Output):
         ttk.Label(tab1, text="").grid(row=4, column=0, columnspan=3, sticky=NSEW)
         ttk.Label(tab2, text="").grid(row=5, column=0, columnspan=3, sticky=NSEW)
         ttk.Label(tab3, text="").grid(row=4, column=0, columnspan=3, sticky=NSEW)
-   
+
     def clearAllPages(self):
         self.input_.clearPage()
         self.solver_.clearPage()
         self.output_.clearPage()
-    
+
     def solveCode(self):
         solver_option = self.solver_.solver_option.get()
-        
+
         if solver_option == 1:
             self.command = "make"
 
@@ -114,7 +114,7 @@ class Interface(Input, Solver, Output):
             ## TO RUN WITH MPI: ##
             nb_process_str = str(self.solver_.nb_process.get())
             self.command = "make clean; make; mpiexec -n " + nb_process_str + " ./bin/euler3D ./bin/output_interface"
-            
+
             ## TO RUN WHITOUT MPI: ##
             # self.command = "make clean; make; ./bin/euler3D ./bin/output_interface"
         command_post = './Python/runPostProcessing.sh'
@@ -153,7 +153,7 @@ class Interface(Input, Solver, Output):
         # complete_file_name = os.path.join(file_path, file_name)
 
         # subprocess.Popen([file_name],shell=True)
-    
+
     def saveOutputAs(self):
 
         input_text = self.input_.writePartialOutput()
@@ -180,12 +180,12 @@ class Interface(Input, Solver, Output):
             file = open(filename, "r")
 
             file.readline() # "MESH"
-            
+
             file.readline() # "topologyfilename"
             filename, space = file.readline().split("\n") # File name
 
             file.readline() # "INPUT"
-            
+
             file.readline() # "cfl gamma angleattackdeg"
             a = file.readline()
             cfl, gamma, angleattackdeg = a.split()
@@ -200,7 +200,7 @@ class Interface(Input, Solver, Output):
 
             file.readline() # "residual smoothing (0-no 1-yes)"
             smoothing = file.readline()
-            
+
             file.readline() # "fluxscheme schemeorder"
             a = file.readline()
             fluxscheme, schemeorder = a.split()
@@ -214,7 +214,7 @@ class Interface(Input, Solver, Output):
             omega, k = a.split()
 
             file.readline() # "EXECUTABLE (0-no 1-yes)"
-            
+
             file.readline() # "build execute"
             a = file.readline()
             build, execute = a.split()
@@ -223,7 +223,7 @@ class Interface(Input, Solver, Output):
 
             file.readline() # "filestype (0-Euler 1 -SU2)"
             filestype, space = file.readline().split("\n")
-            
+
             file.readline() # "clalpha cdalpha cmalpha"
             a = file.readline()
             clalpha, cdalpha, cmalpha = a.split()

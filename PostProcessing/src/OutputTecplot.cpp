@@ -44,7 +44,7 @@ void OutputTecplot::printFlowData(Block* block)
   if (!FlowData.is_open())
   {
     // TODO throw exception
-    cerr << "Failed opening file " << filename << endl;
+    cerr << "Failed opening file_test2 " << filename << endl;
     //return;
   }
 
@@ -204,7 +204,7 @@ void OutputTecplot::printSurfaceFlowData(Block* block)
       if (!SurfaceFlowData.is_open())
       {
         // TODO throw exception
-        cerr << "Failed opening file " << filename << endl;
+        cerr << "Failed opening file_test3 " << filename << endl;
         //return;
       }
 

@@ -66,12 +66,12 @@ string CompleteMesh::getBlockFileName(int block_id)
 	}
 	else
 	{
-		cout << "Opening File'" << topology_file_name_ << "' Failure..."<<endl;
+		cout << "Opening File_test1'" << topology_file_name_ << "' Failure..."<<endl;
 		/*std::ofstream outfile ("STOP");
 		outfile.close();*/
 		exit(42);
 	}
-	
+
 	return block_file_name;
 }
 
@@ -94,7 +94,7 @@ void CompleteMesh::InitializeMyBlocks(Interface* interface, BlockCommunicator* c
 		if (communicator->process_id_ == 0){
 		cout << "Initialize block number: "<<block_id<<endl;
 		}
-		
+
 		ConcreteBlockBuilder block_builder=ConcreteBlockBuilder(block_file_name, topology_file_name_);
 		Block* new_block = all_blocks_[block_id];
 
@@ -170,7 +170,7 @@ void CompleteMesh::InitializeMyBlocks(Interface* interface, BlockCommunicator* c
 	for(int block_id=0;block_id<n_blocks_;block_id++)
 	{
 
-		
+
 		std::ifstream myfile(topology_file_name_);
 		char str_temp[200];
 		std::string line;
@@ -202,10 +202,10 @@ void CompleteMesh::InitializeMyBlocks(Interface* interface, BlockCommunicator* c
 				sscanf (line.c_str(), "%s %d",str_temp,&block_idx);
 					//cout<<"Block idx read: "<<block_idx<<endl;
 					// Current block found
-				if(block_idx==block_id) 
+				if(block_idx==block_id)
 				{
 					//cout<<"Block Found: "<<block_idx<<endl;
-					
+
 					// Read Count Connexions
 					getline(myfile, line);
 					sscanf (line.c_str(), "%s %d",str_temp,&count_connexions);
@@ -221,10 +221,10 @@ void CompleteMesh::InitializeMyBlocks(Interface* interface, BlockCommunicator* c
 						ConnexionCellIds *block_connexion_boundary_cell_ids = new ConnexionCellIds();
 
 						getline(myfile, line);
-						sscanf (line.c_str(), "%s %d",str_temp,&block_origin_temp); 
+						sscanf (line.c_str(), "%s %d",str_temp,&block_origin_temp);
 						//cout<<"Source block: "<<block_origin_temp<<endl;
 						getline(myfile, line);
-						sscanf (line.c_str(), "%s %d",str_temp,&n_elems); 
+						sscanf (line.c_str(), "%s %d",str_temp,&n_elems);
 						//cout<<"Number of elements: "<<n_elems<<endl;
 
 
@@ -240,7 +240,7 @@ void CompleteMesh::InitializeMyBlocks(Interface* interface, BlockCommunicator* c
 						for(k=0;k<n_elems;k++)
 						{
 							getline(myfile, line);
-							sscanf (line.c_str(), "%d",&elem_id_destination_temp); 
+							sscanf (line.c_str(), "%d",&elem_id_destination_temp);
 
 							block_connexion_boundary_cell_ids->cell_ids_in_boundary_[k]=count_connexions;
 							count_connexions+=1;
@@ -265,30 +265,30 @@ void CompleteMesh::InitializeMyBlocks(Interface* interface, BlockCommunicator* c
 						// Skip Count Connexions
 					getline(myfile, line);
 					sscanf (line.c_str(), "%s %d",str_temp,&count_connexions);
-					
+
 					getline(myfile, line);
 					sscanf (line.c_str(), "%s %d",str_temp,&n_boundaries);
 
-					
+
 
 					for(j=0;j<n_boundaries;j++)
 					{
 
 						getline(myfile, line);
-						sscanf (line.c_str(), "%s %d",str_temp,&block_origin_temp); 
+						sscanf (line.c_str(), "%s %d",str_temp,&block_origin_temp);
 						getline(myfile, line);
-						sscanf (line.c_str(), "%s %d",str_temp,&n_elems); 
+						sscanf (line.c_str(), "%s %d",str_temp,&n_elems);
 
 						for(k=0;k<n_elems;k++)
 						{
 							getline(myfile, line);
-							sscanf (line.c_str(), "%s %d",str_temp,&elem_id_destination_temp); 
+							sscanf (line.c_str(), "%s %d",str_temp,&elem_id_destination_temp);
 						}
 					}
 				}
 			}
 		}
-		myfile.close();		
+		myfile.close();
 	}
 }
 

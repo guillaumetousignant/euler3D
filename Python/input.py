@@ -23,7 +23,7 @@ class Input():
         title_section_1_1.grid_rowconfigure(4, weight=1)
 
         ttk.Label(title_section_1_1, text=" ").grid(row=0, column=0, columnspan=3, sticky=NSEW)
-        
+
         text_section_1_1 = ttk.Label(title_section_1_1, text="\n\nPlease select the desired mesh or geometry:\n")
         text_section_1_1.grid(row=1, column=0, columnspan=3, sticky=NSEW, padx=2)
 
@@ -32,7 +32,7 @@ class Input():
 
         import_geometry = Button(title_section_1_1, text="Import\ngeometry", command=self.importGeometry, anchor=CENTER, takefocus=0)
         import_geometry.grid(row=2, column=1, sticky=NSEW, padx=2, pady=2)
-        
+
         generate_geometry = Button(title_section_1_1, text="Generate\ngeometry", command=self.generateGeometry, anchor=CENTER, takefocus=0)
         generate_geometry.grid(row=2, column=2, sticky=NSEW, padx=2, pady=2)
 
@@ -96,7 +96,7 @@ class Input():
         self.rk_label.grid(row=4, column=2, sticky=NSEW, padx=2, pady=2)
         self.rk_entry = ttk.Entry(title_section_1_2, textvariable=self.rk, justify=CENTER, takefocus=0)
         self.rk_entry.grid(row=4, column=3, sticky=NSEW, padx=2, pady=2)
-        
+
         self.filename_mesh = StringVar()
         self.filename_mesh.set("void")
         self.filename_geometry = StringVar()
@@ -115,10 +115,10 @@ class Input():
 
         text_mesh_importation = ttk.Label(self.mesh_window, text="\nImport the desired mesh:\n")
         text_mesh_importation.grid(row=0, column=0, columnspan=4, sticky=W, padx=2)
-        
+
         select_file_button = ttk.Button(self.mesh_window, text="Select a file", command=self.meshFileDialog)
         select_file_button.grid(row=1, column=0, padx=2)
-        
+
         self.filename_label_mesh = ttk.Label(self.mesh_window, text=self.filename_mesh.get(), relief="solid", width=60)
         self.filename_label_mesh.grid(row=1, column=1, columnspan=3, padx=2)
 
@@ -126,7 +126,7 @@ class Input():
             self.filename_label_mesh.configure(text=self.filename_mesh.get())
         else:
             self.filename_label_mesh.configure(text="")
-        
+
         ok_button = ttk.Button(self.mesh_window, text="Ok", command=self.saveAndDestroyMeshWindow)
         ok_button.grid(row=2, column=1, pady=5)
 
@@ -138,15 +138,15 @@ class Input():
 
         if self.filename_mesh.get() == "":
             self.filename_label_mesh.configure(text="")
-        
+
         elif self.filename_mesh.get().endswith('.su2'):
             self.filename_label_mesh.configure(text=self.filename_mesh.get())
         else:
             messagebox.showwarning("Warning", "Chosen mesh file must be a SU2 file!")
             self.filename_label_mesh.configure(text=self.filename_mesh.get())
-        
+
         self.mesh_window.lift()
-        
+
     def importGeometry(self):
         self.geometry_window = Toplevel(self.master)
         self.geometry_window.title("Geometry importation")
@@ -155,10 +155,10 @@ class Input():
 
         text_geometry_importation = ttk.Label(self.geometry_window, text="\nImport the desired geometry:\n")
         text_geometry_importation.grid(row=0, column=0, columnspan=4, sticky=W, padx=2)
-        
+
         select_file_button = ttk.Button(self.geometry_window, text="Select a file", command=self.geometryFileDialog)
         select_file_button.grid(row=1, column=0, padx=2)
-        
+
         self.filename_label_geometry = ttk.Label(self.geometry_window, text="", relief="solid", width=60)
         self.filename_label_geometry.grid(row=1, column=1, columnspan=3, padx=2)
         if self.filename_geometry.get() != "void":
@@ -175,23 +175,23 @@ class Input():
 
     def geometryFileDialog(self):
         self.filename_geometry.set(filedialog.askopenfilename(initialdir="/home/etudiant/", title="Select a file", filetypes=(("csm", "*.csm"),("All Files", "*.*"))))
-        
+
         if self.filename_geometry.get() == "":
             self.filename_label_geometry.configure(text="")
-        
+
         elif self.filename_geometry.get().endswith('.csm'):
             self.filename_label_geometry.configure(text=self.filename_geometry.get())
-        
+
         else:
             messagebox.showwarning("Warning", "Chosen geometry file must be a csm file!")
             self.filename_label_geometry.configure(text=self.filename_geometry.get())
 
         self.geometry_window.lift()
-    
+
     def saveImportedGeometry(self):
         if self.filename_geometry.get() == "":
             messagebox.showwarning("Warning", "Please import a geometry file.")
-        
+
         elif self.filename_geometry.get() == "void":
             messagebox.showwarning("Warning", "Please import a geometry file.")
 
@@ -211,7 +211,7 @@ class Input():
 
         ttk.Label(self.geometry_generation_window, text="\nSpecify the needed information for geometry generation:\n").grid(row=0, column=0, columnspan=4, sticky=W, padx=2)
         ttk.Label(self.geometry_generation_window, text="NACA profile:").grid(row=1, column=0, columnspan=2, sticky=W, padx=2, pady=2)
-           
+
         self.max_camber = IntVar()
         self.max_camber.set(0)
         self.max_camber_label = ttk.Label(self.geometry_generation_window, text="Max camber (%)", borderwidth=2, relief="groove", width=20)
@@ -219,7 +219,7 @@ class Input():
         self.max_camber_entry = ttk.Entry(self.geometry_generation_window, textvariable=self.max_camber, width=10, justify=CENTER)
         self.max_camber_entry.grid(row=2, column=2, sticky=NW, padx=2)
         ttk.Label(self.geometry_generation_window, text="(0 to 9.5%)", anchor=CENTER, width=10).grid(row=2, column=3, sticky=NSEW)
-        
+
         self.max_camber_position = IntVar()
         self.max_camber_position.set(0)
         self.max_camber_position_label = ttk.Label(self.geometry_generation_window, text="Max camber position (%)", borderwidth=2, relief="groove", width=20)
@@ -229,13 +229,13 @@ class Input():
         ttk.Label(self.geometry_generation_window, text="(0 to 90%)", anchor=CENTER, width=10).grid(row=3, column=3, sticky=NSEW)
 
         self.thickness = IntVar()
-        self.thickness.set(12)        
+        self.thickness.set(12)
         self.thickness_label = ttk.Label(self.geometry_generation_window, text="Thickness (%)", borderwidth=2, relief="groove", width=20)
         self.thickness_label.grid(row=4, column=0, columnspan=2, sticky=NSEW, padx=2)
         self.thickness_entry = ttk.Entry(self.geometry_generation_window, textvariable=self.thickness, width=10, justify=CENTER)
         self.thickness_entry.grid(row=4, column=2, sticky=NW, padx=2)
         ttk.Label(self.geometry_generation_window, text="(1 to 40%)", anchor=CENTER, width=10).grid(row=4, column=3, sticky=NSEW)
-      
+
         refresh = ttk.Button(self.geometry_generation_window, text="Refresh NACA", command=self.changeNACADigits)
         refresh.grid(row=5, column=0, sticky=NSEW, padx=2, pady=2)
         self.naca_result = ttk.Label(self.geometry_generation_window, text="NACA 0012", borderwidth=2, relief="groove", width=10, anchor=CENTER)
@@ -275,7 +275,7 @@ class Input():
         self.show_geometry.set(0)
         self.show_geometry_label = ttk.Label(self.geometry_generation_window, text="\n\nWould you like to visualize geometry in ESP?", anchor=CENTER)
         self.show_geometry_label.grid(row=14, column=0, columnspan=2, padx=2)
-        
+
         self.show_geometry_yes = Radiobutton(self.geometry_generation_window, text="Yes", value=1, variable=self.show_geometry, relief="groove", borderwidth=2, width=8, anchor=W)
         self.show_geometry_yes.grid(row=15, column=0, padx=2, pady=2, sticky=NSEW)
 
@@ -292,18 +292,18 @@ class Input():
 
         if first_digit == "0":
             second_digit = "0"
-        
+
         else:
             if self.max_camber_position.get() < 10:
                 second_digit = "1"
             else:
                 second_digit = str(self.max_camber_position.get())
                 second_digit = second_digit[0]
-        
+
         third_fourth_digit = str(self.thickness.get())
         naca_result_text = "NACA " + first_digit + second_digit + third_fourth_digit
         self.naca_result.configure(text=naca_result_text)
-    
+
     def saveGeneratedGeometry(self):
         first_digit = str(self.max_camber.get())
         second_digit = str(self.max_camber_position.get())
@@ -314,23 +314,23 @@ class Input():
 
         if first_digit == "0":
             second_digit = "0"
-        
+
         else:
             if second_digit < 10:
                 second_digit = "1"
             else:
                 second_digit = second_digit[0]
-        
+
         third_fourth_digit = str(self.thickness.get())
         naca_result_text = "NACA " + first_digit + second_digit + third_fourth_digit
         self.naca_result.configure(text=naca_result_text)
 
         if mesh_type == "1":
             mesh_type = ".egads"
-        
+
         elif mesh_type == "2":
             mesh_type = ".iges"
-        
+
         else:
             mesh_type = ".step"
 
@@ -359,9 +359,9 @@ class Input():
                     "rule      0\n\n") + (
                     "DUMP $/" + mesh_file_name + " 0 0\n") + (
                     "end"))
-        
+
         file.close()
-        
+
         self.geometry_generation_window.destroy()
 
         if self.show_geometry.get() == 0:
@@ -374,7 +374,7 @@ class Input():
         os.system("pointwise")
 
     def showResultingMesh(self):
-        
+
         if self.filename_mesh.get() == "void" or self.filename_mesh.get() == "":
             messagebox.showwarning("Warning", "No mesh to show. Please import a mesh file.")
         else:
@@ -382,7 +382,7 @@ class Input():
 
     def saveAndDestroyMeshWindow(self):
         self.writePartialOutputMesh()
-        
+
         if self.filename_mesh.get() != "void" and self.filename_mesh.get() != "":
             self.partition_window = Toplevel(self.master)
             self.partition_window.title("Mesh Partitionning?")
@@ -409,7 +409,7 @@ class Input():
             ok_button.grid(row=4, column=1, pady=5)
             cancel_button = ttk.Button(self.partition_window, text="Cancel", command=self.partition_window.destroy)
             cancel_button.grid(row=4, column=2, pady=5)
-        
+
         else:
             messagebox.showwarning("Warning", "Please import a mesh file.")
             self.mesh_window.lift()
@@ -417,15 +417,15 @@ class Input():
     def callPartitioningScript(self):
         self.partition_window.destroy()
         self.mesh_window.destroy()
-      
-        if self.partition.get() == 1:            
+
+        if self.partition.get() == 1:
             command = "./MeshPartitioning/Mesh_Partitioning " + str(self.filename_mesh.get()) + " " + str(self.number_blocks.get()) + " local_mesh_B topology.top"
             os.system(command)
-            self.filename_topology.set("/home/etudiant/Documents/Euler3D/euler3D/topology.top")
+            self.filename_topology.set("/home/apollon/vilig/PI4/euler3D/topology.top")
         else:
             shutil.copyfile(self.filename_mesh.get(), "single_block.su2")
             self.filename_topology.set("single_block.top")#home/etudiant//Documents/Euler3D/euler3D/
-            
+
     def activateNumberBlocks(self):
         if self.partition.get() == 1:
             self.number_blocks_label.configure(state="normal")
@@ -444,7 +444,7 @@ class Input():
         self.filename_mesh.set("")
         self.filename_topology.set("")
 
-    
+
     def clearPage(self):
         self.cfl.set(0.0)
         self.gamma.set(0.0)
@@ -456,7 +456,7 @@ class Input():
         self.filename_topology.set("")
 
     def writePartialOutputMesh(self):
-        
+
         self.partial_output_mesh = "MESH\ntopologyfilename\n" + str(self.filename_topology.get())
 
         return self.partial_output_mesh
@@ -474,15 +474,15 @@ class Input():
                              "\nINPUT\ncfl gamma angleattackdeg\n")+(
                              cfl_str+" "+gamma_str+" "+angle_attack_str)+(
                              "\nrkstage mach cmac\n")+(
-                             rk_str+" "+mach_str+" "+cmac_str)                        
+                             rk_str+" "+mach_str+" "+cmac_str)
         else:
             partial_output = "MESH\ntopologyfilename\n"+(
                              str(self.filename_topology.get()))+(
                              "\nINPUT\ncfl gamma angleattackdeg\n")+(
                              cfl_str+" "+gamma_str+" "+angle_attack_str)+(
                              "\nrkstage mach cmac\n")+(
-                             rk_str+" "+mach_str+" "+cmac_str)  
-        
+                             rk_str+" "+mach_str+" "+cmac_str)
+
         return partial_output
 
     def saveImportedData(self, filename_var, cfl_var, gamma_var, angle_attack_var, rk_var, mach_var, cmac_var):
