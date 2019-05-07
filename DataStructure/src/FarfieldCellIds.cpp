@@ -26,6 +26,9 @@ void FarfieldCellIds::updateBoundary()
 
 	for(int i=0;i<nb_farfield_faces;i++)
 	{
+		std::cout << nb_farfield_faces << std::endl;
+		std::cout << cell_ids_in_boundary_[i] << std::endl;
+		std::cout << block -> n_all_cells_in_block_ << std::endl;
 		farfield_face_idx=block -> block_cells_[cell_ids_in_boundary_[i]]->cell_2_faces_connectivity_[0];
 		//block -> cell_ids_in_boundary_[i];
 		//cout<<"Face numéro: "<<i<<" Id: "<<farfield_face_idx<<endl;

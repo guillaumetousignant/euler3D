@@ -8,6 +8,7 @@ using namespace std;
 
 void SymmetryCellIds::updateBoundary()
 {
+	return;
 	// Symmetry  !!!ATTENTION!!! VÉRIFIER SENS DES NORMALES
 	//cout<<"Symmetry cells updating \n";
 	Block* block=owner_block_;

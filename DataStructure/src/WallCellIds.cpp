@@ -8,6 +8,7 @@ using namespace std;
 
 void WallCellIds::updateBoundary()
 {
+	return;
 	// WALL  !!!ATTENTION!!! VÉRIFIER SENS DES NORMALES
 	//cout<<"Wall cells updating \n";
 	Block* block=owner_block_;
