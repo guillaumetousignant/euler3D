@@ -104,7 +104,7 @@ MPICXX = mpic++
 CXXFLAGS += -std=c++11 -Wall -Wno-unused-function -Wno-strict-overflow
 
 DEBUGFLAGS += -Og -g -pg
-RELEASEFLAGS += -O3 -fopenmp
+RELEASEFLAGS += -O2 -fopenmp
 
 # Include search paths
 METIS_INCLUDE_PATH = $(METISROOT)/include

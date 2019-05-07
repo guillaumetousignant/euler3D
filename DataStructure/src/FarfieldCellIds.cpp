@@ -12,7 +12,8 @@ void FarfieldCellIds::updateBoundary()
 	//cout<<"Farfield cells updating \n";
 	Block* block=owner_block_;
 
-	int nb_farfield_faces=block->n_farfield_faces_;
+	//int nb_farfield_faces=block->n_farfield_faces_;
+	int nb_farfield_faces = n_cell_in_boundary_;
 	//cout<<"Nb farfield faces: "<<nb_farfield_faces<<endl;
 
 	// FARFIELD  !!!ATTENTION!!! VÉRIFIER SENS DES NORMALES
@@ -113,7 +114,6 @@ void FarfieldCellIds::updateBoundary()
 				block->block_primitive_variables_->pp_[ext_cell_idx]=2.0*pp_bc-pp_int;
 			}
 		}
-
 	}
 
 

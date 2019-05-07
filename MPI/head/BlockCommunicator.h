@@ -28,6 +28,7 @@ class BlockCommunicator {
         void initialize();
         void getGlobal(CompleteMesh* mesh, PostProcessing* postprocess);
         void createBoundaries(std::string  &topology_filename);
+        void sync();
 
         void setBoundaryOffset();
         void initializeBuffers();

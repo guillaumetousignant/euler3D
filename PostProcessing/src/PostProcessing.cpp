@@ -15,7 +15,7 @@ using namespace std;
 
 PostProcessing::PostProcessing(int n_blocks, int max_iter, double convergence_criterion, double cmac, double mach_aircraft, double aoa_deg, double gamma)
 {
-  cout << "Initialize PostProcessing............................................DONE" << endl;
+  //cout << "Initialize PostProcessing............................................" << endl;
 
   stop_file_name_="STOP";
   current_iter_=0;
@@ -44,7 +44,7 @@ PostProcessing::PostProcessing(int n_blocks, int max_iter, double convergence_cr
   convergence_ = new Convergence();
   output_tecplot_ = new OutputTecplot(mach_aircraft, aoa_deg, gamma);
 
-  cout << "Initialize PostProcessing............................................DONE" << endl;
+  //cout << "Initialize PostProcessing........................................DONE" << endl;
 }
 
 PostProcessing::~PostProcessing()
@@ -55,7 +55,7 @@ PostProcessing::~PostProcessing()
 }
 
 
-// ENLEVER DÉPENDANCE SOLVER
+// ENLEVER D�PENDANCE SOLVER
 void PostProcessing::checkStopSolver()
 {
   //cout << "Starting checkStopSolver............................................." << endl;
@@ -77,7 +77,6 @@ void PostProcessing::checkStopSolver()
   if((current_iter_+1 == max_iter_)|| (ro_convergence_ <= convergence_criterion_)||(file_exist_flag))
   {
     stop_solver_= true;
-    remove( stop_file_name_.c_str() );
   }
   //cout << "Ending checkStopSolver..............................................." << endl;
 
@@ -254,11 +253,17 @@ void PostProcessing::process(CompleteMesh* complete_mesh, BlockCommunicator* com
     checkStopSolver();
     if (stop_solver_==true)
     {
-      cout<<"STOP ACTIVATED"<<endl;
+      communicator->sync();
+      if (communicator->process_id_ == 0){
+        cout<<"STOP ACTIVATED"<<endl;
+        remove( stop_file_name_.c_str() );
+      }
     }
 
     // EN ATTENDANT
-    cout<<"Iter: "<<current_iter_<<" Convergence Ro: "<<ro_convergence_<<" cl: "<<cl_geometry_mesh_<<" cd: "<<cd_geometry_mesh_<<endl;
+    if (communicator->process_id_ == 0){
+      cout<<"Iter: "<<current_iter_<<" Convergence Ro: "<<ro_convergence_<<" cl: "<<cl_geometry_mesh_<<" cd: "<<cd_geometry_mesh_<<endl;
+    }
 
     // Save and print flow data into binary files
 
@@ -269,7 +274,9 @@ void PostProcessing::process(CompleteMesh* complete_mesh, BlockCommunicator* com
     
     if (stop_solver_==true)
     {
-      cout << "Writing Solution......................................................" << endl;
+      if (communicator->process_id_ == 0){
+        cout << "Writing Solution......................................................" << endl;
+      }
       // Pour chaque block
       // SINON ON PEUT FAIRE PAR EXEMPLE printFlowData(complete_mesh), pis c'est le printFlowData qui gère la patente
       for (i=0;i<n_blocks_in_process;i++)
@@ -285,8 +292,9 @@ void PostProcessing::process(CompleteMesh* complete_mesh, BlockCommunicator* com
       if (communicator->process_id_ == 0){
         output_tecplot_->printAerodynamicCoefficients(cl_geometry_mesh_, cd_geometry_mesh_, cmx_geometry_mesh_, cmy_geometry_mesh_, cmz_geometry_mesh_);
       }
-      cout << "========================END OF PROGRAM========================" << endl;
-
+      if (communicator->process_id_ == 0){
+        cout << "========================END OF PROGRAM========================" << endl;
+      }
       //exit(0);
     }
 

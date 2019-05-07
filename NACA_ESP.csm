@@ -1,0 +1,18 @@
+despmtr   series_w    0012.00000
+dimension wing   3   5   1
+despmtr   wing[3,:]   "     0.00000;     5.0000;     0.00000;     1.00000;     180.00000;"
+
+mark
+udprim    naca   Series   series_w
+rotatez   -wing[3,5]   0   0
+rotatex   90   0   0
+scale     wing[3,4]   0   0   0
+translate wing[3,1]   -wing[3,2]   wing[3,3]
+
+udprim    naca   Series   series_w
+rotatez   -wing[3,5]   0   0
+rotatex   90   0   0
+rule      0
+
+DUMP $/NACA0012_S5.0_CR1.0.iges 0 0
+end

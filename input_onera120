@@ -1,6 +1,10 @@
 MESH
 topologyfilename
+<<<<<<< HEAD
 ./oneraM6_120B/topology.top
+=======
+./Meshes/oneraM6_120B/topology_M6.top
+>>>>>>> origin/master
 INPUT
 cfl gamma angleattackdeg
 1.5 1.4 1.25

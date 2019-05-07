@@ -72,7 +72,7 @@ void Solver::solve(CompleteMesh* complete_mesh, BlockCommunicator* communicator)
 	}
 	*/
 
-	
+	// communicator->updateMetrics(ccomplete_mesh);
 	while(!post_processing_->stop_solver_)
 	{
 		

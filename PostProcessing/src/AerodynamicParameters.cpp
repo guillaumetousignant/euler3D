@@ -13,7 +13,7 @@ using namespace std;
 
 AerodynamicParameters::AerodynamicParameters(double cmac, double mach_aircraft, double aoa_deg, double gamma)
 {
-  cout << "Initialize AerodynamicParameters....................................." << endl;
+  //cout << "Initialize AerodynamicParameters....................................." << endl;
 
 
   gamma_=gamma;
@@ -21,7 +21,7 @@ AerodynamicParameters::AerodynamicParameters(double cmac, double mach_aircraft, 
   mach_aircraft_=mach_aircraft;
   aoa_rad_=aoa_deg*4.*atan(1.)/180;
 
-  cout << "Initialize AerodynamicParameters.................................DONE" << endl;
+  //cout << "Initialize AerodynamicParameters.................................DONE" << endl;
 }
 
 AerodynamicParameters::~AerodynamicParameters()

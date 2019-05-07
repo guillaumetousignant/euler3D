@@ -59,14 +59,19 @@ string CompleteMesh::getBlockFileName(int block_id)
 		// Reading NBlocks
 		topology_file >> block_file_name;
 		//block_file_name="../"+block_file_name; // why
+		if (block_id == 0){
 		cout<<"Block File Name is: "<<block_file_name<<endl;
-		
+		}
+		topology_file.close();
 	}
 	else
 	{
-		cout << "Opening File Failure..."<<endl;
+		cout << "Opening File'" << topology_file_name_ << "' Failure..."<<endl;
+		/*std::ofstream outfile ("STOP");
+		outfile.close();*/
+		exit(42);
 	}
-	topology_file.close();
+	
 	return block_file_name;
 }
 
@@ -86,7 +91,9 @@ void CompleteMesh::InitializeMyBlocks(Interface* interface, BlockCommunicator* c
 		int block_id = my_blocks_[i];
 		block_file_name=getBlockFileName(block_id);
 
+		if (communicator->process_id_ == 0){
 		cout << "Initialize block number: "<<block_id<<endl;
+		}
 		
 		ConcreteBlockBuilder block_builder=ConcreteBlockBuilder(block_file_name, topology_file_name_);
 		Block* new_block = all_blocks_[block_id];
@@ -138,17 +145,25 @@ void CompleteMesh::InitializeMyBlocks(Interface* interface, BlockCommunicator* c
 		// cout<<test_node->node_coordinates_[2]<<endl;
 		*/
 
+		if (communicator->process_id_ == 0){
 		cout << "In MetricsInitializer........." << endl;
+		}
 		MetricsInitializer metricsInit(new_block);
 		metricsInit.doInit();
 
+		if (communicator->process_id_ == 0){
 		cout << "In calculateFreeVariables........." << endl;
+		}
 		new_block->block_primitive_variables_->calculateFreeVariables(interface->gamma_interface_, interface->aoa_deg_interface_, interface->mach_aircraft_interface_);
 
+		if (communicator->process_id_ == 0){
 		cout << "In initializeFlowField........." << endl;
+		}
 		new_block->block_primitive_variables_->initializeFlowField(new_block->n_all_cells_in_block_);
 
+		if (communicator->process_id_ == 0){
 		cout << "In Solver........." << endl;
+		}
 	}
 
 
@@ -163,7 +178,7 @@ void CompleteMesh::InitializeMyBlocks(Interface* interface, BlockCommunicator* c
 		int n_blocks,block_idx,n_boundaries,n_elems,block_origin_temp,elem_id_destination_temp,count_connexions;
 
 
-		cout<<"Début Set Topology............ "<<endl;
+		//cout<<"Début Set Topology............ "<<endl;
 
 		if (myfile.is_open())
 		{
@@ -269,18 +284,11 @@ void CompleteMesh::InitializeMyBlocks(Interface* interface, BlockCommunicator* c
 							getline(myfile, line);
 							sscanf (line.c_str(), "%s %d",str_temp,&elem_id_destination_temp); 
 						}
-
 					}
-
-
 				}
-
 			}
 		}
-		myfile.close();
-
-
-		
+		myfile.close();		
 	}
 }
 

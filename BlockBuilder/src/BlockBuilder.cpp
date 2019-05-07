@@ -149,8 +149,9 @@ void BlockBuilder::setConnectivity(Block* block)
 	int i,j,k,idx,node_0,node_1,node_2; //,n_cells_linked;
 	int *idx_node,*idx_cell_2_faces,*idx_cell_2_cells;
 
-
+	if (block->block_id_ == 0){
 	std::cout<<"DÉBUT node2cellsconnectivity"<<std::endl;
+	}
 
 		//MISE À JOUR NOMBRE CELLS PAR NODE (VÉRIFIÉ)
 
@@ -195,8 +196,9 @@ void BlockBuilder::setConnectivity(Block* block)
 	}
 */
 
-
+if (block->block_id_ == 0){
 std::cout<<"DÉBUT face_2_cells"<<std::endl;
+}
 
 	/*
 	//face_2_cells_connectivity_
@@ -340,8 +342,9 @@ std::cout<<"DÉBUT face_2_cells"<<std::endl;
 		*/
 
 
-
+if (block->block_id_ == 0){
 std::cout<<"DÉBUT cell2facesconnectivity"<<std::endl;
+}
 
 	//cell_2_faces_connectivity_ & cell_2_cells_connectivity_
 		idx_cell_2_faces=new int[block->n_all_cells_in_block_]();
@@ -373,7 +376,9 @@ std::cout<<"DÉBUT cell2facesconnectivity"<<std::endl;
 
 		}
 
+if (block->block_id_ == 0){
 std::cout<<"Remplissage de l'array face_ids_in_wall"<<std::endl;
+}
 int temp_wall_face_count=0;
 int* wall_face_count;
 wall_face_count=&temp_wall_face_count;
@@ -389,8 +394,9 @@ for(i=0;i < block->n_wall_faces_ ;i++)
 	//std::cout<<"TEST WALL cell ID 2: "<< (block->block_faces_[(block->block_wall_face_ids_[i])])->face_2_cells_connectivity_[1]<<std::endl;
 }
 
-
+if (block->block_id_ == 0){
 std::cout<<"Remplissage de l'array face_ids_in_farfield"<<std::endl;
+}
 int temp_farfield_face_count=0;
 int* farfield_face_count;
 farfield_face_count=&temp_farfield_face_count;
@@ -403,7 +409,9 @@ for(i=0;i < block->n_farfield_faces_ ;i++)
 
 }
 
+if (block->block_id_ == 0){
 std::cout<<"Remplissage de l'array face_ids_in_symmetry"<<std::endl;
+}
 int temp_symmetry_face_count=0;
 int* symmetry_face_count;
 symmetry_face_count=&temp_symmetry_face_count;
@@ -416,7 +424,9 @@ for(i=0;i < block->n_symmetry_faces_ ;i++)
 
 }
 
+if (block->block_id_ == 0){
 std::cout<<"Remplissage de l'array face_ids_in_connexion"<<std::endl;
+}
 int temp_connexion_face_count=0;
 int* connexion_face_count;
 connexion_face_count=&temp_connexion_face_count;

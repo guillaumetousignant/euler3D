@@ -7,6 +7,7 @@
 #include "MetricsInitializer.h"
 #include "Block.h"
 #include "ConcreteBlockBuilder.h"
+#include "BlockCommunicator.h"
 
 
 //STL
@@ -19,11 +20,14 @@ typedef unsigned int uint;
 void buildConnectivityInteg(Block *new_block)
 {
     
-    std::string block_file ="UnstructuredMesh5x5.su2";
+    std::string block_file ="./Meshes/UnstructuredMesh5x5.su2";
+    std::string topology_file = "single_block.top";
 
-    ConcreteBlockBuilder concrete_block_builder = ConcreteBlockBuilder(block_file);
+    BlockCommunicator* communicator = new BlockCommunicator(1);
+
+    ConcreteBlockBuilder concrete_block_builder = ConcreteBlockBuilder(block_file, topology_file);
     concrete_block_builder.preReadMyBlock(new_block);
-    concrete_block_builder.readMyBlock(new_block);
+    concrete_block_builder.readMyBlock(new_block, communicator);
 
     concrete_block_builder.createMyFaces(new_block);
 
@@ -31,7 +35,8 @@ void buildConnectivityInteg(Block *new_block)
 
     MetricsInitializer metricsInit(new_block);
     metricsInit.doInit();
-    
+
+    delete communicator; 
 
 }
 
@@ -42,7 +47,7 @@ TEST_CASE("Test computation of center cell", "")
 
     int cellID = 0;
     int dimension = 3;
-    double centerCell[dimension];
+    double centerCell[3];
 
     centerCell[0] = 0.5;
     centerCell[1] = 0.5;
@@ -86,7 +91,7 @@ TEST_CASE("Test computation of center cell", "")
 
 }
 
-TEST_CASE("Compute Normales")
+TEST_CASE("Compute Normals")
 {   
     //Making sure to respect orientation left to right for cells
     Block *blockData = new Block(0);
@@ -131,7 +136,7 @@ TEST_CASE("Compute Normales")
                     //Obtaining a vector from left to right cell convention
                     connectCenterVec[k] = centerCellRight[k] - centerCellLeft[k];
 
-                    //Initialize vector of normales
+                    //Initialize vector of normals
                     normales[k] =  blockData->block_faces_[faceID]->face_normals_[k];
 
                     //Compute dot product
@@ -219,11 +224,13 @@ TEST_CASE("Compute weight least squares with cell #20")
 
     std::vector<double> cellCenter(3);
 
-    std::vector<uint> cellNeighbors;
+    //std::vector<uint> cellNeighbors;
+    int cellNeighbors[6]; //nbFaces
 
     for(uint i(0);i < nbFaces;i++)
     {
-        cellNeighbors.push_back(blockData->block_cells_[cellID]->cell_2_cells_connectivity_[i]);
+        //cellNeighbors.push_back(blockData->block_cells_[cellID]->cell_2_cells_connectivity_[i]);
+        cellNeighbors[i] = blockData->block_cells_[cellID]->cell_2_cells_connectivity_[i];
 
         cellCenter[0] = blockData->block_cells_[20]->cell_coordinates_[0];
         cellCenter[1] = blockData->block_cells_[20]->cell_coordinates_[1];

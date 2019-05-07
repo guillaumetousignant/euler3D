@@ -6,4 +6,7 @@
 /*.lay
 /*.txt
 /*.szplt
-/*pycache*
+/*__pycache__*
+*local_mesh_*
+*.lay
+*.png

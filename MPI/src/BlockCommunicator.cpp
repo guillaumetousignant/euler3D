@@ -10,6 +10,13 @@
 
 #define N_VARIABLES 40
 
+#ifdef HAVE_MPI
+#define  MAX_REQUESTS  15000
+MPI_Request       reqHdl[MAX_REQUESTS];
+MPI_Status        reqStat[MAX_REQUESTS];
+int               reqCount;
+#endif
+
 BlockCommunicator::BlockCommunicator(int nblocks): n_blocks_(nblocks), n_inter_block_boundaries_(0), inter_block_boundaries_(nullptr), buffers_(nullptr) {
     #ifdef HAVE_MPI
     MPI_Comm_size(MPI_COMM_WORLD, &number_of_processes_);
@@ -21,7 +28,7 @@ BlockCommunicator::BlockCommunicator(int nblocks): n_blocks_(nblocks), n_inter_b
 
     block_process_id_ = new int[n_blocks_];
     int n = n_blocks_/number_of_processes_;
-    int remainder = n_blocks_%number_of_processes_; 
+    int remainder = n_blocks_%number_of_processes_;
 
     // Calculates which process owns what block
     for (int i = 0; i < number_of_processes_; i++){
@@ -59,6 +66,8 @@ BlockCommunicator::~BlockCommunicator(){
 void BlockCommunicator::updateBoundaries(CompleteMesh* mesh) const {
     #ifdef HAVE_MPI
 
+    reqCount = 0;
+
     for (int i = 0; i < n_inter_block_boundaries_; i++){
         ConnexionCellIds* boundary = inter_block_boundaries_[i];
         int block_id_origin = boundary->block_origin_;
@@ -71,7 +80,7 @@ void BlockCommunicator::updateBoundaries(CompleteMesh* mesh) const {
         // If this process is sender
         if (process_id_ == origin_process_id){
 
-            // Filling send buffer            
+            // Filling send buffer
             for (int k = 0; k < n_cells; k++){
                 int cell_id_origin = boundary->cell_ids_in_boundary_other_block_[k];
 
@@ -82,28 +91,28 @@ void BlockCommunicator::updateBoundaries(CompleteMesh* mesh) const {
                 buffers_[i][2][k] = block_origin->block_primitive_variables_->vv_[cell_id_origin];
                 buffers_[i][3][k] = block_origin->block_primitive_variables_->ww_[cell_id_origin];
                 buffers_[i][4][k] = block_origin->block_primitive_variables_->pp_[cell_id_origin];
-                buffers_[i][5][k] = block_origin->block_primitive_variables_->conv_res_ro_[cell_id_origin]; 
+                buffers_[i][5][k] = block_origin->block_primitive_variables_->conv_res_ro_[cell_id_origin];
                 buffers_[i][6][k] = block_origin->block_primitive_variables_->conv_res_uu_[cell_id_origin];
                 buffers_[i][7][k] = block_origin->block_primitive_variables_->conv_res_vv_[cell_id_origin];
                 buffers_[i][8][k] = block_origin->block_primitive_variables_->conv_res_ww_[cell_id_origin];
                 buffers_[i][9][k] = block_origin->block_primitive_variables_->conv_res_pp_[cell_id_origin];
-                buffers_[i][10][k] = block_origin->block_primitive_variables_->diss_res_ro_[cell_id_origin]; 
+                buffers_[i][10][k] = block_origin->block_primitive_variables_->diss_res_ro_[cell_id_origin];
                 buffers_[i][11][k] = block_origin->block_primitive_variables_->diss_res_uu_[cell_id_origin];
                 buffers_[i][12][k] = block_origin->block_primitive_variables_->diss_res_vv_[cell_id_origin];
                 buffers_[i][13][k] = block_origin->block_primitive_variables_->diss_res_ww_[cell_id_origin];
                 buffers_[i][14][k] = block_origin->block_primitive_variables_->diss_res_pp_[cell_id_origin];
-                buffers_[i][15][k] = block_origin->block_primitive_variables_->ro_0_[cell_id_origin]; 
+                buffers_[i][15][k] = block_origin->block_primitive_variables_->ro_0_[cell_id_origin];
                 buffers_[i][16][k] = block_origin->block_primitive_variables_->ru_0_[cell_id_origin];
                 buffers_[i][17][k] = block_origin->block_primitive_variables_->rv_0_[cell_id_origin];
                 buffers_[i][18][k] = block_origin->block_primitive_variables_->rw_0_[cell_id_origin];
                 buffers_[i][19][k] = block_origin->block_primitive_variables_->re_0_[cell_id_origin];
-            
+
                 buffers_[i][20][k] = block_origin->block_interpolation_variables_->limiter_ro_[cell_id_origin];
                 buffers_[i][21][k] = block_origin->block_interpolation_variables_->limiter_uu_[cell_id_origin];
                 buffers_[i][22][k] = block_origin->block_interpolation_variables_->limiter_vv_[cell_id_origin];
                 buffers_[i][23][k] = block_origin->block_interpolation_variables_->limiter_ww_[cell_id_origin];
                 buffers_[i][24][k] = block_origin->block_interpolation_variables_->limiter_pp_[cell_id_origin];
-            
+
                 buffers_[i][25][k] = block_origin->block_interpolation_variables_->grad_ro_[cell_id_origin][0];
                 buffers_[i][26][k] = block_origin->block_interpolation_variables_->grad_ro_[cell_id_origin][1];
                 buffers_[i][27][k] = block_origin->block_interpolation_variables_->grad_ro_[cell_id_origin][2];
@@ -121,23 +130,26 @@ void BlockCommunicator::updateBoundaries(CompleteMesh* mesh) const {
                 buffers_[i][39][k] = block_origin->block_interpolation_variables_->grad_pp_[cell_id_origin][2];
             }
 
-            MPI_Request send_request[N_VARIABLES];
+            //MPI_Request send_request[N_VARIABLES];
             for (unsigned int j = 0; j < N_VARIABLES; j++){
-                MPI_Isend(buffers_[i][j], n_cells, MPI_DOUBLE, destination_process_id, N_VARIABLES*i+j, MPI_COMM_WORLD, &send_request[j]);
+                MPI_Isend(buffers_[i][j], n_cells, MPI_DOUBLE, destination_process_id, N_VARIABLES*i+j, MPI_COMM_WORLD, &reqHdl[reqCount]);
+                reqCount++;
             }
         }
 
         // If this process is receiver
-        if (process_id_ == destination_process_id){           
+        if (process_id_ == destination_process_id){
 
-            MPI_Request receive_request[N_VARIABLES];
+            //MPI_Request receive_request[N_VARIABLES];
             for (unsigned int j = 0; j < N_VARIABLES; j++){
-                MPI_Irecv(buffers_[i][j+N_VARIABLES], n_cells, MPI_DOUBLE, origin_process_id, N_VARIABLES*i+j, MPI_COMM_WORLD, &receive_request[j]);
+                MPI_Irecv(buffers_[i][j+N_VARIABLES], n_cells, MPI_DOUBLE, origin_process_id, N_VARIABLES*i+j, MPI_COMM_WORLD, &reqHdl[reqCount]);
+                reqCount++;
             }
         }
     }
 
-    MPI_Barrier(MPI_COMM_WORLD);
+    // MPI_Barrier(MPI_COMM_WORLD);
+    MPI_Waitall(reqCount, reqHdl, reqStat);
 
     // Put in blocks
     for (int i = 0; i < n_inter_block_boundaries_; i++){
@@ -146,11 +158,11 @@ void BlockCommunicator::updateBoundaries(CompleteMesh* mesh) const {
         int n_cells = boundary->n_cell_in_boundary_;
         Block* block_destination = mesh->all_blocks_[block_id_destination];
         int destination_process_id = block_process_id_[block_id_destination];
-        
-        if (process_id_ == destination_process_id){            
+
+        if (process_id_ == destination_process_id){
             for (int k = 0; k < n_cells; k++){
                 int cell_id_destination = boundary->cell_ids_in_boundary_[k];
-                
+
                 block_destination->block_primitive_variables_->ro_[cell_id_destination] = buffers_[i][N_VARIABLES][k];
                 block_destination->block_primitive_variables_->uu_[cell_id_destination] = buffers_[i][N_VARIABLES+1][k];
                 block_destination->block_primitive_variables_->vv_[cell_id_destination] = buffers_[i][N_VARIABLES+2][k];
@@ -171,7 +183,7 @@ void BlockCommunicator::updateBoundaries(CompleteMesh* mesh) const {
                 block_destination->block_primitive_variables_->rv_0_[cell_id_destination] = buffers_[i][N_VARIABLES+17][k];
                 block_destination->block_primitive_variables_->rw_0_[cell_id_destination] = buffers_[i][N_VARIABLES+18][k];
                 block_destination->block_primitive_variables_->re_0_[cell_id_destination] = buffers_[i][N_VARIABLES+19][k];
-            
+
                 block_destination->block_interpolation_variables_->limiter_ro_[cell_id_destination] = buffers_[i][N_VARIABLES+20][k];
                 block_destination->block_interpolation_variables_->limiter_uu_[cell_id_destination] = buffers_[i][N_VARIABLES+21][k];
                 block_destination->block_interpolation_variables_->limiter_vv_[cell_id_destination] = buffers_[i][N_VARIABLES+22][k];
@@ -205,7 +217,7 @@ void BlockCommunicator::updateBoundaries(CompleteMesh* mesh) const {
         int n_cells = boundary->n_cell_in_boundary_;
         Block* block_origin = mesh->all_blocks_[block_id_origin];
         Block* block_destination = mesh->all_blocks_[block_id_destination];
-        
+
         for (int j = 0; j < n_cells; j++){
             int cell_id_origin = boundary->cell_ids_in_boundary_other_block_[j];
             int cell_id_destination = boundary->cell_ids_in_boundary_[j];
@@ -230,7 +242,7 @@ void BlockCommunicator::updateBoundaries(CompleteMesh* mesh) const {
             block_destination->block_primitive_variables_->rv_0_[cell_id_destination] = block_origin->block_primitive_variables_->rv_0_[cell_id_origin];
             block_destination->block_primitive_variables_->rw_0_[cell_id_destination] = block_origin->block_primitive_variables_->rw_0_[cell_id_origin];
             block_destination->block_primitive_variables_->re_0_[cell_id_destination] = block_origin->block_primitive_variables_->re_0_[cell_id_origin];
-        
+
             block_destination->block_interpolation_variables_->limiter_ro_[cell_id_destination] = block_origin->block_interpolation_variables_->limiter_ro_[cell_id_origin];
             block_destination->block_interpolation_variables_->limiter_uu_[cell_id_destination] = block_origin->block_interpolation_variables_->limiter_uu_[cell_id_origin];
             block_destination->block_interpolation_variables_->limiter_vv_[cell_id_destination] = block_origin->block_interpolation_variables_->limiter_vv_[cell_id_origin];
@@ -271,14 +283,14 @@ void BlockCommunicator::addCellIdInConnexion(ConnexionCellIds* boundary){
 
 void BlockCommunicator::getMyBlocks(int& n_blocks_in_process, int* &my_blocks) const {
     int n = n_blocks_/number_of_processes_;
-    int remainder = n_blocks_%number_of_processes_; 
+    int remainder = n_blocks_%number_of_processes_;
     int index_start = process_id_ * n + std::min(process_id_, remainder);
     n_blocks_in_process = n + (process_id_ < remainder);
 
     my_blocks = new int[n_blocks_in_process];
     for (int i = 0; i < n_blocks_in_process; i++){
         my_blocks[i] = index_start + i;
-    }    
+    }
 }
 
 void BlockCommunicator::initialize(){
@@ -339,7 +351,7 @@ void BlockCommunicator::getGlobal(CompleteMesh* mesh, PostProcessing* postproces
     postprocess->cmy_geometry_mesh_=0.0;
     postprocess->cmz_geometry_mesh_=0.0;
 
-    for(i=0; i<complete_mesh->n_blocks_ ; i++) // For each block
+    for(int i=0; i<mesh->n_blocks_ ; i++) // For each block
     {
         // Convergence data
         postprocess->ro_rms_mesh_ += postprocess->ro_rms_blocks_[i];
@@ -366,7 +378,9 @@ void BlockCommunicator::createBoundaries(std::string  &topology_filename){
 
 	if (!topo.is_open()){
 		std::cout << "ERROR: Topology file '" << topology_filename << "' not opened, exiting." << std::endl;
-		return;
+		/*std::ofstream outfile ("STOP");
+		outfile.close();*/
+		exit(42);
 	}
 
 	std::string line;
@@ -393,7 +407,7 @@ void BlockCommunicator::createBoundaries(std::string  &topology_filename){
 			if (boundary_started){
                 save = true;
 				boundary_started = false;
-			}	
+			}
 		}
 		else if (marker == "NBLOCK="){
 			liness >> n_blocks;
@@ -403,7 +417,7 @@ void BlockCommunicator::createBoundaries(std::string  &topology_filename){
             if (boundary_started){
                 save = true;
 				boundary_started = false;
-			}			
+			}
 		}
 		else if (marker == "Block="){
             liness >> block_destination;
@@ -411,7 +425,7 @@ void BlockCommunicator::createBoundaries(std::string  &topology_filename){
             if (boundary_started){
                 save = true;
 				boundary_started = false;
-			}				
+			}
 		}
 		else if (marker == "Nconnexion="){
             if (boundary_started){
@@ -489,7 +503,7 @@ void BlockCommunicator::createBoundaries(std::string  &topology_filename){
         {
             std::cout<<cell_id_destination<<"\t\t\t\t"<<cell_id_origin<<std::endl;
         }
-        std::cout<<endl;		
+        std::cout<<endl;
     }
     }*/
 }
@@ -524,10 +538,16 @@ void BlockCommunicator::initializeBuffers(){
                 buffers_[i][j] = new double[inter_block_boundaries_[i]->n_cell_in_boundary_];
             }
         }
-        if (process_id_ == block_process_id_[inter_block_boundaries_[i]->block_destination_]){           
+        if (process_id_ == block_process_id_[inter_block_boundaries_[i]->block_destination_]){
             for (unsigned int j = N_VARIABLES; j < N_VARIABLES*2; j++){
                 buffers_[i][j] = new double[inter_block_boundaries_[i]->n_cell_in_boundary_];
             }
         }
     }
+}
+
+void BlockCommunicator::sync(){
+    #ifdef HAVE_MPI
+    MPI_Barrier(MPI_COMM_WORLD);
+    #endif
 }

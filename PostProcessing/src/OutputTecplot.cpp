@@ -17,11 +17,11 @@ using namespace std;
 
 OutputTecplot::OutputTecplot(double mach_aircraft, double aoa_deg, double gamma)
 {
-  cout << "Initialize OutTecplot................................................" << endl;
+  //cout << "Initialize OutTecplot................................................" << endl;
   mach_aircraft_=mach_aircraft;
   aoa_deg_=aoa_deg;
   gamma_=gamma;
-  cout << "Initialize OutTecplot............................................DONE" << endl;
+  //cout << "Initialize OutTecplot............................................DONE" << endl;
 }
 
 OutputTecplot::~OutputTecplot()
@@ -33,7 +33,7 @@ void OutputTecplot::printFlowData(Block* block)
 {
   int i;
 
-  cout << "Starting printFlowData..............................................." << endl;
+  //cout << "Starting printFlowData..............................................." << endl;
 
   std::stringstream ss;
   ss << std::setw(OUTPUT_ZERO_PADDING) << std::setfill('0') << block->block_id_;
@@ -186,14 +186,14 @@ void OutputTecplot::printFlowData(Block* block)
 
   FlowData.close();
 
-  cout << "Ending printFlowData..............................................." << endl;
+  //cout << "Ending printFlowData..............................................." << endl;
 }
 
 void OutputTecplot::printSurfaceFlowData(Block* block)
 {
   if(block->n_wall_faces_ != 0)
   {
-    cout << "Starting printSurfaceFlowData........................................" << endl;
+    //cout << "Starting printSurfaceFlowData........................................" << endl;
 
     std::stringstream ss;
     ss << std::setw(OUTPUT_ZERO_PADDING) << std::setfill('0') << block->block_id_;
@@ -406,7 +406,7 @@ void OutputTecplot::printSurfaceFlowData(Block* block)
 
       SurfaceFlowData.close();
 
-      cout << "Ending printSurfaceFlowData.........................................." << endl;
+      //cout << "Ending printSurfaceFlowData.........................................." << endl;
   }
 }
 
@@ -447,7 +447,7 @@ void OutputTecplot::printConvergence(int iter, double cl, double cd, double cmx,
 
 void OutputTecplot::printAerodynamicCoefficients(double cl, double cd, double cmx, double cmy, double cmz)
 {
-  cout << "Starting printAerodynamicCoefficients................................" << endl;
+  //cout << "Starting printAerodynamicCoefficients................................" << endl;
 
   //AerodynamicCoefficients.open("AerodynamicCoefficients.plt", ios::binary);
   std::ofstream AerodynamicCoefficients;
@@ -469,12 +469,12 @@ void OutputTecplot::printAerodynamicCoefficients(double cl, double cd, double cm
 
   AerodynamicCoefficients.close();
 
-  cout << "Ending printAerodynamicCoefficients.................................." << endl;
+  //cout << "Ending printAerodynamicCoefficients.................................." << endl;
 }
 
 void OutputTecplot::printRestartFile(Block* block)
 {
-  cout << "Starting printRestartFile............................................" << endl;
+  //cout << "Starting printRestartFile............................................" << endl;
 
   std::stringstream ss;
   ss << std::setw(OUTPUT_ZERO_PADDING) << std::setfill('0') << block->block_id_;
@@ -491,7 +491,7 @@ void OutputTecplot::printRestartFile(Block* block)
 
     RestartFile.close();
 
-  cout << "Ending printRestartFile.............................................." << endl;
+  //cout << "Ending printRestartFile.............................................." << endl;
 }
 
 
