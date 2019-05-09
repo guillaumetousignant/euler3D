@@ -87,6 +87,7 @@ void OutputTecplot::printFlowData(Block* block)
   for(i=0; i < block->n_real_cells_in_block_; i++)
   {
     ro_cell = block->block_primitive_variables_->ro_[i];
+    //ro_cell = block->block_primitive_variables_->conv_res_ro_[i]-block->block_primitive_variables_->diss_res_ro_[i];
 
     FlowData << ro_cell << endl;
   }
@@ -96,6 +97,7 @@ void OutputTecplot::printFlowData(Block* block)
   for(i=0; i < block->n_real_cells_in_block_; i++)
   {
     uu_cell = block->block_primitive_variables_->uu_[i];
+    //uu_cell = block->block_primitive_variables_->conv_res_uu_[i]-block->block_primitive_variables_->diss_res_uu_[i];
 
     FlowData << uu_cell << endl;
   }
@@ -105,7 +107,7 @@ void OutputTecplot::printFlowData(Block* block)
   for(i=0; i < block->n_real_cells_in_block_; i++)
   {
     vv_cell = block->block_primitive_variables_->vv_[i];
-
+    //vv_cell = block->block_primitive_variables_->conv_res_vv_[i]-block->block_primitive_variables_->diss_res_vv_[i];
     FlowData << vv_cell << endl;
   }
 
@@ -114,6 +116,7 @@ void OutputTecplot::printFlowData(Block* block)
   for(i=0; i < block->n_real_cells_in_block_; i++)
   {
     ww_cell = block->block_primitive_variables_->ww_[i];
+    //ww_cell = block->block_primitive_variables_->conv_res_ww_[i]-block->block_primitive_variables_->diss_res_ww_[i];
 
     FlowData << ww_cell << endl;
   }
@@ -123,6 +126,7 @@ void OutputTecplot::printFlowData(Block* block)
   for(i=0; i < block->n_real_cells_in_block_; i++)
   {
     pp_cell = block->block_primitive_variables_->pp_[i];
+    //pp_cell = block->block_primitive_variables_->conv_res_pp_[i]-block->block_primitive_variables_->diss_res_pp_[i];
 
     FlowData << pp_cell << endl;
   }
@@ -437,8 +441,8 @@ void OutputTecplot::printConvergence(int iter, double cl, double cd, double cmx,
   {
     Convergence << "Iteration" << " " << "Cl" << " " << "Cd" << " " << "Cmx" << " " << "Cmy" << " " << "Cmz" << " " << "Density_Convergence" << " " << "Uu_Convergence" << " " << "Vv_Convergence" << " " << "Ww_Convergence" << " " << "Pressure_Convergence" << " " << endl;
   }
-
-  Convergence << iter << " " << cl << " " << cd << " " << cmx << " " << cmy << " " << cmz << " " << ro_convergence << " " << uu_convergence << " " << vv_convergence << " " << ww_convergence << " " << pp_convergence << endl;
+  double prec=15;
+  Convergence << iter << " " << std::setprecision(prec) << cl << " " << std::setprecision(prec) << cd << " " << std::setprecision(prec) << cmx << " " << std::setprecision(prec) << cmy << " " << std::setprecision(prec) << cmz << " " << ro_convergence << " " << uu_convergence << " " << vv_convergence << " " << ww_convergence << " " << pp_convergence << endl;
 
   Convergence.close();
 

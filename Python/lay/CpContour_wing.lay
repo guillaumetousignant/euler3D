@@ -65,7 +65,7 @@ $!PlotType  = Cartesian2D
 $!FrameName  = 'Frame 001'
 $!GlobalTime 
   SolutionTime = 0
-$!ActiveFieldMaps  =  [1-7]
+$!ActiveFieldMaps  =  [1]
 $!GlobalRGB 
   RangeMin = 0
   RangeMax = 1
@@ -81,23 +81,21 @@ $!GlobalContour  1
     }
   ColorCutoff
     {
-    RangeMin = -0.161777243018
-    RangeMax = 0.933314248919
+    RangeMin = 0.408758275211
+    RangeMax = 2.0185528174
     }
   ColorMapFilter
     {
     ContinuousColor
       {
-      CMin = -0.709322988987
-      CMax = 1.48085999489
+      CMin = -0.396138995886
+      CMax = 2.8234500885
       }
     }
 $!ContourLevels New
   ContourGroup = 1
   RawData
-11
--0.6
--0.4
+15
 -0.2
 0
 0.2
@@ -107,6 +105,12 @@ $!ContourLevels New
 1
 1.2
 1.4
+1.6
+1.8
+2
+2.2
+2.4
+2.6
 $!GlobalContour  2
   Legend
     {
@@ -239,7 +243,7 @@ $!GlobalScatter
     Color = Red
     FillColor = Red
     }
-$!FieldMap  [1-7]
+$!FieldMap  [1]
   Mesh
     {
     Color = Black
@@ -309,23 +313,23 @@ $!TwoDAxis
   XDetail
     {
     ShowAxis = No
-    RangeMin = -0.023337200284004211426
-    RangeMax = 1.0084531834080814328
-    GRSpacing = 0.2
+    RangeMin = -71.5652008056640625
+    RangeMax = 86.536038799223973683
+    GRSpacing = 50
     }
 $!TwoDAxis 
   YDetail
     {
     ShowAxis = No
-    RangeMin = -0.07200130075216293335
-    RangeMax = 0.86960296051350349789
-    GRSpacing = 0.2
+    RangeMin = -72.13379669189453125
+    RangeMax = 72.148223451232922798
+    GRSpacing = 20
     }
 $!IsoSurfaceAttributes  1
   IsoSurfaceSelection = OneSpecificValue
-  Isovalue1 = -0.161777243018
-  Isovalue2 = 0.385768502951
-  Isovalue3 = 0.933314248919
+  Isovalue1 = 0.408758275211
+  Isovalue2 = 1.21365554631
+  Isovalue3 = 2.0185528174
   Effects
     {
     LightingEffect = Gouraud

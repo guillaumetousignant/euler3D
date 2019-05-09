@@ -128,6 +128,8 @@ void BlockCommunicator::updateBoundaries(CompleteMesh* mesh) const {
                 buffers_[i][37][k] = block_origin->block_interpolation_variables_->grad_pp_[cell_id_origin][0];
                 buffers_[i][38][k] = block_origin->block_interpolation_variables_->grad_pp_[cell_id_origin][1];
                 buffers_[i][39][k] = block_origin->block_interpolation_variables_->grad_pp_[cell_id_origin][2];
+                	// double* right_cell_r_vector_;
+	                // double* left_cell_r_vector_;
             }
 
             //MPI_Request send_request[N_VARIABLES];
@@ -304,6 +306,8 @@ void BlockCommunicator::getGlobal(CompleteMesh* mesh, PostProcessing* postproces
     double vv_rms_process=0.0;
     double ww_rms_process=0.0;
     double pp_rms_process=0.0;
+    //int n_real_cells=0;
+    //int n_real_cells_global=0;
     double cl_geometry_process=0.0;
     double cd_geometry_process=0.0;
     double cmx_geometry_process=0.0;
@@ -320,6 +324,7 @@ void BlockCommunicator::getGlobal(CompleteMesh* mesh, PostProcessing* postproces
         vv_rms_process += postprocess->vv_rms_blocks_[blockid];
         ww_rms_process += postprocess->ww_rms_blocks_[blockid];
         pp_rms_process += postprocess->pp_rms_blocks_[blockid];
+        //n_real_cells+=mesh->all_blocks[blockid]->n_real_cells_in_block_;
         cl_geometry_process += postprocess->cl_geometry_blocks_[blockid];
         cd_geometry_process += postprocess->cd_geometry_blocks_[blockid];
         cmx_geometry_process += postprocess->cmx_geometry_blocks_[blockid];
@@ -337,6 +342,7 @@ void BlockCommunicator::getGlobal(CompleteMesh* mesh, PostProcessing* postproces
     MPI_Allreduce(&cmx_geometry_process, &postprocess->cmx_geometry_mesh_, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
     MPI_Allreduce(&cmy_geometry_process, &postprocess->cmy_geometry_mesh_, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
     MPI_Allreduce(&cmz_geometry_process, &postprocess->cmz_geometry_mesh_, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+    //MPI_Allreduce(&n_real_cells, &n_real_cells_global, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
     MPI_Barrier(MPI_COMM_WORLD); // Dunno if needed, check
     #else
 
