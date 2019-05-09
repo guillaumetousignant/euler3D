@@ -24,7 +24,7 @@ MetricsInitializer::~MetricsInitializer()
 }
 
 
-void MetricsInitializer::doInit()
+void MetricsInitializer::doInit(BlockCommunicator* communicator)
 {
 
     uint iNCells = blockData_->n_real_cells_in_block_;
@@ -346,10 +346,10 @@ void MetricsInitializer::computeNormalFaces(uint iNFaces, Face** iFaces, Cell** 
 
         }
 
-        if(iFaces[i]->n_nodes_per_face_ == 3)   
+        if(iFaces[i]->n_nodes_per_face_ == 3)
         {
             //Triangular face
-            
+
                 x1 = node_coord[0];
                 x2 = node_coord[3];
                 x3 = node_coord[6];
@@ -378,12 +378,12 @@ void MetricsInitializer::computeNormalFaces(uint iNFaces, Face** iFaces, Cell** 
                 s_y = 0.5*(dzxA + dzxB + dzxC);
                 s_z = 0.5*(dxyA + dxyB + dxyC);
 
-        }   
+        }
         else if(iFaces[i]->n_nodes_per_face_ == 4)
         {
 
             //Quadrilateral case
-            
+
                 x1 = node_coord[0];
                 x2 = node_coord[3];
                 x3 = node_coord[6];
@@ -415,7 +415,7 @@ void MetricsInitializer::computeNormalFaces(uint iNFaces, Face** iFaces, Cell** 
         {
             s_x = 0.0;
             s_y = 0.0;
-            s_z = 0.0; 
+            s_z = 0.0;
         }
 
         //Adjust orientation of vector to obey left to right rule for cells

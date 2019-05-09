@@ -149,7 +149,7 @@ void CompleteMesh::InitializeMyBlocks(Interface* interface, BlockCommunicator* c
 		cout << "In MetricsInitializer........." << endl;
 		}
 		MetricsInitializer metricsInit(new_block);
-		metricsInit.doInit();
+		metricsInit.doInit(communicator);
 
 		if (communicator->process_id_ == 0){
 		cout << "In calculateFreeVariables........." << endl;

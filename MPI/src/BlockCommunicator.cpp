@@ -63,6 +63,259 @@ BlockCommunicator::~BlockCommunicator(){
     }
 }
 
+void BlockCommunicator::passRVectors(CompleteMesh* mesh) const {
+
+#ifdef HAVE_MPI
+    double *** buffers;
+    unsigned int n_var=3;
+    reqCount = 0;
+    buffers = new double**[n_inter_block_boundaries_];
+    for (int i = 0; i < n_inter_block_boundaries_; i++){
+        buffers[i] = new double*[n_var*2];
+        for (unsigned int j = 0; j < n_var*2; j++){
+            buffers[i][j] = nullptr;
+        }
+    }
+
+    for (int i = 0; i < n_inter_block_boundaries_; i++){
+        if (process_id_ == block_process_id_[inter_block_boundaries_[i]->block_origin_]){
+            for (unsigned int j = 0; j < n_var; j++){
+                buffers[i][j] = new double[inter_block_boundaries_[i]->n_cell_in_boundary_];
+            }
+        }
+        if (process_id_ == block_process_id_[inter_block_boundaries_[i]->block_destination_]){
+            for (unsigned int j = n_var; j < n_var*2; j++){
+                buffers[i][j] = new double[inter_block_boundaries_[i]->n_cell_in_boundary_];
+            }
+        }
+    }
+
+    for (int i = 0; i < n_inter_block_boundaries_; i++){
+        ConnexionCellIds* boundary = inter_block_boundaries_[i];
+        int block_id_origin = boundary->block_origin_;
+        int block_id_destination = boundary->block_destination_;
+        int n_cells = boundary->n_cell_in_boundary_;
+        Block* block_origin = mesh->all_blocks_[block_id_origin];
+        int origin_process_id = block_process_id_[block_id_origin];
+        int destination_process_id = block_process_id_[block_id_destination];
+
+
+        // If this process is sender
+        if (process_id_ == origin_process_id){
+
+            // Filling send buffer
+            for (int k = 0; k < n_cells; k++){
+                int cell_id_origin = boundary->cell_ids_in_boundary_other_block_[k];
+
+                //double cell_id_origin_double=cell_id_origin; // Pour debug le transfert MPI
+
+                buffers[i][0][k] = block_origin->block_cells_[cell_id_origin]->cell_coordinates_[0]; // cell_id_origin_double; //Pour debug le transfert MPI
+                buffers[i][1][k] = block_origin->block_cells_[cell_id_origin]->cell_coordinates_[1];
+                buffers[i][2][k] = block_origin->block_cells_[cell_id_origin]->cell_coordinates_[2];
+                /*buffers[i][1][k] = block_origin->block_primitive_variables_->uu_[cell_id_origin];
+                buffers[i][2][k] = block_origin->block_primitive_variables_->vv_[cell_id_origin];
+                buffers_[i][3][k] = block_origin->block_primitive_variables_->ww_[cell_id_origin];
+                buffers_[i][4][k] = block_origin->block_primitive_variables_->pp_[cell_id_origin];
+                buffers_[i][5][k] = block_origin->block_primitive_variables_->conv_res_ro_[cell_id_origin];
+                buffers_[i][6][k] = block_origin->block_primitive_variables_->conv_res_uu_[cell_id_origin];
+                buffers_[i][7][k] = block_origin->block_primitive_variables_->conv_res_vv_[cell_id_origin];
+                buffers_[i][8][k] = block_origin->block_primitive_variables_->conv_res_ww_[cell_id_origin];
+                buffers_[i][9][k] = block_origin->block_primitive_variables_->conv_res_pp_[cell_id_origin];
+                buffers_[i][10][k] = block_origin->block_primitive_variables_->diss_res_ro_[cell_id_origin];
+                buffers_[i][11][k] = block_origin->block_primitive_variables_->diss_res_uu_[cell_id_origin];
+                buffers_[i][12][k] = block_origin->block_primitive_variables_->diss_res_vv_[cell_id_origin];
+                buffers_[i][13][k] = block_origin->block_primitive_variables_->diss_res_ww_[cell_id_origin];
+                buffers_[i][14][k] = block_origin->block_primitive_variables_->diss_res_pp_[cell_id_origin];
+                buffers_[i][15][k] = block_origin->block_primitive_variables_->ro_0_[cell_id_origin];
+                buffers_[i][16][k] = block_origin->block_primitive_variables_->ru_0_[cell_id_origin];
+                buffers_[i][17][k] = block_origin->block_primitive_variables_->rv_0_[cell_id_origin];
+                buffers_[i][18][k] = block_origin->block_primitive_variables_->rw_0_[cell_id_origin];
+                buffers_[i][19][k] = block_origin->block_primitive_variables_->re_0_[cell_id_origin];
+
+                buffers_[i][20][k] = block_origin->block_interpolation_variables_->limiter_ro_[cell_id_origin];
+                buffers_[i][21][k] = block_origin->block_interpolation_variables_->limiter_uu_[cell_id_origin];
+                buffers_[i][22][k] = block_origin->block_interpolation_variables_->limiter_vv_[cell_id_origin];
+                buffers_[i][23][k] = block_origin->block_interpolation_variables_->limiter_ww_[cell_id_origin];
+                buffers_[i][24][k] = block_origin->block_interpolation_variables_->limiter_pp_[cell_id_origin];
+
+                buffers_[i][25][k] = block_origin->block_interpolation_variables_->grad_ro_[cell_id_origin][0];
+                buffers_[i][26][k] = block_origin->block_interpolation_variables_->grad_ro_[cell_id_origin][1];
+                buffers_[i][27][k] = block_origin->block_interpolation_variables_->grad_ro_[cell_id_origin][2];
+                buffers_[i][28][k] = block_origin->block_interpolation_variables_->grad_uu_[cell_id_origin][0];
+                buffers_[i][29][k] = block_origin->block_interpolation_variables_->grad_uu_[cell_id_origin][1];
+                buffers_[i][30][k] = block_origin->block_interpolation_variables_->grad_uu_[cell_id_origin][2];
+                buffers_[i][31][k] = block_origin->block_interpolation_variables_->grad_vv_[cell_id_origin][0];
+                buffers_[i][32][k] = block_origin->block_interpolation_variables_->grad_vv_[cell_id_origin][1];
+                buffers_[i][33][k] = block_origin->block_interpolation_variables_->grad_vv_[cell_id_origin][2];
+                buffers_[i][34][k] = block_origin->block_interpolation_variables_->grad_ww_[cell_id_origin][0];
+                buffers_[i][35][k] = block_origin->block_interpolation_variables_->grad_ww_[cell_id_origin][1];
+                buffers_[i][36][k] = block_origin->block_interpolation_variables_->grad_ww_[cell_id_origin][2];
+                buffers_[i][37][k] = block_origin->block_interpolation_variables_->grad_pp_[cell_id_origin][0];
+                buffers_[i][38][k] = block_origin->block_interpolation_variables_->grad_pp_[cell_id_origin][1];
+                buffers_[i][39][k] = block_origin->block_interpolation_variables_->grad_pp_[cell_id_origin][2];*/
+            }
+
+            //MPI_Request send_request[N_VARIABLES];
+            for (unsigned int j = 0; j < n_var; j++){
+                MPI_Isend(buffers[i][j], n_cells, MPI_DOUBLE, destination_process_id, n_var*i+j, MPI_COMM_WORLD, &reqHdl[reqCount]);
+                reqCount++;
+            }
+        }
+
+        // If this process is receiver
+        if (process_id_ == destination_process_id){
+
+            //MPI_Request receive_request[N_VARIABLES];
+            for (unsigned int j = 0; j < n_var; j++){
+                MPI_Irecv(buffers[i][j+n_var], n_cells, MPI_DOUBLE, origin_process_id, n_var*i+j, MPI_COMM_WORLD, &reqHdl[reqCount]);
+                reqCount++;
+            }
+        }
+    }
+
+    // MPI_Barrier(MPI_COMM_WORLD);
+    MPI_Waitall(reqCount, reqHdl, reqStat);
+
+    // Put in blocks
+    for (int i = 0; i < n_inter_block_boundaries_; i++){
+        ConnexionCellIds* boundary = inter_block_boundaries_[i];
+        int block_id_destination = boundary->block_destination_;
+        int n_cells = boundary->n_cell_in_boundary_;
+        Block* block_destination = mesh->all_blocks_[block_id_destination];
+        int destination_process_id = block_process_id_[block_id_destination];
+
+        if (process_id_ == destination_process_id){
+            for (int k = 0; k < n_cells; k++){
+                int cell_id_destination = boundary->cell_ids_in_boundary_[k];
+
+                block_destination->block_cells_[cell_id_destination]->cell_coordinates_[2] = buffers[i][n_var+2][k];
+                block_destination->block_cells_[cell_id_destination]->cell_coordinates_[0] = buffers[i][n_var][k]; // cell_id_origin_double; //Pour debug le transfert MPI
+                block_destination->block_cells_[cell_id_destination]->cell_coordinates_[1] = buffers[i][n_var+1][k];
+
+                /*block_destination->block_primitive_variables_->ro_[cell_id_destination] = buffers_[i][N_VARIABLES][k];
+                block_destination->block_primitive_variables_->uu_[cell_id_destination] = buffers_[i][N_VARIABLES+1][k];
+                block_destination->block_primitive_variables_->vv_[cell_id_destination] = buffers_[i][N_VARIABLES+2][k];
+                block_destination->block_primitive_variables_->ww_[cell_id_destination] = buffers_[i][N_VARIABLES+3][k];
+                block_destination->block_primitive_variables_->pp_[cell_id_destination] = buffers_[i][N_VARIABLES+4][k];
+                block_destination->block_primitive_variables_->conv_res_ro_[cell_id_destination] = buffers_[i][N_VARIABLES+5][k];
+                block_destination->block_primitive_variables_->conv_res_uu_[cell_id_destination] = buffers_[i][N_VARIABLES+6][k];
+                block_destination->block_primitive_variables_->conv_res_vv_[cell_id_destination] = buffers_[i][N_VARIABLES+7][k];
+                block_destination->block_primitive_variables_->conv_res_ww_[cell_id_destination] = buffers_[i][N_VARIABLES+8][k];
+                block_destination->block_primitive_variables_->conv_res_pp_[cell_id_destination] = buffers_[i][N_VARIABLES+9][k];
+                block_destination->block_primitive_variables_->diss_res_ro_[cell_id_destination] = buffers_[i][N_VARIABLES+10][k];
+                block_destination->block_primitive_variables_->diss_res_uu_[cell_id_destination] = buffers_[i][N_VARIABLES+11][k];
+                block_destination->block_primitive_variables_->diss_res_vv_[cell_id_destination] = buffers_[i][N_VARIABLES+12][k];
+                block_destination->block_primitive_variables_->diss_res_ww_[cell_id_destination] = buffers_[i][N_VARIABLES+13][k];
+                block_destination->block_primitive_variables_->diss_res_pp_[cell_id_destination] = buffers_[i][N_VARIABLES+14][k];
+                block_destination->block_primitive_variables_->ro_0_[cell_id_destination] = buffers_[i][N_VARIABLES+15][k];
+                block_destination->block_primitive_variables_->ru_0_[cell_id_destination] = buffers_[i][N_VARIABLES+16][k];
+                block_destination->block_primitive_variables_->rv_0_[cell_id_destination] = buffers_[i][N_VARIABLES+17][k];
+                block_destination->block_primitive_variables_->rw_0_[cell_id_destination] = buffers_[i][N_VARIABLES+18][k];
+                block_destination->block_primitive_variables_->re_0_[cell_id_destination] = buffers_[i][N_VARIABLES+19][k];
+
+                block_destination->block_interpolation_variables_->limiter_ro_[cell_id_destination] = buffers_[i][N_VARIABLES+20][k];
+                block_destination->block_interpolation_variables_->limiter_uu_[cell_id_destination] = buffers_[i][N_VARIABLES+21][k];
+                block_destination->block_interpolation_variables_->limiter_vv_[cell_id_destination] = buffers_[i][N_VARIABLES+22][k];
+                block_destination->block_interpolation_variables_->limiter_ww_[cell_id_destination] = buffers_[i][N_VARIABLES+23][k];
+                block_destination->block_interpolation_variables_->limiter_pp_[cell_id_destination] = buffers_[i][N_VARIABLES+24][k];
+
+                block_destination->block_interpolation_variables_->grad_ro_[cell_id_destination][0] = buffers_[i][N_VARIABLES+25][k];
+                block_destination->block_interpolation_variables_->grad_ro_[cell_id_destination][1] = buffers_[i][N_VARIABLES+26][k];
+                block_destination->block_interpolation_variables_->grad_ro_[cell_id_destination][2] = buffers_[i][N_VARIABLES+27][k];
+                block_destination->block_interpolation_variables_->grad_uu_[cell_id_destination][0] = buffers_[i][N_VARIABLES+28][k];
+                block_destination->block_interpolation_variables_->grad_uu_[cell_id_destination][1] = buffers_[i][N_VARIABLES+29][k];
+                block_destination->block_interpolation_variables_->grad_uu_[cell_id_destination][2] = buffers_[i][N_VARIABLES+30][k];
+                block_destination->block_interpolation_variables_->grad_vv_[cell_id_destination][0] = buffers_[i][N_VARIABLES+31][k];
+                block_destination->block_interpolation_variables_->grad_vv_[cell_id_destination][1] = buffers_[i][N_VARIABLES+32][k];
+                block_destination->block_interpolation_variables_->grad_vv_[cell_id_destination][2] = buffers_[i][N_VARIABLES+33][k];
+                block_destination->block_interpolation_variables_->grad_ww_[cell_id_destination][0] = buffers_[i][N_VARIABLES+34][k];
+                block_destination->block_interpolation_variables_->grad_ww_[cell_id_destination][1] = buffers_[i][N_VARIABLES+35][k];
+                block_destination->block_interpolation_variables_->grad_ww_[cell_id_destination][2] = buffers_[i][N_VARIABLES+36][k];
+                block_destination->block_interpolation_variables_->grad_pp_[cell_id_destination][0] = buffers_[i][N_VARIABLES+37][k];
+                block_destination->block_interpolation_variables_->grad_pp_[cell_id_destination][1] = buffers_[i][N_VARIABLES+38][k];
+                block_destination->block_interpolation_variables_->grad_pp_[cell_id_destination][2] = buffers_[i][N_VARIABLES+39][k];*/
+            }
+        }
+    }
+
+    if (buffers != nullptr){
+        for (int i = 0; i < n_inter_block_boundaries_; i++){
+            if (buffers[i] != nullptr){
+                for (unsigned int j = 0; j < n_var*2; j++){
+                    if (buffers[i][j] != nullptr){
+                        delete [] buffers[i][j];
+                    }
+                }
+                delete [] buffers[i];
+            }
+        }
+        delete [] buffers; // This line throws "munmap_chunk(): invalid pointer" on process 3 when there are 6 blocks and 6 processes. wtf
+    }
+
+    #else
+    for (int i = 0; i < n_inter_block_boundaries_; i++){
+        ConnexionCellIds* boundary = inter_block_boundaries_[i];
+        int block_id_origin = boundary->block_origin_;
+        int block_id_destination = boundary->block_destination_;
+        int n_cells = boundary->n_cell_in_boundary_;
+        Block* block_origin = mesh->all_blocks_[block_id_origin];
+        Block* block_destination = mesh->all_blocks_[block_id_destination];
+
+        for (int j = 0; j < n_cells; j++){
+            int cell_id_origin = boundary->cell_ids_in_boundary_other_block_[j];
+            int cell_id_destination = boundary->cell_ids_in_boundary_[j];
+
+            block_destination->block_cells_[cell_id_destination]->cell_coordinates_[0] = block_origin->block_cells_[cell_id_origin]->cell_coordinates_[0];
+            block_destination->block_cells_[cell_id_destination]->cell_coordinates_[1] = block_origin->block_cells_[cell_id_origin]->cell_coordinates_[1];
+            block_destination->block_cells_[cell_id_destination]->cell_coordinates_[2] = block_origin->block_cells_[cell_id_origin]->cell_coordinates_[2];
+            /*block_destination->block_primitive_variables_->ro_[cell_id_destination] = block_origin->block_primitive_variables_->ro_[cell_id_origin];
+            block_destination->block_primitive_variables_->uu_[cell_id_destination] = block_origin->block_primitive_variables_->uu_[cell_id_origin];
+            block_destination->block_primitive_variables_->vv_[cell_id_destination] = block_origin->block_primitive_variables_->vv_[cell_id_origin];
+            block_destination->block_primitive_variables_->ww_[cell_id_destination] = block_origin->block_primitive_variables_->ww_[cell_id_origin];
+            block_destination->block_primitive_variables_->pp_[cell_id_destination] = block_origin->block_primitive_variables_->pp_[cell_id_origin];
+            block_destination->block_primitive_variables_->conv_res_ro_[cell_id_destination] = block_origin->block_primitive_variables_->conv_res_ro_[cell_id_origin];
+            block_destination->block_primitive_variables_->conv_res_uu_[cell_id_destination] = block_origin->block_primitive_variables_->conv_res_uu_[cell_id_origin];
+            block_destination->block_primitive_variables_->conv_res_vv_[cell_id_destination] = block_origin->block_primitive_variables_->conv_res_vv_[cell_id_origin];
+            block_destination->block_primitive_variables_->conv_res_ww_[cell_id_destination] = block_origin->block_primitive_variables_->conv_res_ww_[cell_id_origin];
+            block_destination->block_primitive_variables_->conv_res_pp_[cell_id_destination] = block_origin->block_primitive_variables_->conv_res_pp_[cell_id_origin];
+            block_destination->block_primitive_variables_->diss_res_ro_[cell_id_destination] = block_origin->block_primitive_variables_->diss_res_ro_[cell_id_origin];
+            block_destination->block_primitive_variables_->diss_res_uu_[cell_id_destination] = block_origin->block_primitive_variables_->diss_res_uu_[cell_id_origin];
+            block_destination->block_primitive_variables_->diss_res_vv_[cell_id_destination] = block_origin->block_primitive_variables_->diss_res_vv_[cell_id_origin];
+            block_destination->block_primitive_variables_->diss_res_ww_[cell_id_destination] = block_origin->block_primitive_variables_->diss_res_ww_[cell_id_origin];
+            block_destination->block_primitive_variables_->diss_res_pp_[cell_id_destination] = block_origin->block_primitive_variables_->diss_res_pp_[cell_id_origin];
+            block_destination->block_primitive_variables_->ro_0_[cell_id_destination] = block_origin->block_primitive_variables_->ro_0_[cell_id_origin];
+            block_destination->block_primitive_variables_->ru_0_[cell_id_destination] = block_origin->block_primitive_variables_->ru_0_[cell_id_origin];
+            block_destination->block_primitive_variables_->rv_0_[cell_id_destination] = block_origin->block_primitive_variables_->rv_0_[cell_id_origin];
+            block_destination->block_primitive_variables_->rw_0_[cell_id_destination] = block_origin->block_primitive_variables_->rw_0_[cell_id_origin];
+            block_destination->block_primitive_variables_->re_0_[cell_id_destination] = block_origin->block_primitive_variables_->re_0_[cell_id_origin];
+
+            block_destination->block_interpolation_variables_->limiter_ro_[cell_id_destination] = block_origin->block_interpolation_variables_->limiter_ro_[cell_id_origin];
+            block_destination->block_interpolation_variables_->limiter_uu_[cell_id_destination] = block_origin->block_interpolation_variables_->limiter_uu_[cell_id_origin];
+            block_destination->block_interpolation_variables_->limiter_vv_[cell_id_destination] = block_origin->block_interpolation_variables_->limiter_vv_[cell_id_origin];
+            block_destination->block_interpolation_variables_->limiter_ww_[cell_id_destination] = block_origin->block_interpolation_variables_->limiter_ww_[cell_id_origin];
+            block_destination->block_interpolation_variables_->limiter_pp_[cell_id_destination] = block_origin->block_interpolation_variables_->limiter_pp_[cell_id_origin];
+
+            block_destination->block_interpolation_variables_->grad_ro_[cell_id_destination][0] = block_origin->block_interpolation_variables_->grad_ro_[cell_id_origin][0];
+            block_destination->block_interpolation_variables_->grad_ro_[cell_id_destination][1] = block_origin->block_interpolation_variables_->grad_ro_[cell_id_origin][1];
+            block_destination->block_interpolation_variables_->grad_ro_[cell_id_destination][2] = block_origin->block_interpolation_variables_->grad_ro_[cell_id_origin][2];
+            block_destination->block_interpolation_variables_->grad_uu_[cell_id_destination][0] = block_origin->block_interpolation_variables_->grad_uu_[cell_id_origin][0];
+            block_destination->block_interpolation_variables_->grad_uu_[cell_id_destination][1] = block_origin->block_interpolation_variables_->grad_uu_[cell_id_origin][1];
+            block_destination->block_interpolation_variables_->grad_uu_[cell_id_destination][2] = block_origin->block_interpolation_variables_->grad_uu_[cell_id_origin][2];
+            block_destination->block_interpolation_variables_->grad_vv_[cell_id_destination][0] = block_origin->block_interpolation_variables_->grad_vv_[cell_id_origin][0];
+            block_destination->block_interpolation_variables_->grad_vv_[cell_id_destination][1] = block_origin->block_interpolation_variables_->grad_vv_[cell_id_origin][1];
+            block_destination->block_interpolation_variables_->grad_vv_[cell_id_destination][2] = block_origin->block_interpolation_variables_->grad_vv_[cell_id_origin][2];
+            block_destination->block_interpolation_variables_->grad_ww_[cell_id_destination][0] = block_origin->block_interpolation_variables_->grad_ww_[cell_id_origin][0];
+            block_destination->block_interpolation_variables_->grad_ww_[cell_id_destination][1] = block_origin->block_interpolation_variables_->grad_ww_[cell_id_origin][1];
+            block_destination->block_interpolation_variables_->grad_ww_[cell_id_destination][2] = block_origin->block_interpolation_variables_->grad_ww_[cell_id_origin][2];
+            block_destination->block_interpolation_variables_->grad_pp_[cell_id_destination][0] = block_origin->block_interpolation_variables_->grad_pp_[cell_id_origin][0];
+            block_destination->block_interpolation_variables_->grad_pp_[cell_id_destination][1] = block_origin->block_interpolation_variables_->grad_pp_[cell_id_origin][1];
+            block_destination->block_interpolation_variables_->grad_pp_[cell_id_destination][2] = block_origin->block_interpolation_variables_->grad_pp_[cell_id_origin][2];*/
+        }
+    }
+    #endif
+
+}
+
 void BlockCommunicator::updateBoundaries(CompleteMesh* mesh) const {
     #ifdef HAVE_MPI
 
@@ -128,8 +381,6 @@ void BlockCommunicator::updateBoundaries(CompleteMesh* mesh) const {
                 buffers_[i][37][k] = block_origin->block_interpolation_variables_->grad_pp_[cell_id_origin][0];
                 buffers_[i][38][k] = block_origin->block_interpolation_variables_->grad_pp_[cell_id_origin][1];
                 buffers_[i][39][k] = block_origin->block_interpolation_variables_->grad_pp_[cell_id_origin][2];
-                	// double* right_cell_r_vector_;
-	                // double* left_cell_r_vector_;
             }
 
             //MPI_Request send_request[N_VARIABLES];
