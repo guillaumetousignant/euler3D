@@ -24,6 +24,7 @@ class Solver
 		Timestep *timestep_;
 		RungeKutta *runge_kutta_;
 		PostProcessing *post_processing_;
+		int interpolation_choice_;
 
 		void solve(CompleteMesh* complete_mesh, BlockCommunicator* communicator);
 		void saveW0(Block* block);

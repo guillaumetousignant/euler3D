@@ -29,7 +29,7 @@ void LeastSquares::computeGradients(Block* block)
 
 	PrimitiveVariables* my_primitive_variables;
 	my_primitive_variables = block -> block_primitive_variables_;
-	
+
 	my_ro_array = my_primitive_variables -> ro_;
 	my_uu_array = my_primitive_variables -> uu_;
 	my_vv_array = my_primitive_variables -> vv_;
@@ -51,30 +51,29 @@ void LeastSquares::computeGradients(Block* block)
 	my_grad_ww_array=my_interpolation_variables->grad_ww_;
 	my_grad_pp_array=my_interpolation_variables->grad_pp_;
 
-	
 
 
-	
-	int n_all_cells_in_block= block -> n_all_cells_in_block_;
 
-	// Initialize all gradients to 0
 
-	for (int all_cell_idx = 0; all_cell_idx < n_all_cells_in_block; all_cell_idx++)
+	int n_real_cells_in_block= block -> n_real_cells_in_block_;
+
+	// Initialize real gradients to 0
+
+	for (int real_cell_idx = 0; real_cell_idx < n_real_cells_in_block; real_cell_idx++)
 	{
 		// Initialize gradients to 0
 		for (int dim_idx=0; dim_idx<n_dim; dim_idx++)
 		{
-			my_grad_ro_array[all_cell_idx][dim_idx]=0.0;
-			my_grad_uu_array[all_cell_idx][dim_idx]=0.0;
-			my_grad_vv_array[all_cell_idx][dim_idx]=0.0;
-			my_grad_ww_array[all_cell_idx][dim_idx]=0.0;
-			my_grad_pp_array[all_cell_idx][dim_idx]=0.0;
+			my_grad_ro_array[real_cell_idx][dim_idx]=0.0;
+			my_grad_uu_array[real_cell_idx][dim_idx]=0.0;
+			my_grad_vv_array[real_cell_idx][dim_idx]=0.0;
+			my_grad_ww_array[real_cell_idx][dim_idx]=0.0;
+			my_grad_pp_array[real_cell_idx][dim_idx]=0.0;
 		}
 
 
 	}
 
-	int n_real_cells_in_block = block -> n_real_cells_in_block_;
 	// Set gradients in real cells
 
 	for (int real_cell_idx = 0; real_cell_idx < n_real_cells_in_block; real_cell_idx++)
@@ -118,7 +117,7 @@ void LeastSquares::computeGradients(Block* block)
 
 	}
 
-	
+
 
 	// Reflection formlua is r=d-2(d\dot n)*n, where r is reflected vector, d is incident vector and n is normalized face vector
 
@@ -141,7 +140,7 @@ for (int j=0;j<n_boundaries_real;j++)
 	for (int i = 0; i < n_boundary_faces; i++)
 	{
 		ext_cell_idx=(block->block_boundary_cell_ids_[j])->cell_ids_in_boundary_[i];
-		
+
 		boundary_face_idx=(block -> block_cells_[ext_cell_idx])->cell_2_faces_connectivity_[0];
 		int_cell_idx=block->block_faces_[boundary_face_idx]->face_2_cells_connectivity_[0];
 
@@ -150,7 +149,7 @@ for (int j=0;j<n_boundaries_real;j++)
 		// Normalized normals
 		for (int dim_idx=0; dim_idx<n_dim; dim_idx++)
 		{
-			boundary_face_normals_normalized[dim_idx]=block->block_faces_[boundary_face_idx]->face_normals_[dim_idx];		
+			boundary_face_normals_normalized[dim_idx]=block->block_faces_[boundary_face_idx]->face_normals_[dim_idx];
 			boundary_face_normals_normalized[dim_idx]/=face_area;
 		}
 
@@ -211,7 +210,7 @@ for (int j=0;j<n_boundaries_real;j++)
 // 		// Normalized normals
 // 		for (int dim_idx=0; dim_idx<n_dim; dim_idx++)
 // 		{
-// 			wall_face_normals_normalized[dim_idx]=block->block_faces_[wall_face_idx]->face_normals_[dim_idx];		
+// 			wall_face_normals_normalized[dim_idx]=block->block_faces_[wall_face_idx]->face_normals_[dim_idx];
 // 			wall_face_normals_normalized[dim_idx]/=face_area;
 // 		}
 
@@ -264,7 +263,7 @@ for (int j=0;j<n_boundaries_real;j++)
 // 		// Normalized normals
 // 		for (int dim_idx=0; dim_idx<n_dim; dim_idx++)
 // 		{
-// 			symmetry_face_normals_normalized[dim_idx]=block->block_faces_[symmetry_face_idx]->face_normals_[dim_idx];		
+// 			symmetry_face_normals_normalized[dim_idx]=block->block_faces_[symmetry_face_idx]->face_normals_[dim_idx];
 // 			symmetry_face_normals_normalized[dim_idx]/=face_area;
 // 		}
 
@@ -317,7 +316,7 @@ for (int j=0;j<n_boundaries_real;j++)
 // 		// Normalized normals
 // 		for (int dim_idx=0; dim_idx<n_dim; dim_idx++)
 // 		{
-// 			farfield_face_normals_normalized[dim_idx]=block->block_faces_[farfield_face_idx]->face_normals_[dim_idx];		
+// 			farfield_face_normals_normalized[dim_idx]=block->block_faces_[farfield_face_idx]->face_normals_[dim_idx];
 // 			farfield_face_normals_normalized[dim_idx]/=face_area;
 // 		}
 
@@ -351,7 +350,7 @@ for (int j=0;j<n_boundaries_real;j++)
 
 
 // 	}
-	
+
 }
 
 
@@ -359,7 +358,7 @@ for (int j=0;j<n_boundaries_real;j++)
 LeastSquares::LeastSquares()
 {
 
-	
+
 }
 
 LeastSquares::~LeastSquares()

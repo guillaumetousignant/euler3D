@@ -19,6 +19,7 @@ Solver::Solver(double gamma, double cfl, int stage_number, int interpolation_cho
 	timestep_= new Timestep(gamma, cfl);
 	runge_kutta_= new RungeKutta(gamma, stage_number, interpolation_choice, gradient_choice, limiter_choice, flux_scheme_choice,residual_smoother_choice, omega, k);
 	post_processing_= new PostProcessing( n_blocks, max_iter, convergence_criterion, cmac, mach_aircraft, aoa_deg, gamma);
+	interpolation_choice_=interpolation_choice;
 }
 
 
@@ -93,7 +94,16 @@ void Solver::solve(CompleteMesh* complete_mesh, BlockCommunicator* communicator)
 		///INSÉRER LES TRUCS DE MPI ICI JE CROIS
 		communicator->sync();
 		communicator->updateBoundaries(complete_mesh);
-
+		if (interpolation_choice_==2)
+		{
+			for	(int i=0;i<n_blocks_in_process;i++)
+			{
+				Block* current_block=all_blocks[my_blocks[i]];
+				runge_kutta_->residual_calculator_->interpolation_->gradient_->computeGradients(current_block);
+			}
+			communicator->sync();
+			communicator->updateBoundaries(complete_mesh);
+		}
 		post_processing_->process(complete_mesh, communicator);
 
 	}
