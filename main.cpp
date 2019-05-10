@@ -78,6 +78,8 @@ int main(int argc, char* argv[])
 	CompleteMesh* complete_mesh = new CompleteMesh(n_blocks, n_blocks_in_process, my_blocks, interface->topology_file_name_interface_);
 	complete_mesh->InitializeMyBlocks(interface, communicator);
 
+
+
 	//communicator->createBoundaries(complete_mesh->topology_file_name_);
 	communicator->initializeBuffers();
 
@@ -90,8 +92,8 @@ int main(int argc, char* argv[])
     solver->solve(complete_mesh, communicator);
     auto t_end = std::chrono::high_resolution_clock::now();
 	if (communicator->process_id_ == 0){
-		std::cout << "Time elapsed solving: " 
-			<< std::chrono::duration<double, std::milli>(t_end-t_start).count()/1000.0 
+		std::cout << "Time elapsed solving: "
+			<< std::chrono::duration<double, std::milli>(t_end-t_start).count()/1000.0
 			<< "s." << std::endl;
 	}
 
