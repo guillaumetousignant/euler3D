@@ -21,7 +21,7 @@ public:
 	CompleteMesh(int n_blocks, int n_block_in_process, int* my_blocks, string topology_file_name);
 	~CompleteMesh();
 	void InitializeMyBlocks(Interface* interface, BlockCommunicator* communicator);
-
+	void RecomputeConnexionInterVect(BlockCommunicator* communicator);
 	string getBlockFileName(int block_id);
 
 };
