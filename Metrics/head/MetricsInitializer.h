@@ -31,6 +31,8 @@ class MetricsInitializer
 
         void doInit(BlockCommunicator* communicator);
 
+        void doConnexionInterVectInit(BlockCommunicator* communicator);
+
         /**
          * @brief Construct a new Metrics Initializer object
          *
@@ -87,6 +89,7 @@ class MetricsInitializer
          */
 
         void computeInterpVect(uint iNCells, uint iNCellsTot, uint iNFaces, Cell** iCells, Face** iFaces);
+        void computeConnexionInterpVect(uint iNCells, uint iNCellsTot, uint iNFaces, Cell** iCells, Face** iFaces);
 
         /**
          * @brief
