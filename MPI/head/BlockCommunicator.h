@@ -21,7 +21,7 @@ class BlockCommunicator {
         ConnexionCellIds** inter_block_boundaries_; // make list?
 
         double *** buffers_;
-        void passRVectors(CompleteMesh* mesh) const;
+        void passConnexionCellCenters(CompleteMesh* mesh) const;
         void updateBoundaries(CompleteMesh* mesh) const;
         void addCellIdInConnexion(ConnexionCellIds* boundary);
         void getMyBlocks(int& n_blocks_in_process, int* &my_blocks) const;

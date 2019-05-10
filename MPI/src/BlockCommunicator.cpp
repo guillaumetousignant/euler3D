@@ -63,7 +63,7 @@ BlockCommunicator::~BlockCommunicator(){
     }
 }
 
-void BlockCommunicator::passRVectors(CompleteMesh* mesh) const {
+void BlockCommunicator::passConnexionCellCenters(CompleteMesh* mesh) const {
 
 #ifdef HAVE_MPI
     double *** buffers;

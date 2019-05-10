@@ -80,7 +80,8 @@ int main(int argc, char* argv[])
 	CompleteMesh* complete_mesh = new CompleteMesh(n_blocks, n_blocks_in_process, my_blocks, interface->topology_file_name_interface_);
 	complete_mesh->InitializeMyBlocks(interface, communicator);
 	communicator->sync();
-	communicator->passRVectors(complete_mesh);
+	communicator->passConnexionCellCenters(complete_mesh);
+
 	for (int i=0;i<communicator->n_inter_block_boundaries_;i++)
 	{
 		for (int k=0; k<complete_mesh->n_blocks_in_process_; k++)
