@@ -151,6 +151,11 @@ void CompleteMesh::InitializeMyBlocks(Interface* interface, BlockCommunicator* c
 		MetricsInitializer metricsInit(new_block);
 		metricsInit.doInit(communicator);
 
+
+
+		// metricsInit.doConnexionInterVectInit(communicator);
+
+
 		if (communicator->process_id_ == 0){
 		cout << "In calculateFreeVariables........." << endl;
 		}
@@ -290,6 +295,21 @@ void CompleteMesh::InitializeMyBlocks(Interface* interface, BlockCommunicator* c
 		}
 		myfile.close();
 	}
+}
+
+void CompleteMesh::RecomputeConnexionInterVect( BlockCommunicator* communicator)
+{
+	for(int i=0;i<n_blocks_in_process_;i++)
+	{
+
+		int block_id = my_blocks_[i];
+		Block* new_block = all_blocks_[block_id];
+
+		MetricsInitializer metricsInit(new_block);
+		metricsInit.doConnexionInterVectInit(communicator);
+
+	}
+
 }
 
 #endif
