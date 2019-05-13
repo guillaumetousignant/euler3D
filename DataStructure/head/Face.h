@@ -4,6 +4,7 @@
 class Face
 {
 public:
+	int is_in_wall_;
 	int face_id_;
 	int block_id_;
 	int* face_2_nodes_connectivity_;
@@ -17,7 +18,7 @@ public:
 
 	Face();
 	~Face();
-	
+
 };
 
 #endif

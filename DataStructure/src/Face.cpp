@@ -5,6 +5,7 @@
 
 Face::Face()
 {
+	is_in_wall_=0;
 	face_normals_ = new double[3]();
 	face_2_cells_connectivity_ = new int[2]();
 	right_cell_r_vector_ = new double[3]();
@@ -14,7 +15,7 @@ Face::Face()
 }
 Face::~Face()
 {
-	
+
 	delete[] face_2_nodes_connectivity_;
 	delete[] face_normals_;
 	delete[] face_2_cells_connectivity_;
