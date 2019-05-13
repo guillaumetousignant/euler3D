@@ -181,6 +181,8 @@ void FluxScheme::computeFluxConv(Block* block)
 		flux_4_convective = 0.5*(Fc_L_4+Fc_R_4)*normal_norm;
 		flux_5_convective = 0.5*(Fc_L_5+Fc_R_5)*normal_norm;
 
+		
+
 		//cout<<"right_cell: "<<right_cell<<" left_cell: "<<left_cell<<" face_idx: "<<face_idx<<endl;
 		//cout<<"Fc_L_2 :"<<Fc_L_2<<" Fc_R_2 :"<<Fc_R_2<<" flux_2_convective: "<<flux_2_convective<<endl;
 		//cout<<"normalized_x :"<<normalized_x<<" normalized_y :"<<normalized_y<<" normalized_z: "<<normalized_z<<" normal_norm: "<<normal_norm<<endl<<endl;
