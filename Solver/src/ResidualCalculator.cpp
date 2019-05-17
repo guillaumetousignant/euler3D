@@ -36,7 +36,10 @@ void ResidualCalculator::computeResidual(Block* block)
 	}
 	//cout<<"\t\t\tFin FluxScheme"<<endl;
 	//cout<<endl<<"\t\t\tDans ResidualSmoother"<<endl;
-	residual_smoother_->smoothResidual(block);
+	for (int i=0;i<1;i++)
+	{
+		residual_smoother_->smoothResidual(block);
+	}
 	//cout<<"\t\t\tFin ResidualSmoother"<<endl;
 }
 

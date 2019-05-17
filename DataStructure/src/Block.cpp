@@ -53,7 +53,6 @@ void Block::addFaceIdInWall(int face_id, int* face_count)
 	//std::cout<<"numero de faceid:"<< face_id <<std::endl;
 	block_wall_face_ids_[*face_count] = face_id;
 	*face_count += 1;
-	block_faces_[face_id]->is_in_wall_=1;
 
 }
 

@@ -3,13 +3,13 @@ topologyfilename
 topology.top
 INPUT
 cfl gamma angleattackdeg
-1.5 1.4 1.25
+5.5 1.4 1.25
 rkstage mach cmac
 5 0.8 1.0
 nbitermax convcriterion
-300 -15
+300000 -15
 residual smoothing (0-no 1-yes)
-0
+1
 fluxscheme schemeorder
 roe 2
 gradient limiter
@@ -18,14 +18,14 @@ omega k
 1.0e-16 5.0
 EXECUTABLE (0-no 1-yes)
 build execute
-1 1
+0 1
 OUTPUT (0-no 1-yes)
 filestype (0-Euler 1-SU2)
-1
+0
 clalpha cdalpha cmalpha
 0 0 0
 coefficientsconvergence residualconv
-0 0
+1 1
 cpxc machcontour cpcontour machisosurface
 0 0 0 0
 slicecp

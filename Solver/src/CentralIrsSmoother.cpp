@@ -67,7 +67,7 @@ void CentralIrsSmoother::smoothResidual(Block* block)
 	double* ww_dissipative_smooth= new double[ncell];
 	double* pp_dissipative_smooth= new double[ncell];
 
-	double epsilon=0.8; // espilon = 0.5 to 0.8 (Blazek p.303)
+	double epsilon=0.7; // espilon = 0.5 to 0.8 (Blazek p.303)
 	int Na;
 
 	int my_cell_n_faces;
@@ -78,18 +78,20 @@ void CentralIrsSmoother::smoothResidual(Block* block)
 	for (int cell_idx=0; cell_idx<ncell; cell_idx++)
 	{
 		Na = block->block_cells_[cell_idx]->n_faces_per_cell_;
-		jacobi_1_ro_convective[cell_idx] = (my_conv_res_ro[cell_idx] +0.)/(1.+epsilon*Na);
-		jacobi_1_uu_convective[cell_idx] = (my_conv_res_uu[cell_idx] +0.)/(1.+epsilon*Na);
-		jacobi_1_vv_convective[cell_idx] = (my_conv_res_vv[cell_idx] +0.)/(1.+epsilon*Na);
-		jacobi_1_ww_convective[cell_idx] = (my_conv_res_ww[cell_idx] +0.)/(1.+epsilon*Na);
-		jacobi_1_pp_convective[cell_idx] = (my_conv_res_pp[cell_idx] +0.)/(1.+epsilon*Na);
+		ro_convective_smooth[cell_idx] = (my_conv_res_ro[cell_idx] +0.);///(1.+epsilon*Na);
+		uu_convective_smooth[cell_idx] = (my_conv_res_uu[cell_idx] +0.);///(1.+epsilon*Na);
+		vv_convective_smooth[cell_idx] = (my_conv_res_vv[cell_idx] +0.);///(1.+epsilon*Na);
+		ww_convective_smooth[cell_idx] = (my_conv_res_ww[cell_idx] +0.);///(1.+epsilon*Na);
+		pp_convective_smooth[cell_idx] = (my_conv_res_pp[cell_idx] +0.);///(1.+epsilon*Na);
 
-		jacobi_1_ro_dissipative[cell_idx] = (my_diss_res_ro[cell_idx] +0.)/(1.+epsilon*Na);
-		jacobi_1_uu_dissipative[cell_idx] = (my_diss_res_uu[cell_idx] +0.)/(1.+epsilon*Na);
-		jacobi_1_vv_dissipative[cell_idx] = (my_diss_res_vv[cell_idx] +0.)/(1.+epsilon*Na);
-		jacobi_1_vv_dissipative[cell_idx] = (my_diss_res_ww[cell_idx] +0.)/(1.+epsilon*Na);
-		jacobi_1_pp_dissipative[cell_idx] = (my_diss_res_pp[cell_idx] +0.)/(1.+epsilon*Na);
+		ro_dissipative_smooth[cell_idx] = (my_diss_res_ro[cell_idx] +0.);///(1.+epsilon*Na);
+		uu_dissipative_smooth[cell_idx] = (my_diss_res_uu[cell_idx] +0.);///(1.+epsilon*Na);
+		vv_dissipative_smooth[cell_idx] = (my_diss_res_vv[cell_idx] +0.);///(1.+epsilon*Na);
+		ww_dissipative_smooth[cell_idx] = (my_diss_res_ww[cell_idx] +0.);///(1.+epsilon*Na);
+		pp_dissipative_smooth[cell_idx] = (my_diss_res_pp[cell_idx] +0.);///(1.+epsilon*Na);
 	}
+for (int iter =0; iter<20;iter++)
+{
 	for (int cell_idx=0; cell_idx<ncell; cell_idx++)
 	{
 		my_cell=block->block_cells_[cell_idx];
@@ -115,17 +117,17 @@ void CentralIrsSmoother::smoothResidual(Block* block)
 			my_neighbor_cell_idx = my_cell_2_cells_connectivity[cell_2_cells_idx];
 			if (my_neighbor_cell_idx < ncell)
 			{
-				sum_jacobi1_ro_convective += jacobi_1_ro_convective[my_neighbor_cell_idx];
-				sum_jacobi1_uu_convective += jacobi_1_uu_convective[my_neighbor_cell_idx];
-				sum_jacobi1_vv_convective += jacobi_1_vv_convective[my_neighbor_cell_idx];
-				sum_jacobi1_ww_convective += jacobi_1_ww_convective[my_neighbor_cell_idx];
-				sum_jacobi1_pp_convective += jacobi_1_pp_convective[my_neighbor_cell_idx];
+				sum_jacobi1_ro_convective +=  ro_convective_smooth[my_neighbor_cell_idx];
+				sum_jacobi1_uu_convective +=  uu_convective_smooth[my_neighbor_cell_idx];
+				sum_jacobi1_vv_convective +=  vv_convective_smooth[my_neighbor_cell_idx];
+				sum_jacobi1_ww_convective +=  ww_convective_smooth[my_neighbor_cell_idx];
+				sum_jacobi1_pp_convective +=  pp_convective_smooth[my_neighbor_cell_idx];
 
-				sum_jacobi1_ro_dissipative += jacobi_1_ro_dissipative[my_neighbor_cell_idx];
-				sum_jacobi1_uu_dissipative += jacobi_1_uu_dissipative[my_neighbor_cell_idx];
-				sum_jacobi1_vv_dissipative += jacobi_1_vv_dissipative[my_neighbor_cell_idx];
-				sum_jacobi1_ww_dissipative += jacobi_1_ww_dissipative[my_neighbor_cell_idx];
-				sum_jacobi1_pp_dissipative += jacobi_1_pp_dissipative[my_neighbor_cell_idx];
+				sum_jacobi1_ro_dissipative += ro_dissipative_smooth[my_neighbor_cell_idx];
+				sum_jacobi1_uu_dissipative += uu_dissipative_smooth[my_neighbor_cell_idx];
+				sum_jacobi1_vv_dissipative += vv_dissipative_smooth[my_neighbor_cell_idx];
+				sum_jacobi1_ww_dissipative += ww_dissipative_smooth[my_neighbor_cell_idx];
+				sum_jacobi1_pp_dissipative += pp_dissipative_smooth[my_neighbor_cell_idx];
 			}
 		}
 		Na = block->block_cells_[cell_idx]->n_faces_per_cell_;
@@ -141,6 +143,7 @@ void CentralIrsSmoother::smoothResidual(Block* block)
 		ww_dissipative_smooth[cell_idx] = (my_diss_res_ww[cell_idx]+epsilon*sum_jacobi1_ww_dissipative)/(1.+epsilon*Na);
 		pp_dissipative_smooth[cell_idx] = (my_diss_res_pp[cell_idx]+epsilon*sum_jacobi1_pp_dissipative)/(1.+epsilon*Na);
 	}
+}
 
 	for (int cell_idx=0; cell_idx<ncell; cell_idx++)
 	{

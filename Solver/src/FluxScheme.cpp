@@ -99,7 +99,6 @@ void FluxScheme::computeFluxConv(Block* block)
 
 	for (int face_idx = 0; face_idx < nface; face_idx++)
 	{
-
 		my_face = block -> block_faces_[face_idx];
 		// Get S vector
 		normalized_x = block -> block_faces_[face_idx] -> face_normals_[0];
@@ -123,14 +122,17 @@ void FluxScheme::computeFluxConv(Block* block)
 		p_L = my_pp_array[left_cell];
 		left_cell_r_vector=block -> block_faces_[face_idx] -> left_cell_r_vector_;
 
-		// Add gradient effect and limiter
-		for (int dim_idx=0; dim_idx<n_dim; dim_idx++)
+		if (!block -> block_faces_[face_idx] ->is_in_wall_)
 		{
-			rho_L+=my_ro_limiters[left_cell]*my_grad_ro_array[left_cell][dim_idx]*left_cell_r_vector[dim_idx];
-			u_L+=my_uu_limiters[left_cell]*my_grad_uu_array[left_cell][dim_idx]*left_cell_r_vector[dim_idx];
-			v_L+=my_vv_limiters[left_cell]*my_grad_vv_array[left_cell][dim_idx]*left_cell_r_vector[dim_idx];
-			w_L+=my_ww_limiters[left_cell]*my_grad_ww_array[left_cell][dim_idx]*left_cell_r_vector[dim_idx];
-			p_L+=my_pp_limiters[left_cell]*my_grad_pp_array[left_cell][dim_idx]*left_cell_r_vector[dim_idx];
+			// Add gradient effect and limiter
+			for (int dim_idx=0; dim_idx<n_dim; dim_idx++)
+			{
+				rho_L+=my_ro_limiters[left_cell]*my_grad_ro_array[left_cell][dim_idx]*left_cell_r_vector[dim_idx];
+				u_L+=my_uu_limiters[left_cell]*my_grad_uu_array[left_cell][dim_idx]*left_cell_r_vector[dim_idx];
+				v_L+=my_vv_limiters[left_cell]*my_grad_vv_array[left_cell][dim_idx]*left_cell_r_vector[dim_idx];
+				w_L+=my_ww_limiters[left_cell]*my_grad_ww_array[left_cell][dim_idx]*left_cell_r_vector[dim_idx];
+				p_L+=my_pp_limiters[left_cell]*my_grad_pp_array[left_cell][dim_idx]*left_cell_r_vector[dim_idx];
+			}
 		}
 
 
@@ -148,16 +150,18 @@ void FluxScheme::computeFluxConv(Block* block)
 		p_R = my_pp_array[right_cell];
 		right_cell_r_vector=block -> block_faces_[face_idx] -> right_cell_r_vector_;
 
-		// Add gradient effect and limiter
-		for (int dim_idx=0; dim_idx<n_dim; dim_idx++)
+		if (!block -> block_faces_[face_idx] ->is_in_wall_)
 		{
-			rho_R+=my_ro_limiters[right_cell]*my_grad_ro_array[right_cell][dim_idx]*right_cell_r_vector[dim_idx];
-			u_R+=my_uu_limiters[right_cell]*my_grad_uu_array[right_cell][dim_idx]*right_cell_r_vector[dim_idx];
-			v_R+=my_vv_limiters[right_cell]*my_grad_vv_array[right_cell][dim_idx]*right_cell_r_vector[dim_idx];
-			w_R+=my_ww_limiters[right_cell]*my_grad_ww_array[right_cell][dim_idx]*right_cell_r_vector[dim_idx];
-			p_R+=my_pp_limiters[right_cell]*my_grad_pp_array[right_cell][dim_idx]*right_cell_r_vector[dim_idx];
+			// Add gradient effect and limiter
+			for (int dim_idx=0; dim_idx<n_dim; dim_idx++)
+			{
+				rho_R+=my_ro_limiters[right_cell]*my_grad_ro_array[right_cell][dim_idx]*right_cell_r_vector[dim_idx];
+				u_R+=my_uu_limiters[right_cell]*my_grad_uu_array[right_cell][dim_idx]*right_cell_r_vector[dim_idx];
+				v_R+=my_vv_limiters[right_cell]*my_grad_vv_array[right_cell][dim_idx]*right_cell_r_vector[dim_idx];
+				w_R+=my_ww_limiters[right_cell]*my_grad_ww_array[right_cell][dim_idx]*right_cell_r_vector[dim_idx];
+				p_R+=my_pp_limiters[right_cell]*my_grad_pp_array[right_cell][dim_idx]*right_cell_r_vector[dim_idx];
+			}
 		}
-
 
 		qq_R = u_R*u_R+v_R*v_R+w_R*w_R;
 		H_R = (0.5*qq_R+gamma_/(gamma_-1.0)*p_R/rho_R);
@@ -181,7 +185,7 @@ void FluxScheme::computeFluxConv(Block* block)
 		flux_4_convective = 0.5*(Fc_L_4+Fc_R_4)*normal_norm;
 		flux_5_convective = 0.5*(Fc_L_5+Fc_R_5)*normal_norm;
 
-		
+
 
 		//cout<<"right_cell: "<<right_cell<<" left_cell: "<<left_cell<<" face_idx: "<<face_idx<<endl;
 		//cout<<"Fc_L_2 :"<<Fc_L_2<<" Fc_R_2 :"<<Fc_R_2<<" flux_2_convective: "<<flux_2_convective<<endl;
