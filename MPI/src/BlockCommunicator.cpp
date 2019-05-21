@@ -67,7 +67,7 @@ void BlockCommunicator::passConnexionCellCenters(CompleteMesh* mesh) const {
 
 #ifdef HAVE_MPI
     double *** buffers;
-    unsigned int n_var=3;
+    unsigned int n_var=4;
     reqCount = 0;
     buffers = new double**[n_inter_block_boundaries_];
     for (int i = 0; i < n_inter_block_boundaries_; i++){
@@ -112,6 +112,7 @@ void BlockCommunicator::passConnexionCellCenters(CompleteMesh* mesh) const {
                 buffers[i][0][k] = block_origin->block_cells_[cell_id_origin]->cell_coordinates_[0]; // cell_id_origin_double; //Pour debug le transfert MPI
                 buffers[i][1][k] = block_origin->block_cells_[cell_id_origin]->cell_coordinates_[1];
                 buffers[i][2][k] = block_origin->block_cells_[cell_id_origin]->cell_coordinates_[2];
+                buffers[i][3][k] = block_origin->block_cells_[cell_id_origin]->cell_volume_;
                 /*buffers[i][1][k] = block_origin->block_primitive_variables_->uu_[cell_id_origin];
                 buffers[i][2][k] = block_origin->block_primitive_variables_->vv_[cell_id_origin];
                 buffers_[i][3][k] = block_origin->block_primitive_variables_->ww_[cell_id_origin];
@@ -191,7 +192,7 @@ void BlockCommunicator::passConnexionCellCenters(CompleteMesh* mesh) const {
                 block_destination->block_cells_[cell_id_destination]->cell_coordinates_[2] = buffers[i][n_var+2][k];
                 block_destination->block_cells_[cell_id_destination]->cell_coordinates_[0] = buffers[i][n_var][k]; // cell_id_origin_double; //Pour debug le transfert MPI
                 block_destination->block_cells_[cell_id_destination]->cell_coordinates_[1] = buffers[i][n_var+1][k];
-
+                block_destination->block_cells_[cell_id_destination]->cell_volume_ = buffers[i][n_var+3][k];
                 /*block_destination->block_primitive_variables_->ro_[cell_id_destination] = buffers_[i][N_VARIABLES][k];
                 block_destination->block_primitive_variables_->uu_[cell_id_destination] = buffers_[i][N_VARIABLES+1][k];
                 block_destination->block_primitive_variables_->vv_[cell_id_destination] = buffers_[i][N_VARIABLES+2][k];
@@ -268,6 +269,7 @@ void BlockCommunicator::passConnexionCellCenters(CompleteMesh* mesh) const {
             block_destination->block_cells_[cell_id_destination]->cell_coordinates_[0] = block_origin->block_cells_[cell_id_origin]->cell_coordinates_[0];
             block_destination->block_cells_[cell_id_destination]->cell_coordinates_[1] = block_origin->block_cells_[cell_id_origin]->cell_coordinates_[1];
             block_destination->block_cells_[cell_id_destination]->cell_coordinates_[2] = block_origin->block_cells_[cell_id_origin]->cell_coordinates_[2];
+            block_destination->block_cells_[cell_id_destination]->cell_volume_ = block_origin->block_cells_[cell_id_origin]->cell_volume_;
             /*block_destination->block_primitive_variables_->ro_[cell_id_destination] = block_origin->block_primitive_variables_->ro_[cell_id_origin];
             block_destination->block_primitive_variables_->uu_[cell_id_destination] = block_origin->block_primitive_variables_->uu_[cell_id_origin];
             block_destination->block_primitive_variables_->vv_[cell_id_destination] = block_origin->block_primitive_variables_->vv_[cell_id_origin];

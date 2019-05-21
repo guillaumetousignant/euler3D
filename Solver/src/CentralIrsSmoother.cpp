@@ -90,7 +90,7 @@ void CentralIrsSmoother::smoothResidual(Block* block)
 		ww_dissipative_smooth[cell_idx] = (my_diss_res_ww[cell_idx] +0.);///(1.+epsilon*Na);
 		pp_dissipative_smooth[cell_idx] = (my_diss_res_pp[cell_idx] +0.);///(1.+epsilon*Na);
 	}
-for (int iter =0; iter<20;iter++)
+for (int iter =0; iter<3;iter++)
 {
 	for (int cell_idx=0; cell_idx<ncell; cell_idx++)
 	{
