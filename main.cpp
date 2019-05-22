@@ -90,8 +90,8 @@ int main(int argc, char* argv[])
     solver->solve(complete_mesh, communicator);
     auto t_end = std::chrono::high_resolution_clock::now();
 	if (communicator->process_id_ == 0){
-		std::cout << "Time elapsed solving: " 
-			<< std::chrono::duration<double, std::milli>(t_end-t_start).count()/1000.0 
+		std::cout << "Time elapsed solving: "
+			<< std::chrono::duration<double, std::milli>(t_end-t_start).count()/1000.0
 			<< "s." << std::endl;
 	}
 
