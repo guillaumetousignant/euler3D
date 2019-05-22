@@ -1,0 +1,7 @@
+NBLOCK= 1
+Meshes/NACA0012_JAMESON_65x65_1B/NACA0012_JAMESON_65x65_1B.su2
+Block= 0
+GhostCount= 0
+Nconnexion= 0
+Nmark= 1
+Nelems= 0

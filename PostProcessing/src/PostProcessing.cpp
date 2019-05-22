@@ -55,7 +55,7 @@ PostProcessing::~PostProcessing()
 }
 
 
-// ENLEVER DÉPENDANCE SOLVER
+// ENLEVER Dï¿½PENDANCE SOLVER
 void PostProcessing::checkStopSolver()
 {
   //cout << "Starting checkStopSolver............................................." << endl;
@@ -70,8 +70,8 @@ void PostProcessing::checkStopSolver()
 
 
   // Check if STOP file exists
-  struct stat buffer;   
-  bool file_exist_flag=(stat (stop_file_name_.c_str(), &buffer) == 0); 
+  struct stat buffer;
+  bool file_exist_flag=(stat (stop_file_name_.c_str(), &buffer) == 0);
 
   // EN ATTENDANT
   if((current_iter_+1 == max_iter_)|| (ro_convergence_ <= convergence_criterion_)||(file_exist_flag))
@@ -229,6 +229,7 @@ void PostProcessing::process(CompleteMesh* complete_mesh, BlockCommunicator* com
     int* my_blocks;
     Block** all_blocks;
     Block* current_block;
+    int n_blocks = complete_mesh->n_blocks_;
 
     n_blocks_in_process=complete_mesh->n_blocks_in_process_;
     my_blocks=complete_mesh->my_blocks_;
@@ -237,7 +238,18 @@ void PostProcessing::process(CompleteMesh* complete_mesh, BlockCommunicator* com
     // Sum aerodynamic parameters and convergence for each block
     // Sum convergence for each block
     communicator->getGlobal(complete_mesh, this);
+    ro_rms_mesh_ = sqrt(ro_rms_mesh_);
+    uu_rms_mesh_ = sqrt(uu_rms_mesh_);
+    vv_rms_mesh_ = sqrt(vv_rms_mesh_);
+    ww_rms_mesh_ = sqrt(ww_rms_mesh_);
+    pp_rms_mesh_ = sqrt(pp_rms_mesh_);
+
     if (current_iter_==0)
+    {
+      convergenceSum0();
+    }
+
+    if (current_iter_==1)
     {
       convergenceSum0();
     }
@@ -269,9 +281,9 @@ void PostProcessing::process(CompleteMesh* complete_mesh, BlockCommunicator* com
 
     // Pour le complete mesh seulement
     if (communicator->process_id_ == 0){
-      output_tecplot_->printConvergence(current_iter_, cl_geometry_mesh_, cd_geometry_mesh_, cmx_geometry_mesh_, cmy_geometry_mesh_, cmz_geometry_mesh_, ro_convergence_, uu_convergence_, vv_convergence_, ww_convergence_, pp_convergence_);
+      output_tecplot_->printConvergence(current_iter_, cl_geometry_mesh_, cd_geometry_mesh_, cmx_geometry_mesh_, cmy_geometry_mesh_, cmz_geometry_mesh_, ro_convergence_, uu_convergence_, vv_convergence_, ww_convergence_, pp_convergence_,n_blocks);
     }
-    
+
     if (stop_solver_==true)
     {
       if (communicator->process_id_ == 0){
@@ -287,10 +299,10 @@ void PostProcessing::process(CompleteMesh* complete_mesh, BlockCommunicator* com
         output_tecplot_->printSurfaceFlowData(current_block);
         output_tecplot_->printRestartFile(current_block);//PARTIE QUI FAIT JUSTE CALCULER LES CL ET CONVERGENCE PARTIELLE
       }
-      
+
       // Pour le complete mesh seulement
       if (communicator->process_id_ == 0){
-        output_tecplot_->printAerodynamicCoefficients(cl_geometry_mesh_, cd_geometry_mesh_, cmx_geometry_mesh_, cmy_geometry_mesh_, cmz_geometry_mesh_);
+        output_tecplot_->printAerodynamicCoefficients(cl_geometry_mesh_, cd_geometry_mesh_, cmx_geometry_mesh_, cmy_geometry_mesh_, cmz_geometry_mesh_,n_blocks);
       }
       if (communicator->process_id_ == 0){
         cout << "========================END OF PROGRAM========================" << endl;

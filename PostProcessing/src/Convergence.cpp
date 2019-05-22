@@ -39,7 +39,7 @@ void Convergence::calculateRoRms(Block* block)
 		rms_ro_block_ += res_ro*res_ro;
 	}
 
-	rms_ro_block_ = (1./block->n_real_cells_in_block_)*pow(rms_ro_block_, 0.5);
+	// rms_ro_block_ = (1./block->n_real_cells_in_block_)*pow(rms_ro_block_, 0.5);
 
 
 
@@ -62,7 +62,7 @@ void Convergence::calculateUuRms(Block* block)
     rms_uu_block_ += res_uu*res_uu;
   }
 
-  rms_uu_block_ = (1./block->n_real_cells_in_block_)*pow(rms_uu_block_, 0.5);
+  // rms_uu_block_ = (1./block->n_real_cells_in_block_)*pow(rms_uu_block_, 0.5);
 
 
   //cout << "Ending calculateUuRms................................................" << endl;
@@ -84,7 +84,7 @@ void Convergence::calculateVvRms(Block* block)
     rms_vv_block_ += res_vv*res_vv;
   }
 
-  rms_vv_block_ = (1./block->n_real_cells_in_block_)*pow(rms_vv_block_, 0.5);
+  // rms_vv_block_ = (1./block->n_real_cells_in_block_)*pow(rms_vv_block_, 0.5);
 
 
   //cout << "Ending calculateVvRms................................................" << endl;
@@ -106,7 +106,7 @@ void Convergence::calculateWwRms(Block* block)
     rms_ww_block_ += res_ww*res_ww;
   }
 
-  rms_ww_block_ = (1./block->n_real_cells_in_block_)*pow(rms_ww_block_, 0.5);
+  // rms_ww_block_ = (1./block->n_real_cells_in_block_)*pow(rms_ww_block_, 0.5);
 
 
   //cout << "Ending calculateWwRms................................................" << endl;
@@ -127,7 +127,7 @@ void Convergence::calculatePpRms(Block* block)
     rms_pp_block_ += res_pp*res_pp;
   }
 
-  rms_pp_block_ = (1./block->n_real_cells_in_block_)*pow(rms_pp_block_, 0.5);
+  // rms_pp_block_ = (1./block->n_real_cells_in_block_)*pow(rms_pp_block_, 0.5);
 
 
   //cout << "Ending calculatePpRms................................................" << endl;

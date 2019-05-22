@@ -34,8 +34,8 @@ double gamma_;
 
 void printFlowData(Block* block);
 void printSurfaceFlowData(Block* block);
-void printConvergence(int iter, double cl, double cd, double cmx, double cmy, double cmz, double ro_convergence, double uu_convergence, double vv_convergence, double ww_convergence, double pp_convergence);
-void printAerodynamicCoefficients(double cl, double cd, double cmx, double cmy, double cmz);
+void printConvergence(int iter, double cl, double cd, double cmx, double cmy, double cmz, double ro_convergence, double uu_convergence, double vv_convergence, double ww_convergence, double pp_convergence,int n_blocks);
+void printAerodynamicCoefficients(double cl, double cd, double cmx, double cmy, double cmz, int n_blocks);
 void printRestartFile(Block* block);
 
 };
