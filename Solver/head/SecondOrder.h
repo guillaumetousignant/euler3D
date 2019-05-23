@@ -23,8 +23,8 @@ class Limiter;
 class SecondOrder : public Interpolation
 {
 	public:
-		
-		Gradient *gradient_;
+
+		// Gradient *gradient_;
 		Limiter *limiter_;
 
 		void setGradient(string gradient_choice);
@@ -41,5 +41,3 @@ class SecondOrder : public Interpolation
 
 
 #endif
-
-
