@@ -23,6 +23,7 @@ public:
 	void InitializeMyBlocks(Interface* interface, BlockCommunicator* communicator);
 
 	string getBlockFileName(int block_id);
+	void RecomputeConnexionInterVect();
 
 };
 

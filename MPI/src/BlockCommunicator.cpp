@@ -62,7 +62,136 @@ BlockCommunicator::~BlockCommunicator(){
         delete [] buffers_; // This line throws "munmap_chunk(): invalid pointer" on process 3 when there are 6 blocks and 6 processes. wtf
     }
 }
+void BlockCommunicator::passRVectors(CompleteMesh* mesh) const {
+    #ifdef HAVE_MPI
+    double *** buffers;
+    unsigned int n_var=4;
+    reqCount = 0;
 
+    buffers = new double**[n_inter_block_boundaries_];
+    for (int i = 0; i < n_inter_block_boundaries_; i++){
+        buffers[i] = new double*[n_var*2];
+        for (unsigned int j = 0; j < n_var*2; j++){
+            buffers[i][j] = nullptr;
+        }
+    }
+
+    for (int i = 0; i < n_inter_block_boundaries_; i++){
+        if (process_id_ == block_process_id_[inter_block_boundaries_[i]->block_origin_]){
+            for (unsigned int j = 0; j < n_var; j++){
+                buffers[i][j] = new double[inter_block_boundaries_[i]->n_cell_in_boundary_];
+            }
+        }
+        if (process_id_ == block_process_id_[inter_block_boundaries_[i]->block_destination_]){
+            for (unsigned int j = n_var; j < n_var*2; j++){
+                buffers[i][j] = new double[inter_block_boundaries_[i]->n_cell_in_boundary_];
+            }
+        }
+    }
+
+    for (int i = 0; i < n_inter_block_boundaries_; i++){
+        ConnexionCellIds* boundary = inter_block_boundaries_[i];
+        int block_id_origin = boundary->block_origin_;
+        int block_id_destination = boundary->block_destination_;
+        int n_cells = boundary->n_cell_in_boundary_;
+        Block* block_origin = mesh->all_blocks_[block_id_origin];
+        int origin_process_id = block_process_id_[block_id_origin];
+        int destination_process_id = block_process_id_[block_id_destination];
+
+        // If this process is sender
+        if (process_id_ == origin_process_id){
+
+            // Filling send buffer
+            for (int k = 0; k < n_cells; k++){
+                int cell_id_origin = boundary->cell_ids_in_boundary_other_block_[k];
+
+                //double cell_id_origin_double=cell_id_origin; // Pour debug le transfert MPI
+
+                buffers[i][0][k] = block_origin->block_cells_[cell_id_origin]->cell_coordinates_[0]; // cell_id_origin_double; //Pour debug le transfert MPI
+                buffers[i][1][k] = block_origin->block_cells_[cell_id_origin]->cell_coordinates_[1];
+                buffers[i][2][k] = block_origin->block_cells_[cell_id_origin]->cell_coordinates_[2];
+                buffers[i][3][k] = block_origin->block_cells_[cell_id_origin]->cell_volume_;
+                }
+
+            //MPI_Request send_request[N_VARIABLES];
+            for (unsigned int j = 0; j < n_var; j++){
+                MPI_Isend(buffers[i][j], n_cells, MPI_DOUBLE, destination_process_id, n_var*i+j, MPI_COMM_WORLD, &reqHdl[reqCount]);
+                reqCount++;
+            }
+        }
+
+        // If this process is receiver
+        if (process_id_ == destination_process_id){
+
+            //MPI_Request receive_request[n_var];
+            for (unsigned int j = 0; j < n_var; j++){
+                MPI_Irecv(buffers[i][j+n_var], n_cells, MPI_DOUBLE, origin_process_id, n_var*i+j, MPI_COMM_WORLD, &reqHdl[reqCount]);
+                reqCount++;
+            }
+        }
+    }
+
+    // MPI_Barrier(MPI_COMM_WORLD);
+    MPI_Waitall(reqCount, reqHdl, reqStat);
+
+    // Put in blocks
+    for (int i = 0; i < n_inter_block_boundaries_; i++){
+        ConnexionCellIds* boundary = inter_block_boundaries_[i];
+        int block_id_destination = boundary->block_destination_;
+        int n_cells = boundary->n_cell_in_boundary_;
+        Block* block_destination = mesh->all_blocks_[block_id_destination];
+        int destination_process_id = block_process_id_[block_id_destination];
+
+        if (process_id_ == destination_process_id){
+            for (int k = 0; k < n_cells; k++){
+                int cell_id_destination = boundary->cell_ids_in_boundary_[k];
+
+                block_destination->block_cells_[cell_id_destination]->cell_coordinates_[0] = buffers[i][n_var][k];
+                block_destination->block_cells_[cell_id_destination]->cell_coordinates_[1] = buffers[i][n_var+1][k];
+                block_destination->block_cells_[cell_id_destination]->cell_coordinates_[2] = buffers[i][n_var+2][k];
+                block_destination->block_cells_[cell_id_destination]->cell_volume_ = buffers[i][n_var+3][k];
+              }
+        }
+    }
+
+    if (buffers != nullptr){
+        for (int i = 0; i < n_inter_block_boundaries_; i++){
+            if (buffers[i] != nullptr){
+                for (uint j = 0; j < n_var*2; j++){
+                    if (buffers[i][j] != nullptr){
+                        delete [] buffers[i][j];
+                    }
+                }
+                delete [] buffers[i];
+            }
+        }
+        delete [] buffers; // This line throws "munmap_chunk(): invalid pointer" on process 3 when there are 6 blocks and 6 processes. wtf
+    }
+
+    #else
+    for (int i = 0; i < n_inter_block_boundaries_; i++){
+        ConnexionCellIds* boundary = inter_block_boundaries_[i];
+        int block_id_origin = boundary->block_origin_;
+        int block_id_destination = boundary->block_destination_;
+        int n_cells = boundary->n_cell_in_boundary_;
+        Block* block_origin = mesh->all_blocks_[block_id_origin];
+        Block* block_destination = mesh->all_blocks_[block_id_destination];
+
+        for (int j = 0; j < n_cells; j++){
+            int cell_id_origin = boundary->cell_ids_in_boundary_other_block_[j];
+            int cell_id_destination = boundary->cell_ids_in_boundary_[j];
+
+            block_destination->block_cells_[cell_id_destination]->cell_coordinates_[0] = block_origin->block_cells_[cell_id_origin]->cell_coordinates_[0];
+            block_destination->block_cells_[cell_id_destination]->cell_coordinates_[1] = block_origin->block_cells_[cell_id_origin]->cell_coordinates_[1];
+            block_destination->block_cells_[cell_id_destination]->cell_coordinates_[2] = block_origin->block_cells_[cell_id_origin]->cell_coordinates_[2];
+            block_destination->block_cells_[cell_id_destination]->cell_volume_ = block_cells_[cell_id_origin]->cell_volume_;
+
+        }
+    }
+    #endif
+
+
+}
 void BlockCommunicator::updateBoundaries(CompleteMesh* mesh) const {
     #ifdef HAVE_MPI
 

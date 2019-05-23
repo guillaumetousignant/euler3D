@@ -53,6 +53,18 @@ void MetricsInitializer::doInit()
 
 }
 
+void MetricsInitializer::doConnexionInterVectInit()
+{
+
+    uint iNCells = blockData_->n_real_cells_in_block_;
+    uint iNCellsTot = blockData_->n_all_cells_in_block_;
+    uint iNFaces = blockData_->n_faces_in_block_;
+
+    Cell** iCells = blockData_->block_cells_;
+    Face** iFaces = blockData_->block_faces_;
+
+    computeConnexionInterpVect(iNCells, iNCellsTot,iNFaces, iCells, iFaces);
+}
 
 void MetricsInitializer::MetricsInitializer::computeCenterCells(uint iNCells, uint iNCellsTot, Cell** iCells, Node** iNodes)
 {
@@ -346,10 +358,10 @@ void MetricsInitializer::computeNormalFaces(uint iNFaces, Face** iFaces, Cell** 
 
         }
 
-        if(iFaces[i]->n_nodes_per_face_ == 3)   
+        if(iFaces[i]->n_nodes_per_face_ == 3)
         {
             //Triangular face
-            
+
                 x1 = node_coord[0];
                 x2 = node_coord[3];
                 x3 = node_coord[6];
@@ -378,12 +390,12 @@ void MetricsInitializer::computeNormalFaces(uint iNFaces, Face** iFaces, Cell** 
                 s_y = 0.5*(dzxA + dzxB + dzxC);
                 s_z = 0.5*(dxyA + dxyB + dxyC);
 
-        }   
+        }
         else if(iFaces[i]->n_nodes_per_face_ == 4)
         {
 
             //Quadrilateral case
-            
+
                 x1 = node_coord[0];
                 x2 = node_coord[3];
                 x3 = node_coord[6];
@@ -415,7 +427,7 @@ void MetricsInitializer::computeNormalFaces(uint iNFaces, Face** iFaces, Cell** 
         {
             s_x = 0.0;
             s_y = 0.0;
-            s_z = 0.0; 
+            s_z = 0.0;
         }
 
         //Adjust orientation of vector to obey left to right rule for cells
@@ -541,6 +553,63 @@ void MetricsInitializer::computeInterpVect(uint iNCells, uint iNCellsTot, uint i
 
 
 }
+
+void MetricsInitializer::computeConnexionInterpVect(uint iNCells, uint iNCellsTot, uint iNFaces, Cell** iCells, Face** iFaces)
+{
+    const uint X = 0;
+    const uint Y = 1;
+    const uint Z = 2;
+
+    const uint LEFT = 0;
+    const uint RIGHT = 1;
+
+    for(uint i(0);i < iNFaces;i++)
+    {
+        //Get center of face
+        double centerFace[3];
+
+        centerFace[X] = iFaces[i]->face_center_[X];
+        centerFace[Y] = iFaces[i]->face_center_[Y];
+        centerFace[Z] = iFaces[i]->face_center_[Z];
+
+        //Get center coordinates from neighbor's cells
+        uint leftCellID = iFaces[i]->face_2_cells_connectivity_[LEFT];
+        uint rightCellID = iFaces[i]->face_2_cells_connectivity_[RIGHT];
+
+        double centerLeftCell[3];
+        double centerRightCell[3];
+
+        centerLeftCell[X] = iCells[leftCellID]->cell_coordinates_[0];
+        centerLeftCell[Y] = iCells[leftCellID]->cell_coordinates_[1];
+        centerLeftCell[Z] = iCells[leftCellID]->cell_coordinates_[2];
+
+        centerRightCell[X] = iCells[rightCellID]->cell_coordinates_[0];
+        centerRightCell[Y] = iCells[rightCellID]->cell_coordinates_[1];
+        centerRightCell[Z] = iCells[rightCellID]->cell_coordinates_[2];
+
+        double vecInterpLeft[3];
+
+        vecInterpLeft[X] = centerFace[X] - centerLeftCell[X];
+        vecInterpLeft[Y] = centerFace[Y] - centerLeftCell[Y];
+        vecInterpLeft[Z] = centerFace[Z] - centerLeftCell[Z];
+
+        double vecInterpRight[3];
+
+        vecInterpRight[X] = centerFace[X] - centerRightCell[X];
+        vecInterpRight[Y] = centerFace[Y] - centerRightCell[Y];
+        vecInterpRight[Z] = centerFace[Z] - centerRightCell[Z];
+
+        iFaces[i]->left_cell_r_vector_[X] = vecInterpLeft[X];
+        iFaces[i]->left_cell_r_vector_[Y] = vecInterpLeft[Y];
+        iFaces[i]->left_cell_r_vector_[Z] = vecInterpLeft[Z];
+
+        iFaces[i]->right_cell_r_vector_[X] = vecInterpRight[X];
+        iFaces[i]->right_cell_r_vector_[Y] = vecInterpRight[Y];
+        iFaces[i]->right_cell_r_vector_[Z] = vecInterpRight[Z];
+
+    }
+
+  }
 
 
 void MetricsInitializer::computeAreaFaces(uint iNFaces, Face** iFaces)
