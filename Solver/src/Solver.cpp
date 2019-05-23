@@ -78,7 +78,7 @@ void Solver::solve(CompleteMesh* complete_mesh, BlockCommunicator* communicator)
 
 		//post_processing_->process(block, complete_mesh); //PARTIE QUI CALCULE LES SOMMES, PRENDS LES DÉCISIONS ET PUBLISH
 		/// FIN DES TRUCS MPI
-		std::cout << "test 1 " << communicator->process_id_ << '\n';
+		// std::cout << "test 1 " << communicator->process_id_ << '\n';
 
 		// #pragma omp parallel for num_threads(8) // DECOMMENTER POUR AVOIR OPENMP
 		for	(int i=0;i<n_blocks_in_process;i++)
@@ -90,19 +90,11 @@ void Solver::solve(CompleteMesh* complete_mesh, BlockCommunicator* communicator)
 			runge_kutta_->computeRungeKutta(current_block);
 			post_processing_->computeFlowData(current_block); //PARTIE QUI FAIT JUSTE CALCULER LES CL ET CONVERGENCE PARTIELLE
 		}
-		std::cout << "test 2 " << communicator->process_id_ << '\n';
-
 		///INSÉRER LES TRUCS DE MPI ICI JE CROIS
 		communicator->sync();
-		std::cout << "test 3 " << communicator->process_id_ << '\n';
 
 		communicator->updateBoundaries(complete_mesh);
-		std::cout << "test 4 " << communicator->process_id_ << '\n';
-
 		post_processing_->process(complete_mesh, communicator);
-		std::cout << "test 5 " << communicator->process_id_ << '\n';
-
-
 
 
 	}

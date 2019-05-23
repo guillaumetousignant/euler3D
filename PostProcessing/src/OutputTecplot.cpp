@@ -420,11 +420,14 @@ void OutputTecplot::printConvergence(int iter, double cl, double cd, double cmx,
   std::ofstream Convergence;
   if(iter == 0)
   {
-    Convergence.open("./bin/Convergence_"+aoa_deg_str+"deg_"+n_blocks_str+"B.dat");
+    // Convergence.open("./bin/Convergence_"+aoa_deg_str+"deg_"+n_blocks_str+"B.dat");
+      Convergence.open("./bin/Convergence_.dat");
   }
   else
   {
-    Convergence.open("./bin/Convergence_"+aoa_deg_str+"deg_"+n_blocks_str+"B.dat", std::ios_base::app);
+    // Convergence.open("./bin/Convergence_"+aoa_deg_str+"deg_"+n_blocks_str+"B.dat", std::ios_base::app);
+    Convergence.open("./bin/Convergence.dat", std::ios_base::app);
+
   }
 
 

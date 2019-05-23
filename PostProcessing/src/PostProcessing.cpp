@@ -231,7 +231,6 @@ void PostProcessing::process(CompleteMesh* complete_mesh, BlockCommunicator* com
     Block* current_block;
     int n_blocks = complete_mesh->n_blocks_;
 
-    std::cout << n_blocks << '\n';
 
     n_blocks_in_process=complete_mesh->n_blocks_in_process_;
     my_blocks=complete_mesh->my_blocks_;
@@ -239,9 +238,9 @@ void PostProcessing::process(CompleteMesh* complete_mesh, BlockCommunicator* com
 
     // Sum aerodynamic parameters and convergence for each block
     // Sum convergence for each block
-    std::cout << "test 1" << '\n';
+    // std::cout << "test 1" << '\n';
     communicator->getGlobal(complete_mesh, this);
-    std::cout << "test 2" << '\n';
+    // std::cout << "test 2" << '\n';
 
     ro_rms_mesh_ = sqrt(ro_rms_mesh_);
     uu_rms_mesh_ = sqrt(uu_rms_mesh_);

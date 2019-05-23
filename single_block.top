@@ -1,5 +1,5 @@
 NBLOCK= 1
-single_block.su2
+Meshes/naca0012_PRESENTATION_SINGLEBLOCK.su2
 Block= 0
 GhostCount= 0
 Nconnexion= 0
