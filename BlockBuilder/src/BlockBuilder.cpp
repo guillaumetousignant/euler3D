@@ -388,6 +388,7 @@ for(i=0;i < block->n_wall_faces_ ;i++)
 	wall_cell_id=(block->block_wall_face_ids_[i]);
 	wall_face_id=(block->block_cells_[wall_cell_id])->cell_2_faces_connectivity_[0];
 	block ->addFaceIdInWall(wall_face_id,wall_face_count);
+	block->block_faces_[wall_face_id]->is_in_wall_=1;
 	//std::cout<<"TEST WALL FACE IDS in wall array: "<< block->block_wall_face_ids_[i]<<std::endl;
 	//std::cout<<"TEST WALL face ID 1: "<< (block->block_faces_[(block->block_wall_face_ids_[i])])->face_id_<<std::endl;
 	//std::cout<<"TEST WALL cell ID 1: "<< (block->block_faces_[(block->block_wall_face_ids_[i])])->face_2_cells_connectivity_[0]<<std::endl;

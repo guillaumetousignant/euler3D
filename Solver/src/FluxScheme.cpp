@@ -124,13 +124,16 @@ void FluxScheme::computeFluxConv(Block* block)
 		left_cell_r_vector=block -> block_faces_[face_idx] -> left_cell_r_vector_;
 
 		// Add gradient effect and limiter
-		for (int dim_idx=0; dim_idx<n_dim; dim_idx++)
+		if(!block->block_faces_[face_idx]->is_in_wall_)
 		{
-			rho_L+=my_ro_limiters[left_cell]*my_grad_ro_array[left_cell][dim_idx]*left_cell_r_vector[dim_idx];
-			u_L+=my_uu_limiters[left_cell]*my_grad_uu_array[left_cell][dim_idx]*left_cell_r_vector[dim_idx];
-			v_L+=my_vv_limiters[left_cell]*my_grad_vv_array[left_cell][dim_idx]*left_cell_r_vector[dim_idx];
-			w_L+=my_ww_limiters[left_cell]*my_grad_ww_array[left_cell][dim_idx]*left_cell_r_vector[dim_idx];
-			p_L+=my_pp_limiters[left_cell]*my_grad_pp_array[left_cell][dim_idx]*left_cell_r_vector[dim_idx];
+			for (int dim_idx=0; dim_idx<n_dim; dim_idx++)
+			{
+				rho_L+=my_ro_limiters[left_cell]*my_grad_ro_array[left_cell][dim_idx]*left_cell_r_vector[dim_idx];
+				u_L+=my_uu_limiters[left_cell]*my_grad_uu_array[left_cell][dim_idx]*left_cell_r_vector[dim_idx];
+				v_L+=my_vv_limiters[left_cell]*my_grad_vv_array[left_cell][dim_idx]*left_cell_r_vector[dim_idx];
+				w_L+=my_ww_limiters[left_cell]*my_grad_ww_array[left_cell][dim_idx]*left_cell_r_vector[dim_idx];
+				p_L+=my_pp_limiters[left_cell]*my_grad_pp_array[left_cell][dim_idx]*left_cell_r_vector[dim_idx];
+			}
 		}
 
 
@@ -149,13 +152,16 @@ void FluxScheme::computeFluxConv(Block* block)
 		right_cell_r_vector=block -> block_faces_[face_idx] -> right_cell_r_vector_;
 
 		// Add gradient effect and limiter
-		for (int dim_idx=0; dim_idx<n_dim; dim_idx++)
+		if(!block->block_faces_[face_idx]->is_in_wall_)
 		{
-			rho_R+=my_ro_limiters[right_cell]*my_grad_ro_array[right_cell][dim_idx]*right_cell_r_vector[dim_idx];
-			u_R+=my_uu_limiters[right_cell]*my_grad_uu_array[right_cell][dim_idx]*right_cell_r_vector[dim_idx];
-			v_R+=my_vv_limiters[right_cell]*my_grad_vv_array[right_cell][dim_idx]*right_cell_r_vector[dim_idx];
-			w_R+=my_ww_limiters[right_cell]*my_grad_ww_array[right_cell][dim_idx]*right_cell_r_vector[dim_idx];
-			p_R+=my_pp_limiters[right_cell]*my_grad_pp_array[right_cell][dim_idx]*right_cell_r_vector[dim_idx];
+			for (int dim_idx=0; dim_idx<n_dim; dim_idx++)
+			{
+				rho_R+=my_ro_limiters[right_cell]*my_grad_ro_array[right_cell][dim_idx]*right_cell_r_vector[dim_idx];
+				u_R+=my_uu_limiters[right_cell]*my_grad_uu_array[right_cell][dim_idx]*right_cell_r_vector[dim_idx];
+				v_R+=my_vv_limiters[right_cell]*my_grad_vv_array[right_cell][dim_idx]*right_cell_r_vector[dim_idx];
+				w_R+=my_ww_limiters[right_cell]*my_grad_ww_array[right_cell][dim_idx]*right_cell_r_vector[dim_idx];
+				p_R+=my_pp_limiters[right_cell]*my_grad_pp_array[right_cell][dim_idx]*right_cell_r_vector[dim_idx];
+			}
 		}
 
 
