@@ -122,8 +122,8 @@ void FluxScheme::computeFluxConv(Block* block)
 		p_L = my_pp_array[left_cell];
 		left_cell_r_vector=block -> block_faces_[face_idx] -> left_cell_r_vector_;
 
-		if (!block -> block_faces_[face_idx] ->is_in_wall_)
-		{
+		//if ((block -> block_faces_[face_idx] ->is_in_wall_)==0)
+		//{
 			// Add gradient effect and limiter
 			for (int dim_idx=0; dim_idx<n_dim; dim_idx++)
 			{
@@ -133,7 +133,7 @@ void FluxScheme::computeFluxConv(Block* block)
 				w_L+=my_ww_limiters[left_cell]*my_grad_ww_array[left_cell][dim_idx]*left_cell_r_vector[dim_idx];
 				p_L+=my_pp_limiters[left_cell]*my_grad_pp_array[left_cell][dim_idx]*left_cell_r_vector[dim_idx];
 			}
-		}
+		//}
 
 
 
@@ -150,8 +150,8 @@ void FluxScheme::computeFluxConv(Block* block)
 		p_R = my_pp_array[right_cell];
 		right_cell_r_vector=block -> block_faces_[face_idx] -> right_cell_r_vector_;
 
-		if (!block -> block_faces_[face_idx] ->is_in_wall_)
-		{
+		//if ((block -> block_faces_[face_idx] ->is_in_wall_)==0)
+		//{
 			// Add gradient effect and limiter
 			for (int dim_idx=0; dim_idx<n_dim; dim_idx++)
 			{
@@ -161,7 +161,7 @@ void FluxScheme::computeFluxConv(Block* block)
 				w_R+=my_ww_limiters[right_cell]*my_grad_ww_array[right_cell][dim_idx]*right_cell_r_vector[dim_idx];
 				p_R+=my_pp_limiters[right_cell]*my_grad_pp_array[right_cell][dim_idx]*right_cell_r_vector[dim_idx];
 			}
-		}
+		//}
 
 		qq_R = u_R*u_R+v_R*v_R+w_R*w_R;
 		H_R = (0.5*qq_R+gamma_/(gamma_-1.0)*p_R/rho_R);

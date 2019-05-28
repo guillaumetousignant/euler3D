@@ -81,7 +81,7 @@ int main(int argc, char* argv[])
 	complete_mesh->InitializeMyBlocks(interface, communicator);
 
 	communicator->sync();
-	communicator->passConnexionCellCenters(complete_mesh);
+	//communicator->passConnexionCellCenters(complete_mesh);
 
 	complete_mesh->RecomputeConnexionInterVect(communicator);
 

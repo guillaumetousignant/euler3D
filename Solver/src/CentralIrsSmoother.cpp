@@ -42,6 +42,10 @@ void CentralIrsSmoother::smoothResidual(Block* block)
 	Cell* my_cell;
 	int ncell;
 	ncell = block -> n_real_cells_in_block_;
+	int n_real_cell;
+	n_real_cell = block -> n_real_cells_in_block_;
+	int n_real_boundaries_in_block;
+	n_real_boundaries_in_block = block->n_farfield_faces_+block->n_wall_faces_+block->n_symmetry_faces_;
 
 	double* jacobi_1_ro_convective= new double[ncell];
 	double* jacobi_1_uu_convective= new double[ncell];
@@ -67,7 +71,7 @@ void CentralIrsSmoother::smoothResidual(Block* block)
 	double* ww_dissipative_smooth= new double[ncell];
 	double* pp_dissipative_smooth= new double[ncell];
 
-	double epsilon=0.7; // espilon = 0.5 to 0.8 (Blazek p.303)
+	double epsilon=0.8; // espilon = 0.5 to 0.8 (Blazek p.303)
 	int Na;
 
 	int my_cell_n_faces;
@@ -78,19 +82,19 @@ void CentralIrsSmoother::smoothResidual(Block* block)
 	for (int cell_idx=0; cell_idx<ncell; cell_idx++)
 	{
 		Na = block->block_cells_[cell_idx]->n_faces_per_cell_;
-		ro_convective_smooth[cell_idx] = (my_conv_res_ro[cell_idx] +0.);///(1.+epsilon*Na);
-		uu_convective_smooth[cell_idx] = (my_conv_res_uu[cell_idx] +0.);///(1.+epsilon*Na);
-		vv_convective_smooth[cell_idx] = (my_conv_res_vv[cell_idx] +0.);///(1.+epsilon*Na);
-		ww_convective_smooth[cell_idx] = (my_conv_res_ww[cell_idx] +0.);///(1.+epsilon*Na);
-		pp_convective_smooth[cell_idx] = (my_conv_res_pp[cell_idx] +0.);///(1.+epsilon*Na);
+		ro_convective_smooth[cell_idx] = (my_conv_res_ro[cell_idx]);///(1.+epsilon*Na);
+		uu_convective_smooth[cell_idx] = (my_conv_res_uu[cell_idx]);///(1.+epsilon*Na);
+		vv_convective_smooth[cell_idx] = (my_conv_res_vv[cell_idx]);///(1.+epsilon*Na);
+		ww_convective_smooth[cell_idx] = (my_conv_res_ww[cell_idx]);///(1.+epsilon*Na);
+		pp_convective_smooth[cell_idx] = (my_conv_res_pp[cell_idx]);///(1.+epsilon*Na);
 
-		ro_dissipative_smooth[cell_idx] = (my_diss_res_ro[cell_idx] +0.);///(1.+epsilon*Na);
-		uu_dissipative_smooth[cell_idx] = (my_diss_res_uu[cell_idx] +0.);///(1.+epsilon*Na);
-		vv_dissipative_smooth[cell_idx] = (my_diss_res_vv[cell_idx] +0.);///(1.+epsilon*Na);
-		ww_dissipative_smooth[cell_idx] = (my_diss_res_ww[cell_idx] +0.);///(1.+epsilon*Na);
-		pp_dissipative_smooth[cell_idx] = (my_diss_res_pp[cell_idx] +0.);///(1.+epsilon*Na);
+		ro_dissipative_smooth[cell_idx] = (my_diss_res_ro[cell_idx]);///(1.+epsilon*Na);
+		uu_dissipative_smooth[cell_idx] = (my_diss_res_uu[cell_idx]);///(1.+epsilon*Na);
+		vv_dissipative_smooth[cell_idx] = (my_diss_res_vv[cell_idx]);///(1.+epsilon*Na);
+		ww_dissipative_smooth[cell_idx] = (my_diss_res_ww[cell_idx]);///(1.+epsilon*Na);
+		pp_dissipative_smooth[cell_idx] = (my_diss_res_pp[cell_idx]);///(1.+epsilon*Na);
 	}
-for (int iter =0; iter<3;iter++)
+for (int iter =0; iter<2;iter++)
 {
 	for (int cell_idx=0; cell_idx<ncell; cell_idx++)
 	{
@@ -110,12 +114,12 @@ for (int iter =0; iter<3;iter++)
 
 		my_cell_n_faces=my_cell->n_faces_per_cell_;
 		my_cell_2_cells_connectivity=my_cell->cell_2_cells_connectivity_;
-
 		for (int cell_2_cells_idx = 0; cell_2_cells_idx < my_cell_n_faces; cell_2_cells_idx++)
 		{
 			// int cell_j = my_cell[cell_idx]->cell_2_cells_connectivity_[cell_2_cells_idx];
 			my_neighbor_cell_idx = my_cell_2_cells_connectivity[cell_2_cells_idx];
-			if (my_neighbor_cell_idx < ncell)
+			Na =4;
+			if (my_neighbor_cell_idx < n_real_cell)// || my_neighbor_cell_idx> n_real_cell+n_real_boundaries_in_block)
 			{
 				sum_jacobi1_ro_convective +=  ro_convective_smooth[my_neighbor_cell_idx];
 				sum_jacobi1_uu_convective +=  uu_convective_smooth[my_neighbor_cell_idx];
@@ -128,9 +132,10 @@ for (int iter =0; iter<3;iter++)
 				sum_jacobi1_vv_dissipative += vv_dissipative_smooth[my_neighbor_cell_idx];
 				sum_jacobi1_ww_dissipative += ww_dissipative_smooth[my_neighbor_cell_idx];
 				sum_jacobi1_pp_dissipative += pp_dissipative_smooth[my_neighbor_cell_idx];
+				//Na+=1;
 			}
 		}
-		Na = block->block_cells_[cell_idx]->n_faces_per_cell_;
+		//Na = block->block_cells_[cell_idx]->n_faces_per_cell_;
 		ro_convective_smooth[cell_idx] = (my_conv_res_ro[cell_idx]+epsilon*sum_jacobi1_ro_convective)/(1.+epsilon*Na);
 		uu_convective_smooth[cell_idx] = (my_conv_res_uu[cell_idx]+epsilon*sum_jacobi1_uu_convective)/(1.+epsilon*Na);
 		vv_convective_smooth[cell_idx] = (my_conv_res_vv[cell_idx]+epsilon*sum_jacobi1_vv_convective)/(1.+epsilon*Na);

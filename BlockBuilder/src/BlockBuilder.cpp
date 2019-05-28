@@ -422,6 +422,7 @@ for(i=0;i < block->n_symmetry_faces_ ;i++)
 	symmetry_cell_id=(block->block_symmetry_face_ids_[i]);
 	symmetry_face_id=(block->block_cells_[symmetry_cell_id])->cell_2_faces_connectivity_[0];
 	block ->addFaceIdInSymmetry(symmetry_face_id,symmetry_face_count);
+	block->block_faces_[symmetry_face_id]->is_in_wall_=1;
 
 }
 

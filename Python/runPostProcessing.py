@@ -244,12 +244,18 @@ def postProcessingEuler():
         myAerodynamicFile_ = "AerodynamicCoefficients.dat";
 
     else:
+        # also Euler Files
+        myInterfaceFile_ = "output_interface";
+        myFlowFile_ = "FlowFile_AllBlocks" + ".szplt";
+        mySurfaceFlowFile_ = "SurfaceFlowFile_AllBlocks" + ".szplt";
+        myConvergenceFile_ = "Convergence.dat";
+        myAerodynamicFile_ = "AerodynamicCoefficients.dat";
         #SU2 Files
-        myInterfaceFile_ = "Interface_ONERAM6.txt";
-        myFlowFile_ = "flow_3.06.dat";
-        mySurfaceFlowFile_ = "surface_flow_3.06.dat";
-        myConvergenceFile_ = "history_3.06.dat";
-        myAerodynamicFile_ = "aerodynamic_file.dat";
+        #myInterfaceFile_ = "Interface_ONERAM6.txt";
+        #myFlowFile_ = "flow_3.06.dat";
+        #mySurfaceFlowFile_ = "surface_flow_3.06.dat";
+        #myConvergenceFile_ = "history_3.06.dat";
+        #myAerodynamicFile_ = "aerodynamic_file.dat";
 
     #Instantiate graphicsGenerator class
     graphicsgenerator_ = graphicsGenerator(myInterfaceFile_, myFlowFile_, mySurfaceFlowFile_, myConvergenceFile_, myAerodynamicFile_);

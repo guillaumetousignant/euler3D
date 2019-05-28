@@ -198,15 +198,15 @@ class graphicsGenerator(object):
     def processingConvergenceFile(self, myConvergenceFile):
         print("processingConvergenceFile.......................................")
         #Load convergence dataset
-        self.convergenceDataset = self.loadData(myConvergenceFile);
+        #self.convergenceDataset = self.loadData(myConvergenceFile);
         #Save data into numpy arrays
-        npIterations = self.getIterations(self.convergenceDataset);
-        npConvergenceCl = self.getCl(self.convergenceDataset);
-        npConvergenceCd = self.getCd(self.convergenceDataset);
-        npConverenceCmx,npConverenceCmy, npConverenceCmz = self.getCm(self.convergenceDataset);
-        npRoResiduals, npUuResiduals, npVvResiduals, npWwResiduals, npPpResiduals = self.getResiduals(self.convergenceDataset);
+        #npIterations = self.getIterations(self.convergenceDataset);
+        #npConvergenceCl = self.getCl(self.convergenceDataset);
+        #npConvergenceCd = self.getCd(self.convergenceDataset);
+        #npConverenceCmx,npConverenceCmy, npConverenceCmz = self.getCm(self.convergenceDataset);
+        #npRoResiduals, npUuResiduals, npVvResiduals, npWwResiduals, npPpResiduals = self.getResiduals(self.convergenceDataset);
         print("processingConvergenceFile...................................DONE")
-        return npIterations, npConvergenceCl, npConvergenceCd, npConverenceCmx,npConverenceCmy, npConverenceCmz, npRoResiduals, npUuResiduals, npVvResiduals, npWwResiduals, npPpResiduals;
+        #return npIterations, npConvergenceCl, npConvergenceCd, npConverenceCmx,npConverenceCmy, npConverenceCmz, npRoResiduals, npUuResiduals, npVvResiduals, npWwResiduals, npPpResiduals;
 
     #Aerodynamic file processing
     def processingAerodynamicFile(self, myAerodynamicFile):
