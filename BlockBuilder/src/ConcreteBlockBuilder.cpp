@@ -160,6 +160,12 @@ void ConcreteBlockBuilder::preReadMyBlock(Block* block)
 		// std::cout << "*********************ALLOCATION: "<< n_faces_in_wall<<std::endl;
 		block ->block_wall_face_ids_ = new int [n_faces_in_wall];
 		block->n_wall_faces_=n_faces_in_wall;
+		block ->block_wall_face_cp_ = new double* [n_faces_in_wall];
+		for(int wall_idx=0;wall_idx<n_faces_in_wall;wall_idx++)
+		{
+			block ->block_wall_face_cp_[wall_idx]=new double [2];
+		}
+
 
 		// std::cout << "*********************ALLOCATION: "<< n_faces_in_farfield<<std::endl;
 		block ->block_farfield_face_ids_ = new int [n_faces_in_farfield];
@@ -220,7 +226,7 @@ void ConcreteBlockBuilder::preReadMyBlock(Block* block)
 		std::cout<<"WARNING! BLOCK FILE '" << block_file_ << "' WAS NOT CORRECTLY OPENED IN PRE-READ FUNCTION. ERRATIC BEHAVIOR MAY APPEAR!"<<std::endl;
 		/*std::ofstream outfile ("STOP");
 		outfile.close();*/
-		exit(42);	
+		exit(42);
 	}
 }
 
@@ -418,10 +424,10 @@ void ConcreteBlockBuilder::readMyBlock(Block* block, BlockCommunicator* communic
 					*((block->block_boundary_cell_ids_[real_boundary_id])->cell_count_)=0;
 					(block->block_boundary_cell_ids_[real_boundary_id])->owner_block_=block;
 					real_boundary_id=real_boundary_id+1;
-					
+
 
 					//count_connexions+=n_ghost_cells_temp;
-					
+
 					//block->n_real_boundaries_in_block_=(block->n_real_boundaries_in_block_)-1;
 
 				}
@@ -489,7 +495,7 @@ void ConcreteBlockBuilder::readMyBlock(Block* block, BlockCommunicator* communic
 		outfile.close();*/
 		exit(42);
 	}
-	
+
 	delete node_creator;
 
 }
@@ -751,7 +757,7 @@ void ConcreteBlockBuilder::setTopology(Block* block, BlockCommunicator* block_co
 
 	int block_id=block->block_id_;
 
-	//cout<<"Début Set Topology............ "<<endl;
+	//cout<<"Dï¿½but Set Topology............ "<<endl;
 
 	if (myfile.is_open())
 	{
@@ -775,7 +781,7 @@ void ConcreteBlockBuilder::setTopology(Block* block, BlockCommunicator* block_co
 			sscanf (line.c_str(), "%s %d",str_temp,&block_idx);
 			//cout<<"Block idx read: "<<block_idx<<endl;
 			// Current block found
-			if(block_idx==block->block_id_) 
+			if(block_idx==block->block_id_)
 			{
 				//cout<<"Block Found: "<<block_idx<<endl;
 				getline(myfile, line);
@@ -789,26 +795,26 @@ void ConcreteBlockBuilder::setTopology(Block* block, BlockCommunicator* block_co
 					ConnexionCellIds *block_connexion_boundary_cell_ids = new ConnexionCellIds();
 
 					getline(myfile, line);
-					sscanf (line.c_str(), "%s %d",str_temp,&block_origin_temp); 
+					sscanf (line.c_str(), "%s %d",str_temp,&block_origin_temp);
 					//cout<<"Source block: "<<block_origin_temp<<endl;
 					getline(myfile, line);
-					sscanf (line.c_str(), "%s %d",str_temp,&n_elems); 
+					sscanf (line.c_str(), "%s %d",str_temp,&n_elems);
 					//cout<<"Number of elements: "<<n_elems<<endl;
 
 
-        			
+
 					block_connexion_boundary_cell_ids->block_destination_=block_id;
 					block_connexion_boundary_cell_ids->block_origin_=block_origin_temp;
 					block_connexion_boundary_cell_ids->n_cell_in_boundary_=n_elems;
 					block_connexion_boundary_cell_ids->cell_ids_in_boundary_other_block_=new int[n_elems]();
 					block_connexion_boundary_cell_ids->cell_ids_in_boundary_=new int[n_elems]();
 					block_connexion_boundary_cell_ids->owner_block_=block;
-					
+
 
 					for(k=0;k<n_elems;k++)
 					{
 						getline(myfile, line);
-						sscanf (line.c_str(), "%d",&elem_id_destination_temp); 
+						sscanf (line.c_str(), "%d",&elem_id_destination_temp);
 
 						block_connexion_boundary_cell_ids->cell_ids_in_boundary_[k]=count_connexions;
 						count_connexions+=1;
@@ -836,21 +842,21 @@ void ConcreteBlockBuilder::setTopology(Block* block, BlockCommunicator* block_co
 				{
 
 					getline(myfile, line);
-					sscanf (line.c_str(), "%s %d",str_temp,&block_origin_temp); 
+					sscanf (line.c_str(), "%s %d",str_temp,&block_origin_temp);
 					getline(myfile, line);
-					sscanf (line.c_str(), "%s %d",str_temp,&n_elems); 
+					sscanf (line.c_str(), "%s %d",str_temp,&n_elems);
 
 					for(k=0;k<n_elems;k++)
 					{
 						getline(myfile, line);
-						sscanf (line.c_str(), "%s %d",str_temp,&elem_id_destination_temp); 
+						sscanf (line.c_str(), "%s %d",str_temp,&elem_id_destination_temp);
 					}
 
 				}
 
 
 			}
-			
+
 		}
 	}
 	myfile.close();
@@ -869,7 +875,7 @@ void ConcreteBlockBuilder::setTopology(Block* block, BlockCommunicator* block_co
 			cout<<block_communicator->inter_block_boundaries_[i]->cell_ids_in_boundary_[j]<<"\t\t\t\t"<<block_communicator->inter_block_boundaries_[i]->cell_ids_in_boundary_other_block_[j]<<endl;
 		}
 		cout<<endl;
-		
+
 	}*/
 	if (block_communicator->process_id_ == 0){
 	cout<<"Fin Set Topology............ "<<endl;

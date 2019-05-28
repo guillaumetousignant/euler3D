@@ -1,5 +1,5 @@
 NBLOCK= 1
-Meshes/naca0012_PRESENTATION_SINGLEBLOCK.su2
+/home/apollon/hepap/pi4_Code/euler3D/MeshPartitioning/NACA0012_JAMESON_129x129_1B.su2
 Block= 0
 GhostCount= 0
 Nconnexion= 0

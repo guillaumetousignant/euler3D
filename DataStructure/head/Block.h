@@ -39,6 +39,7 @@ public:
 	int* block_farfield_face_ids_;
 	int n_farfield_faces_;
 	int* block_wall_face_ids_;
+	double** block_wall_face_cp_;
 	int n_wall_faces_;
 	int* block_symmetry_face_ids_;
 	int n_symmetry_faces_;

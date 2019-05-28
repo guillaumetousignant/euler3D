@@ -7,6 +7,7 @@
 #include "RungeKutta.h"
 #include "Solver.h"
 #include "PostProcessing.h"
+#include <chrono>
 
 //#include <chrono> // for high resolution clock
 #include <string>
@@ -72,7 +73,7 @@ void Solver::solve(CompleteMesh* complete_mesh, BlockCommunicator* communicator)
 
 	}
 	*/
-
+	auto t_start=std::chrono::high_resolution_clock::now();
 	// communicator->updateMetrics(ccomplete_mesh);
 	while(!post_processing_->stop_solver_)
 	{
@@ -93,6 +94,13 @@ void Solver::solve(CompleteMesh* complete_mesh, BlockCommunicator* communicator)
 		}
 		///INSÉRER LES TRUCS DE MPI ICI JE CROIS
 		communicator->sync();
+		auto t_end = std::chrono::high_resolution_clock::now();
+		if (communicator->process_id_ == 0){
+			std::cout << "Time elapsed solving: "
+				<< std::chrono::duration<double, std::milli>(t_end-t_start).count()/1000.0
+				<< "s." << std::endl;
+		}
+		t_start = std::chrono::high_resolution_clock::now();
 
 		communicator->updateBoundaries(complete_mesh);
 		if (interpolation_choice_==2)

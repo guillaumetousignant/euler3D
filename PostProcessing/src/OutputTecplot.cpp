@@ -406,6 +406,24 @@ void OutputTecplot::printSurfaceFlowData(Block* block)
 
       SurfaceFlowData.close();
 
+      std::string filename2 = "CP_Block" + ss.str() + ".dat";
+      std::ofstream cpData;
+      cpData.open("./bin/" + filename2);
+
+        if (!cpData.is_open())
+        {
+          // TODO throw exception
+          cerr << "Failed opening file " << filename2 << endl;
+          //return;
+        }
+
+        for(i=0; i < block->n_wall_faces_; i++)
+        {
+          cpData<<block->block_wall_face_cp_[i][0]<<"\t"<<block->block_wall_face_cp_[i][1]<<"\n";
+        }
+
+
+
       //cout << "Ending printSurfaceFlowData.........................................." << endl;
   }
 }

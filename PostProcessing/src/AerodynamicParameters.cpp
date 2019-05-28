@@ -210,7 +210,8 @@ void AerodynamicParameters::computeAerodynamic(Block* block)
 
     // Pressure coefficient for each wall cell
     cpbc = (ppbc-1.)/(dyn_head*cmac_);
-
+    block->block_wall_face_cp_[i][0]=block->block_faces_[wall_face_id]->face_center_[0];
+    block->block_wall_face_cp_[i][1]=cpbc;
     // Face normals
     // non-normalized
     nx = block->block_faces_[wall_face_id]->face_normals_[0];
