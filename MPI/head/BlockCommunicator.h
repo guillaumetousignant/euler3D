@@ -4,6 +4,7 @@
 #include "CompleteMesh.h"
 #include "ConnexionCellIds.h"
 #include <string>
+#include <chrono>
 
 class PostProcessing;
 class CompleteMesh;
@@ -18,10 +19,13 @@ class BlockCommunicator {
         int* block_process_id_;
         int n_blocks_;
         int n_inter_block_boundaries_;
-        ConnexionCellIds** inter_block_boundaries_; // make list?
+        ConnexionCellIds** inter_block_boundaries_;
+        std::chrono::high_resolution_clock::time_point t_start;
+        std::chrono::high_resolution_clock::time_point t_end; // make list?
+
 
         double *** buffers_;
-        void passRVectors(CompleteMesh* mesh) const; 
+        void passRVectors(CompleteMesh* mesh) const;
         void updateBoundaries(CompleteMesh* mesh) const;
         void addCellIdInConnexion(ConnexionCellIds* boundary);
         void getMyBlocks(int& n_blocks_in_process, int* &my_blocks) const;

@@ -277,6 +277,8 @@ void PostProcessing::process(CompleteMesh* complete_mesh, BlockCommunicator* com
     }
 
     // EN ATTENDANT
+    communicator->t_end = std::chrono::high_resolution_clock::now();
+
     if (communicator->process_id_ == 0){
       cout<<"Iter: "<<current_iter_<<" Convergence Ro: "<<ro_convergence_<<" cl: "<<cl_geometry_mesh_<<" cd: "<<cd_geometry_mesh_<<endl;
     }

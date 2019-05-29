@@ -73,7 +73,6 @@ void Solver::solve(CompleteMesh* complete_mesh, BlockCommunicator* communicator)
 
 	}
 	*/
-	auto t_start=std::chrono::high_resolution_clock::now();
 	// communicator->updateMetrics(ccomplete_mesh);
 	while(!post_processing_->stop_solver_)
 	{
@@ -83,6 +82,8 @@ void Solver::solve(CompleteMesh* complete_mesh, BlockCommunicator* communicator)
 		// std::cout << "test 1 " << communicator->process_id_ << '\n';
 
 		// #pragma omp parallel for num_threads(8) // DECOMMENTER POUR AVOIR OPENMP
+		communicator->t_start=std::chrono::high_resolution_clock::now();
+
 		for	(int i=0;i<n_blocks_in_process;i++)
 		{
 			Block* current_block=all_blocks[my_blocks[i]];
@@ -94,14 +95,6 @@ void Solver::solve(CompleteMesh* complete_mesh, BlockCommunicator* communicator)
 		}
 		///INSÉRER LES TRUCS DE MPI ICI JE CROIS
 		communicator->sync();
-		auto t_end = std::chrono::high_resolution_clock::now();
-		if (communicator->process_id_ == 0){
-			std::cout << "Time elapsed solving: "
-				<< std::chrono::duration<double, std::milli>(t_end-t_start).count()/1000.0
-				<< "s." << std::endl;
-		}
-		t_start = std::chrono::high_resolution_clock::now();
-
 		communicator->updateBoundaries(complete_mesh);
 		if (interpolation_choice_==2)
 		{
@@ -114,8 +107,14 @@ void Solver::solve(CompleteMesh* complete_mesh, BlockCommunicator* communicator)
 
 			communicator->updateBoundaries(complete_mesh);
 		}
+
 		post_processing_->process(complete_mesh, communicator);
 
+		if (communicator->process_id_ == 0){
+			std::cout << "Time elapsed for 1 iteration: "
+				<< std::chrono::duration<double, std::milli>(communicator->t_end-communicator->t_start).count()/1000.0
+				<< "s." << std::endl;
+		}
 
 	}
 
