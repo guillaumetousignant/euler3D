@@ -17,7 +17,7 @@
 #include <iostream>
 using namespace std;
 
-void SecondOrder::computeInterpolation(Block* block)
+void SecondOrder::computeInterpolation(Block* block, int c_iter)
 {
 	//cout<<"\t\t\t\tExécution computeInterpolation: SecondOrder: "<<endl;
 
@@ -25,7 +25,10 @@ void SecondOrder::computeInterpolation(Block* block)
 	gradient_->computeGradients(block);
 	//cout<<"\t\t\t\tFin Gradient"<<endl;
 	//cout<<endl<<"\t\t\t\tDans Limiter"<<endl;
+	if(c_iter<=15000)
+	{
 	limiter_->computeLimiters(block);
+	}
 	//cout<<"\t\t\t\tFin Limiter"<<endl;
 }
 

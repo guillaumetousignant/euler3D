@@ -8,7 +8,7 @@ class Block;
 class Limiter
 {
 	public:
-		
+
 		Limiter();
 		virtual ~Limiter();
 

@@ -8,7 +8,7 @@
 #include <iostream>
 using namespace std;
 
-void Interpolation::computeInterpolation(Block* block)
+void Interpolation::computeInterpolation(Block* block, int c_iter)
 {
 
 }
@@ -17,7 +17,7 @@ void Interpolation::computeInterpolation(Block* block)
 
 Interpolation::Interpolation()
 {
-	
+
 }
 
 Interpolation::~Interpolation()

@@ -37,7 +37,7 @@ class ResidualCalculator
 		void setFluxScheme(double gamma, string flux_scheme_choice);
 		void setResidualSmoother(bool residual_smoother_choice);
 
-		void computeResidual(Block* block);
+		void computeResidual(Block* block,int c_iter);
 
 
 		ResidualCalculator();

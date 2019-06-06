@@ -7,6 +7,7 @@
 #include "RungeKutta.h"
 #include "Solver.h"
 #include "PostProcessing.h"
+//#include "SFD.h"
 #include <chrono>
 
 //#include <chrono> // for high resolution clock
@@ -38,6 +39,8 @@ Solver::Solver()
 void Solver::solve(CompleteMesh* complete_mesh, BlockCommunicator* communicator)
 {
 	//int i;
+	int c_iter=0;
+	//SelectiveFrequencyDamper* sfd_er(3.0,0.12);
 	int n_blocks_in_process;
 	int* my_blocks;
 	Block** all_blocks;
@@ -73,6 +76,7 @@ void Solver::solve(CompleteMesh* complete_mesh, BlockCommunicator* communicator)
 
 	}
 	*/
+
 	auto t_start=std::chrono::high_resolution_clock::now();
 	// communicator->updateMetrics(ccomplete_mesh);
 	while(!post_processing_->stop_solver_)
@@ -89,7 +93,7 @@ void Solver::solve(CompleteMesh* complete_mesh, BlockCommunicator* communicator)
 			this->saveW0(current_block);
 			timestep_->computeSpectralRadius(current_block);
 			timestep_->computeTimestep(current_block);
-			runge_kutta_->computeRungeKutta(current_block);
+			runge_kutta_->computeRungeKutta(current_block,c_iter);
 			post_processing_->computeFlowData(current_block); //PARTIE QUI FAIT JUSTE CALCULER LES CL ET CONVERGENCE PARTIELLE
 		}
 		///INSÉRER LES TRUCS DE MPI ICI JE CROIS
@@ -111,10 +115,11 @@ void Solver::solve(CompleteMesh* complete_mesh, BlockCommunicator* communicator)
 				runge_kutta_->residual_calculator_->interpolation_->gradient_->computeGradients(current_block);
 			}
 			communicator->sync();
-
+			//sfd_er->calculateDampedVariables(current_block);
 			communicator->updateBoundaries(complete_mesh);
 		}
 		post_processing_->process(complete_mesh, communicator);
+		c_iter++;
 
 
 	}

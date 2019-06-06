@@ -9,7 +9,7 @@ class Block;
 class Venkatakrishnan : public Limiter
 {
 	public:
-		
+
 		double k_;
 
 		Venkatakrishnan(double k);

@@ -13,6 +13,12 @@ PrimitiveVariables::PrimitiveVariables(int n_all_cells_in_blocks)
 	ww_ = new double[n_all_cells_in_blocks]();
 	pp_ = new double[n_all_cells_in_blocks]();
 
+	filtered_ro_ = new double[n_all_cells_in_blocks]();
+	filtered_uu_ = new double[n_all_cells_in_blocks]();
+	filtered_vv_ = new double[n_all_cells_in_blocks]();
+	filtered_ww_ = new double[n_all_cells_in_blocks]();
+	filtered_pp_ = new double[n_all_cells_in_blocks]();
+
 	conv_res_ro_ = new double[n_all_cells_in_blocks]();
 	conv_res_uu_ = new double[n_all_cells_in_blocks]();
 	conv_res_vv_ = new double[n_all_cells_in_blocks]();

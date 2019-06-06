@@ -77,7 +77,7 @@ RungeKutta::~RungeKutta()
 
 }
 
-void RungeKutta::computeRungeKutta(Block* block)
+void RungeKutta::computeRungeKutta(Block* block,int c_iter)
 {
 
 	int stage_idx;
@@ -85,7 +85,7 @@ void RungeKutta::computeRungeKutta(Block* block)
 	for (stage_idx=0;stage_idx<stage_number_;stage_idx++)
 	{
 		residual_calculator_->current_stage_=stage_idx;
-		residual_calculator_->computeResidual(block);
+		residual_calculator_->computeResidual(block,c_iter);
 		updater_->current_stage_=stage_idx;
 		updater_->updateInternalBlock(block);
 		updater_->updateBoundary(block);

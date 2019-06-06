@@ -31,7 +31,7 @@ void Venkatakrishnan::computeLimiters(Block* block)
 
 	PrimitiveVariables* my_primitive_variables;
 	my_primitive_variables = block -> block_primitive_variables_;
-	
+
 	my_ro_array = my_primitive_variables -> ro_;
 	my_uu_array = my_primitive_variables -> uu_;
 	my_vv_array = my_primitive_variables -> vv_;
@@ -71,7 +71,7 @@ void Venkatakrishnan::computeLimiters(Block* block)
 
 	Cell* my_cell;
 	Face* my_neighbor_face;
-	
+
 	int my_cell_n_faces;
 
 	int* my_cell_2_cells_connectivity;
@@ -109,9 +109,9 @@ void Venkatakrishnan::computeLimiters(Block* block)
 		my_cell_2_cells_connectivity=my_cell->cell_2_cells_connectivity_;
 
 		for (int cell_2_cells_idx=0;cell_2_cells_idx<my_cell_n_faces;cell_2_cells_idx++)
-		{	
+		{
 			my_neighbor_cell_idx=my_cell_2_cells_connectivity[cell_2_cells_idx];
-			
+
 			ro_neighbor=my_ro_array[my_neighbor_cell_idx];
 			uu_neighbor=my_uu_array[my_neighbor_cell_idx];
 			vv_neighbor=my_vv_array[my_neighbor_cell_idx];
@@ -188,7 +188,7 @@ void Venkatakrishnan::computeLimiters(Block* block)
 
 
 		for (int cell_2_faces_idx=0;cell_2_faces_idx<my_cell_n_faces;cell_2_faces_idx++)
-		{	
+		{
 			my_neighbor_face_idx=my_cell_2_faces_connectivity[cell_2_faces_idx];
 			my_neighbor_face=block->block_faces_[my_neighbor_face_idx];
 
@@ -204,7 +204,7 @@ void Venkatakrishnan::computeLimiters(Block* block)
 				face_r_vector=my_neighbor_face->right_cell_r_vector_;
 			}
 
-			
+
 			// Initialize delta2
 			delta_2_ro=0.0;
 			delta_2_uu=0.0;
@@ -319,7 +319,7 @@ void Venkatakrishnan::computeLimiters(Block* block)
 			}
 
 		}
-		
+
 
 	}
 
@@ -330,6 +330,7 @@ void Venkatakrishnan::computeLimiters(Block* block)
 Venkatakrishnan::Venkatakrishnan(double k)
 {
 	k_=k;
+	//std::cout<<"TEST PARAMETRE K DE VENKATAKRISHNAN: "<<k<<std::endl;
 }
 
 Venkatakrishnan::~Venkatakrishnan()

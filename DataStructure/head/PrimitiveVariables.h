@@ -12,6 +12,12 @@ public:
 	double* ww_;
 	double* pp_;
 
+	double* filtered_ro_;
+	double* filtered_uu_;
+	double* filtered_vv_;
+	double* filtered_ww_;
+	double* filtered_pp_;
+
 	double* conv_res_ro_;
 	double* conv_res_uu_;
 	double* conv_res_vv_;

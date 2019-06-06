@@ -13,7 +13,7 @@ class Interpolation
 		Interpolation();
 		virtual ~Interpolation();
 
-		virtual void computeInterpolation(Block* block)=0;
+		virtual void computeInterpolation(Block* block, int c_iter)=0;
 
 
 };

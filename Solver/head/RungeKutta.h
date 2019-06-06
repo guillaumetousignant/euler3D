@@ -19,11 +19,11 @@ class RungeKutta
 		ResidualCalculator *residual_calculator_;
 		Updater *updater_;
 
-		void computeRungeKutta(Block* block);
+		void computeRungeKutta(Block* block,int c_iter);
 
 
 		RungeKutta(double gamma, int stage_number, int interpolation_choice, string gradient_choice, string limiter_choice, string flux_scheme_choice, bool residual_smoother_choice, double omega, double k);
-		
+
 		~RungeKutta();
 
 

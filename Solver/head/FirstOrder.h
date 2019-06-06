@@ -9,11 +9,11 @@ class Block;
 class FirstOrder : public Interpolation
 {
 	public:
-		
+
 		FirstOrder();
 		~FirstOrder();
 
-		void computeInterpolation(Block* block);
+		void computeInterpolation(Block* block, int c_iter);
 
 };
 

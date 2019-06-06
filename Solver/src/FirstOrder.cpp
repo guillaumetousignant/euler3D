@@ -9,7 +9,7 @@
 #include <iostream>
 using namespace std;
 
-void FirstOrder::computeInterpolation(Block* block)
+void FirstOrder::computeInterpolation(Block* block, int c_iter)
 {
 	//cout<<"\t\t\t\tExécution computeInterpolation: FirstOrder: "<<endl;
 }

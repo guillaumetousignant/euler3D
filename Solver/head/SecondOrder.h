@@ -35,7 +35,7 @@ class SecondOrder : public Interpolation
 		SecondOrder(string gradient_choice, string limiter_choice, double omega, double k);
 		~SecondOrder();
 
-		void computeInterpolation(Block* block);
+		void computeInterpolation(Block* block, int c_iter);
 
 };
 

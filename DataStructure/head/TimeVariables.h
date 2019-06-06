@@ -7,9 +7,9 @@ public:
 	double* dt_;
 	double* spectral_radius_;
 
-	TimeVariables(int n_all_cells_in_blocks);
+	TimeVariables(int n_real_cells_in_blocks);
 	~TimeVariables();
-	
+
 };
 
 #endif

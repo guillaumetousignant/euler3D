@@ -21,11 +21,11 @@
 #include <iostream>
 using namespace std;
 
-void ResidualCalculator::computeResidual(Block* block)
+void ResidualCalculator::computeResidual(Block* block,int c_iter)
 {
 	//cout<<"\t\t\tExécution computeResidual: "<<endl;
 	//cout<<endl<<"\t\t\tDans Interpolation"<<endl;
-	interpolation_->computeInterpolation(block);
+	interpolation_->computeInterpolation(block, c_iter);
 	//cout<<"\t\t\tFin Interpolation"<<endl;
 	//cout<<endl<<"\t\t\tDans FluxScheme"<<endl;
 	flux_scheme_->computeFluxConv(block);
