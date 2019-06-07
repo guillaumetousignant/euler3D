@@ -50,7 +50,7 @@ void AerodynamicParameters::calculateCl()
 
 
   // Sum of lift coefficients
-  cl_ += fy_;
+  cl_ += fz_;
 
 
 

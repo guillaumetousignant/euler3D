@@ -50,8 +50,8 @@ void PrimitiveVariables::calculateFreeVariables(double gamma_interface, double a
 	s=sin(alpha_rad_);
 	ro_free_=1.0;//densite normalise
 	uu_free_=mach_*sqrt(gamma_)*c;
-	vv_free_=mach_*sqrt(gamma_)*s;
-	ww_free_=0.0;// hypothese de cas de vol sans vent de travers, vitesse laterale nulle
+	vv_free_=0.0;// hypothese de cas de vol sans vent de travers, vitesse laterale nulle
+	ww_free_=mach_*sqrt(gamma_)*s;
 	pp_free_=1.0;//pression normalise
 }
 
