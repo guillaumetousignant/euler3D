@@ -26,6 +26,15 @@ void SecondOrder::computeInterpolation(Block* block)
 	//cout<<"\t\t\t\tFin Gradient"<<endl;
 	//cout<<endl<<"\t\t\t\tDans Limiter"<<endl;
 	// limiter_->computeLimiters(block);
+	int n_cells=block->n_all_cells_in_block_;
+	for(int i=0; i<n_cells;i++)
+	{
+		block->block_interpolation_variables_->limiter_ro_[i] = 1.0;
+		block->block_interpolation_variables_->limiter_uu_[i] = 1.0;
+		block->block_interpolation_variables_->limiter_vv_[i] = 1.0;
+		block->block_interpolation_variables_->limiter_ww_[i] = 1.0;
+		block->block_interpolation_variables_->limiter_pp_[i] = 1.0;
+	}
 	//cout<<"\t\t\t\tFin Limiter"<<endl;
 }
 
