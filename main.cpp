@@ -81,6 +81,7 @@ int main(int argc, char* argv[])
 	communicator->passRVectors(complete_mesh);
 	complete_mesh->RecomputeConnexionInterVect();
 	//communicator->createBoundaries(complete_mesh->topology_file_name_);
+	MPI_Barrier(MPI_COMM_WORLD);
 	communicator->initializeBuffers();
 
 	if (communicator->process_id_ == 0){

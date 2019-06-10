@@ -369,10 +369,10 @@ void OutputTecplot::printSurfaceFlowData(Block* block)
 
         // Primitve variables
         pp_face = (block->block_primitive_variables_->pp_[cell] + block->block_primitive_variables_->pp_[cell1])*0.5;
-        ro_face = (block->block_primitive_variables_->pp_[cell] + block->block_primitive_variables_->ro_[cell1])*0.5;
-        uu_face = (block->block_primitive_variables_->pp_[cell] + block->block_primitive_variables_->uu_[cell1])*0.5;
-        vv_face = (block->block_primitive_variables_->pp_[cell] + block->block_primitive_variables_->vv_[cell1])*0.5;
-        ww_face = (block->block_primitive_variables_->pp_[cell] + block->block_primitive_variables_->ww_[cell1])*0.5;
+        ro_face = (block->block_primitive_variables_->ro_[cell] + block->block_primitive_variables_->ro_[cell1])*0.5;
+        uu_face = (block->block_primitive_variables_->uu_[cell] + block->block_primitive_variables_->uu_[cell1])*0.5;
+        vv_face = (block->block_primitive_variables_->vv_[cell] + block->block_primitive_variables_->vv_[cell1])*0.5;
+        ww_face = (block->block_primitive_variables_->ww_[cell] + block->block_primitive_variables_->ww_[cell1])*0.5;
 
         a_face = pow(gamma_*pp_face/ro_face, 0.5);
 
