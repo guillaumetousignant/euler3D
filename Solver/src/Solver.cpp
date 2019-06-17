@@ -7,7 +7,7 @@
 #include "RungeKutta.h"
 #include "Solver.h"
 #include "PostProcessing.h"
-//#include "SFD.h"
+#include "SFD.h"
 #include <chrono>
 
 //#include <chrono> // for high resolution clock
@@ -40,7 +40,9 @@ void Solver::solve(CompleteMesh* complete_mesh, BlockCommunicator* communicator)
 {
 	//int i;
 	int c_iter=0;
-	//SelectiveFrequencyDamper* sfd_er(3.0,0.12);
+	double khi=0.0;
+	double delta=0.12;
+	SelectiveFrequencyDamper sfd_er(khi,delta);
 	int n_blocks_in_process;
 	int* my_blocks;
 	Block** all_blocks;
@@ -106,6 +108,12 @@ void Solver::solve(CompleteMesh* complete_mesh, BlockCommunicator* communicator)
 		}
 		t_start = std::chrono::high_resolution_clock::now();
 
+		for (int i=0;i<n_blocks_in_process;i++)
+		{
+			Block* current_block=all_blocks[my_blocks[i]];
+			sfd_er.calculateDampedVariables(current_block);
+		}
+
 		communicator->updateBoundaries(complete_mesh);
 		if (interpolation_choice_==2)
 		{
@@ -115,7 +123,6 @@ void Solver::solve(CompleteMesh* complete_mesh, BlockCommunicator* communicator)
 				runge_kutta_->residual_calculator_->interpolation_->gradient_->computeGradients(current_block);
 			}
 			communicator->sync();
-			//sfd_er->calculateDampedVariables(current_block);
 			communicator->updateBoundaries(complete_mesh);
 		}
 		post_processing_->process(complete_mesh, communicator);

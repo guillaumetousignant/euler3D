@@ -25,10 +25,11 @@ void SecondOrder::computeInterpolation(Block* block, int c_iter)
 	gradient_->computeGradients(block);
 	//cout<<"\t\t\t\tFin Gradient"<<endl;
 	//cout<<endl<<"\t\t\t\tDans Limiter"<<endl;
-	if(c_iter<=15000)
-	{
+	//if(c_iter<=15)
+	//{
+	//std::cout<<"limiter actif!"<<std::endl;
 	limiter_->computeLimiters(block);
-	}
+	//}
 	//cout<<"\t\t\t\tFin Limiter"<<endl;
 }
 

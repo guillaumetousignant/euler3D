@@ -56,9 +56,15 @@ void PrimitiveVariables::calculateFreeVariables(double gamma_interface, double a
 	s=sin(alpha_rad_);
 	ro_free_=1.0;//densite normalise
 	uu_free_=mach_*sqrt(gamma_)*c;
+	pp_free_=1.0;//pression normalise
+
+	//cas profil 2D extruded:
 	vv_free_=mach_*sqrt(gamma_)*s;
 	ww_free_=0.0;// hypothese de cas de vol sans vent de travers, vitesse laterale nulle
-	pp_free_=1.0;//pression normalise
+	//cas wing body configuration
+	//vv_free_=0.0;// hypothese de cas de vol sans vent de travers, vitesse laterale nulle
+	//ww_free_=mach_*sqrt(gamma_)*s;
+
 }
 
 void PrimitiveVariables::initializeFlowField(int n_all_cells_in_blocks)
@@ -70,6 +76,11 @@ void PrimitiveVariables::initializeFlowField(int n_all_cells_in_blocks)
 		vv_[i]=vv_free_;
 		ww_[i]=ww_free_;
 		pp_[i]=pp_free_;
+		filtered_ro_[i] =ro_free_;
+		filtered_uu_[i] =uu_free_;
+		filtered_vv_[i] =vv_free_;
+		filtered_ww_[i] =ww_free_;
+		filtered_pp_[i] =pp_free_;
 	}
 
 }
